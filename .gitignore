@@ -1,1 +1,7 @@
+.vs
+.idea
+
 container_data
+
+**/bin
+**/obj
