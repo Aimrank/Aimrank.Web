@@ -8,6 +8,7 @@ services:
       - STEAM_ACCOUNT=changeme
       - SERVER_ADMIN_STEAMID=changeme
     ports:
+      - 8080:80
       - 27019:27019/udp
       - 27019:27019/tcp
     volumes:

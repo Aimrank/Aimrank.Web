@@ -3,9 +3,14 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="~/main.css" asp-append-version="true" />
     <title>@ViewData["Title"]</title>
 </head>
 <body>
-    @RenderBody()
+    <div>
+        @RenderBody()
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
+    <script src="~/main.js" asp-append-version="true"></script>
 </body>
 </html>

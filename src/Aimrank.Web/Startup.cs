@@ -1,3 +1,5 @@
+using Aimrank.Web.Hubs;
+using Aimrank.Web.Repositories;
 using Aimrank.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +17,8 @@ namespace Aimrank.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSignalR();
+            services.AddSingleton<IGameRepository, GameRepository>();
             services.AddHostedService<EventBusHostedService>();
             services.AddControllersWithViews();
         }
@@ -31,6 +35,7 @@ namespace Aimrank.Web
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<GameHub>("/hubs/game");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
