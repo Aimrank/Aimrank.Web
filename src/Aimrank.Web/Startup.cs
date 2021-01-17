@@ -19,7 +19,8 @@ namespace Aimrank.Web
         {
             services.AddSignalR();
             services.AddSingleton<IGameRepository, GameRepository>();
-            services.AddHostedService<EventBusHostedService>();
+            services.AddHostedService<EventBusBackgroundService>();
+            services.AddHostedService<ShellBackgroundService>();
             services.AddControllersWithViews();
         }
 

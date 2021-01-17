@@ -9,15 +9,15 @@ using System.Threading;
 
 namespace Aimrank.Web.Services
 {
-    public class EventBusHostedService : BackgroundService
+    public class EventBusBackgroundService : BackgroundService
     {
         private readonly IGameRepository _gameRepository;
-        private readonly ILogger<EventBusHostedService> _logger;
+        private readonly ILogger<EventBusBackgroundService> _logger;
         private readonly IHubContext<GameHub, IGameClient> _gameHub;
 
-        public EventBusHostedService(
+        public EventBusBackgroundService(
             IGameRepository gameRepository,
-            ILogger<EventBusHostedService> logger,
+            ILogger<EventBusBackgroundService> logger,
             IHubContext<GameHub, IGameClient> gameHub)
         {
             _gameRepository = gameRepository;

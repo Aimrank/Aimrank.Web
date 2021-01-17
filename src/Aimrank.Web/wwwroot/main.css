@@ -8,6 +8,36 @@ body {
   font-family: sans-serif;
 }
 
+main {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  height: 0;
+  display: flex;
+}
+
+.column {
+  width: 50%;
+  height: 100%;
+  padding: 10px;
+}
+
+.logs {
+  height: 100%;
+  display: block;
+  background: #f0f0f0;
+  border: 1px solid rgba(0, 0, 0, .125);
+  border-radius: 3px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 ul {
   list-style-type: none;
 }
@@ -23,7 +53,7 @@ li span {
   margin-bottom: 5px;
 }
 
-code {
+li code {
   display: block;
   background: #f0f0f0;
   border: 1px solid rgba(0, 0, 0, .125);

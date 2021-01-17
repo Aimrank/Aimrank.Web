@@ -19,5 +19,11 @@
     ul.appendChild(li);
   });
   
+  connection.on("ServerMessageReceived", content => {
+    const pre = document.getElementById("logs");
+    pre.innerHTML += "\n";
+    pre.innerHTML += content;
+  });
+  
   start();
 })();
