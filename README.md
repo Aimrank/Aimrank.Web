@@ -26,6 +26,7 @@ should be able to listen on in-game events (player killed, round finished) and e
 3. Install Sourcemod
 4. Copy server configuration files
 5. Start web server listenning for game events
+6. Start CS:GO server and stream logs to the browser
 
 ## How to run
 
@@ -36,22 +37,8 @@ should be able to listen on in-game events (player killed, round finished) and e
    
 2. Plugins from `/src` are not built automatically yet. You have to compile them manually and copy to
    `container_data/csgo/addons/sourcemod/plugins`. They are necessary for application to work at all.
-
-3. Web application is set as entrypoint in Dockerfile so it's the only thing that will start initially.
-   At this point CS:GO server is not running. In the future CS:GO server will be started by web app but for now it
-   has to be started manually:
-   ```bash
-   # Find aimrank container
-   docker ps
    
-   # Get in the container
-   docker exec -it <container_id> bash
-   
-   # Start CS:GO server
-   cd /home/steam/csgo
-   exec /home/steam/start.sh
-   ```
-4. When starting CS:GO server for the first time it has to download all necessary data (~28GB). This might take a while depending on
+3. When starting CS:GO server for the first time it has to download all necessary data (~28GB). This might take a while depending on
    your connection. It's saved under /home/steam/csgo and it's persisted inside `container_data` directory.
    
 
