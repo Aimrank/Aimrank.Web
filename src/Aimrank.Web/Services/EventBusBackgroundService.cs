@@ -1,6 +1,5 @@
 ﻿using Aimrank.EventBus;
 using Aimrank.Web.Hubs;
-using Aimrank.Web.Repositories;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,16 +10,13 @@ namespace Aimrank.Web.Services
 {
     public class EventBusBackgroundService : BackgroundService
     {
-        private readonly IGameRepository _gameRepository;
         private readonly ILogger<EventBusBackgroundService> _logger;
         private readonly IHubContext<GameHub, IGameClient> _gameHub;
 
         public EventBusBackgroundService(
-            IGameRepository gameRepository,
             ILogger<EventBusBackgroundService> logger,
             IHubContext<GameHub, IGameClient> gameHub)
         {
-            _gameRepository = gameRepository;
             _logger = logger;
             _gameHub = gameHub;
         }

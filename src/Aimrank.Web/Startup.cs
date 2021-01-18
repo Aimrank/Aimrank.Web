@@ -1,5 +1,5 @@
 using Aimrank.Web.Hubs;
-using Aimrank.Web.Repositories;
+using Aimrank.Web.Server;
 using Aimrank.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,9 +18,8 @@ namespace Aimrank.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR();
-            services.AddSingleton<IGameRepository, GameRepository>();
+            services.AddSingleton<ServerProcessManager>();
             services.AddHostedService<EventBusBackgroundService>();
-            services.AddHostedService<ShellBackgroundService>();
             services.AddControllersWithViews();
         }
 
