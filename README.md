@@ -25,8 +25,7 @@ should be able to listen on in-game events (player killed, round finished) and e
 2. Install Metamod
 3. Install Sourcemod
 4. Copy server configuration files
-5. Start web server listenning for game events
-6. Start CS:GO server and stream logs to the browser
+5. Start web server that is used to manage CS:GO server
 
 ## How to run
 
@@ -53,3 +52,15 @@ should be able to listen on in-game events (player killed, round finished) and e
 2. Sourcepawn
 
     - [Online compiler](https://spider.limetech.io/)
+   
+3. Some repositories used as reference:
+
+   - [csgobash](https://github.com/jpcanoso/csgobash)
+   
+## Others
+
+Processes spawned when starting cs go server:
+
+   1. Bash
+      1.1. (Child process) Screen with attached console to CS:GO server
+         1.2. (Child process) CS:GO server instance

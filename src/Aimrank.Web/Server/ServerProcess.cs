@@ -19,7 +19,7 @@ namespace Aimrank.Web.Server
 
         public ServerProcess(Guid id)
         {
-            const string command = "cd /home/steam/csgo && exec /home/steam/start.sh";
+            const string shellCommand = "cd /home/steam/csgo && exec /home/steam/start.sh";
             
             Id = id;
             
@@ -28,7 +28,7 @@ namespace Aimrank.Web.Server
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "/bin/bash",
-                    Arguments = $"-c \"{command}\"",
+                    Arguments = $"-c \"{shellCommand}\"",
                     CreateNoWindow = true,
                     UseShellExecute = false,
                     RedirectStandardOutput = true
@@ -39,35 +39,55 @@ namespace Aimrank.Web.Server
         public void Start()
         {
             ChangeStatus(ServerProcessStatus.Starting);
-            
+
             _process.Start();
             
-            Task.Run(() =>
-            {
-                while (true)
-                {
-                    _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+            // Task.Run(() =>
+            // {
+            //     while (true)
+            //     {
+            //         _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+            //
+            //         var output = _process.StandardOutput.ReadLine();
+            //         
+            //         if (!string.IsNullOrEmpty(output))
+            //         {
+            //             MessageReceived?.Invoke(this, new ServerProcessLogEvent(Id, output));
+            //         }
+            //     }
+            // });
 
-                    var output = _process.StandardOutput.ReadLine();
-                    
-                    if (!string.IsNullOrEmpty(output))
-                    {
-                        MessageReceived?.Invoke(this, new ServerProcessLogEvent(Id, output));
-                    }
-                }
-            });
-            
             ChangeStatus(ServerProcessStatus.Running);
         }
 
         public void Stop()
         {
             ChangeStatus(ServerProcessStatus.Exiting);
-            
+
             _cancellationTokenSource.Cancel();
             _process.Kill(true);
-            
+
             ChangeStatus(ServerProcessStatus.Exited);
+        }
+
+        public void Execute(string command)
+        {
+            var shellCommand = @$"screen -p 0 -S instancename -X eval 'stuff \""{command}\""\015'";
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "/bin/bash",
+                    Arguments = $"-c \"{shellCommand}\"",
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                }
+            };
+
+            process.Start();
+            process.WaitForExit();
         }
 
         public void Dispose() => _process.Dispose();

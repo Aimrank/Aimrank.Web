@@ -60,6 +60,16 @@ namespace Aimrank.Web.Server
             return true;
         }
 
+        public void ExecuteCommand(Guid serverId, string command)
+        {
+            if (!_processes.ContainsKey(serverId))
+            {
+                return;
+            }
+
+            _processes[serverId].Execute(command);
+        }
+
         public void Dispose()
         {
             foreach (var process in _processes.Values)

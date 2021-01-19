@@ -44,6 +44,14 @@ namespace Aimrank.Web.Controllers
             return BadRequest();
         }
 
+        [HttpPost("{id}/command")]
+        public IActionResult ExecuteCommand(Guid id, ExecuteCommandRequest request)
+        {
+            _serverProcessManager.ExecuteCommand(id, request.Command);
+            
+            return Accepted();
+        }
+
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {

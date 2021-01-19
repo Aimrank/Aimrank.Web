@@ -42,6 +42,7 @@ RUN DEBIAN_FRONTEND=noninteractive && apt-get update \
       curl \
       wget \
       unzip \
+      screen \
   && locale-gen en_US.UTF-8 \
   && adduser --disabled-password --gecos "" steam \
   && mkdir ${STEAM_CMD_DIR} \

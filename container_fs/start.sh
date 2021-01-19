@@ -66,4 +66,4 @@ fi
 
 # Start the server
 
-exec "$BASH" "$SRCDS_RUN" "${SRCDS_ARGUMENTS[@]}"
+screen -dmS instancename $SRCDS_RUN ${SRCDS_ARGUMENTS[@]}
