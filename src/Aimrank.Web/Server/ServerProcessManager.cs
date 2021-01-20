@@ -28,7 +28,7 @@ namespace Aimrank.Web.Server
 
         public IEnumerable<ServerProcess> GetProcesses() => _processes.Values;
 
-        public bool StartServer(Guid serverId)
+        public bool StartServer(Guid serverId, string serverToken)
         {
             lock (_locker)
             {
@@ -39,7 +39,7 @@ namespace Aimrank.Web.Server
 
                 if (_availablePorts.TryDequeue(out var port))
                 {
-                    var process = new ServerProcess(serverId, port);
+                    var process = new ServerProcess(serverId, new ServerConfiguration(serverToken, port));
                     
                     process.EventReceived += (_, ea) => _hubContext.Clients.All.EventReceived(ea.Content);
 
@@ -54,19 +54,17 @@ namespace Aimrank.Web.Server
             }
         }
 
-        public bool StopServer(Guid serverId)
+        public async Task<bool> StopServerAsync(Guid serverId)
         {
-            lock (_locker)
+            if (_processes.TryRemove(serverId, out var process))
             {
-                if (_processes.TryRemove(serverId, out var process))
-                {
-                    _availablePorts.Enqueue(process.Port);
-                    process.Dispose();
-                    return true;
-                }
-
-                return false;
+                await process.StopAsync();
+                process.Dispose();
+                _availablePorts.Enqueue(process.Configuration.Port);
+                return true;
             }
+
+            return false;
         }
 
         public async Task ExecuteCommandAsync(Guid serverId, string command)

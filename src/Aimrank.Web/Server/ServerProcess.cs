@@ -7,22 +7,25 @@ using System;
 
 namespace Aimrank.Web.Server
 {
+    public record ServerConfiguration(string Token, int Port);
+    
     public class ServerProcess : IDisposable
     {
         private readonly Process _process;
         private readonly CancellationTokenSource _cancellationTokenSource = new();
         
         public Guid Id { get; }
-        public int Port { get; }
+        public ServerConfiguration Configuration { get; }
+        public bool IsRunning { get; private set; }
         
         public event EventHandler<ServerProcessMessageEvent> EventReceived;
 
-        public ServerProcess(Guid id, int port)
+        public ServerProcess(Guid id, ServerConfiguration configuration)
         {
-            var shellCommand = $"cd /home/steam/csgo && exec /home/steam/start.sh {id} {port}";
+            var shellCommand = $"cd /home/steam/csgo && exec /home/steam/start.sh {id} {configuration.Token} {configuration.Port}";
             
             Id = id;
-            Port = port;
+            Configuration = configuration;
             
             _process = new Process
             {
@@ -54,13 +57,42 @@ namespace Aimrank.Web.Server
                 _cancellationTokenSource.Token,
                 TaskCreationOptions.LongRunning,
                 TaskScheduler.Default);
+
+            IsRunning = true;
         }
 
+        public Task ExecuteAsync(string command) => ExecuteScreenCommandAsync(@$"eval 'stuff \""{command}\""\015'");
 
-        public Task ExecuteAsync(string command)
+        public async Task StopAsync()
         {
-            var shellCommand = @$"screen -p 0 -S {Id} -X eval 'stuff \""{command}\""\015'";
+            if (IsRunning)
+            {
+                await ExecuteScreenCommandAsync("quit");
+                
+                _cancellationTokenSource.Cancel();
+            }
 
+            IsRunning = false;
+        }
+
+        public void Dispose()
+        {
+            StopAsync().Wait();
+
+            try
+            {
+                _process.Kill(true);
+            }
+            finally
+            {
+                _process.Dispose();
+            }
+        }
+        
+        private Task ExecuteScreenCommandAsync(string command)
+        {
+            var shellCommand = @$"screen -p 0 -S {Id} -X {command}";
+            
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -76,20 +108,6 @@ namespace Aimrank.Web.Server
             process.Start();
             
             return process.WaitForExitAsync();
-        }
-
-        public void Dispose()
-        {
-            _cancellationTokenSource.Cancel();
-
-            try
-            {
-                _process.Kill(true);
-            }
-            finally
-            {
-                _process.Dispose();
-            }
         }
         
         private void ProcessEvents()

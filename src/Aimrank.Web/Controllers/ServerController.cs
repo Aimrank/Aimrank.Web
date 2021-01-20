@@ -26,7 +26,7 @@ namespace Aimrank.Web.Controllers
                 return Ok(processes.Select(p => new
                 {
                     p.Id,
-                    p.Port
+                    p.Configuration.Port
                 }));
             }
 
@@ -36,7 +36,7 @@ namespace Aimrank.Web.Controllers
         [HttpPost]
         public IActionResult Create(CreateServerRequest request)
         {
-            var result = _serverProcessManager.StartServer(request.Id);
+            var result = _serverProcessManager.StartServer(request.Id, request.Token);
             if (result)
             {
                 return CreatedAtAction(nameof(Get), new {request.Id}, null);
@@ -54,9 +54,9 @@ namespace Aimrank.Web.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var result = _serverProcessManager.StopServer(id);
+            var result = await _serverProcessManager.StopServerAsync(id);
             if (result)
             {
                 return NoContent();

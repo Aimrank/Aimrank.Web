@@ -5,7 +5,6 @@ services:
     build: .
     image: aimrank:latest
     environment:
-      - STEAM_ACCOUNT=changeme
       - SERVER_ADMIN_STEAMID=changeme
     ports:
       - 8080:80
