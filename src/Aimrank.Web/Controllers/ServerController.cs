@@ -2,6 +2,7 @@
 using Aimrank.Web.Server;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 using System;
 
 namespace Aimrank.Web.Controllers
@@ -25,7 +26,7 @@ namespace Aimrank.Web.Controllers
                 return Ok(processes.Select(p => new
                 {
                     p.Id,
-                    Status = Enum.GetName(typeof(ServerProcessStatus), p.Status)
+                    p.Port
                 }));
             }
 
@@ -45,9 +46,9 @@ namespace Aimrank.Web.Controllers
         }
 
         [HttpPost("{id}/command")]
-        public IActionResult ExecuteCommand(Guid id, ExecuteCommandRequest request)
+        public async Task<IActionResult> ExecuteCommand(Guid id, ExecuteCommandRequest request)
         {
-            _serverProcessManager.ExecuteCommand(id, request.Command);
+            await _serverProcessManager.ExecuteCommandAsync(id, request.Command);
             
             return Accepted();
         }

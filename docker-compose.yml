@@ -9,8 +9,8 @@ services:
       - SERVER_ADMIN_STEAMID=changeme
     ports:
       - 8080:80
-      - 27019:27019/udp
-      - 27019:27019/tcp
+      - 27016-27019:27016-27019/udp
+      - 27016-27019:27016-27019/tcp
     volumes:
       - ./container_data:/home/steam/csgo
       - ./container_fs/maps/aim_map.bsp:/home/steam/csgo/csgo/maps/aim_map.bsp:ro

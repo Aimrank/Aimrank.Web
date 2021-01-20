@@ -29,7 +29,7 @@ ENV STEAM_CMD_DIR /home/steam/steamcmd
 ENV CSGO_APP_ID 740
 ENV CSGO_DIR /home/steam/csgo
 
-# 3. Install cs go server
+# 3. Install cs:go server
 ARG STEAM_CMD_URL=https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
 
 RUN DEBIAN_FRONTEND=noninteractive && apt-get update \
@@ -67,5 +67,9 @@ COPY --chown=steam:steam container_fs ${STEAM_DIR}/
 USER steam
 VOLUME ${CSGO_DIR}
 WORKDIR /home/app
+
+# Expose possible cs:go server ports
+EXPOSE 27016-27019/udp
+EXPOSE 27016-27019/tcp
 
 ENTRYPOINT ["dotnet", "Aimrank.Web.dll"]

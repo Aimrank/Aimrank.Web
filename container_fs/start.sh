@@ -1,5 +1,8 @@
 #!/bin/bash
 
+SERVER_INSTANCE_NAME="$1"
+SERVER_PORT="$2"
+
 export SERVER_HOSTNAME="${SERVER_HOSTNAME:-Counter-Strike: Global Offensive Dedicated Server}"
 export SERVER_PASSWORD="${SERVER_PASSWORD:-}"
 export SERVER_ADMIN_STEAMID="${SERVER_ADMIN_STEAMID:-}"
@@ -45,7 +48,7 @@ SRCDS_ARGUMENTS=(
   "-steam_dir $STEAM_CMD_DIR"
   "-steamcmd_script $STEAM_DIR/autoupdate_script.txt"
   "-tickrate 128"
-  "-port 27019"
+  "-port $SERVER_PORT"
   "-net_port_try 1"
   "-ip 0.0.0.0"
   "+game_type 0"
@@ -66,4 +69,4 @@ fi
 
 # Start the server
 
-screen -dmS instancename $SRCDS_RUN ${SRCDS_ARGUMENTS[@]}
+screen -dmS $SERVER_INSTANCE_NAME $SRCDS_RUN ${SRCDS_ARGUMENTS[@]}
