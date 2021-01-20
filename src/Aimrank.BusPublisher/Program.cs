@@ -1,13 +1,13 @@
 ﻿using System.Text;
 using System;
 
-namespace Aimrank.EventBus.Client
+namespace Aimrank.BusPublisher
 {
     class Program
     {
         public static void Main(string[] args)
         {
-            using var client = new BusPublisher();
+            using var client = new Publisher("eventbus");
             
             client.Publish(ReadDataFromStandardInput());
         }

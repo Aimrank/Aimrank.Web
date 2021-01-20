@@ -4,14 +4,12 @@ WORKDIR /app
 
 COPY *.sln .
 COPY src/Aimrank.Web/*.csproj ./src/Aimrank.Web/
-COPY src/Aimrank.EventBus/*.csproj ./src/Aimrank.EventBus/
-COPY src/Aimrank.EventBus.Client/*.csproj ./src/Aimrank.EventBus.Client/
+COPY src/Aimrank.BusPublisher/*.csproj ./src/Aimrank.BusPublisher/
 
 RUN dotnet restore
 
 COPY src/Aimrank.Web/. ./src/Aimrank.Web/
-COPY src/Aimrank.EventBus/. ./src/Aimrank.EventBus/
-COPY src/Aimrank.EventBus.Client/. ./src/Aimrank.EventBus.Client/
+COPY src/Aimrank.BusPublisher/. ./src/Aimrank.BusPublisher/
 
 RUN dotnet publish -c Release -o /app/out
 

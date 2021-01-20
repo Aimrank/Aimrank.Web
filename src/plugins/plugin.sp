@@ -26,7 +26,7 @@ public void PublishEvent(char[] content, any ...)
   char[] command = new char[512];
 
   VFormat(event, 512, content, 2);
-  Format(command, 512, "cat << EVENTDATA | /home/app/Aimrank.EventBus.Client\n%s\nEVENTDATA", event);
+  Format(command, 512, "cat << EVENTDATA | /home/app/Aimrank.BusPublisher\n%s\nEVENTDATA", event);
 
   System2_ExecuteThreaded(PublishEvent_Executed, command);
 }

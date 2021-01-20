@@ -17,7 +17,6 @@ should be able to listen on in-game events (player killed, round finished) and e
 |SERVER_PASSWORD      ||
 |SERVER_ADMIN_STEAMID ||
 |RCON_PASSWORD        |changeme|
-|STEAM_ACCOUNT        |changeme|
 
 ## What it does
 
@@ -25,7 +24,7 @@ should be able to listen on in-game events (player killed, round finished) and e
 2. Install Metamod
 3. Install Sourcemod
 4. Copy server configuration files
-5. Start web server that is used to manage CS:GO server
+5. Start web server that is used to manage CS:GO servers
 
 ## How to run
 
