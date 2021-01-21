@@ -112,9 +112,7 @@ namespace Aimrank.Web.Server
         
         private void ProcessEvents()
         {
-            // Todo: This should listen only for events from that particular server
-            
-            using var stream = new NamedPipeServerStream("eventbus", PipeDirection.In);
+            using var stream = new NamedPipeServerStream($"eventbus.{Id}", PipeDirection.In);
             using var reader = new StreamReader(stream);
             
             stream.WaitForConnection();

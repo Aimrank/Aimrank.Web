@@ -5,11 +5,19 @@ namespace Aimrank.BusPublisher
 {
     class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            using var client = new Publisher("eventbus");
+            if (args.Length != 1)
+            {
+                Console.WriteLine("Usage: ./BusPublisher <server_id>");
+                return 1;
+            }
+            
+            using var client = new Publisher($"eventbus.{args[0]}");
             
             client.Publish(ReadDataFromStandardInput());
+
+            return 0;
         }
 
         private static string ReadDataFromStandardInput()

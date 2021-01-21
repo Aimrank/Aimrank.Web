@@ -57,6 +57,7 @@ SRCDS_ARGUMENTS=(
   "+map aim_map"
   "+sv_setsteamaccount" "$SERVER_STEAM_TOKEN"
   "+sv_lan 0"
+  "+aimrank_server_id $SERVER_INSTANCE_NAME"
 )
 
 SRCDS_RUN="$CSGO_DIR/srcds_run"

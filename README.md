@@ -61,5 +61,14 @@ should be able to listen on in-game events (player killed, round finished) and e
 Processes spawned when starting cs go server:
 
    1. Bash
+      
       1.1. (Child process) Screen with attached console to CS:GO server
-         1.2. (Child process) CS:GO server instance
+      
+      1.2. (Child process) CS:GO server instance
+      
+## Todo
+
+1. More server events passed to web server:
+   - server_started (to display that server is running)
+   - server_stopped (to display that server is no longer running)
+2. Cleanup when server unexpectedly closes.

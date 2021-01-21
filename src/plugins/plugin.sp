@@ -1,6 +1,8 @@
 #include <sourcemod>
 #include <system2>
 
+ConVar g_aimrankServerId;
+
 public Plugin myinfo =
 {
     name = "Custom",
@@ -12,23 +14,29 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+    g_aimrankServerId = CreateConVar("aimrank_server_id", "00000000-0000-0000-0000-000000000000", "Aimrank server identifier");
+
     PrintToServer("[Stats] Plugin started: v.1.0.0");
     
     HookEvent("round_end", Event_RoundEnd);
     HookEvent("round_start", Event_RoundStart);
     HookEvent("player_death", Event_PlayerDeath);
     HookEvent("player_hurt", Event_PlayerHurt);
+    HookEvent("player_connect", Event_PlayerConnect);
 }
 
 public void PublishEvent(char[] content, any ...)
 {
-  char[] event = new char[512];
-  char[] command = new char[512];
+    decl String:value[64]
+    GetConVarString(g_aimrankServerId, value, sizeof(value));
 
-  VFormat(event, 512, content, 2);
-  Format(command, 512, "cat << EVENTDATA | /home/app/Aimrank.BusPublisher\n%s\nEVENTDATA", event);
+    char[] event = new char[512];
+    char[] command = new char[512];
 
-  System2_ExecuteThreaded(PublishEvent_Executed, command);
+    VFormat(event, 512, content, 2);
+    Format(command, 512, "cat << EVENTDATA | /home/app/Aimrank.BusPublisher %s\n%s\nEVENTDATA", value, event);
+
+    System2_ExecuteThreaded(PublishEvent_Executed, command);
 }
 
 public void PublishEvent_Executed(bool success, const char[] command, System2ExecuteOutput output)
@@ -66,4 +74,13 @@ public Action Event_PlayerHurt(Event event, const char[] name, bool dontBroadcas
     int dmgHealth = event.GetInt("dmg_health");
 
     PublishEvent("{\"name\": \"player_hurt\", \"playerId\": %d, \"attackerId\": %d, \"dmgHealth\": %d}", player, attacker, dmgHealth);
+}
+
+public Action Event_PlayerConnect(Event event, const char[] name, bool dontBroadcast)
+{
+    decl String:username[128];
+
+    event.GetString("name", username, sizeof(username));
+
+    PublishEvent("{\"name\": \"player_connect\", \"name\": \"%s\"}", username);
 }
