@@ -1,6 +1,5 @@
 using Aimrank.Web.Hubs;
 using Aimrank.Web.Server;
-using Aimrank.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +18,6 @@ namespace Aimrank.Web
         {
             services.AddSignalR();
             services.AddSingleton<ServerProcessManager>();
-            services.AddHostedService<EventBusBackgroundService>();
             services.AddControllersWithViews();
         }
 

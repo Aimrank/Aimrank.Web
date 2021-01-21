@@ -1,15 +1,16 @@
 ﻿using System.IO.Pipes;
 using System.IO;
+using System;
 
-namespace Aimrank.EventBus
+namespace Aimrank.BusPublisher
 {
-    public class BusPublisher : IBusPublisher
+    public class Publisher : IDisposable
     {
         private readonly NamedPipeClientStream _client;
 
-        public BusPublisher()
+        public Publisher(string name)
         {
-            _client = new NamedPipeClientStream(".", "eventbus", PipeDirection.Out);
+            _client = new NamedPipeClientStream(".", name, PipeDirection.Out);
             _client.Connect();
         }
 

@@ -1,27 +1,31 @@
 ﻿using System.Diagnostics;
+using System.IO.Pipes;
+using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
 
 namespace Aimrank.Web.Server
 {
+    public record ServerConfiguration(string Token, int Port);
+    
     public class ServerProcess : IDisposable
     {
-        public Guid Id { get; }
-
-        public ServerProcessStatus Status { get; private set; }
-        
-        public event EventHandler<ServerProcessLogEvent> MessageReceived;
-        public event EventHandler<ServerProcessStatusChangedEvent> StatusChanged;
-        
         private readonly Process _process;
         private readonly CancellationTokenSource _cancellationTokenSource = new();
+        
+        public Guid Id { get; }
+        public ServerConfiguration Configuration { get; }
+        public bool IsRunning { get; private set; }
+        
+        public event EventHandler<ServerProcessMessageEvent> EventReceived;
 
-        public ServerProcess(Guid id)
+        public ServerProcess(Guid id, ServerConfiguration configuration)
         {
-            const string shellCommand = "cd /home/steam/csgo && exec /home/steam/start.sh";
+            var shellCommand = $"cd /home/steam/csgo && exec /home/steam/start.sh {id} {configuration.Token} {configuration.Port}";
             
             Id = id;
+            Configuration = configuration;
             
             _process = new Process
             {
@@ -38,42 +42,57 @@ namespace Aimrank.Web.Server
 
         public void Start()
         {
-            ChangeStatus(ServerProcessStatus.Starting);
-
             _process.Start();
+
+            Task.Factory.StartNew(
+                () =>
+                {
+                    while (true)
+                    {
+                        _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                        
+                        ProcessEvents();
+                    }
+                },
+                _cancellationTokenSource.Token,
+                TaskCreationOptions.LongRunning,
+                TaskScheduler.Default);
+
+            IsRunning = true;
+        }
+
+        public Task ExecuteAsync(string command) => ExecuteScreenCommandAsync(@$"eval 'stuff \""{command}\""\015'");
+
+        public async Task StopAsync()
+        {
+            if (IsRunning)
+            {
+                await ExecuteScreenCommandAsync("quit");
+                
+                _cancellationTokenSource.Cancel();
+            }
+
+            IsRunning = false;
+        }
+
+        public void Dispose()
+        {
+            StopAsync().Wait();
+
+            try
+            {
+                _process.Kill(true);
+            }
+            finally
+            {
+                _process.Dispose();
+            }
+        }
+        
+        private Task ExecuteScreenCommandAsync(string command)
+        {
+            var shellCommand = @$"screen -p 0 -S {Id} -X {command}";
             
-            // Task.Run(() =>
-            // {
-            //     while (true)
-            //     {
-            //         _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-            //
-            //         var output = _process.StandardOutput.ReadLine();
-            //         
-            //         if (!string.IsNullOrEmpty(output))
-            //         {
-            //             MessageReceived?.Invoke(this, new ServerProcessLogEvent(Id, output));
-            //         }
-            //     }
-            // });
-
-            ChangeStatus(ServerProcessStatus.Running);
-        }
-
-        public void Stop()
-        {
-            ChangeStatus(ServerProcessStatus.Exiting);
-
-            _cancellationTokenSource.Cancel();
-            _process.Kill(true);
-
-            ChangeStatus(ServerProcessStatus.Exited);
-        }
-
-        public void Execute(string command)
-        {
-            var shellCommand = @$"screen -p 0 -S instancename -X eval 'stuff \""{command}\""\015'";
-
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -87,15 +106,24 @@ namespace Aimrank.Web.Server
             };
 
             process.Start();
-            process.WaitForExit();
+            
+            return process.WaitForExitAsync();
         }
-
-        public void Dispose() => _process.Dispose();
-
-        private void ChangeStatus(ServerProcessStatus status)
+        
+        private void ProcessEvents()
         {
-            Status = status;
-            StatusChanged?.Invoke(this, new ServerProcessStatusChangedEvent(Id, status));
+            using var stream = new NamedPipeServerStream($"eventbus.{Id}", PipeDirection.In);
+            using var reader = new StreamReader(stream);
+            
+            stream.WaitForConnection();
+
+            var content = reader.ReadToEnd();
+            if (content.Length > 0)
+            {
+                EventReceived?.Invoke(this, new ServerProcessMessageEvent(Id, content));
+            }
+            
+            stream.Disconnect();
         }
     }
 }

@@ -2,6 +2,7 @@
 using Aimrank.Web.Server;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 using System;
 
 namespace Aimrank.Web.Controllers
@@ -25,7 +26,7 @@ namespace Aimrank.Web.Controllers
                 return Ok(processes.Select(p => new
                 {
                     p.Id,
-                    Status = Enum.GetName(typeof(ServerProcessStatus), p.Status)
+                    p.Configuration.Port
                 }));
             }
 
@@ -35,7 +36,7 @@ namespace Aimrank.Web.Controllers
         [HttpPost]
         public IActionResult Create(CreateServerRequest request)
         {
-            var result = _serverProcessManager.StartServer(request.Id);
+            var result = _serverProcessManager.StartServer(request.Id, request.Token);
             if (result)
             {
                 return CreatedAtAction(nameof(Get), new {request.Id}, null);
@@ -45,17 +46,17 @@ namespace Aimrank.Web.Controllers
         }
 
         [HttpPost("{id}/command")]
-        public IActionResult ExecuteCommand(Guid id, ExecuteCommandRequest request)
+        public async Task<IActionResult> ExecuteCommand(Guid id, ExecuteCommandRequest request)
         {
-            _serverProcessManager.ExecuteCommand(id, request.Command);
+            await _serverProcessManager.ExecuteCommandAsync(id, request.Command);
             
             return Accepted();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var result = _serverProcessManager.StopServer(id);
+            var result = await _serverProcessManager.StopServerAsync(id);
             if (result)
             {
                 return NoContent();

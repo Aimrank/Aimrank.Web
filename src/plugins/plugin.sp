@@ -1,5 +1,13 @@
 #include <sourcemod>
+#include <sdktools>
+#include <cstrike>
 #include <system2>
+#include <json>
+
+ConVar g_aimrankServerId;
+
+#define M_IFRAGS 4044
+#define M_IDEATHS 4052
 
 public Plugin myinfo =
 {
@@ -12,58 +20,113 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    PrintToServer("[Stats] Plugin started: v.1.0.0");
+    g_aimrankServerId = CreateConVar("aimrank_server_id", "00000000-0000-0000-0000-000000000000", "Aimrank server identifier");
+
+    PrintToServer("[Stats] Plugin started: v.1.0.1");
     
     HookEvent("round_end", Event_RoundEnd);
-    HookEvent("round_start", Event_RoundStart);
-    HookEvent("player_death", Event_PlayerDeath);
-    HookEvent("player_hurt", Event_PlayerHurt);
+    HookEvent("player_connect", Event_PlayerConnect);
+    HookEvent("player_disconnect", Event_PlayerDisconnect);
 }
 
-public void PublishEvent(char[] content, any ...)
+public void PublishEvent(JSON_Object data)
 {
-  char[] event = new char[512];
-  char[] command = new char[512];
+    decl String:serverId[64];
+    GetConVarString(g_aimrankServerId, serverId, sizeof(serverId));
 
-  VFormat(event, 512, content, 2);
-  Format(command, 512, "cat << EVENTDATA | /home/app/Aimrank.EventBus.Client\n%s\nEVENTDATA", event);
+    decl String:event[1024];
+    decl String:command[1024];
 
-  System2_ExecuteThreaded(PublishEvent_Executed, command);
+    data.Encode(event, sizeof(event));
+
+    Format(command, sizeof(command), "cat << EVENTDATA | /home/app/Aimrank.BusPublisher %s\n%s\nEVENTDATA", serverId, event);
+    
+    PrintToServer(event);
+    PrintToServer(command);
+
+    System2_ExecuteThreaded(PublishEvent_Executed, command);
+
+    data.Cleanup();
 }
 
 public void PublishEvent_Executed(bool success, const char[] command, System2ExecuteOutput output)
 {
 }
 
-public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
-{
-    int timelimit = event.GetInt("timelimit");
-    int fraglimit = event.GetInt("fraglimit");
 
-    PublishEvent("{\"name\": \"round_start\", \"timelimit\": %d, \"fraglimit\": %d}", timelimit, fraglimit);
+public JSON_Object GetScoreboard()
+{
+    JSON_Array clientsT = new JSON_Array();
+    JSON_Array clientsCt = new JSON_Array();
+
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        if (IsClientConnected(i) && IsClientInGame(i))
+        {
+            JSON_Object data = new JSON_Object();
+
+            char clientName[128];
+
+            GetClientName(i, clientName, sizeof(clientName));
+
+            data.SetString("name", clientName);
+            data.SetInt("kills", GetEntData(i, M_IFRAGS));
+            data.SetInt("deaths", GetEntData(i, M_IDEATHS));
+
+            int team = GetClientTeam(i);
+            if (team == CS_TEAM_T)
+            {
+                clientsT.PushObject(data);
+            }
+            else if (team == CS_TEAM_CT)
+            {
+                clientsCt.PushObject(data);
+            }
+        }
+    }
+
+    JSON_Object teamT = new JSON_Object();
+    JSON_Object teamCt = new JSON_Object();
+
+    teamT.SetInt("score", GetTeamScore(CS_TEAM_T));
+    teamT.SetObject("clients", clientsT);
+
+    teamCt.SetInt("score", GetTeamScore(CS_TEAM_CT));
+    teamCt.SetObject("clients", clientsCt);
+
+    JSON_Object scoreboard = new JSON_Object();
+    scoreboard.SetObject("teamTerrorists", teamT);
+    scoreboard.SetObject("teamCounterTerrorists", teamCt);
+    
+    return scoreboard;
 }
 
 public Action Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-    int reason = event.GetInt("reason");
-    int winner = event.GetInt("winner");
-
-    PublishEvent("{\"name\": \"round_end\", \"winner\": %d, \"reason\": %d}", winner, reason);
+    JSON_Object data = new JSON_Object();
+    data.SetString("eventName", name);
+    data.SetObject("scoreboard", GetScoreboard());
+    PublishEvent(data);
 }
 
-public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
+public Action Event_PlayerConnect(Event event, const char[] name, bool dontBroadcast)
 {
-    int player = event.GetInt("userid");
-    int attacker = event.GetInt("attackerid");
+    decl String:username[128];
+    event.GetString("name", username, sizeof(username));
 
-    PublishEvent("{\"name\": \"player_death\", \"playerId\": %d, \"attackerId\": %d}", player, attacker);
+    JSON_Object data = new JSON_Object();
+    data.SetString("event_name", name);
+    data.SetString("name", username);
+    PublishEvent(data);
 }
 
-public Action Event_PlayerHurt(Event event, const char[] name, bool dontBroadcast)
+public Action Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast)
 {
-    int player = event.GetInt("userid");
-    int attacker = event.GetInt("attackerid");
-    int dmgHealth = event.GetInt("dmg_health");
+    decl String:username[128];
+    event.GetString("name", username, sizeof(username));
 
-    PublishEvent("{\"name\": \"player_hurt\", \"playerId\": %d, \"attackerId\": %d, \"dmgHealth\": %d}", player, attacker, dmgHealth);
+    JSON_Object data = new JSON_Object();
+    data.SetString("event_name", name);
+    data.SetString("name", username);
+    PublishEvent(data);
 }

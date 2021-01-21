@@ -4,14 +4,12 @@ WORKDIR /app
 
 COPY *.sln .
 COPY src/Aimrank.Web/*.csproj ./src/Aimrank.Web/
-COPY src/Aimrank.EventBus/*.csproj ./src/Aimrank.EventBus/
-COPY src/Aimrank.EventBus.Client/*.csproj ./src/Aimrank.EventBus.Client/
+COPY src/Aimrank.BusPublisher/*.csproj ./src/Aimrank.BusPublisher/
 
 RUN dotnet restore
 
 COPY src/Aimrank.Web/. ./src/Aimrank.Web/
-COPY src/Aimrank.EventBus/. ./src/Aimrank.EventBus/
-COPY src/Aimrank.EventBus.Client/. ./src/Aimrank.EventBus.Client/
+COPY src/Aimrank.BusPublisher/. ./src/Aimrank.BusPublisher/
 
 RUN dotnet publish -c Release -o /app/out
 
@@ -29,7 +27,7 @@ ENV STEAM_CMD_DIR /home/steam/steamcmd
 ENV CSGO_APP_ID 740
 ENV CSGO_DIR /home/steam/csgo
 
-# 3. Install cs go server
+# 3. Install cs:go server
 ARG STEAM_CMD_URL=https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
 
 RUN DEBIAN_FRONTEND=noninteractive && apt-get update \
@@ -67,5 +65,9 @@ COPY --chown=steam:steam container_fs ${STEAM_DIR}/
 USER steam
 VOLUME ${CSGO_DIR}
 WORKDIR /home/app
+
+# Expose possible cs:go server ports
+EXPOSE 27016-27019/udp
+EXPOSE 27016-27019/tcp
 
 ENTRYPOINT ["dotnet", "Aimrank.Web.dll"]

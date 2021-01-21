@@ -17,7 +17,6 @@ should be able to listen on in-game events (player killed, round finished) and e
 |SERVER_PASSWORD      ||
 |SERVER_ADMIN_STEAMID ||
 |RCON_PASSWORD        |changeme|
-|STEAM_ACCOUNT        |changeme|
 
 ## What it does
 
@@ -25,7 +24,7 @@ should be able to listen on in-game events (player killed, round finished) and e
 2. Install Metamod
 3. Install Sourcemod
 4. Copy server configuration files
-5. Start web server that is used to manage CS:GO server
+5. Start web server that is used to manage CS:GO servers
 
 ## How to run
 
@@ -57,10 +56,31 @@ should be able to listen on in-game events (player killed, round finished) and e
 
    - [csgobash](https://github.com/jpcanoso/csgobash)
    
+4. Sourcemod
+   
+   ```bash
+   sm_dump_datamaps datamaps.txt
+   sm_dump_netprops netprops.txt
+   ```
+   
+   Plugins:
+
+   - system2
+   - sm-json
+   
 ## Others
 
 Processes spawned when starting cs go server:
 
    1. Bash
+      
       1.1. (Child process) Screen with attached console to CS:GO server
-         1.2. (Child process) CS:GO server instance
+      
+      1.2. (Child process) CS:GO server instance
+      
+## Todo
+
+1. More server events passed to web server:
+   - server_started (to display that server is running)
+   - server_stopped (to display that server is no longer running)
+2. Cleanup when server unexpectedly closes.

@@ -1,10 +1,13 @@
 #!/bin/bash
 
+SERVER_INSTANCE_NAME="$1"
+SERVER_STEAM_TOKEN="$2"
+SERVER_PORT="$3"
+
 export SERVER_HOSTNAME="${SERVER_HOSTNAME:-Counter-Strike: Global Offensive Dedicated Server}"
 export SERVER_PASSWORD="${SERVER_PASSWORD:-}"
 export SERVER_ADMIN_STEAMID="${SERVER_ADMIN_STEAMID:-}"
 export RCON_PASSWORD="${RCON_PASSWORD:-changeme}"
-export STEAM_ACCOUNT="${STEAM_ACCOUNT:-changeme}"
 
 # Attempt to update CSGO before starting server
 
@@ -45,14 +48,16 @@ SRCDS_ARGUMENTS=(
   "-steam_dir $STEAM_CMD_DIR"
   "-steamcmd_script $STEAM_DIR/autoupdate_script.txt"
   "-tickrate 128"
-  "-port 27019"
+  "-port $SERVER_PORT"
   "-net_port_try 1"
   "-ip 0.0.0.0"
+  "-nohltv"
   "+game_type 0"
   "+game_mode 1"
   "+map aim_map"
-  "+sv_setsteamaccount" "$STEAM_ACCOUNT"
+  "+sv_setsteamaccount" "$SERVER_STEAM_TOKEN"
   "+sv_lan 0"
+  "+aimrank_server_id $SERVER_INSTANCE_NAME"
 )
 
 SRCDS_RUN="$CSGO_DIR/srcds_run"
@@ -66,4 +71,4 @@ fi
 
 # Start the server
 
-screen -dmS instancename $SRCDS_RUN ${SRCDS_ARGUMENTS[@]}
+screen -dmS $SERVER_INSTANCE_NAME $SRCDS_RUN ${SRCDS_ARGUMENTS[@]}
