@@ -56,6 +56,18 @@ should be able to listen on in-game events (player killed, round finished) and e
 
    - [csgobash](https://github.com/jpcanoso/csgobash)
    
+4. Sourcemod
+   
+   ```bash
+   sm_dump_datamaps datamaps.txt
+   sm_dump_netprops netprops.txt
+   ```
+   
+   Plugins:
+
+   - system2
+   - sm-json
+   
 ## Others
 
 Processes spawned when starting cs go server:
