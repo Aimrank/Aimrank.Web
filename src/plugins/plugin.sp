@@ -4,16 +4,16 @@
 #include <system2>
 #include <json>
 
-ConVar g_aimrankServerId;
-
 #define M_IFRAGS 4044
 #define M_IDEATHS 4052
 
+ConVar g_aimrankServerId;
+
 public Plugin myinfo =
 {
-    name = "Custom",
-    author = "",
-    description = "Custom",
+    name = "Aimrank",
+    author = "Mariusz Baran",
+    description = "Aimrank plugin that sends game events to web application.",
     version = "1.0.0",
     url = ""
 };
@@ -21,21 +21,20 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
     g_aimrankServerId = CreateConVar("aimrank_server_id", "00000000-0000-0000-0000-000000000000", "Aimrank server identifier");
-
-    PrintToServer("[Stats] Plugin started: v.1.0.1");
     
-    HookEvent("round_end", Event_RoundEnd);
-    HookEvent("player_connect", Event_PlayerConnect);
-    HookEvent("player_disconnect", Event_PlayerDisconnect);
+    HookEvent("round_end", Event_PublishScoreboard);
+    HookEvent("round_start", Event_PublishScoreboard);
+    HookEvent("player_connect", Event_PublishScoreboard);
+    HookEvent("player_disconnect", Event_PublishScoreboard);
 }
 
 public void PublishEvent(JSON_Object data)
 {
-    decl String:serverId[64];
-    GetConVarString(g_aimrankServerId, serverId, sizeof(serverId));
+    char event[1024];
+    char command[1024];
+    char serverId[64];
 
-    decl String:event[1024];
-    decl String:command[1024];
+    GetConVarString(g_aimrankServerId, serverId, sizeof(serverId));
 
     data.Encode(event, sizeof(event));
 
@@ -65,13 +64,18 @@ public JSON_Object GetScoreboard()
         {
             JSON_Object data = new JSON_Object();
 
-            char clientName[128];
+            char clientName[32];
+            char clientAuth[18];
 
             GetClientName(i, clientName, sizeof(clientName));
+            GetClientAuthId(i, AuthId_Steam2, clientAuth, sizeof(clientAuth));
 
             data.SetString("name", clientName);
-            data.SetInt("kills", GetEntData(i, M_IFRAGS));
-            data.SetInt("deaths", GetEntData(i, M_IDEATHS));
+            data.SetString("steamId", clientAuth);
+            data.SetInt("kills", GetEntProp(i, Prop_Data, "m_iFrags"));
+            data.SetInt("deaths", GetEntProp(i, Prop_Data, "m_iDeaths"));
+            data.SetInt("assists", CS_GetClientAssists(i));
+            data.SetInt("score", CS_GetClientContributionScore(i));
 
             int team = GetClientTeam(i);
             if (team == CS_TEAM_T)
@@ -101,32 +105,15 @@ public JSON_Object GetScoreboard()
     return scoreboard;
 }
 
-public Action Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
+public JSON_Object CreateIntegrationEvent(const char[] name, JSON_Object data)
 {
-    JSON_Object data = new JSON_Object();
-    data.SetString("eventName", name);
-    data.SetObject("scoreboard", GetScoreboard());
-    PublishEvent(data);
+    JSON_Object event = new JSON_Object();
+    event.SetString("name", name);
+    event.SetObject("data", data);
+    return event;
 }
 
-public Action Event_PlayerConnect(Event event, const char[] name, bool dontBroadcast)
+public Action Event_PublishScoreboard(Event event, const char[] name, bool dontBroadcast)
 {
-    decl String:username[128];
-    event.GetString("name", username, sizeof(username));
-
-    JSON_Object data = new JSON_Object();
-    data.SetString("event_name", name);
-    data.SetString("name", username);
-    PublishEvent(data);
-}
-
-public Action Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast)
-{
-    decl String:username[128];
-    event.GetString("name", username, sizeof(username));
-
-    JSON_Object data = new JSON_Object();
-    data.SetString("event_name", name);
-    data.SetString("name", username);
-    PublishEvent(data);
+    PublishEvent(CreateIntegrationEvent("scoreboard_changed", GetScoreboard()));
 }
