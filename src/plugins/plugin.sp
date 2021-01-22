@@ -22,6 +22,7 @@ public void OnPluginStart()
 {
     g_aimrankServerId = CreateConVar("aimrank_server_id", "00000000-0000-0000-0000-000000000000", "Aimrank server identifier");
     
+    HookEvent("cs_win_panel_match", Event_MatchEnd);
     HookEvent("round_end", Event_PublishScoreboard);
     HookEvent("round_start", Event_PublishScoreboard);
     HookEvent("player_connect", Event_PublishScoreboard);
@@ -116,4 +117,9 @@ public JSON_Object CreateIntegrationEvent(const char[] name, JSON_Object data)
 public Action Event_PublishScoreboard(Event event, const char[] name, bool dontBroadcast)
 {
     PublishEvent(CreateIntegrationEvent("scoreboard_changed", GetScoreboard()));
+}
+
+public Action Event_MatchEnd(Event event, const char[] name, bool dontBroadcast)
+{
+    PublishEvent(CreateIntegrationEvent("match_end", GetScoreboard()));
 }

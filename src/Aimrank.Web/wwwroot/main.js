@@ -32,6 +32,10 @@
   connection.on("EventReceived", content => {
     const event = JSON.parse(content);
     const time = new Date().toUTCString();
+
+    if (event.name !== "scoreboard_changed") {
+      return;
+    }
     
     const component = `
       <div class="scoreboard">
