@@ -47,14 +47,10 @@ namespace Aimrank.Web.Events
     public class EventBus
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly IHubContext<GameHub, IGameClient> _hubContext;
 
-        public EventBus(
-            IServiceScopeFactory serviceScopeFactory,
-            IHubContext<GameHub, IGameClient> hubContext)
+        public EventBus(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
-            _hubContext = hubContext;
         }
 
         public async Task PublishAsync(Guid serverId, string content)
@@ -62,14 +58,15 @@ namespace Aimrank.Web.Events
             var temp = JsonSerializer.Deserialize<Event>(content,
                 new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
             
+            using var scope = _serviceScopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var manager = scope.ServiceProvider.GetRequiredService<ServerProcessManager>();
+            var hub = scope.ServiceProvider.GetRequiredService<IHubContext<GameHub, IGameClient>>();
+            
             if (temp.Name == "match_end")
             {
                 var @event = JsonSerializer.Deserialize<MatchEndEvent>(content,
                     new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
-
-                using var scope = _serviceScopeFactory.CreateScope();
-                var context = scope.ServiceProvider.GetRequiredService<DataContext>();
-                var manager = scope.ServiceProvider.GetRequiredService<ServerProcessManager>();
 
                 await manager.StopServerAsync(serverId);
 
@@ -92,7 +89,7 @@ namespace Aimrank.Web.Events
             }
             else
             {
-                await _hubContext.Clients.All.EventReceived(content);
+                await hub.Clients.All.EventReceived(content);
             }
         }
     }

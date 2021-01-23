@@ -40,11 +40,6 @@ namespace Aimrank.Web.Server
                 if (_availablePorts.TryDequeue(out var port))
                 {
                     var process = new ServerProcess(serverId, new ServerConfiguration(serverToken, port, whitelist.ToList()));
-                    
-                    process.EventReceived += (_, ea) =>
-                    {
-                        _eventBus.PublishAsync(serverId, ea.Content);
-                    };
 
                     if (_processes.TryAdd(serverId, process))
                     {
