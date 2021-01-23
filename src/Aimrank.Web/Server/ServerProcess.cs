@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Pipes;
 using System.IO;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using System;
 
 namespace Aimrank.Web.Server
 {
-    public record ServerConfiguration(string Token, int Port);
+    public record ServerConfiguration(string Token, int Port, List<string> Whitelist);
     
     public class ServerProcess : IDisposable
     {
@@ -22,7 +23,9 @@ namespace Aimrank.Web.Server
 
         public ServerProcess(Guid id, ServerConfiguration configuration)
         {
-            var shellCommand = $"cd /home/steam/csgo && exec /home/steam/start.sh {id} {configuration.Token} {configuration.Port}";
+            var whitelist = string.Join(',', configuration.Whitelist);
+            
+            var shellCommand = $"cd /home/steam/csgo && exec /home/steam/start.sh {id} {configuration.Token} {configuration.Port} {whitelist}";
             
             Id = id;
             Configuration = configuration;

@@ -3,6 +3,7 @@
 SERVER_INSTANCE_NAME="$1"
 SERVER_STEAM_TOKEN="$2"
 SERVER_PORT="$3"
+SERVER_WHITELIST="$4"
 
 export SERVER_HOSTNAME="${SERVER_HOSTNAME:-Counter-Strike: Global Offensive Dedicated Server}"
 export SERVER_PASSWORD="${SERVER_PASSWORD:-}"
@@ -58,6 +59,7 @@ SRCDS_ARGUMENTS=(
   "+sv_setsteamaccount" "$SERVER_STEAM_TOKEN"
   "+sv_lan 0"
   "+aimrank_server_id $SERVER_INSTANCE_NAME"
+  "+aimrank_whitelist $SERVER_WHITELIST"
 )
 
 SRCDS_RUN="$CSGO_DIR/srcds_run"

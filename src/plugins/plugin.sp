@@ -7,7 +7,13 @@
 #define M_IFRAGS 4044
 #define M_IDEATHS 4052
 
+#define CLIENT_NAME_LENGTH 33       // 32 + 1
+#define CLIENT_ID_LENGTH 19         // 18 + 1
+
+#define MAX_CLIENTS 2
+
 ConVar g_aimrankServerId;
+ConVar g_aimrankWhitelist;
 
 public Plugin myinfo =
 {
@@ -21,11 +27,12 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
     g_aimrankServerId = CreateConVar("aimrank_server_id", "00000000-0000-0000-0000-000000000000", "Aimrank server identifier");
+    g_aimrankWhitelist = CreateConVar("aimrank_whitelist", "0", "SteamID list of whitelisted players.");
     
     HookEvent("cs_win_panel_match", Event_MatchEnd);
     HookEvent("round_end", Event_PublishScoreboard);
     HookEvent("round_start", Event_PublishScoreboard);
-    HookEvent("player_connect", Event_PublishScoreboard);
+    HookEvent("player_activate", Event_PublishScoreboard);
     HookEvent("player_disconnect", Event_PublishScoreboard);
 }
 
@@ -65,8 +72,8 @@ public JSON_Object GetScoreboard()
         {
             JSON_Object data = new JSON_Object();
 
-            char clientName[32];
-            char clientAuth[18];
+            char clientName[CLIENT_NAME_LENGTH];
+            char clientAuth[CLIENT_ID_LENGTH];
 
             GetClientName(i, clientName, sizeof(clientName));
             GetClientAuthId(i, AuthId_Steam2, clientAuth, sizeof(clientAuth));
@@ -123,3 +130,24 @@ public Action Event_MatchEnd(Event event, const char[] name, bool dontBroadcast)
 {
     PublishEvent(CreateIntegrationEvent("match_end", GetScoreboard()));
 }
+
+public void OnClientPutInServer(int client)
+{
+    if (IsFakeClient(client))
+    {
+        return;
+    }
+
+    char clientId[CLIENT_ID_LENGTH];
+    char whitelist[CLIENT_ID_LENGTH * MAX_CLIENTS];
+
+    GetClientAuthId(client, AuthId_Steam2, clientId, sizeof(clientId));
+    GetConVarString(g_aimrankWhitelist, whitelist, sizeof(whitelist));
+
+    if (StrContains(whitelist, clientId) == -1)
+    {
+        KickClient(client, "You are not whitelisted");
+    }
+}
+
+// When warmup ends and not all players are connected - cancel the game

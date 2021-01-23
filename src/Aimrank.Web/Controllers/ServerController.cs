@@ -36,7 +36,7 @@ namespace Aimrank.Web.Controllers
         [HttpPost]
         public IActionResult Create(CreateServerRequest request)
         {
-            var result = _serverProcessManager.StartServer(request.Id, request.Token);
+            var result = _serverProcessManager.StartServer(request.Id, request.Token, request.Whitelist);
             if (result)
             {
                 return CreatedAtAction(nameof(Get), new {request.Id}, null);

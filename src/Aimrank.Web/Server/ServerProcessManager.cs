@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System;
 
@@ -28,7 +29,7 @@ namespace Aimrank.Web.Server
 
         public IEnumerable<ServerProcess> GetProcesses() => _processes.Values;
 
-        public bool StartServer(Guid serverId, string serverToken)
+        public bool StartServer(Guid serverId, string serverToken, IEnumerable<string> whitelist)
         {
             lock (_locker)
             {
@@ -39,7 +40,7 @@ namespace Aimrank.Web.Server
 
                 if (_availablePorts.TryDequeue(out var port))
                 {
-                    var process = new ServerProcess(serverId, new ServerConfiguration(serverToken, port));
+                    var process = new ServerProcess(serverId, new ServerConfiguration(serverToken, port, whitelist.ToList()));
                     
                     process.EventReceived += (_, ea) => _hubContext.Clients.All.EventReceived(ea.Content);
 

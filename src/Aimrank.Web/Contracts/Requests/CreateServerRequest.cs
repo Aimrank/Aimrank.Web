@@ -6,5 +6,6 @@ namespace Aimrank.Web.Contracts.Requests
     {
         public Guid Id { get; set; }
         public string Token { get; set; }
+        public string[] Whitelist { get; set; }
     }
 }
