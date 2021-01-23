@@ -1,5 +1,4 @@
-﻿using Aimrank.Web.Hubs;
-using Microsoft.AspNetCore.SignalR;
+﻿using Aimrank.Web.Events;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +11,15 @@ namespace Aimrank.Web.Server
     {
         private readonly object _locker = new();
         
-        private readonly IHubContext<GameHub, IGameClient> _hubContext;
+        private readonly EventBus _eventBus;
         
         private readonly ConcurrentQueue<int> _availablePorts = new();
         
         private readonly ConcurrentDictionary<Guid, ServerProcess> _processes = new();
 
-        public ServerProcessManager(IHubContext<GameHub, IGameClient> hubContext)
+        public ServerProcessManager(EventBus eventBus)
         {
-            _hubContext = hubContext;
+            _eventBus = eventBus;
             _availablePorts.Enqueue(27016);
             _availablePorts.Enqueue(27017);
             _availablePorts.Enqueue(27018);
@@ -42,7 +41,10 @@ namespace Aimrank.Web.Server
                 {
                     var process = new ServerProcess(serverId, new ServerConfiguration(serverToken, port, whitelist.ToList()));
                     
-                    process.EventReceived += (_, ea) => _hubContext.Clients.All.EventReceived(ea.Content);
+                    process.EventReceived += (_, ea) =>
+                    {
+                        _eventBus.PublishAsync(serverId, ea.Content);
+                    };
 
                     if (_processes.TryAdd(serverId, process))
                     {

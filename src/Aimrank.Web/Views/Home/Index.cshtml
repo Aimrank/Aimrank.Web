@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Aimrank.Web.Data
+@model List<Match>
+
+@{
     ViewData["Title"] = "Aimrank";
 }
 
@@ -6,6 +9,27 @@
     <div class="column">
         <h3>Scoreboard</h3>
         <div id="scoreboard"></div>
+        <br />
+        <h3>Matches history</h3>
+        <table class="history-table">
+            <tr>
+                <th>Team 1</th>
+                <th>Score</th>
+                <th></th>
+                <th>Score</th>
+                <th>Team 2</th>
+            </tr>
+            @foreach (var match in Model)
+            {
+                <tr>
+                    <td class="@(match.ScoreT > match.ScoreCT ? "winner" : "loser")">@match.Scoreboard.FirstOrDefault(p => p.Team == 3).Name</td>
+                    <td class="@(match.ScoreT > match.ScoreCT ? "winner" : "loser")">@match.ScoreT</td>
+                    <td><div style="width: 100px;"></div></td>
+                    <td class="@(match.ScoreCT > match.ScoreT ? "winner" : "loser")">@match.ScoreCT</td>
+                    <td class="@(match.ScoreCT > match.ScoreT ? "winner" : "loser")">@match.Scoreboard.FirstOrDefault(p => p.Team == 2).Name</td>
+                </tr>
+            }
+        </table>
     </div>
     <div class="column">
         <h3>Actions</h3>

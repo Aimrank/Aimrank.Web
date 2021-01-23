@@ -51,3 +51,26 @@ h3 {
   font-size: 20px;
   font-weight: bold;
 }
+
+.history-table {
+  border-collapse: collapse;
+}
+
+.history-table .winner {
+  background: lightgreen;
+}
+
+.history-table .loser {
+  background: #ff4444;
+  color: white;
+}
+
+.history-table th {
+  text-align: left;
+}
+
+.history-table th,
+.history-table td {
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, .125);
+}

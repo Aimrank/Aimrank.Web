@@ -70,9 +70,9 @@ namespace Aimrank.Web.Server
         {
             if (IsRunning)
             {
-                await ExecuteScreenCommandAsync("quit");
-                
                 _cancellationTokenSource.Cancel();
+                
+                await ExecuteScreenCommandAsync("quit");
             }
 
             IsRunning = false;

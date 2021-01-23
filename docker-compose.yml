@@ -14,3 +14,11 @@ services:
       - ./container_data:/home/steam/csgo
       - ./container_fs/maps/aim_map.bsp:/home/steam/csgo/csgo/maps/aim_map.bsp:ro
       - ./container_fs/maps/aim_map.jpg:/home/steam/csgo/csgo/maps/aim_map.jpg:ro
+
+  db:
+    image: mcr.microsoft.com/mssql/server
+    environment:
+      - SA_PASSWORD=Secret123!
+      - ACCEPT_EULA=Y
+    ports:
+      - 1433:1433
