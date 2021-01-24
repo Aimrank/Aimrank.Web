@@ -23,6 +23,8 @@ rcon_password "$RCON_PASSWORD"
 sv_password "$SERVER_PASSWORD"
 sv_cheats 0
 sv_lan 0
+sv_allowupload 1
+sv_allowdownload 1
 exec banned_user.cfg
 exec banned_ip.cfg
 AUTOEXECCFG
@@ -36,7 +38,7 @@ SERVERCFG
 
 # Copy predefined config files
 
-cp -a -nf $STEAM_DIR/cfg/. $CSGO_DIR/csgo/cfg/
+cp -a $STEAM_DIR/cfg/. $CSGO_DIR/csgo/cfg/
 
 "$BASH" "$STEAM_DIR/configure_metamod.sh"
 "$BASH" "$STEAM_DIR/configure_sourcemod.sh"
@@ -53,6 +55,7 @@ SRCDS_ARGUMENTS=(
   "-net_port_try 1"
   "-ip 0.0.0.0"
   "-nohltv"
+  "-maxplayers 2"
   "+game_type 0"
   "+game_mode 1"
   "+map aim_map"

@@ -18,7 +18,8 @@ namespace Aimrank.Web.Controllers
             _serverProcessManager = serverProcessManager;
         }
 
-        public IActionResult Get()
+        [HttpGet]
+        public IActionResult GetAll()
         {
             var processes = _serverProcessManager.GetProcesses();
             if (processes.Any())
@@ -32,14 +33,32 @@ namespace Aimrank.Web.Controllers
 
             return Ok(processes);
         }
+
+        [HttpGet("{id}")]
+        public IActionResult Get(Guid id)
+        {
+            var process = _serverProcessManager.GetProcesses().FirstOrDefault(p => p.Id == id);
+            if (process is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new
+            {
+                process.Id,
+                process.Configuration.Port
+            });
+        }
         
         [HttpPost]
         public IActionResult Create(CreateServerRequest request)
         {
-            var result = _serverProcessManager.StartServer(request.Id, request.Token, request.Whitelist);
+            var serverId = Guid.NewGuid();
+            
+            var result = _serverProcessManager.StartServer(serverId, request.Token, request.Whitelist);
             if (result)
             {
-                return CreatedAtAction(nameof(Get), new {request.Id}, null);
+                return CreatedAtAction(nameof(Get), new {serverId}, null);
             }
 
             return BadRequest();

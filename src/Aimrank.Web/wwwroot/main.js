@@ -42,7 +42,7 @@
         <div class="scoreboard__time">${time}</div>
         <table class="scoreboard__table">
           <tr>
-            <th>Steam ID</th>
+            <th>SteamID64</th>
             <th>Name</th>
             <th>Kills</th>
             <th>Assists</th>

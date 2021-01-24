@@ -7,8 +7,8 @@
 #define M_IFRAGS 4044
 #define M_IDEATHS 4052
 
-#define CLIENT_NAME_LENGTH 33       // 32 + 1
-#define CLIENT_ID_LENGTH 19         // 18 + 1
+#define CLIENT_NAME_LENGTH 33
+#define CLIENT_ID_LENGTH 18
 
 #define MAX_CLIENTS 2
 
@@ -76,7 +76,7 @@ public JSON_Object GetScoreboard()
             char clientAuth[CLIENT_ID_LENGTH];
 
             GetClientName(i, clientName, sizeof(clientName));
-            GetClientAuthId(i, AuthId_Steam2, clientAuth, sizeof(clientAuth));
+            GetClientSteamId(i, clientAuth, sizeof(clientAuth));
 
             data.SetString("name", clientName);
             data.SetString("steamId", clientAuth);
@@ -141,13 +141,18 @@ public void OnClientPutInServer(int client)
     char clientId[CLIENT_ID_LENGTH];
     char whitelist[CLIENT_ID_LENGTH * MAX_CLIENTS];
 
-    GetClientAuthId(client, AuthId_Steam2, clientId, sizeof(clientId));
+    GetClientSteamId(client, clientId, sizeof(clientId));
     GetConVarString(g_aimrankWhitelist, whitelist, sizeof(whitelist));
 
     if (StrContains(whitelist, clientId) == -1)
     {
         KickClient(client, "You are not whitelisted");
     }
+}
+
+public void GetClientSteamId(int client, char[] output, int maxlen)
+{
+    GetClientAuthId(client, AuthId_SteamID64, output, maxlen);
 }
 
 // When warmup ends and not all players are connected - cancel the game
