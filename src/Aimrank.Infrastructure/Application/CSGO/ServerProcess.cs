@@ -19,7 +19,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
         {
             var whitelist = string.Join(',', configuration.Whitelist);
             
-            var shellCommand = $"cd /home/steam/csgo && exec /home/steam/start.sh {id} {configuration.Token} {configuration.Port} {whitelist}";
+            var shellCommand = $"cd /home/steam/csgo && exec /home/steam/start-csgo.sh {id} {configuration.Token} {configuration.Port} {whitelist}";
             
             Id = id;
             Configuration = configuration;

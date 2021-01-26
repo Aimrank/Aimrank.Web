@@ -47,6 +47,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
                     if (_processes.TryAdd(serverId, process))
                     {
                         process.Start();
+                        return;
                     }
                 }
                 
@@ -61,6 +62,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
                 await process.StopAsync();
                 process.Dispose();
                 _availablePorts.Enqueue(process.Configuration.Port);
+                return;
             }
 
             throw new ServerProcessStopException();

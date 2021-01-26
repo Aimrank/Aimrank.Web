@@ -39,7 +39,6 @@ namespace Aimrank.Web
             services.AddSwagger();
             services.AddProblemDetails(options =>
             {
-                options.IncludeExceptionDetails = (_, _) => false;
                 options.Map<ApplicationException>(ex => new ApplicationProblemDetails(ex));
             });
 

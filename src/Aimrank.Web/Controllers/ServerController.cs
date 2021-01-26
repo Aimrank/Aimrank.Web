@@ -48,7 +48,7 @@ namespace Aimrank.Web.Controllers
 
             await _aimrankModule.ExecuteCommandAsync(new StartServerCommand(serverId, request.Token, request.Whitelist));
             
-            return CreatedAtAction(nameof(Get), new {serverId}, null);
+            return CreatedAtAction(nameof(Get), new {Id = serverId}, null);
         }
 
         [HttpPost("{id}/command")]
