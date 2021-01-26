@@ -1,5 +1,7 @@
 using Aimrank.Application;
-using Microsoft.Extensions.DependencyInjection;
+using Autofac;
+using System.Collections.Generic;
+using System.Collections;
 using System.Threading.Tasks;
 
 namespace Aimrank.Web.Events.Handlers
@@ -7,22 +9,23 @@ namespace Aimrank.Web.Events.Handlers
     public class IntegrationEventGenericHandler<T> : IIntegrationEventHandler<T>
         where T : IntegrationEvent
     {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly ILifetimeScope _lifetimeScope;
 
-        public IntegrationEventGenericHandler(IServiceScopeFactory serviceScopeFactory)
+        public IntegrationEventGenericHandler(ILifetimeScope lifetimeScope)
         {
-            _serviceScopeFactory = serviceScopeFactory;
+            _lifetimeScope = lifetimeScope;
         }
 
         public async Task HandleAsync(T @event)
         {
-            using var scope = _serviceScopeFactory.CreateScope();
+            await using var scope = _lifetimeScope.BeginLifetimeScope();
 
             var eventHandlerOpenType = typeof(IIntegrationEventHandler<>);
             var eventHandlerClosedType = eventHandlerOpenType.MakeGenericType(@event.GetType());
+            var eventHandlersType = typeof(IEnumerable<>).MakeGenericType(eventHandlerClosedType);
 
-            var handlers = scope.ServiceProvider.GetServices(eventHandlerClosedType);
-
+            var handlers = (IEnumerable) scope.Resolve(eventHandlersType);
+            
             foreach (dynamic handler in handlers)
             {
                 await handler.HandleAsync(@event);

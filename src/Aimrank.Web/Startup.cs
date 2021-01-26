@@ -46,8 +46,6 @@ namespace Aimrank.Web
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllersWithViews();
 
-            services.AddTransient<ServerMessageReceivedEventHandler>();
-
             // services.AddDbContext<AimrankContext>(options =>
             //     options.UseSqlServer(_configuration.GetConnectionString("Database"), 
             //         x => x.MigrationsAssembly("Aimrank.Database.Migrator")));
@@ -56,6 +54,8 @@ namespace Aimrank.Web
         public void ConfigureContainer(ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterModule(new AimrankAutofacModule());
+
+            containerBuilder.RegisterType<ServerMessageReceivedEventHandler>().AsImplementedInterfaces();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -91,9 +91,7 @@ namespace Aimrank.Web
         }
         private void InitializeEventBus(ILifetimeScope container)
         {
-            var serviceScopeFactory = container.Resolve<IServiceScopeFactory>();
-            
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<ServerMessageReceivedEvent>(serviceScopeFactory));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<ServerMessageReceivedEvent>(container));
         }
 
         private void InitializeModules(ILifetimeScope container)
