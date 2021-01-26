@@ -1,7 +1,12 @@
-# -- Step 1 -- Build dotnet projects
+# -- Step 1 -- Restore and build web application
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /app
+
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+ENV NODE_VERSION=12.6.0
+ENV NODE_ENV=Production
 
 COPY *.sln .
 COPY src/Aimrank.Web/*.csproj ./src/Aimrank.Web/
@@ -20,9 +25,25 @@ COPY src/Aimrank.Infrastructure/. ./src/Aimrank.Infrastructure/
 COPY src/Database/Aimrank.Database.Migrator/. ./src/Database/Aimrank.Database.Migrator/
 COPY src/BusPublisher/Aimrank.BusPublisher/. ./src/BusPublisher/Aimrank.BusPublisher/
 
+WORKDIR /app/src/Aimrank.Web/Frontend
+
+RUN apt install -y curl
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN node --version
+RUN npm --version
+
+RUN npm install && npm run build-prod
+
+WORKDIR /app
+
 RUN dotnet publish -c Release -o /app/out
 
-# -- Step 2 -- Create image with dotnet runtime and CS:GO server
+# -- Step 2 -- Create image with web application and CS:GO server
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 
@@ -36,8 +57,6 @@ ENV STEAM_DIR /home/steam
 ENV STEAM_CMD_DIR /home/steam/steamcmd
 ENV CSGO_APP_ID 740
 ENV CSGO_DIR /home/steam/csgo
-
-# -- Step 3 -- Install CS:GO server
 
 ARG STEAM_CMD_URL=https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
 
@@ -76,13 +95,15 @@ COPY --chown=steam:steam container_fs/start.sh /home/start.sh
 
 RUN chmod +x /home/start.sh
 
-USER steam
+# USER steam
 VOLUME ${CSGO_DIR}
 
 WORKDIR /home/app
 
-# CS:GO server ports
 EXPOSE 27016-27019/udp
 EXPOSE 27016-27019/tcp
+
+HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=5 \
+  CMD curl -f http://localhost/ || exit 1
 
 ENTRYPOINT ["/home/start.sh"]

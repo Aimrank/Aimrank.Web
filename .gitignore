@@ -5,3 +5,7 @@ container_data
 
 **/bin
 **/obj
+
+**/node_modules
+
+src/Aimrank.Web/wwwroot/base

@@ -1,11 +1,8 @@
-version: "3"
+version: "3.5"
 
 services:
-  csgo:
-    build: ..
+  web:
     image: aimrank:latest
-    environment:
-      - ConnectionStrings__Database=Server=db;Database=Aimrank;User=sa;Password=Secret123!
     ports:
       - 80:80
       - 27016-27019:27016-27019/udp
@@ -14,11 +11,13 @@ services:
       - ../container_data:/home/steam/csgo
       - ../container_fs/csgo/maps/aim_map.bsp:/home/steam/csgo/csgo/maps/aim_map.bsp:ro
       - ../container_fs/csgo/maps/aim_map.jpg:/home/steam/csgo/csgo/maps/aim_map.jpg:ro
+    depends_on:
+      - db
 
   db:
     image: mcr.microsoft.com/mssql/server
-    environment:
-      - SA_PASSWORD=Secret123!
-      - ACCEPT_EULA=Y
-    ports:
-      - 1433:1433
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+volumes:
+  mssql_data:

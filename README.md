@@ -29,7 +29,7 @@ should be able to listen on in-game events (player killed, round finished) and e
 
 1. Start container with web application and CS:GO server
    ```bash
-   docker-compose -f compose/docker-compose.yml up
+   docker-compose -f compose/docker-compose.yml -f compose/docker-compose.development.yml up
    ```
    
 2. Plugins from `/src` are not built automatically yet. You have to compile them manually and copy to
