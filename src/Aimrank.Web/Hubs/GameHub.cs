@@ -1,4 +1,5 @@
-﻿using Aimrank.Web.Events;
+﻿using Aimrank.Application.Commands.ProcessServerEvent;
+using Aimrank.Application.Contracts;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using System;
@@ -7,16 +8,16 @@ namespace Aimrank.Web.Hubs
 {
     public class GameHub : Hub<IGameClient>
     {
-        private readonly EventBus _eventBus;
+        private readonly IAimrankModule _aimrankModule;
 
-        public GameHub(EventBus eventBus)
+        public GameHub(IAimrankModule aimrankModule)
         {
-            _eventBus = eventBus;
+            _aimrankModule = aimrankModule;
         }
 
         public async Task PublishEvent(Guid serverId, string content)
         {
-            await _eventBus.PublishAsync(serverId, content);
+            await _aimrankModule.ExecuteCommandAsync(new ProcessServerEventCommand(serverId, content));
         }
     }
 }

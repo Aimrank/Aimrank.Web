@@ -1,5 +1,5 @@
-﻿@using Aimrank.Web.Data
-@model List<Match>
+﻿@using Aimrank.Application.Queries.GetMatchesHistory
+@model IEnumerable<MatchHistoryDto>
 
 @{
     ViewData["Title"] = "Aimrank";
@@ -22,11 +22,11 @@
             @foreach (var match in Model)
             {
                 <tr>
-                    <td class="@(match.ScoreT > match.ScoreCT ? "winner" : "loser")">@match.Scoreboard.FirstOrDefault(p => p.Team == 3).Name</td>
+                    <td class="@(match.ScoreT > match.ScoreCT ? "winner" : "loser")">@match.TeamNameT</td>
                     <td class="@(match.ScoreT > match.ScoreCT ? "winner" : "loser")">@match.ScoreT</td>
                     <td><div style="width: 100px;"></div></td>
                     <td class="@(match.ScoreCT > match.ScoreT ? "winner" : "loser")">@match.ScoreCT</td>
-                    <td class="@(match.ScoreCT > match.ScoreT ? "winner" : "loser")">@match.Scoreboard.FirstOrDefault(p => p.Team == 2).Name</td>
+                    <td class="@(match.ScoreCT > match.ScoreT ? "winner" : "loser")">@match.TeamNameCT</td>
                 </tr>
             }
         </table>

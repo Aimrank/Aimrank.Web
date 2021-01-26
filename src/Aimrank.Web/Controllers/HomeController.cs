@@ -1,23 +1,22 @@
-﻿using Aimrank.Web.Data;
+﻿using Aimrank.Application.Contracts;
+using Aimrank.Application.Queries.GetMatchesHistory;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Aimrank.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IAimrankModule _aimrankModule;
 
-        public HomeController(DataContext context)
+        public HomeController(IAimrankModule aimrankModule)
         {
-            _context = context;
+            _aimrankModule = aimrankModule;
         }
 
         public async Task<IActionResult> Index()
         {
-            var matches = await _context.Matches.OrderByDescending(m => m.CreatedAt).ToListAsync();
+            var matches = await _aimrankModule.ExecuteQueryAsync(new GetMatchesHistoryQuery());
             
             return View(matches);
         }

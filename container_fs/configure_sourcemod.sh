@@ -19,9 +19,9 @@ cp -a $STEAM_DIR/sourcemod/plugins/. $CSGO_DIR/csgo/addons/sourcemod/plugins/
 cp -a $STEAM_DIR/sourcemod/configs/. $CSGO_DIR/csgo/addons/sourcemod/configs/
 cp -a $STEAM_DIR/sourcemod/extensions/. $CSGO_DIR/csgo/addons/sourcemod/extensions/
 
-if [[ ! -z "$SERVER_ADMIN_STEAMID" ]]
-then
-cat << ADMINSSIMPLE > "$CSGO_DIR/csgo/addons/sourcemod/configs/admins_simple.ini"
-"$SERVER_ADMIN_STEAMID" "99:z"
-ADMINSSIMPLE
-fi
+#if [[ ! -z "$SERVER_ADMIN_STEAMID" ]]
+#then
+#cat << ADMINSSIMPLE > "$CSGO_DIR/csgo/addons/sourcemod/configs/admins_simple.ini"
+#"$SERVER_ADMIN_STEAMID" "99:z"
+#ADMINSSIMPLE
+#fi
