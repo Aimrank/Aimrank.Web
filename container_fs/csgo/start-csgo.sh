@@ -42,6 +42,8 @@ SERVERCFG
 cp -a $STEAM_DIR/cfg/. $CSGO_DIR/csgo/cfg/
 cp -a $STEAM_DIR/maps/. $CSGO_DIR/csgo/maps/
 
+cp $STEAM_DIR/pure_server_whitelist.txt $CSGO_DIR/csgo/pure_server_whitelist.txt
+
 "$BASH" "$STEAM_DIR/configure_metamod.sh"
 "$BASH" "$STEAM_DIR/configure_sourcemod.sh"
 
