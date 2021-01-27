@@ -44,11 +44,11 @@ namespace Aimrank.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateServerRequest request)
         {
-            var serverId = Guid.NewGuid();
+            var command = new StartServerCommand(Guid.NewGuid(), request.Token, request.Map, request.Whitelist);
 
-            await _aimrankModule.ExecuteCommandAsync(new StartServerCommand(serverId, request.Token, request.Whitelist));
+            await _aimrankModule.ExecuteCommandAsync(command);
             
-            return CreatedAtAction(nameof(Get), new {Id = serverId}, null);
+            return CreatedAtAction(nameof(Get), new {Id = command.ServerId}, null);
         }
 
         [HttpPost("{id}/command")]

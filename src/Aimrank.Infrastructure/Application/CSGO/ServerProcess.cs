@@ -5,7 +5,7 @@ using System;
 
 namespace Aimrank.Infrastructure.Application.CSGO
 {
-    internal record ServerConfiguration(string Token, int Port, List<string> Whitelist);
+    internal record ServerConfiguration(string Token, int Port, List<string> Whitelist, string Map);
     
     internal class ServerProcess : IDisposable
     {
@@ -19,7 +19,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
         {
             var whitelist = string.Join(',', configuration.Whitelist);
             
-            var shellCommand = $"cd /home/steam/csgo && su steam -s /home/steam/start-csgo.sh {id} {configuration.Token} {configuration.Port} {whitelist}";
+            var shellCommand = $"cd /home/steam/csgo && su steam -s /home/steam/start-csgo.sh {id} {configuration.Token} {configuration.Port} {whitelist} {configuration.Map}";
             
             Id = id;
             Configuration = configuration;

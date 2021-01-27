@@ -31,7 +31,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
                 Port = p.Configuration.Port
             });
 
-        public void StartServer(Guid serverId, string serverToken, IEnumerable<string> whitelist)
+        public void StartServer(Guid serverId, string serverToken, IEnumerable<string> whitelist, string map)
         {
             lock (_locker)
             {
@@ -42,7 +42,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
 
                 if (_availablePorts.TryDequeue(out var port))
                 {
-                    var process = new ServerProcess(serverId, new ServerConfiguration(serverToken, port, whitelist.ToList()));
+                    var process = new ServerProcess(serverId, new ServerConfiguration(serverToken, port, whitelist.ToList(), map));
 
                     if (_processes.TryAdd(serverId, process))
                     {

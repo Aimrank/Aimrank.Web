@@ -1,9 +1,9 @@
 using Aimrank.Application.Events;
 using Aimrank.Application.Exceptions;
 using Aimrank.Application;
-using Aimrank.Infrastructure;
 using Aimrank.Infrastructure.Configuration;
 using Aimrank.Infrastructure.EventBus;
+using Aimrank.Infrastructure;
 using Aimrank.Web.Configuration.ExecutionContext;
 using Aimrank.Web.Configuration.Extensions;
 using Aimrank.Web.Configuration;
@@ -12,6 +12,7 @@ using Aimrank.Web.Hubs;
 using Aimrank.Web.ProblemDetails;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
+using FluentValidation.AspNetCore;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,7 +44,14 @@ namespace Aimrank.Web
             });
 
             services.AddRouting(options => options.LowercaseUrls = true);
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddFluentValidation(options =>
+                {
+                    options.RegisterValidatorsFromAssemblyContaining<Startup>(lifetime: ServiceLifetime.Singleton);
+                    options.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+                    options.ImplicitlyValidateChildProperties = true;
+                    options.LocalizationEnabled = false;
+                });
 
             // services.AddDbContext<AimrankContext>(options =>
             //     options.UseSqlServer(_configuration.GetConnectionString("Database"), 
