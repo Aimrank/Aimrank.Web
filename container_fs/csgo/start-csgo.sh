@@ -40,6 +40,7 @@ SERVERCFG
 # Copy predefined config files
 
 cp -a $STEAM_DIR/cfg/. $CSGO_DIR/csgo/cfg/
+cp -a $STEAM_DIR/maps/. $CSGO_DIR/csgo/maps/
 
 "$BASH" "$STEAM_DIR/configure_metamod.sh"
 "$BASH" "$STEAM_DIR/configure_sourcemod.sh"
