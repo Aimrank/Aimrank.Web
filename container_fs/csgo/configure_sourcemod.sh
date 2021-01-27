@@ -15,7 +15,7 @@ function install_sourcemod {
 
 install_sourcemod
 
-cp -a $STEAM_DIR/sourcemod/plugins/. $CSGO_DIR/csgo/addons/sourcemod/plugins/
+cp -a $STEAM_DIR/sourcemod/plugins/*.smx $CSGO_DIR/csgo/addons/sourcemod/plugins/
 cp -a $STEAM_DIR/sourcemod/configs/. $CSGO_DIR/csgo/addons/sourcemod/configs/
 cp -a $STEAM_DIR/sourcemod/extensions/. $CSGO_DIR/csgo/addons/sourcemod/extensions/
 

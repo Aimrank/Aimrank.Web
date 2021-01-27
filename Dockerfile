@@ -1,6 +1,6 @@
 # -- Step 1 -- Restore and build web application
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
 WORKDIR /app
 
 ENV ASPNETCORE_ENVIRONMENT=Production
@@ -94,6 +94,16 @@ COPY --chown=steam:steam container_fs/csgo/ ${STEAM_DIR}/
 COPY --chown=steam:steam container_fs/start.sh /home/start.sh
 
 RUN chmod +x /home/start.sh
+
+# -- Step 3 -- Compile sourcemod plugins
+
+WORKDIR ${STEAM_DIR}/sourcemod/plugins
+
+RUN tar -xzf build.tar.gz \
+  && chmod +x ./build/sourcemod/scripting/spcomp \
+  && ./build/sourcemod/scripting/spcomp aimrank.sp
+
+# -- Step 4 -- Startup
 
 VOLUME ${CSGO_DIR}
 
