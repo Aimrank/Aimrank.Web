@@ -19,7 +19,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
         {
             var whitelist = string.Join(',', configuration.Whitelist);
             
-            var shellCommand = $"cd /home/steam/csgo && exec /home/steam/start-csgo.sh {id} {configuration.Token} {configuration.Port} {whitelist}";
+            var shellCommand = $"cd /home/steam/csgo && su steam -s /home/steam/start-csgo.sh {id} {configuration.Token} {configuration.Port} {whitelist}";
             
             Id = id;
             Configuration = configuration;
@@ -32,6 +32,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
                     Arguments = $"-c \"{shellCommand}\"",
                     CreateNoWindow = true,
                     UseShellExecute = false,
+                    RedirectStandardError = true,
                     RedirectStandardOutput = true
                 }
             };
@@ -72,16 +73,15 @@ namespace Aimrank.Infrastructure.Application.CSGO
         
         private Task ExecuteScreenCommandAsync(string command)
         {
-            var shellCommand = @$"screen -p 0 -S {Id} -X {command}";
-            
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "/bin/bash",
-                    Arguments = $"-c \"{shellCommand}\"",
+                    FileName = "su",
+                    Arguments = $"- steam -c \"screen -p 0 -S {Id} -X {command}\"",
                     CreateNoWindow = true,
                     UseShellExecute = false,
+                    RedirectStandardError = true,
                     RedirectStandardOutput = true
                 }
             };

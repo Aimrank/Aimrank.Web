@@ -95,7 +95,6 @@ COPY --chown=steam:steam container_fs/start.sh /home/start.sh
 
 RUN chmod +x /home/start.sh
 
-# USER steam
 VOLUME ${CSGO_DIR}
 
 WORKDIR /home/app
