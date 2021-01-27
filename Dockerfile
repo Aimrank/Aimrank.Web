@@ -1,19 +1,50 @@
-# 1. Build dotnet projects
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+# -- Step 1 -- Restore and build web application
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
 WORKDIR /app
+
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+ENV NODE_VERSION=12.6.0
+ENV NODE_ENV=Production
 
 COPY *.sln .
 COPY src/Aimrank.Web/*.csproj ./src/Aimrank.Web/
-COPY src/Aimrank.BusPublisher/*.csproj ./src/Aimrank.BusPublisher/
+COPY src/Aimrank.Domain/*.csproj ./src/Aimrank.Domain/
+COPY src/Aimrank.Application/*.csproj ./src/Aimrank.Application/
+COPY src/Aimrank.Infrastructure/*.csproj ./src/Aimrank.Infrastructure/
+COPY src/Database/Aimrank.Database.Migrator/*.csproj ./src/Database/Aimrank.Database.Migrator/
+COPY src/BusPublisher/Aimrank.BusPublisher/*.csproj ./src/BusPublisher/Aimrank.BusPublisher/
 
 RUN dotnet restore
 
 COPY src/Aimrank.Web/. ./src/Aimrank.Web/
-COPY src/Aimrank.BusPublisher/. ./src/Aimrank.BusPublisher/
+COPY src/Aimrank.Domain/. ./src/Aimrank.Domain/
+COPY src/Aimrank.Application/. ./src/Aimrank.Application/
+COPY src/Aimrank.Infrastructure/. ./src/Aimrank.Infrastructure/
+COPY src/Database/Aimrank.Database.Migrator/. ./src/Database/Aimrank.Database.Migrator/
+COPY src/BusPublisher/Aimrank.BusPublisher/. ./src/BusPublisher/Aimrank.BusPublisher/
+
+WORKDIR /app/src/Aimrank.Web/Frontend
+
+RUN apt install -y curl
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN node --version
+RUN npm --version
+
+RUN npm install && npm run build-prod
+
+WORKDIR /app
 
 RUN dotnet publish -c Release -o /app/out
 
-# 2. Create image with dotnet runtime and cs:go server
+# -- Step 2 -- Create image with web application and CS:GO server
+
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 
 RUN mkdir -p /home/app
@@ -27,7 +58,6 @@ ENV STEAM_CMD_DIR /home/steam/steamcmd
 ENV CSGO_APP_ID 740
 ENV CSGO_DIR /home/steam/csgo
 
-# 3. Install cs:go server
 ARG STEAM_CMD_URL=https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
 
 RUN DEBIAN_FRONTEND=noninteractive && apt-get update \
@@ -60,14 +90,29 @@ RUN DEBIAN_FRONTEND=noninteractive && apt-get update \
   && chown -R steam:steam ${STEAM_DIR} \
   && rm -rf /var/lib/apt/lists/*
   
-COPY --chown=steam:steam container_fs ${STEAM_DIR}/
+COPY --chown=steam:steam container_fs/csgo/ ${STEAM_DIR}/
+COPY --chown=steam:steam container_fs/start.sh /home/start.sh
 
-USER steam
+RUN chmod +x /home/start.sh
+
+# -- Step 3 -- Compile sourcemod plugins
+
+WORKDIR ${STEAM_DIR}/sourcemod/plugins
+
+RUN tar -xzf build.tar.gz \
+  && chmod +x ./build/sourcemod/scripting/spcomp \
+  && ./build/sourcemod/scripting/spcomp aimrank.sp
+
+# -- Step 4 -- Startup
+
 VOLUME ${CSGO_DIR}
+
 WORKDIR /home/app
 
-# Expose possible cs:go server ports
 EXPOSE 27016-27019/udp
 EXPOSE 27016-27019/tcp
 
-ENTRYPOINT ["dotnet", "Aimrank.Web.dll"]
+HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=5 \
+  CMD curl -f http://localhost/ || exit 1
+
+ENTRYPOINT ["/home/start.sh"]

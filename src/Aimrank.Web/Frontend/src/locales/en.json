@@ -1,0 +1,8 @@
+{
+  "views": {
+    "Home": {
+      "board": "Board",
+      "history": "Matches history"
+    }
+  }
+}

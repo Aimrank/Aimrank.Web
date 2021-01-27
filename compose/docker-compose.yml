@@ -1,0 +1,21 @@
+version: "3.5"
+
+services:
+  web:
+    image: aimrank:latest
+    ports:
+      - 80:80
+      - 27016-27019:27016-27019/udp
+      - 27016-27019:27016-27019/tcp
+    volumes:
+      - ../container_data:/home/steam/csgo
+    depends_on:
+      - db
+
+  db:
+    image: mcr.microsoft.com/mssql/server
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+volumes:
+  mssql_data:

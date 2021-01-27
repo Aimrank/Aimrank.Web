@@ -1,0 +1,34 @@
+$breakpoints: (
+  tablet: 768px,
+  laptop: 1024px
+);
+
+@mixin media($rule) {
+  $comparator: '>=';
+  $breakpoint: 'tablet';
+
+  @if str-index($rule, '=') {
+    $comparator: str-slice($rule, 1, 2);
+    $breakpoint: str-slice($rule, 3);
+  } @else {
+    $comparator: str-slice($rule, 1, 1);
+    $breakpoint: str-slice($rule, 2);
+  }
+
+  $breakpointValue: map-get($breakpoints, $breakpoint);
+  $mediaProperty: 'min-width: 768px';
+
+  @if $comparator == '>=' {
+    $mediaProperty: 'min-width: #{$breakpointValue}';
+  } @else if $comparator == '>' {
+    $mediaProperty: 'min-width: #{$breakpointValue + 1px}';
+  } @else if $comparator == '<=' {
+    $mediaProperty: 'max-width: #{$breakpointValue}';
+  } @else if $comparator == '<' {
+    $mediaProperty: 'max-width: #{$breakpointValue - 1px}';
+  }
+
+  @media screen and (#{$mediaProperty}) {
+    @content;
+  }
+}
