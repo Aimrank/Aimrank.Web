@@ -1,5 +1,7 @@
 # Aimrank
 
+![Docker build status](https://github.com/mariusz-ba/aimrank/workflows/Build/badge.svg)
+
 CS:GO server with Docker configuration. Comes with Metamod and Sourcemod preinstalled and configured.
 
 Additionally container exposes web application on port 80 which is used to present live server status (e.g. automatically updated scoreboard).
