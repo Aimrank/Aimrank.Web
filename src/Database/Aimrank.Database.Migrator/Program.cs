@@ -1,5 +1,7 @@
-﻿using Aimrank.Infrastructure;
+﻿using Aimrank.Common.Infrastructure;
+using Aimrank.Infrastructure;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.IO;
@@ -35,6 +37,7 @@ static void MigrateDatabase(IConfiguration configuration)
     var connectionString = configuration.GetConnectionString("Database");
 
     var optionsBuilder = new DbContextOptionsBuilder<AimrankContext>()
+        .ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>()
         .UseSqlServer(connectionString, ConfigureContext);
 
     using var context = new AimrankContext(optionsBuilder.Options);

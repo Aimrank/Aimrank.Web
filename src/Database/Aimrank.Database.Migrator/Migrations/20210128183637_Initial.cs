@@ -30,8 +30,8 @@ namespace Aimrank.Database.Migrator.Migrations
                 schema: "aimrank",
                 columns: table => new
                 {
-                    SteamId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MatchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SteamId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
                     Team = table.Column<int>(type: "int", nullable: false),
                     Score = table.Column<int>(type: "int", nullable: false),

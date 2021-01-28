@@ -1,9 +1,8 @@
 using Aimrank.Application.Events;
 using Aimrank.Application.Exceptions;
 using Aimrank.Application;
+using Aimrank.Common.Infrastructure.EventBus;
 using Aimrank.Infrastructure.Configuration;
-using Aimrank.Infrastructure.EventBus;
-using Aimrank.Infrastructure;
 using Aimrank.Web.Configuration.ExecutionContext;
 using Aimrank.Web.Configuration.Extensions;
 using Aimrank.Web.Configuration;
@@ -17,7 +16,6 @@ using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -54,8 +52,11 @@ namespace Aimrank.Web
                 });
 
             // services.AddDbContext<AimrankContext>(options =>
-            //     options.UseSqlServer(_configuration.GetConnectionString("Database"), 
-            //         x => x.MigrationsAssembly("Aimrank.Database.Migrator")));
+            // {
+            //     options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
+            //     options.UseSqlServer(_configuration.GetConnectionString("Database"),
+            //         x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
+            // });
         }
 
         public void ConfigureContainer(ContainerBuilder containerBuilder)

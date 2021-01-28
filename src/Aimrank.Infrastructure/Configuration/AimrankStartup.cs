@@ -1,8 +1,8 @@
 using Aimrank.Application;
+using Aimrank.Common.Infrastructure.EventBus;
 using Aimrank.Infrastructure.Configuration.CSGO;
 using Aimrank.Infrastructure.Configuration.DataAccess;
 using Aimrank.Infrastructure.Configuration.Mediator;
-using Aimrank.Infrastructure.EventBus;
 using Autofac;
 
 namespace Aimrank.Infrastructure.Configuration

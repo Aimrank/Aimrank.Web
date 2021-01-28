@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aimrank.Database.Migrator.Migrations
 {
     [DbContext(typeof(AimrankContext))]
-    [Migration("20210126000238_Initial")]
+    [Migration("20210128183637_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,6 @@ namespace Aimrank.Database.Migrator.Migrations
             modelBuilder.Entity("Aimrank.Domain.Matches.Match", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
@@ -43,7 +42,7 @@ namespace Aimrank.Database.Migrator.Migrations
 
             modelBuilder.Entity("Aimrank.Domain.Matches.Match", b =>
                 {
-                    b.OwnsMany("Aimrank.Domain.Matches.MatchPlayer", "Scoreboard", b1 =>
+                    b.OwnsMany("Aimrank.Domain.Matches.MatchPlayer", "Players", b1 =>
                         {
                             b1.Property<string>("SteamId")
                                 .HasColumnType("nvarchar(450)");
@@ -80,7 +79,7 @@ namespace Aimrank.Database.Migrator.Migrations
                                 .HasForeignKey("MatchId");
                         });
 
-                    b.Navigation("Scoreboard");
+                    b.Navigation("Players");
                 });
 #pragma warning restore 612, 618
         }

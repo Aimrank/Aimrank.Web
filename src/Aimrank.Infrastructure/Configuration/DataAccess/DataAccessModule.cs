@@ -1,7 +1,9 @@
 using Aimrank.Application;
+using Aimrank.Common.Infrastructure;
 using Aimrank.Infrastructure.Application;
 using Autofac;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aimrank.Infrastructure.Configuration.DataAccess
 {
@@ -26,6 +28,7 @@ namespace Aimrank.Infrastructure.Configuration.DataAccess
                     var dbContextOptionsBuilder = new DbContextOptionsBuilder<AimrankContext>();
                     dbContextOptionsBuilder.UseSqlServer(_databaseConnectionString,
                         x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
+                    dbContextOptionsBuilder.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
 
                     return new AimrankContext(dbContextOptionsBuilder.Options);
                 })

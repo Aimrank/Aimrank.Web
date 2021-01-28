@@ -1,6 +1,6 @@
 using Aimrank.Application.CSGO;
 using Aimrank.Application.Events;
-using Aimrank.Infrastructure.EventBus;
+using Aimrank.Common.Infrastructure.EventBus;
 using System.Threading.Tasks;
 using System;
 

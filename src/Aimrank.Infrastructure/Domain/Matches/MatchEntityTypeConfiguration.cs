@@ -12,7 +12,7 @@ namespace Aimrank.Infrastructure.Domain.Matches
             
             builder.HasKey(m => m.Id);
             
-            builder.OwnsMany(m => m.Scoreboard, b =>
+            builder.OwnsMany(m => m.Players, b =>
             {
                 b.ToTable("MatchesPlayers", "aimrank");
                 b.HasKey(p => new {p.SteamId, p.MatchId});

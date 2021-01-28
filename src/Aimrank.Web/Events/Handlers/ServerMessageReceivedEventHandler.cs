@@ -1,8 +1,9 @@
 using Aimrank.Application.Events;
-using Aimrank.Application;
+using Aimrank.Common.Application;
 using Aimrank.Web.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Aimrank.Web.Events.Handlers
 {
@@ -15,7 +16,7 @@ namespace Aimrank.Web.Events.Handlers
             _hubContext = hubContext;
         }
 
-        public async Task HandleAsync(ServerMessageReceivedEvent @event)
+        public async Task HandleAsync(ServerMessageReceivedEvent @event, CancellationToken cancellationToken = default)
         {
             await _hubContext.Clients.All.EventReceived(@event.Content);
         }

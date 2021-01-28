@@ -1,13 +1,11 @@
-﻿using System;
-
-namespace Aimrank.Domain.Matches
+﻿namespace Aimrank.Domain.Matches
 {
     public class MatchPlayer
     {
+        public MatchId MatchId { get; }
         public string SteamId { get; set; }
         public string Name { get; set; }
-        public Guid MatchId { get; set; }
-        public int Team { get; set; } // 2 - ct, 3 - t
+        public MatchTeam Team { get; set; }
         public int Score { get; set; }
         public int Kills { get; set; }
         public int Deaths { get; set; }
@@ -15,11 +13,19 @@ namespace Aimrank.Domain.Matches
 
         private MatchPlayer() {}
 
-        public MatchPlayer(string steamId, string name, Guid matchId, int team, int score, int kills, int deaths, int assists)
+        public MatchPlayer(
+            MatchId matchId,
+            string steamId,
+            string name,
+            MatchTeam team,
+            int score,
+            int kills,
+            int deaths,
+            int assists)
         {
+            MatchId = matchId;
             SteamId = steamId;
             Name = name;
-            MatchId = matchId;
             Team = team;
             Score = score;
             Kills = kills;

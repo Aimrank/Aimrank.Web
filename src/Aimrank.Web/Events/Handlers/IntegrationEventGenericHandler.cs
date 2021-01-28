@@ -1,7 +1,8 @@
-using Aimrank.Application;
+using Aimrank.Common.Application;
 using Autofac;
 using System.Collections.Generic;
 using System.Collections;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Aimrank.Web.Events.Handlers
@@ -16,7 +17,7 @@ namespace Aimrank.Web.Events.Handlers
             _lifetimeScope = lifetimeScope;
         }
 
-        public async Task HandleAsync(T @event)
+        public async Task HandleAsync(T @event, CancellationToken cancellationToken = default)
         {
             await using var scope = _lifetimeScope.BeginLifetimeScope();
 

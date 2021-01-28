@@ -1,3 +1,4 @@
+using Aimrank.Common.Application;
 using System;
 
 namespace Aimrank.Application.Events

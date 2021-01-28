@@ -1,8 +1,8 @@
-using Aimrank.Application;
+using Aimrank.Common.Application;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Aimrank.Infrastructure.EventBus
+namespace Aimrank.Common.Infrastructure.EventBus
 {
     internal sealed class InMemoryEventBus
     {
