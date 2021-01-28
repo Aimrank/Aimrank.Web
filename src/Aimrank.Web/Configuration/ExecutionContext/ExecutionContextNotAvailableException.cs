@@ -1,4 +1,4 @@
-using Aimrank.Application.Exceptions;
+using Aimrank.Common.Application;
 
 namespace Aimrank.Web.Configuration.ExecutionContext
 {

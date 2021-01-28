@@ -3,6 +3,7 @@ using Aimrank.Application.Commands.StartServer;
 using Aimrank.Application.Commands.StopServer;
 using Aimrank.Application.Contracts;
 using Aimrank.Application.Queries.GetServerProcesses;
+using Aimrank.Web.Attributes;
 using Aimrank.Web.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using System;
 
 namespace Aimrank.Web.Controllers
 {
+    [JwtAuth]
     [ApiController]
     [Route("api/[controller]")]
     public class ServerController : ControllerBase

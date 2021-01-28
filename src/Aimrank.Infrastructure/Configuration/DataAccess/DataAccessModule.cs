@@ -1,9 +1,12 @@
 using Aimrank.Application;
 using Aimrank.Common.Infrastructure;
 using Aimrank.Infrastructure.Application;
+using Autofac.Extensions.DependencyInjection;
 using Autofac;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Aimrank.Infrastructure.Configuration.DataAccess
 {
@@ -18,6 +21,8 @@ namespace Aimrank.Infrastructure.Configuration.DataAccess
 
         protected override void Load(ContainerBuilder builder)
         {
+            LoadIdentityCore(builder);
+            
             builder.RegisterType<SqlConnectionFactory>()
                 .As<ISqlConnectionFactory>()
                 .WithParameter("connectionString", _databaseConnectionString)
@@ -42,6 +47,15 @@ namespace Aimrank.Infrastructure.Configuration.DataAccess
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
+        }
+
+        private void LoadIdentityCore(ContainerBuilder builder)
+        {
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddIdentityCore<IdentityUser>()
+                .AddEntityFrameworkStores<AimrankContext>();
+            builder.Populate(serviceCollection);
         }
     }
 }

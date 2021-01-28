@@ -1,4 +1,4 @@
-using Aimrank.Application.Exceptions;
+using Aimrank.Common.Application;
 using Microsoft.AspNetCore.Http;
 
 namespace Aimrank.Web.ProblemDetails
