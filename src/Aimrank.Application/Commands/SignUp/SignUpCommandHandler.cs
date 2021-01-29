@@ -2,6 +2,7 @@ using Aimrank.Application.Commands.RefreshJwt;
 using Aimrank.Application.Contracts;
 using Aimrank.Domain.RefreshTokens;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -63,14 +64,13 @@ namespace Aimrank.Application.Commands.SignUp
             var existsEmail = await _userManager.FindByEmailAsync(email);
             if (existsEmail is not null)
             {
-                throw new SignUpException(new[]
+                throw new SignUpException
                 {
-                    new AuthenticationErrorDto
+                    Errors =
                     {
-                        FieldName = "email",
-                        Errors = new[] {"This email is already taken"}
+                        ["Email"] = new List<string> {"This email is already taken"}
                     }
-                });
+                };
             }
         }
 
@@ -79,14 +79,13 @@ namespace Aimrank.Application.Commands.SignUp
             var usernameExists = await _userManager.FindByNameAsync(username);
             if (usernameExists is not null)
             {
-                throw new SignUpException(new[]
+                throw new SignUpException
                 {
-                    new AuthenticationErrorDto
+                    Errors =
                     {
-                        FieldName = "username",
-                        Errors = new[] {"This username is already taken"}
+                        ["Username"] = new List<string> {"This username is already taken"}
                     }
-                });
+                };
             }
         }
     }

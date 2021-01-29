@@ -11,7 +11,6 @@ namespace Aimrank.Web.ProblemDetails
             Title = exception.Message;
             Status = StatusCodes.Status409Conflict;
             Extensions.Add("code", exception.Code);
-            Extensions.Add("fields", exception.Fields);
         }
     }
 }

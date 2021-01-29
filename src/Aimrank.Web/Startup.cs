@@ -47,6 +47,7 @@ namespace Aimrank.Web
             services.AddAuthenticationWithBearer(_configuration);
             services.AddProblemDetails(options =>
             {
+                options.ExceptionDetailsPropertyName = "exceptionDetails";
                 options.Map<SignUpException>(ex => new SignUpProblemDetails(ex));
                 options.Map<SignInException>(ex => new SignInProblemDetails(ex));
                 options.Map<ApplicationException>(ex => new ApplicationProblemDetails(ex));
