@@ -1,0 +1,33 @@
+@use "@/styles/variables/fonts";
+@use "@/styles/variables/colors";
+
+.container {
+  margin-bottom: 5px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: fonts.$sizeSm;
+  font-weight: fonts.$weightBase;
+}
+
+.input {
+  font-size: fonts.$sizeSm;
+  font-weight: fonts.$weightBase;
+  border: 1px solid colors.$lightGray;
+  border-radius: 3px;
+  padding: 5px 10px;
+  width: 100%;
+  min-width: 200px;
+  min-height: 36px;
+  max-height: 36px;
+
+  &.inputError {
+    border-color: colors.$danger;
+  }
+}
+
+.errors {
+  margin-top: 5px;
+}

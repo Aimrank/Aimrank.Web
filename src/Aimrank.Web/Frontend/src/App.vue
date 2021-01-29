@@ -1,8 +1,20 @@
 <template>
   <div>
+    <main-header />
     <router-view />
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import MainHeader from "@/modules/common/components/MainHeader";
+
+export default defineComponent({
+  components: {
+    MainHeader
+  }
+});
+</script>
 
 <style lang="scss">
 @use "@/styles/variables/fonts" as fonts;

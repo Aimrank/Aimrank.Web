@@ -1,0 +1,15 @@
+@use "@/styles/variables/colors";
+
+.errors {
+  color: colors.$danger;
+}
+
+.list {
+  list-style-type: none;
+}
+
+.listItem {
+  &:not(:last-child) {
+    margin-bottom: 5px;
+  }
+}

@@ -1,14 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Home from "@/views/Home";
+import { routes as home } from "@/modules/home";
+import { routes as authentication } from "@/modules/authentication";
 
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
-    {
-      name: "home",
-      path: "/",
-      component: Home
-    }
+    ...home,
+    ...authentication
   ]
 });

@@ -1,0 +1,84 @@
+@use "@/styles/variables/fonts";
+@use "@/styles/variables/colors";
+
+.button {
+  --color-background-hover: #{colors.$lightGray};
+  --color-background: transparent;
+  --color-border: #{colors.$lightGray};
+  --color-text: #{colors.$black};
+
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  outline: none;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: fonts.$family;
+  font-size: fonts.$sizeSm;
+  font-weight: fonts.$weightBold;
+  text-decoration: none;
+  padding: 5px 10px;
+  min-width: 80px;
+  height: 36px;
+
+  &:not(.buttonLoading),
+  &:not(.buttonDisabled) {
+    &:hover {
+      background: var(--color-background-hover);
+    }
+  }
+
+  &.buttonSmall {
+    font-size: fonts.$sizeSmX;
+    min-width: 0;
+    height: 28px;
+  }
+
+  &.buttonPrimary {
+    --color-background-hover: #{darken(colors.$primary, 5%)};
+    --color-background: #{colors.$primary};
+    --color-text: #{colors.$white};
+  }
+
+  &.buttonLoading,
+  &.buttonDisabled {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  &.buttonLoading {
+    .slot {
+      opacity: 0;
+    }
+  }
+
+  &.buttonDisabled {
+    opacity: 0.5;
+  }
+}
+
+.loader {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--color-text);
+  border-radius: 50%;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  transform: translate(-50%, -50%);
+  animation: base-button_loading 1s infinite linear;
+}
+
+@keyframes base-button_loading {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}

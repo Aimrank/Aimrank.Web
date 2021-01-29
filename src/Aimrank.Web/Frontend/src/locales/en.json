@@ -1,8 +1,30 @@
 {
-  "views": {
-    "Home": {
-      "board": "Board",
-      "history": "Matches history"
+  "home": {
+    "views": {
+      "Home": {
+        "board": "Board",
+        "history": "Matches history"
+      }
+    }
+  },
+  "authentication": {
+    "views": {
+      "SignIn": {
+        "title": "Sign in",
+        "usernameOrEmail": "Username or E-Mail",
+        "password": "Password",
+        "submit": "Sign in"
+      },
+      "SignUp": {
+        "title": "Sign up",
+        "form": {
+          "email": "E-Mail",
+          "username": "Username",
+          "password": "Password",
+          "repeatPassword": "Repeat password",
+          "submit": "Sign up"
+        }
+      }
     }
   }
 }

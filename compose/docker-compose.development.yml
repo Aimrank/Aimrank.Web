@@ -5,6 +5,8 @@ services:
     build: ..
     environment:
       - ConnectionStrings__Database=Server=db;Database=Aimrank;User=sa;Password=Secret123!
+    volumes:
+      - ../src/Aimrank.Web/wwwroot:/home/app/wwwroot
   
   db:
     environment:
