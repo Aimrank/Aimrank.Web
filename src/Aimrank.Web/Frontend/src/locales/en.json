@@ -26,5 +26,16 @@
         }
       }
     }
+  },
+  "user": {
+    "views": {
+      "Settings": {
+        "title": "Settings",
+        "steamNotConnected": "Not connected",
+        "connectSteamButtonConnected": "Change Steam account",
+        "connectSteamButtonNotConnected": "Connect Steam account",
+        "loading": "Loading..."
+      }
+    }
   }
 }

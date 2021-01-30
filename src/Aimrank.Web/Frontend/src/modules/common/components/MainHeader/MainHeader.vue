@@ -7,7 +7,7 @@
       <router-link :to="{ name: 'home' }">Home</router-link>
     </div>
     <div v-if="authState.isAuthenticated">
-      Hello {{ userState.user.email }}
+      Hello {{ userState.user.username }}
       <button @click="signOut">Sign out</button>
     </div>
     <div v-else>

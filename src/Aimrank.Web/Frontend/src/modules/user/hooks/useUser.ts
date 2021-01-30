@@ -1,3 +1,4 @@
+import { userService } from "@/services";
 import { reactive, readonly } from "vue";
 import { IUser } from "../models/IUser";
 
@@ -13,7 +14,20 @@ const setUser = (user: IUser | null) => {
   state.user = user;
 }
 
+const updateUser = async (userId: string) => {
+  const result = await userService.getUserDetails(userId);
+
+  if (result.isOk()) {
+    setUser({
+      id: result.value.userId,
+      steamId: result.value.steamId,
+      username: result.value.username
+    });
+  }
+}
+
 export const useUser = () => ({
   state: readonly(state),
+  updateUser,
   setUser
 });
