@@ -1,5 +1,6 @@
 using Aimrank.Infrastructure.Configuration.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +23,11 @@ namespace Aimrank.Web.Configuration.Extensions
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
+                .AddSteam(options =>
+                {
+                    options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
+                    options.SignInScheme = "Cookies";
+                })
                 .AddJwtBearer(options =>
                 {
                     options.SaveToken = true;
@@ -34,7 +40,8 @@ namespace Aimrank.Web.Configuration.Extensions
                         RequireExpirationTime = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret))
                     };
-                });
+                })
+                .AddCookie("Cookies");
 
             return services;
         }
