@@ -1,21 +1,23 @@
 using Aimrank.Application.Commands.RefreshJwt;
 using Aimrank.Application.Contracts;
 using Aimrank.Domain.RefreshTokens;
+using Aimrank.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
+using System;
 
 namespace Aimrank.Application.Commands.SignUp
 {
     public class SignUpCommandHandler : ICommandHandler<SignUpCommand, AuthenticationSuccessDto>
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IJwtService _jwtService;
 
         public SignUpCommandHandler(
-            UserManager<IdentityUser> userManager,
+            UserManager<User> userManager,
             IRefreshTokenRepository refreshTokenRepository,
             IJwtService jwtService)
         {
@@ -29,11 +31,7 @@ namespace Aimrank.Application.Commands.SignUp
             await AssertUniqueEmailAsync(request.Email);
             await AssertUniqueUsernameAsync(request.Username);
 
-            var user = new IdentityUser
-            {
-                UserName = request.Username,
-                Email = request.Email
-            };
+            var user = new User(Guid.NewGuid().ToString(), request.Email, request.Username);
 
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)

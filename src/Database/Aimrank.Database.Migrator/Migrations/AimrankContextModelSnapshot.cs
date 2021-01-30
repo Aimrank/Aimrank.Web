@@ -132,6 +132,10 @@ namespace Aimrank.Database.Migrator.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -183,6 +187,8 @@ namespace Aimrank.Database.Migrator.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -265,6 +271,17 @@ namespace Aimrank.Database.Migrator.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Aimrank.Domain.Users.User", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("SteamId")
+                        .HasMaxLength(17)
+                        .HasColumnType("nvarchar(17)");
+
+                    b.HasDiscriminator().HasValue("User");
+                });
+
             modelBuilder.Entity("Aimrank.Domain.Matches.Match", b =>
                 {
                     b.OwnsMany("Aimrank.Domain.Matches.MatchPlayer", "Players", b1 =>
@@ -309,7 +326,7 @@ namespace Aimrank.Database.Migrator.Migrations
 
             modelBuilder.Entity("Aimrank.Domain.RefreshTokens.RefreshToken", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("Aimrank.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

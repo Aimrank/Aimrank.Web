@@ -1,3 +1,4 @@
+using Aimrank.Application.Commands.UpdateUserSteamDetails;
 using Aimrank.Application.Contracts;
 using Aimrank.Application;
 using Aimrank.Web.Attributes;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
 
 namespace Aimrank.Web.Controllers
 {
@@ -33,15 +33,17 @@ namespace Aimrank.Web.Controllers
         public async Task<IActionResult> SignInWithSteamSuccess()
         {
             var result = await HttpContext.AuthenticateAsync(SteamAuthenticationDefaults.AuthenticationScheme);
-            
-            // Check if userId exists
+
+            var userId = result.Properties?.Items.FirstOrDefault(x => x.Key == "userId").Value;
+            if (userId is null)
+            {
+                return BadRequest();
+            }
             
             var data = HttpContext.GetSteamData();
-            Console.WriteLine(result.Properties?.Items["userId"]);
-            Console.WriteLine(data.Id);
 
-            // var command = new UpdateUserSteamDetailsCommand(id, data.Id);
-            // await _aimrankModule.ExecuteCommandAsync(command);
+            var command = new UpdateUserSteamDetailsCommand(userId, data.Id);
+            await _aimrankModule.ExecuteCommandAsync(command);
             
             return Redirect("/settings");
         }

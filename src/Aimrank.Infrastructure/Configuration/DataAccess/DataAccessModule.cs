@@ -1,9 +1,9 @@
 using Aimrank.Application;
 using Aimrank.Common.Infrastructure;
+using Aimrank.Domain.Users;
 using Aimrank.Infrastructure.Application;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -53,7 +53,7 @@ namespace Aimrank.Infrastructure.Configuration.DataAccess
         {
             var serviceCollection = new ServiceCollection();
             serviceCollection
-                .AddIdentityCore<IdentityUser>()
+                .AddIdentityCore<User>()
                 .AddEntityFrameworkStores<AimrankContext>();
             builder.Populate(serviceCollection);
         }

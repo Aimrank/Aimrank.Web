@@ -1,6 +1,7 @@
 using Aimrank.Application.Commands.RefreshJwt;
 using Aimrank.Application.Contracts;
 using Aimrank.Domain.RefreshTokens;
+using Aimrank.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System.Threading;
@@ -9,12 +10,12 @@ namespace Aimrank.Application.Commands.SignIn
 {
     public class SignInCommandHandler : ICommandHandler<SignInCommand, AuthenticationSuccessDto>
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IJwtService _jwtService;
 
         public SignInCommandHandler(
-            UserManager<IdentityUser> userManager,
+            UserManager<User> userManager,
             IRefreshTokenRepository refreshTokenRepository,
             IJwtService jwtService)
         {
