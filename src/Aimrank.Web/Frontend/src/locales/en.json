@@ -2,8 +2,7 @@
   "home": {
     "views": {
       "Home": {
-        "board": "Board",
-        "history": "Matches history"
+        "title": "Home"
       }
     }
   },
