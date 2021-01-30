@@ -2,14 +2,15 @@ import { createApp } from "vue";
 import { createI18n } from "vue-i18n";
 import { router } from "@/router";
 import { httpClient } from "@/services";
-import { useAuth, useUser } from "./modules/authentication";
+import { useAuth } from "./modules/authentication";
+import { useUser } from "./modules/user";
 
 import App from "./App.vue";
 
 const en = require("@/locales/en.json");
 
-const init = () => {
-  initAuthentication();
+const init = async () => {
+  await initAuthentication();
 
   const app = createApp(App);
   const i18n = createI18n({
@@ -22,7 +23,7 @@ const init = () => {
   app.mount("#root");
 }
 
-const initAuthentication = () => {
+const initAuthentication = async () => {
   const auth = useAuth();
   const user = useUser();
 
@@ -33,10 +34,7 @@ const initAuthentication = () => {
 
   if (userId && userEmail) {
     auth.setAuthenticated(true);
-    user.setUser({
-      id: userId,
-      email: userEmail
-    });
+    await user.updateUser(userId);
   }
 }
 

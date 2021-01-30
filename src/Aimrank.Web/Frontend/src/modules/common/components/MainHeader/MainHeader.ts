@@ -1,5 +1,6 @@
 import { defineComponent } from "vue";
-import { useAuth, useUser } from "@/modules/authentication";
+import { useAuth } from "@/modules/authentication";
+import { useUser } from "@/modules/user";
 
 const MainHeader = defineComponent({
   setup() {

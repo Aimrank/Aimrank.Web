@@ -2,8 +2,7 @@
   "home": {
     "views": {
       "Home": {
-        "board": "Board",
-        "history": "Matches history"
+        "title": "Home"
       }
     }
   },
@@ -24,6 +23,17 @@
           "repeatPassword": "Repeat password",
           "submit": "Sign up"
         }
+      }
+    }
+  },
+  "user": {
+    "views": {
+      "Settings": {
+        "title": "Settings",
+        "steamNotConnected": "Not connected",
+        "connectSteamButtonConnected": "Change Steam account",
+        "connectSteamButtonNotConnected": "Connect Steam account",
+        "loading": "Loading..."
       }
     }
   }

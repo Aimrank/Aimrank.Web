@@ -2,11 +2,6 @@
 
 <template>
   <div :class="$style.container">
-    <div :class="$style.column">
-      <h3>{{ $t("home.views.Home.board") }}</h3>
-    </div>
-    <div :class="$style.column">
-      <h3>{{ $t("home.views.Home.history") }}</h3>
-    </div>
+    <h1>{{ $t("home.views.Home.title") }}</h1>
   </div>
 </template>

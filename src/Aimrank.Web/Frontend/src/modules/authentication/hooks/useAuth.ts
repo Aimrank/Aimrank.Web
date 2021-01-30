@@ -1,7 +1,7 @@
 import { reactive, readonly } from "vue";
 import { authService, httpClient } from "@/services";
 import { router } from "@/router";
-import { useUser } from "./useUser";
+import { useUser } from "@/modules/user";
 import { ISignInRequest, ISignUpRequest } from "../services/AuthService";
 
 interface IAuthState {
@@ -25,7 +25,7 @@ const signIn = async (request: ISignInRequest) => {
       result.value.refreshToken
     );
     
-    updateUser();
+    await updateUser();
     setAuthenticated(true);
   }
 
@@ -41,7 +41,7 @@ const signUp = async (request: ISignUpRequest) => {
       result.value.refreshToken
     );
 
-    updateUser();
+    await updateUser();
     setAuthenticated(true);
   }
 
@@ -59,13 +59,9 @@ const signOut = async () => {
   await router.push({ name: "home" });
 }
 
-const updateUser = () => {
-  const { setUser } = useUser();
-
-  setUser({
-    id: httpClient.getUserId()!,
-    email: httpClient.getUserEmail()!
-  });
+const updateUser = async () => {
+  const user = useUser();
+  await user.updateUser(httpClient.getUserId()!);
 }
 
 export const useAuth = () => ({
