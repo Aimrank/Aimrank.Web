@@ -1,22 +1,37 @@
 using Aimrank.Common.Domain;
 using Aimrank.Domain.Users.Rules;
-using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 namespace Aimrank.Domain.Users
 {
-    public class User : IdentityUser
+    public class User : Entity
     {
+        public UserId Id { get; }
+        public string Email { get; private set; }
+        public string Username { get; private set; }
         public string SteamId { get; private set; }
 
         private User() {}
 
-        public User(string id, string email, string username)
+        private User(UserId id, string email, string username)
         {
             Id = id;
             Email = email;
-            UserName = username;
+            Username = username;
         }
 
+        public static async Task<User> CreateAsync(
+            UserId id,
+            string email,
+            string username,
+            IUserRepository userRepository)
+        {
+            await BusinessRules.CheckAsync(new EmailMustBeUniqueRule(userRepository, email));
+            await BusinessRules.CheckAsync(new UsernameMustBeUniqueRule(userRepository, username));
+
+            return new User(id, email, username);
+        }
+        
         public void SetSteamId(string steamId)
         {
             BusinessRules.Check(new SteamIdMustBeValidRule(steamId));

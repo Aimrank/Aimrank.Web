@@ -1,5 +1,5 @@
 using Aimrank.Domain.RefreshTokens;
-using Aimrank.Domain.Users;
+using Aimrank.Infrastructure.Domain.Users;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +18,7 @@ namespace Aimrank.Infrastructure.Domain.RefreshTokens
             builder.Property(t => t.ExpiresAt).HasColumnName("ExpiresAt").IsRequired();
             builder.Property(t => t.IsInvalidated).HasColumnName("IsInvalidated").IsRequired();
 
-            builder.HasOne<User>().WithMany().HasForeignKey("UserId");
+            builder.HasOne<UserModel>().WithMany().HasForeignKey("UserId");
         }
     }
 }

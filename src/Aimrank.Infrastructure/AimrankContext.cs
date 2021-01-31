@@ -1,6 +1,9 @@
 using Aimrank.Domain.Matches;
 using Aimrank.Domain.RefreshTokens;
+using Aimrank.Domain.Users;
+using Aimrank.Infrastructure.Domain.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 
@@ -9,7 +12,7 @@ using System.Runtime.CompilerServices;
 
 namespace Aimrank.Infrastructure
 {
-    internal class AimrankContext : IdentityDbContext
+    internal class AimrankContext : IdentityDbContext<UserModel, IdentityRole<UserId>, UserId>
     {
         public DbSet<Match> Matches { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }

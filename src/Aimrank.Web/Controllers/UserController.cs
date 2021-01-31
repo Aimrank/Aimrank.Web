@@ -22,7 +22,7 @@ namespace Aimrank.Web.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDetailsDto>> GetUserDetails(Guid id)
         {
-            var result = await _aimrankModule.ExecuteQueryAsync(new GetUserDetailsQuery(id.ToString()));
+            var result = await _aimrankModule.ExecuteQueryAsync(new GetUserDetailsQuery(id));
             if (result is null)
             {
                 return NotFound();

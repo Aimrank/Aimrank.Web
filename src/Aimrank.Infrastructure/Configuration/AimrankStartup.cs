@@ -1,5 +1,6 @@
 using Aimrank.Application;
 using Aimrank.Common.Infrastructure.EventBus;
+using Aimrank.Infrastructure.Configuration.Authentication;
 using Aimrank.Infrastructure.Configuration.CSGO;
 using Aimrank.Infrastructure.Configuration.DataAccess;
 using Aimrank.Infrastructure.Configuration.Jwt;
@@ -33,6 +34,7 @@ namespace Aimrank.Infrastructure.Configuration
             containerBuilder.RegisterModule(new MediatorModule());
             containerBuilder.RegisterModule(new CSGOModule());
             containerBuilder.RegisterModule(new JwtModule(jwtSettings));
+            containerBuilder.RegisterModule(new AuthenticationModule());
             containerBuilder.RegisterInstance(executionContextAccessor);
             containerBuilder.RegisterInstance(eventBus);
 

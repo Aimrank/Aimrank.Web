@@ -1,8 +1,7 @@
 using Aimrank.Application.Commands.RefreshJwt;
 using Aimrank.Application.Contracts;
+using Aimrank.Application.Services;
 using Aimrank.Domain.RefreshTokens;
-using Aimrank.Domain.Users;
-using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -10,16 +9,16 @@ namespace Aimrank.Application.Commands.SignIn
 {
     public class SignInCommandHandler : ICommandHandler<SignInCommand, AuthenticationSuccessDto>
     {
-        private readonly UserManager<User> _userManager;
+        private readonly IAuthenticationService _authenticationService;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IJwtService _jwtService;
 
         public SignInCommandHandler(
-            UserManager<User> userManager,
+            IAuthenticationService authenticationService,
             IRefreshTokenRepository refreshTokenRepository,
             IJwtService jwtService)
         {
-            _userManager = userManager;
+            _authenticationService = authenticationService;
             _refreshTokenRepository = refreshTokenRepository;
             _jwtService = jwtService;
         }
@@ -27,28 +26,22 @@ namespace Aimrank.Application.Commands.SignIn
         public async Task<AuthenticationSuccessDto> Handle(SignInCommand request, CancellationToken cancellationToken)
         {
             var user =
-                (await _userManager.FindByEmailAsync(request.UsernameOrEmail)) ??
-                (await _userManager.FindByNameAsync(request.UsernameOrEmail));
+                (await _authenticationService.AuthenticateUserWithEmailAsync(request.UsernameOrEmail, request.Password)) ??
+                (await _authenticationService.AuthenticateUserWithUsernameAsync(request.UsernameOrEmail, request.Password));
 
             if (user is null)
             {
                 throw new SignInException();
             }
+            
+            var refreshToken = RefreshToken.Create(user.Id, user.Email, _jwtService);
+            _refreshTokenRepository.Add(refreshToken);
 
-            var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
-            if (passwordValid)
+            return new AuthenticationSuccessDto
             {
-                var refreshToken = RefreshToken.Create(user.Id, user.Email, _jwtService);
-                _refreshTokenRepository.Add(refreshToken);
-
-                return new AuthenticationSuccessDto
-                {
-                    Jwt = refreshToken.Jwt,
-                    RefreshToken = refreshToken.Id.Value.ToString()
-                };
-            }
-
-            throw new SignInException();
+                Jwt = refreshToken.Jwt,
+                RefreshToken = refreshToken.Id.Value.ToString()
+            };
         }
     }
 }

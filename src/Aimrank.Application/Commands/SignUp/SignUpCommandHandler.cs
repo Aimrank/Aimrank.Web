@@ -1,8 +1,9 @@
 using Aimrank.Application.Commands.RefreshJwt;
 using Aimrank.Application.Contracts;
+using Aimrank.Common.Domain;
 using Aimrank.Domain.RefreshTokens;
+using Aimrank.Domain.Users.Rules;
 using Aimrank.Domain.Users;
-using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
@@ -12,78 +13,63 @@ namespace Aimrank.Application.Commands.SignUp
 {
     public class SignUpCommandHandler : ICommandHandler<SignUpCommand, AuthenticationSuccessDto>
     {
-        private readonly UserManager<User> _userManager;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IJwtService _jwtService;
 
         public SignUpCommandHandler(
-            UserManager<User> userManager,
             IRefreshTokenRepository refreshTokenRepository,
+            IUserRepository userRepository,
             IJwtService jwtService)
         {
-            _userManager = userManager;
             _refreshTokenRepository = refreshTokenRepository;
+            _userRepository = userRepository;
             _jwtService = jwtService;
         }
 
         public async Task<AuthenticationSuccessDto> Handle(SignUpCommand request, CancellationToken cancellationToken)
         {
-            await AssertUniqueEmailAsync(request.Email);
-            await AssertUniqueUsernameAsync(request.Username);
+            var user = await CreateUserAsync(request.Email, request.Username);
 
-            var user = new User(Guid.NewGuid().ToString(), request.Email, request.Username);
-
-            var result = await _userManager.CreateAsync(user, request.Password);
-            if (result.Succeeded)
+            var refreshToken = RefreshToken.Create(user.Id, user.Email, _jwtService);
+            
+            _refreshTokenRepository.Add(refreshToken);
+            
+            var result = await _userRepository.AddAsync(user, request.Password);
+            if (result)
             {
-                try
+                return new AuthenticationSuccessDto
                 {
-                    var refreshToken = RefreshToken.Create(user.Id, user.Email, _jwtService);
-                    _refreshTokenRepository.Add(refreshToken);
-
-                    return new AuthenticationSuccessDto
-                    {
-                        Jwt = refreshToken.Jwt,
-                        RefreshToken = refreshToken.Id.Value.ToString()
-                    };
-                }
-                catch
-                {
-                    await _userManager.DeleteAsync(user);
-                    throw new SignUpException();
-                }
+                    Jwt = refreshToken.Jwt,
+                    RefreshToken = refreshToken.Id.Value.ToString()
+                };
             }
 
             throw new SignUpException();
         }
-        
-        private async Task AssertUniqueEmailAsync(string email)
-        {
-            var existsEmail = await _userManager.FindByEmailAsync(email);
-            if (existsEmail is not null)
-            {
-                throw new SignUpException
-                {
-                    Errors =
-                    {
-                        ["Email"] = new List<string> {"This email is already taken"}
-                    }
-                };
-            }
-        }
 
-        private async Task AssertUniqueUsernameAsync(string username)
+        private async Task<User> CreateUserAsync(string email, string username)
         {
-            var usernameExists = await _userManager.FindByNameAsync(username);
-            if (usernameExists is not null)
+            var userId = new UserId(Guid.NewGuid());
+            
+            try
             {
-                throw new SignUpException
+                var user = await User.CreateAsync(userId, email, username, _userRepository);
+                return user;
+            }
+            catch (BusinessRuleValidationException exception)
+            {
+                switch (exception.BrokenRule)
                 {
-                    Errors =
-                    {
-                        ["Username"] = new List<string> {"This username is already taken"}
-                    }
-                };
+                    case UsernameMustBeUniqueRule:
+                        throw new SignUpException
+                            {Errors = {["Username"] = new List<string> {exception.BrokenRule.Message}}};
+                    case EmailMustBeUniqueRule:
+                        throw new SignUpException
+                            {Errors = {["Email"] = new List<string> {exception.BrokenRule.Message}}};
+                    default:
+                        throw;
+                }
             }
         }
     }

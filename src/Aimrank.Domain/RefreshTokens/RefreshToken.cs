@@ -1,5 +1,6 @@
 using Aimrank.Common.Domain;
 using Aimrank.Domain.RefreshTokens.Rules;
+using Aimrank.Domain.Users;
 using System;
 
 namespace Aimrank.Domain.RefreshTokens
@@ -7,14 +8,14 @@ namespace Aimrank.Domain.RefreshTokens
     public class RefreshToken : Entity
     {
         public RefreshTokenId Id { get; }
-        public string UserId { get; }
+        public UserId UserId { get; }
         public string Jwt { get; private set; }
         public bool IsInvalidated { get; private set; }
         public DateTime ExpiresAt { get; private set; }
         
         private RefreshToken() {}
 
-        private RefreshToken(RefreshTokenId id, string userId, string jwt, DateTime expiresAt)
+        private RefreshToken(RefreshTokenId id, UserId userId, string jwt, DateTime expiresAt)
         {
             BusinessRules.Check(new JwtMustBeValidRule(jwt));
 
@@ -24,7 +25,7 @@ namespace Aimrank.Domain.RefreshTokens
             ExpiresAt = expiresAt;
         }
 
-        public static RefreshToken Create(string userId, string email, IJwtService jwtService)
+        public static RefreshToken Create(UserId userId, string email, IJwtService jwtService)
             => new RefreshToken(
                 new RefreshTokenId(Guid.NewGuid()),
                 userId,

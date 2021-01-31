@@ -1,4 +1,5 @@
 using Aimrank.Domain.RefreshTokens;
+using Aimrank.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Aimrank.Infrastructure.Domain.RefreshTokens
         public Task<RefreshToken> GetAsync(RefreshTokenId id, string jwt)
             => _context.RefreshTokens.FirstOrDefaultAsync(t => t.Id == id && t.Jwt == jwt);
 
-        public async Task<IEnumerable<RefreshToken>> GetByUserIdAsync(string userId)
+        public async Task<IEnumerable<RefreshToken>> GetByUserIdAsync(UserId userId)
             => await _context.RefreshTokens.Where(t => t.UserId == userId).ToListAsync();
 
         public void Add(RefreshToken refreshToken) => _context.RefreshTokens.Add(refreshToken);

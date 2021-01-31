@@ -1,4 +1,5 @@
 using Aimrank.Domain.RefreshTokens;
+using Aimrank.Domain.Users;
 using Aimrank.Infrastructure.Configuration.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Aimrank.Infrastructure.Domain.RefreshTokens
             _jwtSettings = jwtSettings;
         }
 
-        public string CreateJwt(string userId, string email)
+        public string CreateJwt(UserId userId, string email)
         {
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -30,7 +31,7 @@ namespace Aimrank.Infrastructure.Domain.RefreshTokens
                     new Claim(JwtRegisteredClaimNames.Sub, email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Email, email),
-                    new Claim("id", userId)
+                    new Claim("id", userId.Value.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
@@ -42,8 +43,11 @@ namespace Aimrank.Infrastructure.Domain.RefreshTokens
             return tokenHandler.WriteToken(token);
         }
 
-        public string GetUserId(string jwt)
-            => GetTokenClaims(jwt).FirstOrDefault(c => c.Type == "id")?.Value;
+        public UserId GetUserId(string jwt)
+        {
+            var value = GetTokenClaims(jwt).FirstOrDefault(c => c.Type == "id")?.Value;
+            return string.IsNullOrEmpty(value) ? null : new UserId(Guid.Parse(value));
+        }
 
         public string GetUserEmail(string jwt)
             => GetTokenClaims(jwt).FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Email)?.Value;

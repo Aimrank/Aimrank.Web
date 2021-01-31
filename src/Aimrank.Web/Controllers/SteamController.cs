@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace Aimrank.Web.Controllers
 {
@@ -42,7 +43,7 @@ namespace Aimrank.Web.Controllers
             
             var data = HttpContext.GetSteamData();
 
-            var command = new UpdateUserSteamDetailsCommand(userId, data.Id);
+            var command = new UpdateUserSteamDetailsCommand(Guid.Parse(userId), data.Id);
             await _aimrankModule.ExecuteCommandAsync(command);
             
             return Redirect("/settings");

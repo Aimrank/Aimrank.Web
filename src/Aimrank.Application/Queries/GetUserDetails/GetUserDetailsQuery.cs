@@ -1,12 +1,13 @@
 using Aimrank.Application.Contracts;
+using System;
 
 namespace Aimrank.Application.Queries.GetUserDetails
 {
     public class GetUserDetailsQuery : IQuery<UserDetailsDto>
     {
-        public string UserId { get; }
+        public Guid UserId { get; }
 
-        public GetUserDetailsQuery(string userId)
+        public GetUserDetailsQuery(Guid userId)
         {
             UserId = userId;
         }
