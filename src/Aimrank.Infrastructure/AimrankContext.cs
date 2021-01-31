@@ -1,3 +1,4 @@
+using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Matches;
 using Aimrank.Domain.RefreshTokens;
 using Aimrank.Domain.Users;
@@ -15,6 +16,7 @@ namespace Aimrank.Infrastructure
     internal class AimrankContext : IdentityDbContext<UserModel, IdentityRole<UserId>, UserId>
     {
         public DbSet<Match> Matches { get; set; }
+        public DbSet<Lobby> Lobbies { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         
         public AimrankContext(DbContextOptions<AimrankContext> options) : base(options)
