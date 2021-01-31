@@ -8,6 +8,7 @@ namespace Aimrank.Infrastructure.Domain.Users
         public void Configure(EntityTypeBuilder<UserModel> builder)
         {
             builder.Property(u => u.SteamId).HasMaxLength(17);
+            builder.HasIndex(u => u.SteamId).IsUnique();
         }
     }
 }

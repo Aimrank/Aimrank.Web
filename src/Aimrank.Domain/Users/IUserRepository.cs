@@ -7,6 +7,7 @@ namespace Aimrank.Domain.Users
         Task<User> GetByIdAsync(UserId id);
         Task<bool> ExistsEmailAsync(string email);
         Task<bool> ExistsUsernameAsync(string username);
+        Task<bool> ExistsSteamIdAsync(string steamId, UserId userId);
         Task<bool> AddAsync(User user, string password);
         Task UpdateAsync(User user);
         Task DeleteAsync(User user);

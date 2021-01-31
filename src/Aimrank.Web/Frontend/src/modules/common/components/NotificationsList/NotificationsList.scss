@@ -1,0 +1,41 @@
+@use "@/styles/mixins";
+
+.list {
+  z-index: 10;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+
+  @include mixins.media(">tablet") {
+    top: 70px;
+    left: auto;
+    width: 300px;
+  }
+}
+
+.listItem {
+  transition: transform 0.5s ease-in-out;
+}
+
+.fade {
+  &:global(-enter-active),
+  &:global(-leave-active) {
+    transition: opacity 0.3s ease-in, transform 0.3s ease-in;
+  }
+
+  &:global(-leave-active) {
+    position: absolute;
+    width: 100%;
+  }
+
+  &:global(-enter-from) {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  &:global(-leave-to) {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}

@@ -31,9 +31,10 @@
       "Settings": {
         "title": "Settings",
         "steamNotConnected": "Not connected",
-        "connectSteamButtonConnected": "Change Steam account",
-        "connectSteamButtonNotConnected": "Connect Steam account",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "errors": {
+          "steam_id_not_unique": "This SteamID is already assigned to different account"
+        }
       }
     }
   }

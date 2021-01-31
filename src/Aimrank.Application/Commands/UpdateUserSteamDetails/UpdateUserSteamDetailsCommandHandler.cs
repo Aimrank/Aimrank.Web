@@ -24,7 +24,7 @@ namespace Aimrank.Application.Commands.UpdateUserSteamDetails
                 throw new EntityNotFoundException();
             }
 
-            user.SetSteamId(request.SteamId);
+            await user.SetSteamIdAsync(request.SteamId, _userRepository);
             
             await _userRepository.UpdateAsync(user);
 

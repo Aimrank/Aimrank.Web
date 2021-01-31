@@ -134,6 +134,10 @@ namespace Aimrank.Database.Migrator.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("SteamId")
+                        .IsUnique()
+                        .HasFilter("[SteamId] IS NOT NULL");
+
                     b.ToTable("AspNetUsers");
                 });
 

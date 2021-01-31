@@ -1,6 +1,7 @@
 <template>
   <div>
     <main-header />
+    <notifications-list />
     <router-view />
   </div>
 </template>
@@ -8,10 +9,12 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import MainHeader from "@/modules/common/components/MainHeader";
+import NotificationsList from "@/modules/common/components/NotificationsList";
 
 export default defineComponent({
   components: {
-    MainHeader
+    MainHeader,
+    NotificationsList
   }
 });
 </script>

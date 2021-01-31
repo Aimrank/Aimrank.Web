@@ -32,9 +32,10 @@ namespace Aimrank.Domain.Users
             return new User(id, email, username);
         }
         
-        public void SetSteamId(string steamId)
+        public async Task SetSteamIdAsync(string steamId, IUserRepository userRepository)
         {
             BusinessRules.Check(new SteamIdMustBeValidRule(steamId));
+            await BusinessRules.CheckAsync(new SteamIdMustBeUniqueRule(userRepository, steamId, Id));
 
             SteamId = steamId;
         }

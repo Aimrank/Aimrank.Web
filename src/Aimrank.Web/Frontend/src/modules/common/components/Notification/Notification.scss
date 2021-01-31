@@ -1,0 +1,43 @@
+@use "@/styles/variables/colors";
+
+.notification {
+  position: relative;
+  display: flex;
+  border-radius: 3px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+  background: colors.$white;
+  color: colors.$black;
+
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+
+  &.notificationSuccess {
+    background: colors.$success;
+    color: colors.$white;
+  }
+
+  &.notificationWarning {
+    background: colors.$warning;
+    color: colors.$white;
+  }
+
+  &.notificationDanger {
+    background: colors.$danger;
+    color: colors.$white;
+  }
+}
+
+.content {
+  flex: 1;
+  padding: 15px;
+}
+
+.close {
+  padding: 0 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-left: 1px solid colors.$lightGray;
+}

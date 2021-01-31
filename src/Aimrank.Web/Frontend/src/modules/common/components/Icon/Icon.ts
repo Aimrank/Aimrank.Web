@@ -1,6 +1,10 @@
 import { computed, defineComponent } from "vue";
 
-const icons = {};
+const icons = {
+  times: "fas fa-times",
+  check: "fas fa-check",
+  steam: "fab fa-steam"
+};
 
 const Icon = defineComponent({
   props: {

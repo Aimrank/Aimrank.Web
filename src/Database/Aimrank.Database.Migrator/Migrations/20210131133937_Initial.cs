@@ -272,6 +272,14 @@ namespace Aimrank.Database.Migrator.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_SteamId",
+                schema: "aimrank",
+                table: "AspNetUsers",
+                column: "SteamId",
+                unique: true,
+                filter: "[SteamId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 schema: "aimrank",
                 table: "AspNetUsers",

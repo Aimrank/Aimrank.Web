@@ -26,6 +26,8 @@ namespace Aimrank.Infrastructure.Domain.Users
 
         public Task<bool> ExistsUsernameAsync(string username) => _context.Users.AnyAsync(u => u.UserName == username);
 
+        public Task<bool> ExistsSteamIdAsync(string steamId, UserId userId) => _context.Users.AnyAsync(u => u.SteamId == steamId && u.Id != userId);
+
         public async Task<bool> AddAsync(User user, string password)
         {
             var model = new UserModel

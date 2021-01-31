@@ -1,6 +1,7 @@
 using Aimrank.Application.Commands.UpdateUserSteamDetails;
 using Aimrank.Application.Contracts;
 using Aimrank.Application;
+using Aimrank.Common.Domain;
 using Aimrank.Web.Attributes;
 using Aimrank.Web.Contracts.Responses;
 using Aimrank.Web.Steam;
@@ -40,13 +41,20 @@ namespace Aimrank.Web.Controllers
             {
                 return BadRequest();
             }
-            
-            var data = HttpContext.GetSteamData();
 
-            var command = new UpdateUserSteamDetailsCommand(Guid.Parse(userId), data.Id);
-            await _aimrankModule.ExecuteCommandAsync(command);
-            
-            return Redirect("/settings");
+            try
+            {
+                var data = HttpContext.GetSteamData();
+
+                var command = new UpdateUserSteamDetailsCommand(Guid.Parse(userId), data.Id);
+                await _aimrankModule.ExecuteCommandAsync(command);
+                
+                return Redirect("/settings");
+            }
+            catch (BusinessRuleValidationException exception)
+            {
+                return Redirect($"/settings?error={exception.BrokenRule.Code}");
+            }
         }
         
         [JwtAuth]
