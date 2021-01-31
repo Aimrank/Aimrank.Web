@@ -17,7 +17,7 @@ namespace Aimrank.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SteamController : ControllerBase
+    public class SteamController : Controller
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly IAimrankModule _aimrankModule;
@@ -48,13 +48,13 @@ namespace Aimrank.Web.Controllers
 
                 var command = new UpdateUserSteamDetailsCommand(Guid.Parse(userId), data.Id);
                 await _aimrankModule.ExecuteCommandAsync(command);
-                
-                return Redirect("/settings");
             }
             catch (BusinessRuleValidationException exception)
             {
-                return Redirect($"/settings?error={exception.BrokenRule.Code}");
+                TempData["error"] = exception.BrokenRule.Message;
             }
+            
+            return Redirect("/settings");
         }
         
         [JwtAuth]

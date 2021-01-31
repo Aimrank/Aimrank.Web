@@ -10,6 +10,11 @@
     <title>Aimrank</title>
 </head>
 <body>
+<script>
+window.initialAppState = {
+  error: "@(TempData.ContainsKey("error") ? TempData["error"] : string.Empty)"
+}
+</script>
 <div id="root"></div>
 <script src="~/base/main.js" asp-append-version="true"></script>
 </body>

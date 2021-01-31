@@ -31,10 +31,7 @@
       "Settings": {
         "title": "Settings",
         "steamNotConnected": "Not connected",
-        "loading": "Loading...",
-        "errors": {
-          "steam_id_not_unique": "This SteamID is already assigned to different account"
-        }
+        "loading": "Loading..."
       }
     }
   }

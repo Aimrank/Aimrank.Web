@@ -1,8 +1,7 @@
 import { defineComponent, onMounted, ref } from "vue";
-import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
 import { useUser } from "@/modules/user";
 import { useNotifications } from "@/modules/common/hooks/useNotifications";
+import { useInitialState } from "@/modules/common/hooks/useInitialState";
 import { steamService, userService } from "@/services";
 import BaseButton from "@/modules/common/components/BaseButton";
 import Icon from "@/modules/common/components/Icon";
@@ -21,10 +20,9 @@ const Settings = defineComponent({
   setup() {
     const userDetails = ref<IUserDetails | null>(null);
 
-    const i18n = useI18n();
     const user = useUser();
-    const route = useRoute();
     const notifications = useNotifications();
+    const { getError } = useInitialState();
 
     onMounted(async () => {
       if (!user.state.user) {
@@ -36,8 +34,10 @@ const Settings = defineComponent({
       if (result.isOk()) {
         userDetails.value = result.value;
 
-        if (route.query.error) {
-          notifications.danger(i18n.t(`user.views.Settings.errors.${route.query.error}`));
+        const error = getError();
+
+        if (error && error.length) {
+          notifications.danger(error);
         }
       }
     });
