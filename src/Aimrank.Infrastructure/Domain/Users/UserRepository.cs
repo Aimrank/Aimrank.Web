@@ -1,3 +1,4 @@
+using Aimrank.Common.Application;
 using Aimrank.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,11 @@ namespace Aimrank.Infrastructure.Domain.Users
         public async Task<User> GetByIdAsync(UserId id)
         {
             var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+            if (user is null)
+            {
+                throw new EntityNotFoundException();
+            }
+            
             return user.AsUser();
         }
 
