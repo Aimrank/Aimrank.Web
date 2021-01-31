@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 
 interface IInitialAppState {
-  error: string;
+  error: string | null;
 }
 
 const initialAppState = (window as any).initialAppState as IInitialAppState;
@@ -13,7 +13,7 @@ const state = reactive<IInitialAppState>({
 export const useInitialState = () => {
   const getError = () => {
     const error = state.error;
-    state.error = "";
+    state.error = null;
     return error;
   }
 

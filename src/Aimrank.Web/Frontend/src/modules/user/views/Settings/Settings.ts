@@ -36,7 +36,7 @@ const Settings = defineComponent({
 
         const error = getError();
 
-        if (error && error.length) {
+        if (error) {
           notifications.danger(error);
         }
       }
