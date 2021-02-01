@@ -6,6 +6,7 @@ using Aimrank.Infrastructure.Configuration.DataAccess;
 using Aimrank.Infrastructure.Configuration.EventBus;
 using Aimrank.Infrastructure.Configuration.Jwt;
 using Aimrank.Infrastructure.Configuration.Mediator;
+using Aimrank.Infrastructure.Configuration.Processing;
 using Aimrank.Infrastructure.Configuration.Quartz;
 using Autofac;
 
@@ -43,9 +44,10 @@ namespace Aimrank.Infrastructure.Configuration
 
             containerBuilder.RegisterModule(new DataAccessModule(connectionString));
             containerBuilder.RegisterModule(new MediatorModule());
+            containerBuilder.RegisterModule(new ProcessingModule());
+            containerBuilder.RegisterModule(new AuthenticationModule());
             containerBuilder.RegisterModule(new CSGOModule(csgoSettings));
             containerBuilder.RegisterModule(new JwtModule(jwtSettings));
-            containerBuilder.RegisterModule(new AuthenticationModule());
             containerBuilder.RegisterModule(new QuartzModule());
             containerBuilder.RegisterModule(new EventBusModule(eventBus));
             containerBuilder.RegisterInstance(executionContextAccessor);

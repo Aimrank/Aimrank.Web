@@ -7,13 +7,18 @@ namespace Aimrank.Infrastructure.Application
     internal class UnitOfWork : IUnitOfWork
     {
         private readonly AimrankContext _context;
+        private readonly IEventDispatcher _eventDispatcher;
 
-        public UnitOfWork(AimrankContext context)
+        public UnitOfWork(AimrankContext context, IEventDispatcher eventDispatcher)
         {
             _context = context;
+            _eventDispatcher = eventDispatcher;
         }
 
-        public Task CommitAsync(CancellationToken cancellationToken = default)
-            => _context.SaveChangesAsync(cancellationToken);
+        public async Task CommitAsync(CancellationToken cancellationToken = default)
+        {
+            await _eventDispatcher.DispatchAsync();
+            await _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }
