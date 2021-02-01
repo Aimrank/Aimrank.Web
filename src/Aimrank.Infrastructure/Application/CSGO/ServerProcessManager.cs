@@ -1,5 +1,5 @@
 ﻿using Aimrank.Application.CSGO;
-using Aimrank.Application.Queries.GetServerProcesses;
+using Aimrank.Infrastructure.Configuration.CSGO;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,6 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading.Tasks;
 using System;
-using Aimrank.Infrastructure.Configuration.CSGO;
 
 namespace Aimrank.Infrastructure.Application.CSGO
 {
@@ -29,13 +28,6 @@ namespace Aimrank.Infrastructure.Application.CSGO
             _availablePorts.Enqueue(27018);
             _availablePorts.Enqueue(27019);
         }
-
-        public IEnumerable<ServerProcessDto> GetProcesses()
-            => _processes.Values.Select(p => new ServerProcessDto
-            {
-                ServerId = p.Id,
-                Port = p.Configuration.Port
-            });
 
         public string StartServer(Guid serverId, IEnumerable<string> whitelist, string map)
         {
