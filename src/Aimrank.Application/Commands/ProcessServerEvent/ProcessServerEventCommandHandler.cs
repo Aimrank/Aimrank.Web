@@ -1,5 +1,6 @@
 using Aimrank.Application.CSGO;
 using Aimrank.Application.Contracts;
+using Aimrank.Application.Events;
 using Aimrank.Domain.Matches;
 using MediatR;
 using System.Collections.Generic;
@@ -14,22 +15,22 @@ namespace Aimrank.Application.Commands.ProcessServerEvent
     public class ProcessServerEventCommandHandler : ICommandHandler<ProcessServerEventCommand>
     {
         private readonly IServerProcessManager _serverProcessManager;
-        private readonly IServerEventNotifier _serverEventNotifier;
         private readonly IMatchRepository _matchRepository;
+        private readonly IEventDispatcher _eventDispatcher;
         
-        private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
+        private readonly JsonSerializerOptions _jsonSerializerOptions = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
         public ProcessServerEventCommandHandler(
             IServerProcessManager serverProcessManager,
-            IServerEventNotifier serverEventNotifier,
-            IMatchRepository matchRepository)
+            IMatchRepository matchRepository,
+            IEventDispatcher eventDispatcher)
         {
             _serverProcessManager = serverProcessManager;
-            _serverEventNotifier = serverEventNotifier;
             _matchRepository = matchRepository;
+            _eventDispatcher = eventDispatcher;
         }
 
         public async Task<Unit> Handle(ProcessServerEventCommand request, CancellationToken cancellationToken)
@@ -38,28 +39,55 @@ namespace Aimrank.Application.Commands.ProcessServerEvent
             if (temp.Name == "match_end")
             {
                 var @event = JsonSerializer.Deserialize<MatchEndEvent>(request.Content, _jsonSerializerOptions);
-
+                
                 await _serverProcessManager.StopServerAsync(request.ServerId);
 
-                var matchId = new MatchId(Guid.NewGuid());
-                var players = new List<MatchPlayer>();
+                var match = await _matchRepository.GetByIdAsync(new MatchId(request.ServerId));
                 
-                // Teams are rotated here ? (t = 3, ct = 2)
-                players.AddRange(@event.Data.TeamTerrorists.Clients.Select(p => new MatchPlayer(matchId, p.SteamId, p.Name, MatchTeam.Terrorists, p.Score, p.Kills, p.Deaths, p.Assists)));
-                players.AddRange(@event.Data.TeamCounterTerrorists.Clients.Select(p => new MatchPlayer(matchId, p.SteamId, p.Name, MatchTeam.CounterTerrorists, p.Score, p.Kills, p.Deaths, p.Assists)));
 
-                var match = new Match(
-                    matchId,
-                    @event.Data.TeamTerrorists.Score,
-                    @event.Data.TeamCounterTerrorists.Score,
-                    DateTime.UtcNow,
-                    players);
+                foreach (var player in match.Players)
+                {
+                    var client =
+                        @event.Data.TeamTerrorists.Clients.FirstOrDefault(c => c.SteamId == player.SteamId) ??
+                        @event.Data.TeamCounterTerrorists.Clients.FirstOrDefault(c => c.SteamId == player.SteamId);
+
+                    if (client is null)
+                    {
+                        continue;
+                    }
+
+                    player.UpdateStats(client.Kills, client.Assists, client.Deaths, client.Score);
+                }
                 
-                _matchRepository.Add(match);
+                match.Finish(
+                    @event.Data.TeamTerrorists.Score,
+                    @event.Data.TeamCounterTerrorists.Score);
+                
+                _matchRepository.Update(match);
+
+                // var players = new List<MatchPlayer>();
+                //
+                // Teams are rotated here ? (t = 3, ct = 2)
+                // players.AddRange(@event.Data.TeamTerrorists.Clients.Select(p => new MatchPlayer(matchId, p.SteamId, p.Name, MatchTeam.Terrorists, p.Score, p.Kills, p.Deaths, p.Assists)));
+                // players.AddRange(@event.Data.TeamCounterTerrorists.Clients.Select(p => new MatchPlayer(matchId, p.SteamId, p.Name, MatchTeam.CounterTerrorists, p.Score, p.Kills, p.Deaths, p.Assists)));
+                //
+                // Update match state in database
+                //
+                // var matchId = new MatchId(Guid.NewGuid());
+                //
+                // var match = new Match(
+                //     matchId,
+                //     @event.Data.TeamTerrorists.Score,
+                //     @event.Data.TeamCounterTerrorists.Score,
+                //     DateTime.UtcNow,
+                //     players);
+                //
+                // _matchRepository.Add(match);
             }
             else
             {
-                await _serverEventNotifier.NotifyAsync(request.ServerId, request.Content);
+                await _eventDispatcher.DispatchAsync(new ServerMessageReceivedEvent(Guid.NewGuid(), request.ServerId,
+                    request.Content, DateTime.UtcNow));
             }
             
             return Unit.Value;

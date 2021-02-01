@@ -7,7 +7,6 @@ namespace Aimrank.Web.Contracts.Requests.Validators
     {
         public CreateServerRequestValidator()
         {
-            RuleFor(x => x.Token).NotEmpty().MaximumLength(32);
             RuleFor(x => x.Map)
                 .NotEmpty()
                 .Must(m => m == "aim_map" || m == "am_redline_14")

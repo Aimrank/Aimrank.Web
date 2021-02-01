@@ -46,7 +46,7 @@ namespace Aimrank.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateServerRequest request)
         {
-            var command = new StartServerCommand(Guid.NewGuid(), request.Token, request.Map, request.Whitelist);
+            var command = new StartServerCommand(Guid.NewGuid(), request.Map, request.Whitelist);
 
             await _aimrankModule.ExecuteCommandAsync(command);
             

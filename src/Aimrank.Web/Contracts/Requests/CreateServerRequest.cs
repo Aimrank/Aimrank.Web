@@ -2,7 +2,6 @@
 {
     public class CreateServerRequest
     {
-        public string Token { get; set; }
         public string Map { get; set; }
         public string[] Whitelist { get; set; }
     }

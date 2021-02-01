@@ -3,8 +3,10 @@ using Aimrank.Common.Infrastructure.EventBus;
 using Aimrank.Infrastructure.Configuration.Authentication;
 using Aimrank.Infrastructure.Configuration.CSGO;
 using Aimrank.Infrastructure.Configuration.DataAccess;
+using Aimrank.Infrastructure.Configuration.EventBus;
 using Aimrank.Infrastructure.Configuration.Jwt;
 using Aimrank.Infrastructure.Configuration.Mediator;
+using Aimrank.Infrastructure.Configuration.Quartz;
 using Autofac;
 
 namespace Aimrank.Infrastructure.Configuration
@@ -17,26 +19,36 @@ namespace Aimrank.Infrastructure.Configuration
             string connectionString,
             IExecutionContextAccessor executionContextAccessor,
             IEventBus eventBus,
-            JwtSettings jwtSettings)
+            JwtSettings jwtSettings,
+            CSGOSettings csgoSettings)
         {
-            ConfigureCompositionRoot(connectionString, executionContextAccessor, eventBus, jwtSettings);
+            ConfigureCompositionRoot(
+                connectionString,
+                executionContextAccessor,
+                eventBus,
+                jwtSettings,
+                csgoSettings);
+            
+            QuartzStartup.Initialize();
         }
 
         private static void ConfigureCompositionRoot(
             string connectionString,
             IExecutionContextAccessor executionContextAccessor,
             IEventBus eventBus,
-            JwtSettings jwtSettings)
+            JwtSettings jwtSettings,
+            CSGOSettings csgoSettings)
         {
             var containerBuilder = new ContainerBuilder();
 
             containerBuilder.RegisterModule(new DataAccessModule(connectionString));
             containerBuilder.RegisterModule(new MediatorModule());
-            containerBuilder.RegisterModule(new CSGOModule());
+            containerBuilder.RegisterModule(new CSGOModule(csgoSettings));
             containerBuilder.RegisterModule(new JwtModule(jwtSettings));
             containerBuilder.RegisterModule(new AuthenticationModule());
+            containerBuilder.RegisterModule(new QuartzModule());
+            containerBuilder.RegisterModule(new EventBusModule(eventBus));
             containerBuilder.RegisterInstance(executionContextAccessor);
-            containerBuilder.RegisterInstance(eventBus);
 
             _container = containerBuilder.Build();
             

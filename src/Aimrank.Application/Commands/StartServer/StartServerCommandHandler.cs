@@ -17,7 +17,7 @@ namespace Aimrank.Application.Commands.StartServer
 
         public Task<Unit> Handle(StartServerCommand request, CancellationToken cancellationToken)
         {
-            _serverProcessManager.StartServer(request.ServerId, request.Token, request.Whitelist, request.Map);
+            _serverProcessManager.StartServer(request.ServerId, request.Whitelist, request.Map);
 
             return Task.FromResult(Unit.Value);
         }

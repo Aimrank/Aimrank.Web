@@ -3,8 +3,11 @@ using Aimrank.Application.Queries.GetServerProcesses;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
+using System.Net;
 using System.Threading.Tasks;
 using System;
+using Aimrank.Infrastructure.Configuration.CSGO;
 
 namespace Aimrank.Infrastructure.Application.CSGO
 {
@@ -16,8 +19,11 @@ namespace Aimrank.Infrastructure.Application.CSGO
         
         private readonly ConcurrentDictionary<Guid, ServerProcess> _processes = new();
 
-        public ServerProcessManager()
+        private readonly CSGOSettings _csgoSettings;
+
+        public ServerProcessManager(CSGOSettings csgoSettings)
         {
+            _csgoSettings = csgoSettings;
             _availablePorts.Enqueue(27016);
             _availablePorts.Enqueue(27017);
             _availablePorts.Enqueue(27018);
@@ -31,7 +37,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
                 Port = p.Configuration.Port
             });
 
-        public void StartServer(Guid serverId, string serverToken, IEnumerable<string> whitelist, string map)
+        public string StartServer(Guid serverId, IEnumerable<string> whitelist, string map)
         {
             lock (_locker)
             {
@@ -42,12 +48,22 @@ namespace Aimrank.Infrastructure.Application.CSGO
 
                 if (_availablePorts.TryDequeue(out var port))
                 {
-                    var process = new ServerProcess(serverId, new ServerConfiguration(serverToken, port, whitelist.ToList(), map));
+                    var steamKey =
+                        _csgoSettings.SteamKeys.FirstOrDefault(k =>
+                            _processes.Values.All(p => p.Configuration.Token != k));
+
+                    if (steamKey is null)
+                    {
+                        throw new ServerProcessStartException();
+                    }
+                    
+                    var process = new ServerProcess(serverId, new ServerConfiguration(steamKey, port, whitelist.ToList(), map));
 
                     if (_processes.TryAdd(serverId, process))
                     {
                         process.Start();
-                        return;
+
+                        return $"{GetLocalIpAddress()}:{port}";
                     }
                 }
                 
@@ -82,6 +98,21 @@ namespace Aimrank.Infrastructure.Application.CSGO
             {
                 process.Dispose();
             }
+        }
+
+        private static string GetLocalIpAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+
+            return "localhost";
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Aimrank.Application.CSGO
     public interface IServerProcessManager
     {
         IEnumerable<ServerProcessDto> GetProcesses();
-        void StartServer(Guid serverId, string serverToken, IEnumerable<string> whitelist, string map);
+        string StartServer(Guid serverId, IEnumerable<string> whitelist, string map);
         Task StopServerAsync(Guid serverId);
         Task ExecuteCommandAsync(Guid serverId, string command);
     }
