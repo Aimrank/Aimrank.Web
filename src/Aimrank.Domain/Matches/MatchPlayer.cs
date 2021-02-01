@@ -4,7 +4,7 @@ namespace Aimrank.Domain.Matches
 {
     public class MatchPlayer
     {
-        public UserId Id { get; }
+        public UserId UserId { get; }
         public string SteamId { get; }
         public MatchTeam Team { get; }
         public int Kills { get; private set; }
@@ -14,11 +14,11 @@ namespace Aimrank.Domain.Matches
         
         private MatchPlayer() {}
 
-        public MatchPlayer(UserId id, string steamId, MatchTeam team)
+        public MatchPlayer(UserId userId, string steamId, MatchTeam team)
         {
-            Id = id;
-            Team = team;
+            UserId = userId;
             SteamId = steamId;
+            Team = team;
         }
 
         public void UpdateStats(int kills, int assists, int deaths, int score)

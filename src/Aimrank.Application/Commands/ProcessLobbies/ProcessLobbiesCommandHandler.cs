@@ -57,7 +57,10 @@ namespace Aimrank.Application.Commands.ProcessLobbies
                     new(p2.Id, p2.SteamId, MatchTeam.CounterTerrorists)
                 });
                 
+                lobby.StartGame();
+                
                 _matchRepository.Add(match);
+                _lobbyRepository.Update(lobby);
                 
                 // Move to match created event handler - Create and start new server for that match
 
@@ -66,16 +69,14 @@ namespace Aimrank.Application.Commands.ProcessLobbies
                     match.Players.Select(p => p.SteamId),
                     match.Map);
                 
-                // Dispatch event that server was created and send address to users
-
                 var @event = new ServerCreatedEvent(
                     Guid.NewGuid(),
                     match.Id.Value,
                     address,
                     match.Map,
-                    match.Players.Select(p => p.Id.Value),
+                    match.Players.Select(p => p.UserId.Value),
                     DateTime.UtcNow);
-
+                
                 await _eventDispatcher.DispatchAsync(@event);
             }
             
