@@ -69,8 +69,13 @@ namespace Aimrank.Domain.Lobbies
         }
 
         public void StartGame() => Status = LobbyStatus.InGame;
-        
-        public void Close() => Status = LobbyStatus.Closed;
+
+        public void Close(UserId userId)
+        {
+            BusinessRules.Check(new UserMustBeLobbyLeaderRule(this, userId));
+            
+            Status = LobbyStatus.Closed;
+        }
 
         public void Open() => Status = LobbyStatus.Open;
     }

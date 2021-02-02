@@ -1,4 +1,5 @@
 using Aimrank.Application.Commands.ChangeLobbyMap;
+using Aimrank.Application.Commands.CloseLobby;
 using Aimrank.Application.Commands.CreateLobby;
 using Aimrank.Application.Commands.JoinLobby;
 using Aimrank.Application.Commands.LeaveLobby;
@@ -71,6 +72,13 @@ namespace Aimrank.Web.Controllers
         public async Task<IActionResult> ChangeMap(Guid id, ChangeLobbyMapRequest request)
         {
             await _aimrankModule.ExecuteCommandAsync(new ChangeLobbyMapCommand(id, request.Name));
+            return Ok();
+        }
+
+        [HttpPost("{id}/close")]
+        public async Task<IActionResult> Close(Guid id)
+        {
+            await _aimrankModule.ExecuteCommandAsync(new CloseLobbyCommand(id));
             return Ok();
         }
     }
