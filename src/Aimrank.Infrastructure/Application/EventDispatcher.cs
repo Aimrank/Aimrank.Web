@@ -30,7 +30,8 @@ namespace Aimrank.Infrastructure.Application
 
         public async Task DispatchAsync()
         {
-            var domainEvents = new Queue<IDomainEvent>();
+            var domainEvents = new Queue<IDomainEvent>(GetDomainEventsFromTrackedEntities());
+            
             var integrationEvents = new List<IntegrationEvent>();
 
             while (domainEvents.Count > 0)
