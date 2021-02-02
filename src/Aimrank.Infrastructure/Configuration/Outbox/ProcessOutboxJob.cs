@@ -38,7 +38,7 @@ namespace Aimrank.Infrastructure.Configuration.Outbox
 
             foreach (var message in messages)
             {
-                var type = Assemblies.Application.GetType(message.Type);
+                var type = Assemblies.IntegrationEvents.GetType(message.Type);
                 var @event = (IntegrationEvent) JsonSerializer.Deserialize(message.Data, type);
 
                 await _eventBus.Publish(@event);

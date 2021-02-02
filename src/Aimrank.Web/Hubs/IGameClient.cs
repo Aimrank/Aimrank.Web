@@ -1,4 +1,4 @@
-﻿using Aimrank.Application.Events;
+﻿using Aimrank.IntegrationEvents;
 using System.Threading.Tasks;
 
 namespace Aimrank.Web.Hubs

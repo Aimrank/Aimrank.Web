@@ -1,7 +1,7 @@
 using Aimrank.Common.Application.Events;
 using System;
 
-namespace Aimrank.Application.Events
+namespace Aimrank.IntegrationEvents
 {
     public class ServerMessageReceivedEvent : IntegrationEvent
     {
