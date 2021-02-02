@@ -1,6 +1,7 @@
 using Aimrank.Application.CSGO;
 using Aimrank.Application.Contracts;
 using Aimrank.Application.Events;
+using Aimrank.Common.Application.Events;
 using Aimrank.Domain.Matches;
 using MediatR;
 using System.Collections.Generic;

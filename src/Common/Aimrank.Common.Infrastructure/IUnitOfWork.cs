@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Application
+namespace Aimrank.Common.Infrastructure
 {
     public interface IUnitOfWork
     {

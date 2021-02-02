@@ -1,7 +1,6 @@
-using Aimrank.Common.Application;
 using System.Threading.Tasks;
 
-namespace Aimrank.Application
+namespace Aimrank.Common.Application.Events
 {
     public interface IEventDispatcher
     {

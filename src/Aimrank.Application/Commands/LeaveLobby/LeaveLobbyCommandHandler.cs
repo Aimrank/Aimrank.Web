@@ -1,4 +1,5 @@
 using Aimrank.Application.Contracts;
+using Aimrank.Common.Application;
 using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Users;
 using MediatR;

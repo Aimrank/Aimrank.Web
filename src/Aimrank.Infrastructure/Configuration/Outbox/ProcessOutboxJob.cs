@@ -1,5 +1,5 @@
-using Aimrank.Application;
-using Aimrank.Common.Application;
+using Aimrank.Common.Application.Data;
+using Aimrank.Common.Application.Events;
 using Aimrank.Common.Infrastructure.EventBus;
 using Dapper;
 using Quartz;

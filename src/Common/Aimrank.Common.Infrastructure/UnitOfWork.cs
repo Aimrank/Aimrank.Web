@@ -1,15 +1,16 @@
-using Aimrank.Application;
+using Aimrank.Common.Application.Events;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Infrastructure.Application
+namespace Aimrank.Common.Infrastructure
 {
-    internal class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
-        private readonly AimrankContext _context;
+        private readonly DbContext _context;
         private readonly IEventDispatcher _eventDispatcher;
 
-        public UnitOfWork(AimrankContext context, IEventDispatcher eventDispatcher)
+        public UnitOfWork(DbContext context, IEventDispatcher eventDispatcher)
         {
             _context = context;
             _eventDispatcher = eventDispatcher;

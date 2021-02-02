@@ -1,4 +1,4 @@
-using Aimrank.Common.Application;
+using Aimrank.Common.Application.Exceptions;
 using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Users;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,4 @@
-namespace Aimrank.Common.Application
+namespace Aimrank.Common.Application.Exceptions
 {
     public class EntityNotFoundException : ApplicationException
     {

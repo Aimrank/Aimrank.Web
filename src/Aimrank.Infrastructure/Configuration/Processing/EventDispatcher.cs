@@ -1,5 +1,4 @@
-using Aimrank.Application;
-using Aimrank.Common.Application;
+using Aimrank.Common.Application.Events;
 using Aimrank.Common.Domain;
 using Aimrank.Infrastructure.Configuration.Outbox;
 using Autofac;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Aimrank.Infrastructure.Application
+namespace Aimrank.Infrastructure.Configuration.Processing
 {
     internal class EventDispatcher : IEventDispatcher
     {

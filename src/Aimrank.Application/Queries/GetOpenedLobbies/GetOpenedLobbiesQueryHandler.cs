@@ -1,4 +1,5 @@
 using Aimrank.Application.Contracts;
+using Aimrank.Common.Application.Data;
 using Dapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;

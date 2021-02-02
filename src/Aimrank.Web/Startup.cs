@@ -2,6 +2,7 @@ using Aimrank.Application.Commands.SignIn;
 using Aimrank.Application.Commands.SignUp;
 using Aimrank.Application.Events;
 using Aimrank.Application;
+using Aimrank.Common.Application.Exceptions;
 using Aimrank.Common.Application;
 using Aimrank.Common.Domain;
 using Aimrank.Common.Infrastructure.EventBus;

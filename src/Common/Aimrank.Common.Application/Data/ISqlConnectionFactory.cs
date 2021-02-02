@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace Aimrank.Application
+namespace Aimrank.Common.Application.Data
 {
     public interface ISqlConnectionFactory
     {

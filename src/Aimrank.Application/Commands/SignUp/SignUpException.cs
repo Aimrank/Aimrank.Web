@@ -1,4 +1,4 @@
-using Aimrank.Common.Application;
+using Aimrank.Common.Application.Exceptions;
 using System.Collections.Generic;
 
 namespace Aimrank.Application.Commands.SignUp

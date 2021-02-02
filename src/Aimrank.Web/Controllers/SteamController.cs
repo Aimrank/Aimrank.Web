@@ -1,6 +1,6 @@
 using Aimrank.Application.Commands.UpdateUserSteamDetails;
 using Aimrank.Application.Contracts;
-using Aimrank.Application;
+using Aimrank.Common.Application;
 using Aimrank.Common.Domain;
 using Aimrank.Web.Attributes;
 using Aimrank.Web.Contracts.Responses;

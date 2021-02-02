@@ -1,4 +1,4 @@
-using Aimrank.Application;
+using Aimrank.Common.Infrastructure;
 using MediatR;
 using System.Threading.Tasks;
 using System.Threading;

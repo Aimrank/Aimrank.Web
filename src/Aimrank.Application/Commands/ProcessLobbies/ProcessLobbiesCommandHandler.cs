@@ -1,6 +1,7 @@
 using Aimrank.Application.CSGO;
 using Aimrank.Application.Contracts;
 using Aimrank.Application.Events;
+using Aimrank.Common.Application.Events;
 using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;
