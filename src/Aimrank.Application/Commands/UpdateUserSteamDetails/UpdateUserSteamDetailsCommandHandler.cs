@@ -1,5 +1,5 @@
 using Aimrank.Application.Contracts;
-using Aimrank.Common.Application;
+using Aimrank.Common.Application.Exceptions;
 using Aimrank.Domain.Users;
 using MediatR;
 using System.Threading.Tasks;

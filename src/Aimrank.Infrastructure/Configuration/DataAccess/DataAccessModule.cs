@@ -1,6 +1,6 @@
-using Aimrank.Application;
+using Aimrank.Common.Application.Data;
 using Aimrank.Common.Infrastructure;
-using Aimrank.Infrastructure.Application;
+using Aimrank.Infrastructure.Application.Data;
 using Aimrank.Infrastructure.Domain.Users;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;

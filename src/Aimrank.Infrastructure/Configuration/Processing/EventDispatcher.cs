@@ -1,28 +1,25 @@
-using Aimrank.Application;
-using Aimrank.Common.Application;
+using Aimrank.Common.Application.Events;
 using Aimrank.Common.Domain;
-using Aimrank.Common.Infrastructure.EventBus;
+using Aimrank.Infrastructure.Configuration.Outbox;
 using Autofac;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Aimrank.Infrastructure.Application
+namespace Aimrank.Infrastructure.Configuration.Processing
 {
     internal class EventDispatcher : IEventDispatcher
     {
-        private readonly IEventBus _eventBus;
         private readonly IEventMapper _eventMapper;
         private readonly ILifetimeScope _lifetimeScope;
         private readonly AimrankContext _context;
 
         public EventDispatcher(
-            IEventBus eventBus,
             IEventMapper eventMapper,
             ILifetimeScope lifetimeScope,
             AimrankContext context)
         {
-            _eventBus = eventBus;
             _eventMapper = eventMapper;
             _lifetimeScope = lifetimeScope;
             _context = context;
@@ -59,14 +56,11 @@ namespace Aimrank.Infrastructure.Application
                     integrationEvents.Add(integrationEvent);
                 }
             }
-
-            foreach (var integrationEvent in integrationEvents)
-            {
-                await _eventBus.Publish(integrationEvent);
-            }
+            
+            AddIntegrationEventsToOutbox(integrationEvents);
         }
 
-        public Task DispatchAsync(IntegrationEvent @event) => _eventBus.Publish(@event);
+        public void Dispatch(IntegrationEvent @event) => AddIntegrationEventsToOutbox(@event);
 
         private IEnumerable<IDomainEvent> GetDomainEventsFromTrackedEntities()
         {
@@ -86,5 +80,23 @@ namespace Aimrank.Infrastructure.Application
 
             return domainEvents;
         }
+
+        private void AddIntegrationEventsToOutbox(IEnumerable<IntegrationEvent> events)
+        {
+            foreach (var integrationEvent in events)
+            {
+                var integrationEventType = integrationEvent.GetType().FullName;
+                var integrationEventData = JsonSerializer.Serialize(integrationEvent, integrationEvent.GetType());
+                var outboxMessage = new OutboxMessage(
+                    integrationEvent.Id,
+                    integrationEvent.OccurredAt,
+                    integrationEventType,
+                    integrationEventData);
+                _context.OutboxMessages.Add(outboxMessage);
+            }
+        }
+
+        private void AddIntegrationEventsToOutbox(params IntegrationEvent[] events)
+            => AddIntegrationEventsToOutbox(events.AsEnumerable());
     }
 }

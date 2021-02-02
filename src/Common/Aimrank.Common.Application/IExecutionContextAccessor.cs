@@ -1,6 +1,6 @@
 using System;
 
-namespace Aimrank.Application
+namespace Aimrank.Common.Application
 {
     public interface IExecutionContextAccessor
     {

@@ -1,8 +1,7 @@
-using Aimrank.Application;
-using Aimrank.Common.Application;
+using Aimrank.Common.Application.Events;
 using Aimrank.Common.Domain;
 
-namespace Aimrank.Infrastructure.Application
+namespace Aimrank.Infrastructure.Configuration.Processing
 {
     internal class EventMapper : IEventMapper
     {

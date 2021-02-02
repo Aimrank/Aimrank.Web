@@ -1,7 +1,6 @@
 using Aimrank.Application.Commands.SignIn;
 using Aimrank.Application.Commands.SignUp;
-using Aimrank.Application.Events;
-using Aimrank.Application;
+using Aimrank.Common.Application.Exceptions;
 using Aimrank.Common.Application;
 using Aimrank.Common.Domain;
 using Aimrank.Common.Infrastructure.EventBus;
@@ -10,6 +9,7 @@ using Aimrank.Infrastructure.Configuration.CSGO;
 using Aimrank.Infrastructure.Configuration.Jwt;
 using Aimrank.Infrastructure.Configuration;
 using Aimrank.Infrastructure;
+using Aimrank.IntegrationEvents;
 using Aimrank.Web.Configuration.ExecutionContext;
 using Aimrank.Web.Configuration.Extensions;
 using Aimrank.Web.Configuration;

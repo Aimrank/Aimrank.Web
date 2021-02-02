@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Aimrank.Common.Domain\Aimrank.Common.Domain.csproj" />
+      <ProjectReference Include="..\Common\Aimrank.Common.Application\Aimrank.Common.Application.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,9 +1,10 @@
 using Aimrank.Application.CSGO;
 using Aimrank.Application.Contracts;
-using Aimrank.Application.Events;
+using Aimrank.Common.Application.Events;
 using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;
+using Aimrank.IntegrationEvents;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,7 +78,7 @@ namespace Aimrank.Application.Commands.ProcessLobbies
                     match.Players.Select(p => p.UserId.Value),
                     DateTime.UtcNow);
                 
-                await _eventDispatcher.DispatchAsync(@event);
+                _eventDispatcher.Dispatch(@event);
             }
             
             return Unit.Value;

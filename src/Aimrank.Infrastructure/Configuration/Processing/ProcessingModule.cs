@@ -1,6 +1,6 @@
-using Aimrank.Application;
+using Aimrank.Common.Application.Events;
 using Aimrank.Common.Domain;
-using Aimrank.Infrastructure.Application;
+using Aimrank.Common.Infrastructure;
 using Autofac;
 
 namespace Aimrank.Infrastructure.Configuration.Processing

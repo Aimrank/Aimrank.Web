@@ -1,9 +1,9 @@
-using Aimrank.Application;
+using Aimrank.Common.Application.Data;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System;
 
-namespace Aimrank.Infrastructure.Application
+namespace Aimrank.Infrastructure.Application.Data
 {
     internal class SqlConnectionFactory : ISqlConnectionFactory, IDisposable
     {

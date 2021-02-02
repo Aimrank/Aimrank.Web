@@ -1,6 +1,6 @@
 using System;
 
-namespace Aimrank.Common.Application
+namespace Aimrank.Common.Application.Exceptions
 {
     public abstract class ApplicationException : Exception
     {

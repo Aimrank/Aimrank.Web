@@ -1,7 +1,8 @@
 using Aimrank.Application.CSGO;
 using Aimrank.Application.Contracts;
-using Aimrank.Application.Events;
+using Aimrank.Common.Application.Events;
 using Aimrank.Domain.Matches;
+using Aimrank.IntegrationEvents;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,7 +68,7 @@ namespace Aimrank.Application.Commands.ProcessServerEvent
             }
             else
             {
-                await _eventDispatcher.DispatchAsync(new ServerMessageReceivedEvent(Guid.NewGuid(), request.ServerId,
+                _eventDispatcher.Dispatch(new ServerMessageReceivedEvent(Guid.NewGuid(), request.ServerId,
                     request.Content, DateTime.UtcNow));
             }
             

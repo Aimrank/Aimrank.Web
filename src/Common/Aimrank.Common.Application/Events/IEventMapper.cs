@@ -1,7 +1,6 @@
-using Aimrank.Common.Application;
 using Aimrank.Common.Domain;
 
-namespace Aimrank.Application
+namespace Aimrank.Common.Application.Events
 {
     public interface IEventMapper
     {

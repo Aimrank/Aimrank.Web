@@ -1,4 +1,4 @@
-using Aimrank.Application;
+using Aimrank.Common.Application;
 using Aimrank.Common.Infrastructure.EventBus;
 using Aimrank.Infrastructure.Configuration.Authentication;
 using Aimrank.Infrastructure.Configuration.CSGO;

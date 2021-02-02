@@ -1,9 +1,9 @@
-using Aimrank.Common.Application;
+using Aimrank.Common.Application.Events;
 using Autofac;
 using System.Collections.Generic;
 using System.Collections;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Aimrank.Web.Events.Handlers
 {

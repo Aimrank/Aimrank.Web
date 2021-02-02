@@ -1,4 +1,4 @@
-using Aimrank.Common.Application;
+using Aimrank.Common.Application.Events;
 using System.Threading.Tasks;
 
 namespace Aimrank.Common.Infrastructure.EventBus

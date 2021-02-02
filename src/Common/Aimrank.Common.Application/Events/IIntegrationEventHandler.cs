@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Common.Application
+namespace Aimrank.Common.Application.Events
 {
     public interface IIntegrationEventHandler
     {

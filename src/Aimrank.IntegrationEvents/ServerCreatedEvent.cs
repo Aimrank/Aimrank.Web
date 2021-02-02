@@ -1,8 +1,8 @@
-using Aimrank.Common.Application;
+using Aimrank.Common.Application.Events;
 using System.Collections.Generic;
 using System;
 
-namespace Aimrank.Application.Events
+namespace Aimrank.IntegrationEvents
 {
     public class ServerCreatedEvent : IntegrationEvent
     {
