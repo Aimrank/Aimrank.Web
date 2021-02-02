@@ -4,7 +4,6 @@ using Aimrank.Web.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using System.Threading;
-using System;
 
 namespace Aimrank.Web.Events.Handlers
 {
@@ -17,11 +16,7 @@ namespace Aimrank.Web.Events.Handlers
             _hubContext = hubContext;
         }
 
-        public Task HandleAsync(ServerCreatedEvent @event, CancellationToken cancellationToken = default)
-        {
-            Console.WriteLine($"Created server: {@event.Address} with map: {@event.Map}");
-            // await _hubContext.Clients.All.ServerCreated(@event);
-            return Task.CompletedTask;
-        }
+        public async Task HandleAsync(ServerCreatedEvent @event, CancellationToken cancellationToken = default)
+            => await _hubContext.Clients.All.ServerCreated(@event);
     }
 }
