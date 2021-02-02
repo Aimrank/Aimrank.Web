@@ -1,4 +1,5 @@
-using Aimrank.Infrastructure.Configuration.Quartz.Jobs;
+using Aimrank.Infrastructure.Configuration.Outbox;
+using Aimrank.Infrastructure.Configuration.Processing;
 using Quartz.Impl;
 using Quartz;
 using System.Collections.Specialized;
@@ -30,6 +31,16 @@ namespace Aimrank.Infrastructure.Configuration.Quartz
                     .Build();
 
             _scheduler.ScheduleJob(processLobbiesJob, processLobbiesTrigger).GetAwaiter().GetResult();
+
+            var processOutboxJob = JobBuilder.Create<ProcessOutboxJob>().Build();
+            var processOutboxTrigger =
+                TriggerBuilder
+                    .Create()
+                    .StartNow()
+                    .WithCronSchedule("0/2 * * ? * *")
+                    .Build();
+
+            _scheduler.ScheduleJob(processOutboxJob, processOutboxTrigger).GetAwaiter().GetResult();
         }
     }
 }

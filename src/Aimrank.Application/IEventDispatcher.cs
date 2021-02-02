@@ -5,7 +5,7 @@ namespace Aimrank.Application
 {
     public interface IEventDispatcher
     {
+        void Dispatch(IntegrationEvent @event);
         Task DispatchAsync();
-        Task DispatchAsync(IntegrationEvent @event);
     }
 }

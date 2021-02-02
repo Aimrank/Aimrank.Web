@@ -3,7 +3,7 @@ using MediatR;
 using Quartz;
 using System.Threading.Tasks;
 
-namespace Aimrank.Infrastructure.Configuration.Quartz.Jobs
+namespace Aimrank.Infrastructure.Configuration.Processing
 {
     [DisallowConcurrentExecution]
     internal class ProcessLobbiesJob : IJob

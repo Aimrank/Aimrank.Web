@@ -67,7 +67,7 @@ namespace Aimrank.Application.Commands.ProcessServerEvent
             }
             else
             {
-                await _eventDispatcher.DispatchAsync(new ServerMessageReceivedEvent(Guid.NewGuid(), request.ServerId,
+                _eventDispatcher.Dispatch(new ServerMessageReceivedEvent(Guid.NewGuid(), request.ServerId,
                     request.Content, DateTime.UtcNow));
             }
             

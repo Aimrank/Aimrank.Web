@@ -2,6 +2,7 @@ using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Matches;
 using Aimrank.Domain.RefreshTokens;
 using Aimrank.Domain.Users;
+using Aimrank.Infrastructure.Configuration.Outbox;
 using Aimrank.Infrastructure.Domain.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +19,7 @@ namespace Aimrank.Infrastructure
         public DbSet<Match> Matches { get; set; }
         public DbSet<Lobby> Lobbies { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<OutboxMessage> OutboxMessages { get; set; }
         
         public AimrankContext(DbContextOptions<AimrankContext> options) : base(options)
         {

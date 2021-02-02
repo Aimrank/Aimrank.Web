@@ -77,7 +77,7 @@ namespace Aimrank.Application.Commands.ProcessLobbies
                     match.Players.Select(p => p.UserId.Value),
                     DateTime.UtcNow);
                 
-                await _eventDispatcher.DispatchAsync(@event);
+                _eventDispatcher.Dispatch(@event);
             }
             
             return Unit.Value;
