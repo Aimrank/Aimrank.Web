@@ -6,6 +6,7 @@ using Aimrank.Common.Application;
 using Aimrank.Common.Domain;
 using Aimrank.Common.Infrastructure.EventBus;
 using Aimrank.Common.Infrastructure;
+using Aimrank.Infrastructure.Configuration.CSGO;
 using Aimrank.Infrastructure.Configuration.Jwt;
 using Aimrank.Infrastructure.Configuration;
 using Aimrank.Infrastructure;
@@ -77,6 +78,7 @@ namespace Aimrank.Web
             containerBuilder.RegisterModule(new AimrankAutofacModule());
 
             containerBuilder.RegisterType<ServerMessageReceivedEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<ServerCreatedEventHandler>().AsImplementedInterfaces();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -113,13 +115,16 @@ namespace Aimrank.Web
         private void InitializeEventBus(ILifetimeScope container)
         {
             _eventBus.Subscribe(new IntegrationEventGenericHandler<ServerMessageReceivedEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<ServerCreatedEvent>(container));
         }
 
         private void InitializeModules(ILifetimeScope container)
         {
             var executionContextAccessor = container.Resolve<IExecutionContextAccessor>();
             var jwtSettings = new JwtSettings();
+            var csgoSettings = new CSGOSettings();
             _configuration.GetSection(nameof(JwtSettings)).Bind(jwtSettings);
+            _configuration.GetSection(nameof(CSGOSettings)).Bind(csgoSettings);
 
             var connectionString = _configuration.GetConnectionString("Database");
             
@@ -127,7 +132,8 @@ namespace Aimrank.Web
                 connectionString,
                 executionContextAccessor,
                 _eventBus,
-                jwtSettings);
+                jwtSettings,
+                csgoSettings);
         }
     }
 }

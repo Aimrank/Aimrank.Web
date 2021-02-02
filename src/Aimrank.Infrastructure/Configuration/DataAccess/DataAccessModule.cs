@@ -45,8 +45,6 @@ namespace Aimrank.Infrastructure.Configuration.DataAccess
                 .Where(type => type.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
         }
 
         private void LoadIdentityCore(ContainerBuilder builder)

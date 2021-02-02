@@ -1,36 +1,32 @@
-﻿namespace Aimrank.Domain.Matches
+﻿using Aimrank.Domain.Users;
+
+namespace Aimrank.Domain.Matches
 {
     public class MatchPlayer
     {
-        public MatchId MatchId { get; }
-        public string SteamId { get; set; }
-        public string Name { get; set; }
-        public MatchTeam Team { get; set; }
-        public int Score { get; set; }
-        public int Kills { get; set; }
-        public int Deaths { get; set; }
-        public int Assists { get; set; }
-
+        public UserId UserId { get; }
+        public string SteamId { get; }
+        public MatchTeam Team { get; }
+        public int Kills { get; private set; }
+        public int Assists { get; private set; }
+        public int Deaths { get; private set; }
+        public int Score { get; private set; }
+        
         private MatchPlayer() {}
 
-        public MatchPlayer(
-            MatchId matchId,
-            string steamId,
-            string name,
-            MatchTeam team,
-            int score,
-            int kills,
-            int deaths,
-            int assists)
+        public MatchPlayer(UserId userId, string steamId, MatchTeam team)
         {
-            MatchId = matchId;
+            UserId = userId;
             SteamId = steamId;
-            Name = name;
             Team = team;
-            Score = score;
+        }
+
+        public void UpdateStats(int kills, int assists, int deaths, int score)
+        {
             Kills = kills;
-            Deaths = deaths;
             Assists = assists;
+            Deaths = deaths;
+            Score = score;
         }
     }
 }

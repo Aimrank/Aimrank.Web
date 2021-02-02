@@ -68,6 +68,8 @@ namespace Aimrank.Domain.Lobbies
             Configuration = new LobbyConfiguration(name);
         }
 
+        public void StartGame() => Status = LobbyStatus.InGame;
+        
         public void Close() => Status = LobbyStatus.Closed;
 
         public void Open() => Status = LobbyStatus.Open;

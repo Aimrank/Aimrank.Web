@@ -1,10 +1,12 @@
-using System.Threading.Tasks;
 using Aimrank.Domain.Users;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Aimrank.Domain.Lobbies
 {
     public interface ILobbyRepository
     {
+        Task<IEnumerable<Lobby>> BrowseAsync(LobbyStatus? status);
         Task<Lobby> GetByIdAsync(LobbyId id);
         Task<bool> ExistsForMemberAsync(UserId userId);
         void Add(Lobby lobby);

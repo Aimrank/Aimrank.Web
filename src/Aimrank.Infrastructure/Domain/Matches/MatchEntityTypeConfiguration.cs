@@ -1,4 +1,5 @@
 using Aimrank.Domain.Matches;
+using Aimrank.Infrastructure.Domain.Users;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,12 +13,16 @@ namespace Aimrank.Infrastructure.Domain.Matches
             
             builder.HasKey(m => m.Id);
             
+            builder.Property(m => m.Map).IsRequired().HasMaxLength(50);
+            
             builder.OwnsMany(m => m.Players, b =>
             {
                 b.ToTable("MatchesPlayers", "aimrank");
-                b.HasKey(p => new {p.SteamId, p.MatchId});
-                b.WithOwner().HasForeignKey(p => p.MatchId);
-                b.Property(p => p.Name).HasMaxLength(32);
+                b.Property<MatchId>("MatchId").IsRequired();
+                b.Property(p => p.SteamId).IsRequired().HasMaxLength(17);
+                b.HasOne<UserModel>().WithOne().HasForeignKey<MatchPlayer>("UserId").OnDelete(DeleteBehavior.Restrict);
+                b.WithOwner().HasForeignKey("MatchId");
+                b.HasKey("MatchId", "UserId");
             });
         }
     }

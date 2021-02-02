@@ -1,7 +1,6 @@
 using Aimrank.Domain.Matches;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using System;
 
 namespace Aimrank.Infrastructure.Domain.Matches
 {
@@ -14,7 +13,7 @@ namespace Aimrank.Infrastructure.Domain.Matches
             _context = context;
         }
 
-        public Task<Match> GetByIdAsync(Guid id)
+        public Task<Match> GetByIdAsync(MatchId id)
             => _context.Matches.FirstOrDefaultAsync(m => m.Id == id);
 
         public void Add(Match match) => _context.Matches.Add(match);

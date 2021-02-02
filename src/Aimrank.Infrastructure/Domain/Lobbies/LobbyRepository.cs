@@ -2,6 +2,7 @@ using Aimrank.Common.Application;
 using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Users;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +17,8 @@ namespace Aimrank.Infrastructure.Domain.Lobbies
             _context = context;
         }
 
+        public async Task<IEnumerable<Lobby>> BrowseAsync(LobbyStatus? status)
+            => await _context.Lobbies.Where(l => !status.HasValue || l.Status == status).ToListAsync();
         public async Task<Lobby> GetByIdAsync(LobbyId id)
         {
             var lobby = await _context.Lobbies.FirstOrDefaultAsync(l => l.Id == id);
