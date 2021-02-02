@@ -64,25 +64,6 @@ namespace Aimrank.Application.Commands.ProcessServerEvent
                     @event.Data.TeamCounterTerrorists.Score);
                 
                 _matchRepository.Update(match);
-
-                // var players = new List<MatchPlayer>();
-                //
-                // Teams are rotated here ? (t = 3, ct = 2)
-                // players.AddRange(@event.Data.TeamTerrorists.Clients.Select(p => new MatchPlayer(matchId, p.SteamId, p.Name, MatchTeam.Terrorists, p.Score, p.Kills, p.Deaths, p.Assists)));
-                // players.AddRange(@event.Data.TeamCounterTerrorists.Clients.Select(p => new MatchPlayer(matchId, p.SteamId, p.Name, MatchTeam.CounterTerrorists, p.Score, p.Kills, p.Deaths, p.Assists)));
-                //
-                // Update match state in database
-                //
-                // var matchId = new MatchId(Guid.NewGuid());
-                //
-                // var match = new Match(
-                //     matchId,
-                //     @event.Data.TeamTerrorists.Score,
-                //     @event.Data.TeamCounterTerrorists.Score,
-                //     DateTime.UtcNow,
-                //     players);
-                //
-                // _matchRepository.Add(match);
             }
             else
             {
