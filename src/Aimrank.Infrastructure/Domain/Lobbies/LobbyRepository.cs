@@ -1,5 +1,6 @@
 using Aimrank.Common.Application.Exceptions;
 using Aimrank.Domain.Lobbies;
+using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -22,6 +23,17 @@ namespace Aimrank.Infrastructure.Domain.Lobbies
         public async Task<Lobby> GetByIdAsync(LobbyId id)
         {
             var lobby = await _context.Lobbies.FirstOrDefaultAsync(l => l.Id == id);
+            if (lobby is null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            return lobby;
+        }
+
+        public async Task<Lobby> GetByMatchIdAsync(MatchId id)
+        {
+            var lobby = await _context.Lobbies.FirstOrDefaultAsync(l => l.MatchId == id);
             if (lobby is null)
             {
                 throw new EntityNotFoundException();

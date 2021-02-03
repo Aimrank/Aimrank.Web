@@ -1,5 +1,6 @@
 using Aimrank.Common.Domain;
 using Aimrank.Domain.Lobbies.Rules;
+using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace Aimrank.Domain.Lobbies
     public class Lobby : Entity
     {
         public LobbyId Id { get; }
+        public MatchId MatchId { get; private set; }
         public LobbyStatus Status { get; private set; }
         public LobbyConfiguration Configuration { get; private set; } = new("aim_map");
         public HashSet<LobbyMember> Members { get; private set; } = new();
@@ -68,7 +70,13 @@ namespace Aimrank.Domain.Lobbies
             Configuration = new LobbyConfiguration(name);
         }
 
-        public void StartGame() => Status = LobbyStatus.InGame;
+        public void StartGame(MatchId matchId)
+        {
+            BusinessRules.Check(new LobbyMustBeClosedRule(this));
+
+            MatchId = matchId;
+            Status = LobbyStatus.InGame;
+        }
 
         public void Close(UserId userId)
         {
@@ -77,6 +85,10 @@ namespace Aimrank.Domain.Lobbies
             Status = LobbyStatus.Closed;
         }
 
-        public void Open() => Status = LobbyStatus.Open;
+        public void Open()
+        {
+            MatchId = null;
+            Status = LobbyStatus.Open;
+        }
     }
 }

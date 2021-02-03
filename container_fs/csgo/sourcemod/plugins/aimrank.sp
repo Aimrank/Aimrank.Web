@@ -44,9 +44,10 @@ public void PublishEvent(JSON_Object data)
 
     GetConVarString(g_aimrankServerId, serverId, sizeof(serverId));
 
+    data.SetString("serverId", serverId);
     data.Encode(event, sizeof(event));
 
-    Format(command, sizeof(command), "cat << EVENTDATA | /home/app/Aimrank.BusPublisher %s\n%s\nEVENTDATA", serverId, event);
+    Format(command, sizeof(command), "cat << EVENTDATA | /home/app/Aimrank.BusPublisher\n%s\nEVENTDATA", event);
     
     PrintToServer(event);
     PrintToServer(command);

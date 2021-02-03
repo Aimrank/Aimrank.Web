@@ -58,7 +58,7 @@ namespace Aimrank.Application.Commands.ProcessLobbies
                     new(p2.Id, p2.SteamId, MatchTeam.CounterTerrorists)
                 });
                 
-                lobby.StartGame();
+                lobby.StartGame(matchId);
                 
                 _matchRepository.Add(match);
                 _lobbyRepository.Update(lobby);
