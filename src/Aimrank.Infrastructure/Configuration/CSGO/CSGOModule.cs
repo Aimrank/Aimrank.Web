@@ -16,6 +16,7 @@ namespace Aimrank.Infrastructure.Configuration.CSGO
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<ServerProcessManager>().As<IServerProcessManager>().SingleInstance();
+            builder.RegisterType<ServerEventMapper>().As<IServerEventMapper>().SingleInstance();
             builder.RegisterInstance(_csgoSettings).SingleInstance();
         }
     }

@@ -65,19 +65,18 @@ namespace Aimrank.Web
                     options.LocalizationEnabled = false;
                 });
 
-            // services.AddDbContext<AimrankContext>(options =>
-            // {
-            //     options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
-            //     options.UseSqlServer(_configuration.GetConnectionString("Database"),
-            //         x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
-            // });
+            services.AddDbContext<AimrankContext>(options =>
+            {
+                options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
+                options.UseSqlServer(_configuration.GetConnectionString("Database"),
+                    x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
+            });
         }
 
         public void ConfigureContainer(ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterModule(new AimrankAutofacModule());
 
-            containerBuilder.RegisterType<ServerMessageReceivedEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<ServerCreatedEventHandler>().AsImplementedInterfaces();
         }
 
@@ -114,7 +113,6 @@ namespace Aimrank.Web
         }
         private void InitializeEventBus(ILifetimeScope container)
         {
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<ServerMessageReceivedEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<ServerCreatedEvent>(container));
         }
 

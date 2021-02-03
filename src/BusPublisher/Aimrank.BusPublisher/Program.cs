@@ -9,12 +9,6 @@ namespace Aimrank.BusPublisher
     {
         public static async Task Main(string[] args)
         {
-            if (args.Length != 1)
-            {
-                Console.WriteLine("Usage: ./BusPublisher <server_id>");
-                return;
-            }
-
             var connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:80/hubs/game")
                 .Build();
@@ -26,7 +20,7 @@ namespace Aimrank.BusPublisher
             };
 
             await connection.StartAsync();
-            await connection.InvokeAsync("PublishEvent", args[0], ReadDataFromStandardInput());
+            await connection.InvokeAsync("PublishEvent", ReadDataFromStandardInput());
         }
 
         private static string ReadDataFromStandardInput()

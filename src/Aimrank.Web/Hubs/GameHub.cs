@@ -2,7 +2,6 @@
 using Aimrank.Application.Contracts;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
-using System;
 
 namespace Aimrank.Web.Hubs
 {
@@ -15,9 +14,9 @@ namespace Aimrank.Web.Hubs
             _aimrankModule = aimrankModule;
         }
 
-        public async Task PublishEvent(Guid serverId, string content)
+        public async Task PublishEvent(string content)
         {
-            await _aimrankModule.ExecuteCommandAsync(new ProcessServerEventCommand(serverId, content));
+            await _aimrankModule.ExecuteCommandAsync(new ProcessServerEventCommand(content));
         }
     }
 }
