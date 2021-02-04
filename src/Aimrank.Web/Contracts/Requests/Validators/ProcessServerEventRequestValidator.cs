@@ -6,7 +6,8 @@ namespace Aimrank.Web.Contracts.Requests.Validators
     {
         public ProcessServerEventRequestValidator()
         {
-            RuleFor(x => x.Content).NotEmpty();
+            RuleFor(x => x.ServerId).NotEmpty();
+            RuleFor(x => x.Name).NotEmpty();
         }
     }
 }

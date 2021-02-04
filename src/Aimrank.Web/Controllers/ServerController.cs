@@ -20,7 +20,11 @@ namespace Aimrank.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ProcessServerEvent(ProcessServerEventRequest request)
         {
-            await _aimrankModule.ExecuteCommandAsync(new ProcessServerEventCommand(request.Content));
+            await _aimrankModule.ExecuteCommandAsync(new ProcessServerEventCommand(
+                request.ServerId,
+                request.Name,
+                request.Data));
+            
             return Accepted();
         }
     }

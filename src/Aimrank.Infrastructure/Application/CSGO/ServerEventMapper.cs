@@ -13,26 +13,21 @@ namespace Aimrank.Infrastructure.Application.CSGO
             ["match_end"] = typeof(FinishMatchCommand)
         };
         
-        public IServerEventCommand Map(string content)
+        public IServerEventCommand Map(Guid serverId, string name, dynamic data)
         {
             var settings = new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
 
-            var @event = JsonSerializer.Deserialize<ServerEventDto<object>>(content, settings);
-
-            var commandType = _commands.GetValueOrDefault(@event.Name);
+            var commandType = _commands.GetValueOrDefault(name);
             if (commandType is null)
             {
                 return null;
-            } 
+            }
             
-            dynamic serverEvent = JsonSerializer.Deserialize(
-                content,
-                typeof(ServerEventDto<>).MakeGenericType(commandType),
-                settings);
+            var content = JsonSerializer.Serialize<dynamic>(data, settings);
+            var command = JsonSerializer.Deserialize(content, commandType, settings);
+            command.ServerId = serverId;
 
-            serverEvent.Data.ServerId = serverEvent.ServerId;
-
-            return serverEvent.Data;
+            return command;
         }
     }
 }

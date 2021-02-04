@@ -1,6 +1,7 @@
 using Aimrank.Application.CSGO.Commands.FinishMatch;
 using Aimrank.Application.CSGO;
 using Aimrank.Infrastructure.Application.CSGO;
+using System.Text.Json;
 using System;
 using Xunit;
 
@@ -15,10 +16,11 @@ namespace Aimrank.IntegrationTests.Infrastructure
         {
             // Arrange
             var serverId = Guid.NewGuid();
-            var serverEvent = CreateServerEvent(serverId);
+            var serverEventName = "match_end";
+            var serverEventData = CreateServerEvent();
             
             // Act
-            var command = _serverEventMapper.Map(serverEvent) as FinishMatchCommand;
+            var command = _serverEventMapper.Map(serverId, serverEventName, serverEventData) as FinishMatchCommand;
             
             // Assert
             Assert.NotNull(command);
@@ -32,47 +34,50 @@ namespace Aimrank.IntegrationTests.Infrastructure
         {
             // Arrange
             var serverId = Guid.NewGuid();
-            var serverEvent = @$"{{""serverId"": ""{serverId}"", ""name"": ""test"", ""data"": null}}";
+            var serverEventName = "test";
             
             // Act
-            var command = _serverEventMapper.Map(serverEvent);
+            var command = _serverEventMapper.Map(serverId, serverEventName, null);
             
             // Assert
             Assert.Null(command);
         }
 
-        private string CreateServerEvent(Guid serverId)
-            => @$"
+        private static dynamic CreateServerEvent()
+        {
+            var data = @$"
                 {{
-                    ""serverId"": ""{serverId}"",
-                    ""name"": ""match_end"",
-                    ""data"": {{
-                        ""teamTerrorists"": {{
-                            ""score"": 8,
-                            ""clients"": [{{
-                                ""steamId"": ""12345678901234567"",
-                                ""name"": ""name1"",
-                                ""kills"": 8,
-                                ""assists"": 0,
-                                ""deaths"": 0,
-                                ""score"": 16
-                            }}]
-                        }},
-                        ""teamCounterTerrorists"": {{
-                            ""score"": 0,
-                            ""clients"": [{{
-                                ""steamId"": ""12345678901234568"",
-                                ""name"": ""name2"",
-                                ""kills"": 0,
-                                ""assists"": 0,
-                                ""deaths"": 8,
-                                ""score"": 0
-                            }}]
-                        }}
+                    ""teamTerrorists"": {{
+                        ""score"": 8,
+                        ""clients"": [{{
+                            ""steamId"": ""12345678901234567"",
+                            ""name"": ""name1"",
+                            ""kills"": 8,
+                            ""assists"": 0,
+                            ""deaths"": 0,
+                            ""score"": 16
+                        }}]
+                    }},
+                    ""teamCounterTerrorists"": {{
+                        ""score"": 0,
+                        ""clients"": [{{
+                            ""steamId"": ""12345678901234568"",
+                            ""name"": ""name2"",
+                            ""kills"": 0,
+                            ""assists"": 0,
+                            ""deaths"": 8,
+                            ""score"": 0
+                        }}]
                     }}
                 }}"
                 .Replace("\n", string.Empty)
                 .Replace("\t", string.Empty)
                 .Replace("    ", string.Empty);
+
+            var result = JsonSerializer.Deserialize<dynamic>(data,
+                new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+
+            return result;
+        }
     }
 }
