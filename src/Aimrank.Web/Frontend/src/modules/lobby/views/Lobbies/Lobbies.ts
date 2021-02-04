@@ -1,7 +1,8 @@
 import { defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { lobbyService } from "@/services";
 import { useUser } from "@/modules/user";
+import { useNotifications } from "@/modules/common/hooks/useNotifications";
+import { lobbyService } from "@/services";
 import { ILobbyDto } from "../../services/LobbyService";
 import BaseButton from "@/modules/common/components/BaseButton";
 
@@ -14,6 +15,7 @@ const Lobbies = defineComponent({
 
     const user = useUser();
     const router = useRouter();
+    const notifications = useNotifications();
 
     onMounted(async () => {
       const result = await lobbyService.getList();
@@ -29,7 +31,7 @@ const Lobbies = defineComponent({
       if (result.isOk()) {
         router.push({ name: "lobby" });
       } else {
-        alert(result.error.title);
+        notifications.danger(result.error.title);
       }
     }
 
@@ -39,7 +41,7 @@ const Lobbies = defineComponent({
       if (result.isOk()) {
         router.push({ name: "lobby" });
       } else {
-        alert(result.error.title);
+        notifications.danger(result.error.title);
       }
     }
 

@@ -1,6 +1,7 @@
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUser } from "@/modules/user";
+import { useNotifications } from "@/modules/common/hooks/useNotifications";
 import { lobbyService, matchService } from "@/services";
 import { ILobbyDto } from "../../services/LobbyService";
 import { IMatchDto } from "../../services/MatchService";
@@ -52,6 +53,7 @@ const Lobby = defineComponent({
 
     const user = useUser();
     const router = useRouter();
+    const notifications = useNotifications();
 
     const onCloseLobbyClick = async () => {
       if (!lobby.value) {
@@ -61,9 +63,9 @@ const Lobby = defineComponent({
       const result = await lobbyService.close(lobby.value.id);
 
       if (result.isOk()) {
-        alert("Serching for new game");
+        notifications.success("Searching for available server...");
       } else {
-        alert(result.error.title);
+        notifications.danger(result.error.title);
       }
     }
 
@@ -77,7 +79,7 @@ const Lobby = defineComponent({
       if (result.isOk()) {
         lobby.value = { ...lobby.value, map: map.value };
       } else {
-        alert(result.error.title);
+        notifications.danger(result.error.title);
       }
     }
 
@@ -91,7 +93,7 @@ const Lobby = defineComponent({
       if (result.isOk()) {
         router.push({ name: "lobbies" });
       } else {
-        alert(result.error.title);
+        notifications.danger(result.error.title);
       }
     }
 

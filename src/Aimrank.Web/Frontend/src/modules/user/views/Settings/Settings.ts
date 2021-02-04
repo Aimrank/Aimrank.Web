@@ -46,7 +46,7 @@ const Settings = defineComponent({
       const result = await steamService.signInWithSteam();
 
       if (!result.isOk()) {
-        alert(result.error.title);
+        notifications.danger(result.error.title);
       }
     }
 
