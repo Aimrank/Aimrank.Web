@@ -1,10 +1,8 @@
 using Aimrank.Application.CSGO;
 using Aimrank.Application.Contracts;
-using Aimrank.Common.Application.Events;
 using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;
-using Aimrank.IntegrationEvents;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,20 +18,17 @@ namespace Aimrank.Application.Commands.ProcessLobbies
         private readonly IUserRepository _userRepository;
         private readonly IMatchRepository _matchRepository;
         private readonly IServerProcessManager _serverProcessManager;
-        private readonly IEventDispatcher _eventDispatcher;
 
         public ProcessLobbiesCommandHandler(
             ILobbyRepository lobbyRepository,
             IUserRepository userRepository,
             IMatchRepository matchRepository,
-            IServerProcessManager serverProcessManager,
-            IEventDispatcher eventDispatcher)
+            IServerProcessManager serverProcessManager)
         {
             _lobbyRepository = lobbyRepository;
             _userRepository = userRepository;
             _matchRepository = matchRepository;
             _serverProcessManager = serverProcessManager;
-            _eventDispatcher = eventDispatcher;
         }
 
         public async Task<Unit> Handle(ProcessLobbiesCommand request, CancellationToken cancellationToken)
@@ -57,28 +52,17 @@ namespace Aimrank.Application.Commands.ProcessLobbies
                     new(p1.Id, p1.SteamId, MatchTeam.Terrorists),
                     new(p2.Id, p2.SteamId, MatchTeam.CounterTerrorists)
                 });
-                
-                lobby.StartGame(matchId);
-                
-                _matchRepository.Add(match);
-                _lobbyRepository.Update(lobby);
-                
-                // Move to match created event handler - Create and start new server for that match
 
                 var address = _serverProcessManager.StartServer(
                     match.Id.Value,
                     match.Players.Select(p => p.SteamId),
                     match.Map);
                 
-                var @event = new ServerCreatedEvent(
-                    Guid.NewGuid(),
-                    match.Id.Value,
-                    address,
-                    match.Map,
-                    match.Players.Select(p => p.UserId.Value),
-                    DateTime.UtcNow);
+                lobby.StartGame(matchId);
+                match.Start(address);
                 
-                _eventDispatcher.Dispatch(@event);
+                _matchRepository.Add(match);
+                _lobbyRepository.Update(lobby);
             }
             
             return Unit.Value;

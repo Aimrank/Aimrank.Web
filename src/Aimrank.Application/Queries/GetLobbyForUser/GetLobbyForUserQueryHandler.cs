@@ -8,23 +8,29 @@ using System.Threading.Tasks;
 using System.Threading;
 using System;
 
-namespace Aimrank.Application.Queries.GetLobby
+namespace Aimrank.Application.Queries.GetLobbyForUser
 {
-    public class GetLobbyQueryHandler : IQueryHandler<GetLobbyQuery, LobbyDto>
+    public class GetLobbyForUserQueryHandler : IQueryHandler<GetLobbyForUserQuery, LobbyDto>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public GetLobbyQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
+        public GetLobbyForUserQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<LobbyDto> Handle(GetLobbyQuery request, CancellationToken cancellationToken)
+        public async Task<LobbyDto> Handle(GetLobbyForUserQuery request, CancellationToken cancellationToken)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
-
+            
             const string sql =
-                @"SELECT
+                @"DECLARE @id AS NVARCHAR(450);
+
+                  SELECT @id = [LobbyId]
+                  FROM [aimrank].[LobbiesMembers]
+                  WHERE [UserId] = @UserId;
+
+                  SELECT
                     [Lobby].[Id] AS [Id],
                     [Lobby].[MatchId] AS [MatchId],
                     [Lobby].[Status] AS [Status],
@@ -36,10 +42,10 @@ namespace Aimrank.Application.Queries.GetLobby
                     END AS [IsLeader]
                   FROM [aimrank].[Lobbies] AS [Lobby]
                   LEFT JOIN [aimrank].[LobbiesMembers] AS [Member] ON [Lobby].[Id] = [Member].[LobbyId]
-                  WHERE [Lobby].[Id] = @LobbyId;";
+                  WHERE [Lobby].[Id] = @id;";
 
             var lookup = new Dictionary<Guid, LobbyDto>();
-
+            
             await connection.QueryAsync<LobbyDto, LobbyMemberDto, LobbyDto>(
                 sql,
                 (details, member) =>
@@ -65,7 +71,7 @@ namespace Aimrank.Application.Queries.GetLobby
 
                     return lobby;
                 },
-                new {LobbyId = request.Id},
+                new {UserId = request.Id},
                 splitOn: "UserId");
 
             return lookup.Values.FirstOrDefault();

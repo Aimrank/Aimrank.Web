@@ -7,16 +7,16 @@ using System.Threading;
 
 namespace Aimrank.Web.Events.Handlers
 {
-    public class ServerCreatedEventHandler : IIntegrationEventHandler<ServerCreatedEvent>
+    public class MatchFinishedEventHandler : IIntegrationEventHandler<MatchFinishedEvent>
     {
         private readonly IHubContext<GeneralHub, IGeneralClient> _hubContext;
 
-        public ServerCreatedEventHandler(IHubContext<GeneralHub, IGeneralClient> hubContext)
+        public MatchFinishedEventHandler(IHubContext<GeneralHub, IGeneralClient> hubContext)
         {
             _hubContext = hubContext;
         }
 
-        public async Task HandleAsync(ServerCreatedEvent @event, CancellationToken cancellationToken = default)
-            => await _hubContext.Clients.All.ServerCreated(@event);
+        public async Task HandleAsync(MatchFinishedEvent @event, CancellationToken cancellationToken = default)
+            => await _hubContext.Clients.All.MatchFinished(@event);
     }
 }

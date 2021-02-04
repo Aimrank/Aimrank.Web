@@ -10,6 +10,6 @@ namespace Aimrank.Infrastructure.Configuration
         public static readonly Assembly Application = typeof(IAimrankModule).Assembly;
         public static readonly Assembly Domain = typeof(Match).Assembly;
         public static readonly Assembly Infrastructure = typeof(Assemblies).Assembly;
-        public static readonly Assembly IntegrationEvents = typeof(ServerCreatedEvent).Assembly;
+        public static readonly Assembly IntegrationEvents = typeof(MatchFinishedEvent).Assembly;
     }
 }

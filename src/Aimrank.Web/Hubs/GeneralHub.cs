@@ -7,7 +7,8 @@ namespace Aimrank.Web.Hubs
 {
     public interface IGeneralClient
     {
-        Task ServerCreated(ServerCreatedEvent @event);
+        Task MatchStarted(MatchStartedEvent @event);
+        Task MatchFinished(MatchFinishedEvent @event);
     }
     
     [JwtAuth]
