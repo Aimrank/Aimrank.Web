@@ -1,9 +1,7 @@
-import { AsyncResult, Result } from "@/modules/common/models/Result";
-import { ErrorResponse } from "@/modules/common/models/ErrorResponse";
 import { HttpClient } from "@/modules/common/services/HttpClient";
 import { Service } from "@/modules/common/services/Service";
 
-interface IUserDetailsResponse {
+interface IUserDetailsDto {
   userId: string;
   steamId: string | null;
   username: string;
@@ -16,14 +14,8 @@ export class UserService extends Service {
     });
   }
 
-  public async getUserDetails(userId: string): AsyncResult<IUserDetailsResponse, ErrorResponse>
+  public async getUserDetails(userId: string)
   {
-    try {
-      const res = await this.httpClient.get(this.getRoute("getUserDetails", { userId }));
-
-      return Result.success(res.data);
-    } catch (error) {
-      return Result.fail(ErrorResponse.create(error.response.data));
-    }
+    return this.wrap<IUserDetailsDto>(this.httpClient.get(this.getRoute("getUserDetails", { userId })));
   }
 }

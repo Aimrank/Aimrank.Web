@@ -1,3 +1,6 @@
+import { AsyncResult, Result } from "@/modules/common/models/Result";
+import { ErrorResponse } from "@/modules/common/models/ErrorResponse";
+
 interface IEndpoints {
   [name: string]: string;
 }
@@ -19,5 +22,15 @@ export abstract class Service {
     }
     
     return route;
+  }
+
+  protected async wrap<TResponse>(promise): AsyncResult<TResponse, ErrorResponse> {
+    try {
+      const res = await promise;
+
+      return Result.success(res.data);
+    } catch (error) {
+      return Result.fail(ErrorResponse.create(error.response.data));
+    }
   }
 }

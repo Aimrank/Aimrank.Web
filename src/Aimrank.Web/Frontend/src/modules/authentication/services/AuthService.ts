@@ -1,5 +1,3 @@
-import { AsyncResult, Result } from "@/modules/common/models/Result";
-import { ErrorResponse } from "@/modules/common/models/ErrorResponse";
 import { HttpClient } from "@/modules/common/services/HttpClient";
 import { Service } from "@/modules/common/services/Service";
 
@@ -28,23 +26,11 @@ export class AuthService extends Service {
     });
   }
 
-  public async signIn(request: ISignInRequest): AsyncResult<IAuthenticationSuccessResponse, ErrorResponse> {
-    try {
-      const res = await this.httpClient.post(this.getRoute("signIn"), request);
-
-      return Result.success(res.data);
-    } catch (error) {
-      return Result.fail(ErrorResponse.create(error.response.data));
-    }
+  public async signIn(request: ISignInRequest) {
+    return this.wrap<IAuthenticationSuccessResponse>(this.httpClient.post(this.getRoute("signIn"), request));
   }
 
-  public async signUp(request: ISignUpRequest): AsyncResult<IAuthenticationSuccessResponse, ErrorResponse> {
-    try {
-      const res = await this.httpClient.post(this.getRoute("signUp"), request);
-
-      return Result.success(res.data);
-    } catch (error) {
-      return Result.fail(ErrorResponse.create(error.response.data));
-    }
+  public async signUp(request: ISignUpRequest) {
+    return this.wrap<IAuthenticationSuccessResponse>(this.httpClient.post(this.getRoute("signUp"), request));
   }
 }

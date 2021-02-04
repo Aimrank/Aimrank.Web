@@ -8,12 +8,14 @@
     </div>
     <div v-if="authState.isAuthenticated">
       Hello {{ userState.user.username }}
-      <router-link :to="{ name: 'settings' }">Settings</router-link>
-      <button @click="signOut">Sign out</button>
+      <base-button :class="$style.button" small tag="router-link" :to="{ name: 'settings' }">Settings</base-button>
+      <base-button :class="$style.button" small tag="router-link" :to="{ name: 'lobbies' }">Browse</base-button>
+      <base-button :class="$style.button" small tag="router-link" :to="{ name: 'lobby' }">Lobby</base-button>
+      <base-button :class="$style.button" small primary @click="signOut">Sign out</base-button>
     </div>
     <div v-else>
-      <router-link :to="{ name: 'sign-in' }">Sign in</router-link>
-      <router-link :to="{ name: 'sign-up' }">Sign up</router-link>
+      <base-button :class="$style.button" small tag="router-link" :to="{ name: 'sign-in' }">Sign in</base-button>
+      <base-button :class="$style.button" small tag="router-link" :to="{ name: 'sign-up' }">Sign up</base-button>
     </div>
   </header>
 </template>

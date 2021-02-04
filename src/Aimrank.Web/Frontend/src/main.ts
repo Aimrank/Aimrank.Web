@@ -1,9 +1,10 @@
 import { createApp } from "vue";
 import { createI18n } from "vue-i18n";
 import { router } from "@/router";
-import { httpClient } from "@/services";
+import { httpClient, generalHub } from "@/services";
 import { useAuth } from "./modules/authentication";
 import { useUser } from "./modules/user";
+import { useNotifications } from "./modules/common/hooks/useNotifications";
 
 import App from "./App.vue";
 
@@ -26,6 +27,7 @@ const init = async () => {
 const initAuthentication = async () => {
   const auth = useAuth();
   const user = useUser();
+  const notifications = useNotifications();
 
   httpClient.loadTokens();
 
@@ -35,6 +37,16 @@ const initAuthentication = async () => {
   if (userId && userEmail) {
     auth.setAuthenticated(true);
     await user.updateUser(userId);
+
+    generalHub.connection.on("MatchStarted", (event) => {
+      notifications.success(`Match started: ${event.address}`);
+    });
+
+    generalHub.connection.on("MatchFinished", (event) => {
+      notifications.success(`Match finished: ${event.matchId}`);
+    });
+
+    await generalHub.connect();
   }
 }
 
