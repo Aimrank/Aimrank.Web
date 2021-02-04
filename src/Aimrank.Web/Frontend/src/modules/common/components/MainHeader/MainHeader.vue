@@ -4,10 +4,10 @@
 <template>
   <header :class="$style.header">
     <div>
-      <router-link :to="{ name: 'home' }">Home</router-link>
+      <router-link :to="{ name: 'home' }">Aimrank</router-link>
     </div>
     <div v-if="authState.isAuthenticated">
-      Hello {{ userState.user.username }}
+      {{ $t("common.components.MainHeader.user", [userState.user.username]) }}
       <base-button :class="$style.button" small tag="router-link" :to="{ name: 'settings' }">Settings</base-button>
       <base-button :class="$style.button" small tag="router-link" :to="{ name: 'lobbies' }">Browse</base-button>
       <base-button :class="$style.button" small tag="router-link" :to="{ name: 'lobby' }">Lobby</base-button>

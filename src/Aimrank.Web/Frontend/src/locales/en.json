@@ -1,8 +1,15 @@
 {
+  "common": {
+    "components": {
+      "MainHeader": {
+        "user": "Hello {0}"
+      }
+    }
+  },
   "home": {
     "views": {
       "Home": {
-        "title": "Home"
+        "title": "Welcome on Aimrank"
       }
     }
   },
@@ -32,6 +39,37 @@
         "title": "Settings",
         "steamNotConnected": "Not connected",
         "loading": "Loading..."
+      }
+    }
+  },
+  "lobby": {
+    "views": {
+      "Lobbies": {
+        "title": "Opened lobbies",
+        "create": "Create new lobby",
+        "table": {
+          "id": "Id",
+          "map": "Map",
+          "members": "Members"
+        },
+        "leader": "Leader",
+        "join": "Join"
+      },
+      "Lobby": {
+        "title": "Current lobby",
+        "leave": "Leave lobby",
+        "table": {
+          "id": "Id",
+          "map": "Map",
+          "members": "Members"
+        },
+        "leader": "Leader",
+        "match": "Match",
+        "options": "Options",
+        "optionsMap": "Map",
+        "changeMap": "Change map",
+        "start": "Start game",
+        "empty": "You're not a member of any lobby"
       }
     }
   }

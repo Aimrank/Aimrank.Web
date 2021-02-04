@@ -5,19 +5,19 @@
   <div :class="$style.container">
     <div v-if="lobby">
       <div :class="$style.header">
-        <h3>Current lobby</h3>
+      <h3>{{ $t("lobby.views.Lobby.title") }}</h3>
         <base-button
           v-if="lobby.status === 0"
           @click="onLeaveLobbyClick"
         >
-          Leave lobby
+          {{ $t("lobby.views.Lobby.leave") }}
         </base-button>
       </div>
       <table :class="$style.table">
         <tr>
-          <th>Id</th>
-          <th>Map</th>
-          <th>Members</th>
+          <th>{{ $t("lobby.views.Lobby.table.id") }}</th>
+          <th>{{ $t("lobby.views.Lobby.table.map") }}</th>
+          <th>{{ $t("lobby.views.Lobby.table.members") }}</th>
         </tr>
         <tr>
           <td>{{ lobby.id }}</td>
@@ -29,7 +29,9 @@
                 :key="member.userId"
               >
                 {{ member.userId }}
-                <span v-if="member.isLeader">(Leader)</span>
+                <span v-if="member.isLeader">
+                  ({{ $t("lobby.views.Lobbies.leader") }})
+                </span>
               </li>
             </ul>
           </td>
@@ -39,7 +41,7 @@
         v-if="match"
         :class="$style.section"
       >
-        <h3>Match</h3>
+        <h3>{{ $t("lobby.views.Lobby.match") }}</h3>
         <div>Id: {{ match.id }}</div>
         <div>Map: {{ match.map }}</div>
         <div>Status: {{ ["Created", "Started", "Canceled", "Finished"][match.status] }}</div>
@@ -49,22 +51,24 @@
         v-else-if="member && member.isLeader"
         :class="$style.section"
       >
-        <h3>Options</h3>
+        <h3>{{ $t("lobby.views.Lobby.options") }}</h3>
         <form-field-input
-          label="Map"
+          :label="$t('lobby.views.Lobby.optionsMap')"
           v-model="map"
         />
-        <base-button @click="onChangeMapClick">Change map</base-button>
+        <base-button @click="onChangeMapClick">
+          {{ $t("lobby.views.Lobby.changeMap") }}
+        </base-button>
         <base-button
           primary
           @click="onCloseLobbyClick"
         >
-          Start game
+          {{ $t("lobby.views.Lobby.start") }}
         </base-button>
       </div>
     </div>
     <div v-else>
-      You're not member of any lobby
+      {{ $t("lobby.views.Lobby.empty") }}
     </div>
   </div>
 </template>

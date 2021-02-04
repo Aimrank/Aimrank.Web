@@ -4,19 +4,19 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.header">
-      <h3>Opened lobbies</h3>
+      <h3>{{ $t("lobby.views.Lobbies.title") }}</h3>
       <base-button
         primary
         @click="onCreateNewLobbyClick"
       >
-        Create new lobby
+        {{ $t("lobby.views.Lobbies.create") }}
       </base-button>
     </div>
     <table :class="$style.table">
       <tr>
-        <th>Id</th>
-        <th>Map</th>
-        <th>Members</th>
+        <th>{{ $t("lobby.views.Lobbies.table.id") }}</th>
+        <th>{{ $t("lobby.views.Lobbies.table.map") }}</th>
+        <th>{{ $t("lobby.views.Lobbies.table.members") }}</th>
         <th></th>
       </tr>
       <tr
@@ -32,7 +32,7 @@
               :key="member.userId"
             >
               {{ member.userId }}
-              <span v-if="member.isLeader">(Leader)</span>
+              <span v-if="member.isLeader">({{ $t("lobby.views.Lobbies.leader") }})</span>
             </li>
           </ul>
         </td>
@@ -41,7 +41,7 @@
             v-if="lobby.members.every(m => userState.user && m.userId !== userState.user.id)"
             @click="onJoinClick(lobby.id)"
           >
-            Join
+            {{ $t("lobby.views.Lobbies.join") }}
           </base-button>
         </td>
       </tr>
