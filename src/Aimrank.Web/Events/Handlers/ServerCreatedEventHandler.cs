@@ -9,9 +9,9 @@ namespace Aimrank.Web.Events.Handlers
 {
     public class ServerCreatedEventHandler : IIntegrationEventHandler<ServerCreatedEvent>
     {
-        private readonly IHubContext<GameHub, IGameClient> _hubContext;
+        private readonly IHubContext<GeneralHub, IGeneralClient> _hubContext;
 
-        public ServerCreatedEventHandler(IHubContext<GameHub, IGameClient> hubContext)
+        public ServerCreatedEventHandler(IHubContext<GeneralHub, IGeneralClient> hubContext)
         {
             _hubContext = hubContext;
         }

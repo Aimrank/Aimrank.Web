@@ -104,7 +104,7 @@ namespace Aimrank.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<GameHub>("/hubs/game");
+                endpoints.MapHub<GeneralHub>("/hubs/general");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{*all}",

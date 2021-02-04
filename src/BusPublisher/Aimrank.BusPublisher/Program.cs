@@ -1,29 +1,22 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using System.Net.Http.Json;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System;
 
 namespace Aimrank.BusPublisher
 {
-    class Program
+    record Request(string Content);
+
+    static class Program
     {
         public static async Task Main(string[] args)
         {
-            var connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:80/hubs/game")
-                .Build();
-
-            connection.Closed += async (error) =>
-            {
-                await Task.Delay(new Random().Next(0, 5) * 1000);
-                await connection.StartAsync();
-            };
-
-            await connection.StartAsync();
-            await connection.InvokeAsync("PublishEvent", ReadDataFromStandardInput());
+            using var httpClient = new HttpClient();
+            await httpClient.PostAsJsonAsync("http://localhost/api/server", ReadDataFromStandardInput());
         }
 
-        private static string ReadDataFromStandardInput()
+        private static Request ReadDataFromStandardInput()
         {
             var builder = new StringBuilder();
             var content = Console.ReadLine();
@@ -34,7 +27,7 @@ namespace Aimrank.BusPublisher
                 content = Console.ReadLine();
             }
 
-            return builder.ToString();
+            return new Request(builder.ToString());
         }
     }
 }
