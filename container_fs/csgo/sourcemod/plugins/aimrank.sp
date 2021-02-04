@@ -50,6 +50,8 @@ public void PublishEvent(JSON_Object data)
     httpRequest.SetHeader("Content-Type", "application/json");
     httpRequest.SetData(event);
     httpRequest.POST();
+    
+    delete httpRequest;
 
     data.Cleanup();
 }
