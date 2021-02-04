@@ -63,13 +63,18 @@ namespace Aimrank.Infrastructure.Application.CSGO
             }
         }
 
-        public async Task StopServerAsync(Guid serverId)
+        public void StopServer(Guid serverId)
         {
             if (_processes.TryRemove(serverId, out var process))
             {
-                await process.StopAsync();
-                process.Dispose();
-                _availablePorts.Enqueue(process.Configuration.Port);
+                Task.Run(async () =>
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(20));
+                    await process.StopAsync();
+                    process.Dispose();
+                    _availablePorts.Enqueue(process.Configuration.Port);
+                });
+                
                 return;
             }
 

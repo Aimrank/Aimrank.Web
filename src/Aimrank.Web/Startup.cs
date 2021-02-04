@@ -77,7 +77,8 @@ namespace Aimrank.Web
         {
             containerBuilder.RegisterModule(new AimrankAutofacModule());
 
-            containerBuilder.RegisterType<ServerCreatedEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<MatchStartedEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<MatchFinishedEventHandler>().AsImplementedInterfaces();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -104,7 +105,7 @@ namespace Aimrank.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<GameHub>("/hubs/game");
+                endpoints.MapHub<GeneralHub>("/hubs/general");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{*all}",
@@ -113,7 +114,8 @@ namespace Aimrank.Web
         }
         private void InitializeEventBus(ILifetimeScope container)
         {
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<ServerCreatedEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartedEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchFinishedEvent>(container));
         }
 
         private void InitializeModules(ILifetimeScope container)

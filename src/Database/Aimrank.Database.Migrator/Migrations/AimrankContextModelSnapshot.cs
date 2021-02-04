@@ -45,6 +45,10 @@ namespace Aimrank.Database.Migrator.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Address")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -403,8 +407,7 @@ namespace Aimrank.Database.Migrator.Migrations
 
                             b1.HasKey("MatchId", "UserId");
 
-                            b1.HasIndex("UserId")
-                                .IsUnique();
+                            b1.HasIndex("UserId");
 
                             b1.ToTable("MatchesPlayers", "aimrank");
 
@@ -412,8 +415,8 @@ namespace Aimrank.Database.Migrator.Migrations
                                 .HasForeignKey("MatchId");
 
                             b1.HasOne("Aimrank.Infrastructure.Domain.Users.UserModel", null)
-                                .WithOne()
-                                .HasForeignKey("Aimrank.Domain.Matches.MatchPlayer", "UserId")
+                                .WithMany()
+                                .HasForeignKey("UserId")
                                 .OnDelete(DeleteBehavior.Restrict)
                                 .IsRequired();
                         });

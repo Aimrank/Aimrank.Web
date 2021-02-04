@@ -6,6 +6,7 @@ namespace Aimrank.Application.Queries.GetOpenedLobbies
     public class LobbyDto
     {
         public Guid Id { get; init; }
+        public Guid? MatchId { get; init; }
         public int Status { get; init; }
         public string Map { get; init; }
         public List<LobbyMemberDto> Members { get; init; }

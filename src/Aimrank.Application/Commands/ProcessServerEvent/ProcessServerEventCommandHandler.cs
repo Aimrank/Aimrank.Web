@@ -19,7 +19,7 @@ namespace Aimrank.Application.Commands.ProcessServerEvent
 
         public async Task<Unit> Handle(ProcessServerEventCommand request, CancellationToken cancellationToken)
         {
-            var command = _serverEventMapper.Map(request.Content);
+            var command = _serverEventMapper.Map(request.ServerId, request.Name, request.Data);
             if (command is null)
             {
                 return Unit.Value;

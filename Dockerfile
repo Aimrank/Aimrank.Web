@@ -19,7 +19,6 @@ COPY src/Common/Aimrank.Common.Domain/*.csproj ./src/Common/Aimrank.Common.Domai
 COPY src/Common/Aimrank.Common.Application/*.csproj ./src/Common/Aimrank.Common.Application/
 COPY src/Common/Aimrank.Common.Infrastructure/*.csproj ./src/Common/Aimrank.Common.Infrastructure/
 COPY src/Database/Aimrank.Database.Migrator/*.csproj ./src/Database/Aimrank.Database.Migrator/
-COPY src/BusPublisher/Aimrank.BusPublisher/*.csproj ./src/BusPublisher/Aimrank.BusPublisher/
 
 RUN dotnet restore
 
@@ -33,7 +32,6 @@ COPY src/Common/Aimrank.Common.Domain/. ./src/Common/Aimrank.Common.Domain/
 COPY src/Common/Aimrank.Common.Application/. ./src/Common/Aimrank.Common.Application/
 COPY src/Common/Aimrank.Common.Infrastructure/. ./src/Common/Aimrank.Common.Infrastructure/
 COPY src/Database/Aimrank.Database.Migrator/. ./src/Database/Aimrank.Database.Migrator/
-COPY src/BusPublisher/Aimrank.BusPublisher/. ./src/BusPublisher/Aimrank.BusPublisher/
 
 WORKDIR /app/src/Aimrank.Web/Frontend
 

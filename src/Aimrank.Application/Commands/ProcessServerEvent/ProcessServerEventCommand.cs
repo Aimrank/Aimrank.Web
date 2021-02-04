@@ -1,14 +1,19 @@
 using Aimrank.Application.Contracts;
+using System;
 
 namespace Aimrank.Application.Commands.ProcessServerEvent
 {
     public class ProcessServerEventCommand : ICommand
     {
-        public string Content { get; }
+        public Guid ServerId { get; }
+        public string Name { get; }
+        public dynamic Data { get; }
 
-        public ProcessServerEventCommand(string content)
+        public ProcessServerEventCommand(Guid serverId, string name, dynamic data)
         {
-            Content = content;
+            ServerId = serverId;
+            Name = name;
+            Data = data;
         }
     }
 }

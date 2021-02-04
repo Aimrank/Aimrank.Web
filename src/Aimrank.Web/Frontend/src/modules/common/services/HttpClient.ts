@@ -64,6 +64,11 @@ export class HttpClient {
       this.refreshToken = tokens.refreshToken;
     }
   }
+  
+  public async accessTokenFactory() {
+    await this.refreshAuthorizationTokenIfExpired();
+    return this.authorizationToken || "";
+  }
 
   private attachAuthorization(config?: AxiosRequestConfig) {
     const newConfig: AxiosRequestConfig = config ? config : {};

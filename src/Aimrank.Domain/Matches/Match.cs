@@ -1,4 +1,5 @@
 ﻿using Aimrank.Common.Domain;
+using Aimrank.Domain.Matches.Events;
 using System.Collections.Generic;
 using System;
 
@@ -10,6 +11,7 @@ namespace Aimrank.Domain.Matches
         public int ScoreT { get; private set; }
         public int ScoreCT { get; private set; }
         public string Map { get; private set; }
+        public string Address { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime FinishedAt { get; private set; }
         public MatchStatus Status { get; private set; }
@@ -22,7 +24,7 @@ namespace Aimrank.Domain.Matches
             Id = id;
             Map = map;
             Players = players;
-            Status = MatchStatus.Started;
+            Status = MatchStatus.Created;
             CreatedAt = DateTime.UtcNow;
         }
 
@@ -32,12 +34,24 @@ namespace Aimrank.Domain.Matches
             ScoreCT = scoreCT;
             Status = MatchStatus.Finished;
             FinishedAt = DateTime.UtcNow;
+            
+            AddDomainEvent(new MatchFinishedDomainEvent(this));
         }
 
         public void Cancel()
         {
             Status = MatchStatus.Canceled;
             FinishedAt = DateTime.UtcNow;
+            
+            AddDomainEvent(new MatchCanceledDomainEvent(this));
+        }
+
+        public void Start(string address)
+        {
+            Status = MatchStatus.Started;
+            Address = address;
+            
+            AddDomainEvent(new MatchStartedDomainEvent(this));
         }
     }
 }

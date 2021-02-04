@@ -39,28 +39,26 @@ public void OnPluginStart()
 public void PublishEvent(JSON_Object data)
 {
     char event[1024];
-    char command[1024];
     char serverId[64];
 
     GetConVarString(g_aimrankServerId, serverId, sizeof(serverId));
 
     data.SetString("serverId", serverId);
     data.Encode(event, sizeof(event));
-
-    Format(command, sizeof(command), "cat << EVENTDATA | /home/app/Aimrank.BusPublisher\n%s\nEVENTDATA", event);
     
-    PrintToServer(event);
-    PrintToServer(command);
-
-    System2_ExecuteThreaded(PublishEvent_Executed, command);
+    System2HTTPRequest httpRequest = new System2HTTPRequest(HttpResponseCallback, "http://localhost/api/server");
+    httpRequest.SetHeader("Content-Type", "application/json");
+    httpRequest.SetData(event);
+    httpRequest.POST();
+    
+    delete httpRequest;
 
     data.Cleanup();
 }
 
-public void PublishEvent_Executed(bool success, const char[] command, System2ExecuteOutput output)
+public void HttpResponseCallback(bool success, const char[] error, System2HTTPRequest request, System2HTTPResponse response, HTTPRequestMethod method)
 {
 }
-
 
 public JSON_Object GetScoreboard()
 {

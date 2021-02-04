@@ -3,6 +3,7 @@ using Aimrank.Application.Queries.GetOpenedLobbies;
 using Aimrank.Common.Application.Data;
 using Dapper;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
@@ -25,6 +26,7 @@ namespace Aimrank.Application.Queries.GetLobby
             const string sql =
                 @"SELECT
                     [Lobby].[Id] AS [Id],
+                    [Lobby].[MatchId] AS [MatchId],
                     [Lobby].[Status] AS [Status],
                     [Lobby].[Configuration_Map] AS [Map],
                     [Member].[UserId] AS [UserId],
@@ -47,6 +49,7 @@ namespace Aimrank.Application.Queries.GetLobby
                         lobby = new LobbyDto
                         {
                             Id = details.Id,
+                            MatchId = details.MatchId,
                             Map = details.Map,
                             Status = details.Status,
                             Members = new List<LobbyMemberDto>()
@@ -65,7 +68,7 @@ namespace Aimrank.Application.Queries.GetLobby
                 new {LobbyId = request.Id},
                 splitOn: "UserId");
 
-            return lookup.GetValueOrDefault(request.Id);
+            return lookup.Values.FirstOrDefault();
         }
     }
 }
