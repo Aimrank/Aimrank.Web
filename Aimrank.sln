@@ -1,9 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusPublisher", "BusPublisher", "{5EA96113-126E-4B09-8AF1-3566AC7A3FA6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.BusPublisher", "src\BusPublisher\Aimrank.BusPublisher\Aimrank.BusPublisher.csproj", "{75DB2812-E655-4B1A-961F-365C58D4B2F7}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{E248F606-9E42-4168-AD81-5CC677EFDCEC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Database.Migrator", "src\Database\Aimrank.Database.Migrator\Aimrank.Database.Migrator.csproj", "{528383BC-4260-41C0-89CE-F00138B63F4B}"
@@ -36,7 +32,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{75DB2812-E655-4B1A-961F-365C58D4B2F7} = {5EA96113-126E-4B09-8AF1-3566AC7A3FA6}
 		{528383BC-4260-41C0-89CE-F00138B63F4B} = {E248F606-9E42-4168-AD81-5CC677EFDCEC}
 		{03FFDE24-20D4-4F5F-AF45-A768BD8AD328} = {C78F478D-3405-4762-9E09-99316337F172}
 		{5276BAA4-EE27-46B0-B70F-5236F9028B99} = {C78F478D-3405-4762-9E09-99316337F172}
@@ -44,10 +39,6 @@ Global
 		{02C22F76-4932-47BF-A178-26ADE78CF652} = {CB3E8F47-FF5F-44D3-B79B-7B7930E78289}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{75DB2812-E655-4B1A-961F-365C58D4B2F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75DB2812-E655-4B1A-961F-365C58D4B2F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75DB2812-E655-4B1A-961F-365C58D4B2F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75DB2812-E655-4B1A-961F-365C58D4B2F7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{528383BC-4260-41C0-89CE-F00138B63F4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{528383BC-4260-41C0-89CE-F00138B63F4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{528383BC-4260-41C0-89CE-F00138B63F4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
