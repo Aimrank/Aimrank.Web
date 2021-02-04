@@ -5,7 +5,7 @@ import { UserService } from "@/modules/user/services/UserService";
 import { AuthService } from "@/modules/authentication/services/AuthService";
 import { SteamService } from "@/modules/user/services/SteamService";
 import { LobbyService } from "@/modules/lobby/services/LobbyService";
-import { MatchService } from "@/modules/lobby/services/MatchService";
+import { MatchService } from "@/modules/match/services/MatchService";
 
 import { GeneralHub } from "@/modules/common/hubs/GeneralHub";
 

@@ -4,7 +4,7 @@ import { useUser } from "@/modules/user";
 import { useNotifications } from "@/modules/common/hooks/useNotifications";
 import { lobbyService, matchService } from "@/services";
 import { ILobbyDto } from "../../services/LobbyService";
-import { IMatchDto } from "../../services/MatchService";
+import { IMatchDto } from "@/modules/match/services/MatchService";
 import BaseButton from "@/modules/common/components/BaseButton";
 import FormFieldInput from "@/modules/common/components/FormFieldInput";
 
