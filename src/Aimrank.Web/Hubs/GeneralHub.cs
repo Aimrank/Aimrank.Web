@@ -1,4 +1,5 @@
 using Aimrank.IntegrationEvents;
+using Aimrank.Web.Attributes;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace Aimrank.Web.Hubs
         Task ServerCreated(ServerCreatedEvent @event);
     }
     
+    [JwtAuth]
     public class GeneralHub : Hub<IGeneralClient>
     {
     }

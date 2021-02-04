@@ -1,3 +1,4 @@
+using System.Linq;
 using Aimrank.Infrastructure.Configuration.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Aimrank.Web.Configuration.Extensions
 {
@@ -39,6 +41,28 @@ namespace Aimrank.Web.Configuration.Extensions
                         ValidateLifetime = true,
                         RequireExpirationTime = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret))
+                    };
+
+                    var hubs = new[] {"/hubs/general"};
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            if (string.IsNullOrEmpty(accessToken))
+                            {
+                                return Task.CompletedTask;
+                            }
+
+                            if (hubs.Any(h => context.HttpContext.Request.Path.StartsWithSegments(h)))
+                            {
+                                context.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
+                        }
                     };
                 })
                 .AddCookie("Cookies");
