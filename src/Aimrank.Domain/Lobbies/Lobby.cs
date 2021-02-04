@@ -64,6 +64,7 @@ namespace Aimrank.Domain.Lobbies
 
         public void ChangeMap(UserId userId, string name)
         {
+            BusinessRules.Check(new LobbyStatusMustMatchRule(this, LobbyStatus.Open));
             BusinessRules.Check(new UserMustBeLobbyLeaderRule(this, userId));
             BusinessRules.Check(new MapMustBeSupportedRule(name));
             
@@ -72,7 +73,7 @@ namespace Aimrank.Domain.Lobbies
 
         public void StartGame(MatchId matchId)
         {
-            BusinessRules.Check(new LobbyMustBeClosedRule(this));
+            BusinessRules.Check(new LobbyStatusMustMatchRule(this, LobbyStatus.Closed));
 
             MatchId = matchId;
             Status = LobbyStatus.InGame;

@@ -65,12 +65,12 @@ namespace Aimrank.Web
                     options.LocalizationEnabled = false;
                 });
 
-            services.AddDbContext<AimrankContext>(options =>
-            {
-                options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
-                options.UseSqlServer(_configuration.GetConnectionString("Database"),
-                    x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
-            });
+            // services.AddDbContext<AimrankContext>(options =>
+            // {
+            //     options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
+            //     options.UseSqlServer(_configuration.GetConnectionString("Database"),
+            //         x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
+            // });
         }
 
         public void ConfigureContainer(ContainerBuilder containerBuilder)

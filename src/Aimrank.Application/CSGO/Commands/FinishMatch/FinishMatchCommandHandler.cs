@@ -53,10 +53,6 @@ namespace Aimrank.Application.CSGO.Commands.FinishMatch
             _matchRepository.Update(match);
             _lobbyRepository.Update(lobby);
             
-            // Should modify only one aggregate
-            
-            // Update players ranking
-            
             return Unit.Value;
         }
     }
