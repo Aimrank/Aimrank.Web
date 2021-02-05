@@ -34,6 +34,8 @@ public void OnPluginStart()
     HookEvent("round_start", Event_PublishScoreboard);
     HookEvent("player_activate", Event_PublishScoreboard);
     HookEvent("player_disconnect", Event_PublishScoreboard);
+    HookEvent("game_newmap", Event_PrintEventName);
+    HookEvent("game_start", Event_PrintEventName);
 }
 
 public void PublishEvent(JSON_Object data)
@@ -128,6 +130,11 @@ public Action Event_PublishScoreboard(Event event, const char[] name, bool dontB
 public Action Event_MatchEnd(Event event, const char[] name, bool dontBroadcast)
 {
     PublishEvent(CreateIntegrationEvent("match_end", GetScoreboard()));
+}
+
+public Action Event_GameNewMap(Event event, const char[] name, bool dontBroadcast)
+{
+    PrintToServer("---\n-- Event: %s\n---", name);
 }
 
 public void OnClientPutInServer(int client)
