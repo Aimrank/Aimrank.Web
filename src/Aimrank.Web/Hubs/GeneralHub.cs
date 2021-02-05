@@ -7,6 +7,7 @@ namespace Aimrank.Web.Hubs
 {
     public interface IGeneralClient
     {
+        Task MatchStarting(MatchStartingEvent @event);
         Task MatchStarted(MatchStartedEvent @event);
         Task MatchFinished(MatchFinishedEvent @event);
     }

@@ -1,12 +1,12 @@
-﻿using Aimrank.Common.Domain;
+using Aimrank.Common.Domain;
 
 namespace Aimrank.Domain.Matches.Events
 {
-    public class MatchStartedDomainEvent : IDomainEvent
+    public class MatchStartingDomainEvent : IDomainEvent
     {
         public Match Match { get; }
 
-        public MatchStartedDomainEvent(Match match)
+        public MatchStartingDomainEvent(Match match)
         {
             Match = match;
         }

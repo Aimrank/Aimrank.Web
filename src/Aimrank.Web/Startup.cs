@@ -77,6 +77,7 @@ namespace Aimrank.Web
         {
             containerBuilder.RegisterModule(new AimrankAutofacModule());
 
+            containerBuilder.RegisterType<MatchStartingEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchStartedEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchFinishedEventHandler>().AsImplementedInterfaces();
         }
@@ -114,6 +115,7 @@ namespace Aimrank.Web
         }
         private void InitializeEventBus(ILifetimeScope container)
         {
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartingEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartedEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchFinishedEvent>(container));
         }
