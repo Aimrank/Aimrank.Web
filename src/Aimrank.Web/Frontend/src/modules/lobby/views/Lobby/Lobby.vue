@@ -44,7 +44,7 @@
         <h3>{{ $t("lobby.views.Lobby.match") }}</h3>
         <div>Id: {{ match.id }}</div>
         <div>Map: {{ match.map }}</div>
-        <div>Status: {{ ["Created", "Started", "Canceled", "Finished"][match.status] }}</div>
+        <div>Status: {{ ["Created", "Starting", "Started", "Canceled", "Finished"][match.status] }}</div>
         <div>Address: {{ match.address }}</div>
       </div>
       <div

@@ -38,6 +38,10 @@ const initAuthentication = async () => {
     auth.setAuthenticated(true);
     await user.updateUser(userId);
 
+    generalHub.connection.on("MatchStarting", () => {
+      notifications.success("Starting new server...");
+    });
+
     generalHub.connection.on("MatchStarted", (event) => {
       notifications.success(`Match started: ${event.address}`);
     });

@@ -28,6 +28,10 @@ sv_allowupload 1
 sv_allowdownload 1
 exec banned_user.cfg
 exec banned_ip.cfg
+sv_hibernate_when_empty 0
+sv_hibernate_postgame_delay 0
+sv_hibernate_ms 0
+sv_hibernate_ms_vgui 0
 AUTOEXECCFG
 
 # Create server config

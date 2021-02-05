@@ -130,6 +130,11 @@ public Action Event_MatchEnd(Event event, const char[] name, bool dontBroadcast)
     PublishEvent(CreateIntegrationEvent("match_end", GetScoreboard()));
 }
 
+public void OnMapStart()
+{
+    PublishEvent(CreateIntegrationEvent("map_start", null));
+}
+
 public void OnClientPutInServer(int client)
 {
     if (IsFakeClient(client))

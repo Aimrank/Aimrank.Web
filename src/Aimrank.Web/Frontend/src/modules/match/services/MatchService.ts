@@ -3,6 +3,7 @@ import { Service } from "@/modules/common/services/Service";
 
 enum MatchStatus {
   Created,
+  Starting,
   Started,
   Canceled,
   Finished

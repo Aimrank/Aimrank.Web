@@ -12,6 +12,13 @@ namespace Aimrank.Infrastructure.Configuration.Processing
         public IntegrationEvent Map(IDomainEvent @event)
             => @event switch
             {
+                MatchStartingDomainEvent e => new MatchStartingEvent(
+                    Guid.NewGuid(), 
+                    e.Match.Id.Value,
+                    e.Match.Address,
+                    e.Match.Map,
+                    e.Match.Players.Select(p => p.UserId.Value),
+                    DateTime.UtcNow),
                 MatchStartedDomainEvent e => new MatchStartedEvent(
                     Guid.NewGuid(), 
                     e.Match.Id.Value,

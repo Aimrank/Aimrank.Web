@@ -48,9 +48,21 @@ namespace Aimrank.Domain.Matches
 
         public void Start(string address)
         {
-            Status = MatchStatus.Started;
+            Status = MatchStatus.Starting;
             Address = address;
             
+            AddDomainEvent(new MatchStartingDomainEvent(this));
+        }
+
+        public void MarkAsStarted()
+        {
+            if (Status != MatchStatus.Starting)
+            {
+                return;
+            }
+            
+            Status = MatchStatus.Started;
+                
             AddDomainEvent(new MatchStartedDomainEvent(this));
         }
     }

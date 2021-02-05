@@ -1,4 +1,5 @@
 using Aimrank.Application.CSGO.Commands.FinishMatch;
+using Aimrank.Application.CSGO.Commands.StartMatch;
 using Aimrank.Application.CSGO;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -10,7 +11,8 @@ namespace Aimrank.Infrastructure.Application.CSGO
     {
         private readonly Dictionary<string, Type> _commands = new()
         {
-            ["match_end"] = typeof(FinishMatchCommand)
+            ["match_end"] = typeof(FinishMatchCommand),
+            ["map_start"] = typeof(StartMatchCommand)
         };
         
         public IServerEventCommand Map(Guid serverId, string name, dynamic data)
@@ -23,7 +25,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
                 return null;
             }
             
-            var content = JsonSerializer.Serialize<dynamic>(data, settings);
+            var content = data is null ? "{}" : JsonSerializer.Serialize<dynamic>(data, settings);
             var command = JsonSerializer.Deserialize(content, commandType, settings);
             command.ServerId = serverId;
 

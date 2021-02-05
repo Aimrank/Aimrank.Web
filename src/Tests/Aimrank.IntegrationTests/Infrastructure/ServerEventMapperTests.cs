@@ -3,6 +3,7 @@ using Aimrank.Application.CSGO;
 using Aimrank.Infrastructure.Application.CSGO;
 using System.Text.Json;
 using System;
+using Aimrank.Application.CSGO.Commands.StartMatch;
 using Xunit;
 
 namespace Aimrank.IntegrationTests.Infrastructure
@@ -41,6 +42,21 @@ namespace Aimrank.IntegrationTests.Infrastructure
             
             // Assert
             Assert.Null(command);
+        }
+
+        [Fact]
+        public void ServerEventMapper_Creates_Command_If_Event_Data_Is_Null()
+        {
+            // Arrange
+            var serverId = Guid.NewGuid();
+            var serverEventName = "map_start";
+            
+            // Act
+            var command = _serverEventMapper.Map(serverId, serverEventName, null) as StartMatchCommand;
+            
+            // Assert
+            Assert.NotNull(command);
+            Assert.Equal(serverId, command.ServerId);
         }
 
         private static dynamic CreateServerEvent()
