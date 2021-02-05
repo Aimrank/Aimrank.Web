@@ -4,9 +4,9 @@ namespace Aimrank.Application.Queries.GetMatch
 {
     public class MatchDto
     {
-        public Guid Id { get; init; }
-        public string Address { get; init; }
-        public string Map { get; init; }
-        public int Status { get; init; }
+        public Guid Id { get; set; }
+        public string Address { get; set; }
+        public string Map { get; set; }
+        public int Status { get; set; }
     }
 }
