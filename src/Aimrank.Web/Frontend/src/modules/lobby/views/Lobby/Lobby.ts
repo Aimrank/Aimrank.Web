@@ -14,6 +14,8 @@ const useLobby = () => {
   const lobby = ref<ILobbyDto | null>();
   const match = ref<IMatchDto | null>();
   const map = ref("");
+  
+  const member = computed(() => lobby.value?.members.find(m => m.userId === user.state.user?.id));
 
   onMounted(async () => {
     if (!user.state.user) {
@@ -37,6 +39,7 @@ const useLobby = () => {
   });
 
   return {
+    member,
     lobby,
     match,
     map
@@ -49,9 +52,8 @@ const Lobby = defineComponent({
     FormFieldInput
   },
   setup() {
-    const { lobby, match, map } = useLobby();
+    const { member, lobby, match, map } = useLobby();
 
-    const user = useUser();
     const router = useRouter();
     const notifications = useNotifications();
 
@@ -96,8 +98,6 @@ const Lobby = defineComponent({
         notifications.danger(result.error.title);
       }
     }
-
-    const member = computed(() => lobby.value?.members.find(m => m.userId === user.state.user?.id));
 
     return {
       map,
