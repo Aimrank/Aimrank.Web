@@ -19,3 +19,13 @@
     text-align: left;
   }
 }
+
+.winner td {
+  background: colors.$success;
+  color: colors.$white;
+}
+
+.looser td {
+  background: lightcoral;
+  color: colors.$white;
+}
