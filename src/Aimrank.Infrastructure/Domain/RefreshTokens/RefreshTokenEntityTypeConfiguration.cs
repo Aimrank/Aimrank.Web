@@ -13,12 +13,15 @@ namespace Aimrank.Infrastructure.Domain.RefreshTokens
 
             builder.HasKey(t => t.Id);
 
-            builder.Property(t => t.Jwt).IsRequired();
-            builder.Property(t => t.UserId).IsRequired();
-            builder.Property(t => t.ExpiresAt).IsRequired();
-            builder.Property(t => t.IsInvalidated).IsRequired();
+            builder.Property(t => t.Id).HasColumnName("Id");
+            builder.Property(t => t.Jwt).HasColumnName("Jwt").IsRequired();
+            builder.Property(t => t.UserId).HasColumnName("UserId").IsRequired();
+            builder.Property(t => t.ExpiresAt).HasColumnName("ExpiresAt");
+            builder.Property(t => t.IsInvalidated).HasColumnName("IsInvalidated");
 
             builder.HasOne<UserModel>().WithMany().HasForeignKey("UserId");
+
+            builder.Ignore(t => t.DomainEvents);
         }
     }
 }

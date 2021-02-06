@@ -1,16 +1,15 @@
-using Aimrank.Application.Commands.ChangeLobbyMap;
-using Aimrank.Application.Commands.CloseLobby;
-using Aimrank.Application.Commands.CreateLobby;
-using Aimrank.Application.Commands.JoinLobby;
-using Aimrank.Application.Commands.LeaveLobby;
+using Aimrank.Application.Commands.Lobbies.AcceptLobbyInvitation;
+using Aimrank.Application.Commands.Lobbies.CancelLobbyInvitation;
+using Aimrank.Application.Commands.Lobbies.ChangeLobbyConfiguration;
+using Aimrank.Application.Commands.Lobbies.CreateLobby;
+using Aimrank.Application.Commands.Lobbies.InviteUserToLobby;
+using Aimrank.Application.Commands.Lobbies.LeaveLobby;
+using Aimrank.Application.Commands.Lobbies.StartSearchingForGame;
 using Aimrank.Application.Contracts;
-using Aimrank.Application.Queries.GetLobby;
 using Aimrank.Application.Queries.GetLobbyForUser;
-using Aimrank.Application.Queries.GetOpenedLobbies;
 using Aimrank.Web.Attributes;
 using Aimrank.Web.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 
@@ -28,29 +27,10 @@ namespace Aimrank.Web.Controllers
             _aimrankModule = aimrankModule;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<LobbyDto>>> GetOpened()
+        [HttpGet("user")]
+        public async Task<ActionResult<LobbyDto>> GetByUserId()
         {
-            var lobbies = await _aimrankModule.ExecuteQueryAsync(new GetOpenedLobbiesQuery());
-            return Ok(lobbies);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<LobbyDto>> GetById(Guid id)
-        {
-            var lobby = await _aimrankModule.ExecuteQueryAsync(new GetLobbyQuery(id));
-            if (lobby is null)
-            {
-                return NotFound();
-            }
-            
-            return lobby;
-        }
-
-        [HttpGet("user/{id}")]
-        public async Task<ActionResult<LobbyDto>> GetByUserId(Guid id)
-        {
-            var lobby = await _aimrankModule.ExecuteQueryAsync(new GetLobbyForUserQuery(id));
+            var lobby = await _aimrankModule.ExecuteQueryAsync(new GetLobbyForUserQuery());
             if (lobby is null)
             {
                 return NotFound();
@@ -62,15 +42,28 @@ namespace Aimrank.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create()
         {
-            var lobbyId = Guid.NewGuid();
-            await _aimrankModule.ExecuteCommandAsync(new CreateLobbyCommand(lobbyId));
-            return CreatedAtAction(nameof(GetById), new {Id = lobbyId}, null);
+            await _aimrankModule.ExecuteCommandAsync(new CreateLobbyCommand(Guid.NewGuid()));
+            return Ok();
         }
 
-        [HttpPost("{id}/members")]
-        public async Task<IActionResult> Join(Guid id)
+        [HttpPost("{id}/invite")]
+        public async Task<IActionResult> Invite(Guid id, InviteUserToLobbyRequest request)
         {
-            await _aimrankModule.ExecuteCommandAsync(new JoinLobbyCommand(id));
+            await _aimrankModule.ExecuteCommandAsync(new InviteUserToLobbyCommand(id, request.InvitedUserId));
+            return Ok();
+        }
+
+        [HttpPost("{id}/invite/accept")]
+        public async Task<IActionResult> AcceptInvitation(Guid id)
+        {
+            await _aimrankModule.ExecuteCommandAsync(new AcceptLobbyInvitationCommand(id));
+            return Ok();
+        }
+
+        [HttpPost("{id}/invite/cancel")]
+        public async Task<IActionResult> CancelInvitation(Guid id)
+        {
+            await _aimrankModule.ExecuteCommandAsync(new CancelLobbyInvitationCommand(id));
             return Ok();
         }
 
@@ -81,17 +74,22 @@ namespace Aimrank.Web.Controllers
             return Ok();
         }
 
-        [HttpPost("{id}/map")]
-        public async Task<IActionResult> ChangeMap(Guid id, ChangeLobbyMapRequest request)
+        [HttpPost("{id}/configuration")]
+        public async Task<IActionResult> ChangeConfiguration(Guid id, ChangeLobbyConfigurationRequest request)
         {
-            await _aimrankModule.ExecuteCommandAsync(new ChangeLobbyMapCommand(id, request.Name));
+            await _aimrankModule.ExecuteCommandAsync(new ChangeLobbyConfigurationCommand(
+                id,
+                request.Map,
+                request.Name,
+                request.Mode));
+            
             return Ok();
         }
 
-        [HttpPost("{id}/close")]
-        public async Task<IActionResult> Close(Guid id)
+        [HttpPost("{id}/start")]
+        public async Task<IActionResult> StartSearching(Guid id)
         {
-            await _aimrankModule.ExecuteCommandAsync(new CloseLobbyCommand(id));
+            await _aimrankModule.ExecuteCommandAsync(new StartSearchingForGameCommand(id));
             return Ok();
         }
     }

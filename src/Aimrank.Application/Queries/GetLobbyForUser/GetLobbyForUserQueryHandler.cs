@@ -1,6 +1,6 @@
 using Aimrank.Application.Contracts;
-using Aimrank.Application.Queries.GetOpenedLobbies;
 using Aimrank.Common.Application.Data;
+using Aimrank.Common.Application;
 using Dapper;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +13,14 @@ namespace Aimrank.Application.Queries.GetLobbyForUser
     public class GetLobbyForUserQueryHandler : IQueryHandler<GetLobbyForUserQuery, LobbyDto>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
+        private readonly IExecutionContextAccessor _executionContextAccessor;
 
-        public GetLobbyForUserQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
+        public GetLobbyForUserQueryHandler(
+            ISqlConnectionFactory sqlConnectionFactory,
+            IExecutionContextAccessor executionContextAccessor)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
+            _executionContextAccessor = executionContextAccessor;
         }
 
         public async Task<LobbyDto> Handle(GetLobbyForUserQuery request, CancellationToken cancellationToken)
@@ -71,7 +75,7 @@ namespace Aimrank.Application.Queries.GetLobbyForUser
 
                     return lobby;
                 },
-                new {UserId = request.Id},
+                new {_executionContextAccessor.UserId},
                 splitOn: "UserId");
 
             return lookup.Values.FirstOrDefault();

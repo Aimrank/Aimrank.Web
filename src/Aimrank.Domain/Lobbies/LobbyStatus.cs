@@ -3,7 +3,8 @@ namespace Aimrank.Domain.Lobbies
     public enum LobbyStatus
     {
         Open,
-        Closed,
+        Searching,
+        MatchFound,
         InGame
     }
 }

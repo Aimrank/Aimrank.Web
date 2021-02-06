@@ -13,7 +13,7 @@ namespace Aimrank.Domain.Matches
         public string Map { get; private set; }
         public string Address { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public DateTime FinishedAt { get; private set; }
+        public DateTime? FinishedAt { get; private set; }
         public MatchStatus Status { get; private set; }
         public List<MatchPlayer> Players { get; private set; }
 

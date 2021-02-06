@@ -20,6 +20,7 @@ namespace Aimrank.Infrastructure.Domain.Lobbies
 
         public async Task<IEnumerable<Lobby>> BrowseAsync(LobbyStatus? status)
             => await _context.Lobbies.Where(l => !status.HasValue || l.Status == status).ToListAsync();
+        
         public async Task<Lobby> GetByIdAsync(LobbyId id)
         {
             var lobby = await _context.Lobbies.FirstOrDefaultAsync(l => l.Id == id);
