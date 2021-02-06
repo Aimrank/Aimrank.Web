@@ -14,7 +14,7 @@ namespace Aimrank.Common.Infrastructure.EventBus
         {
         }
         
-        public async Task Publish<TEvent>(TEvent @event) where TEvent : IntegrationEvent
+        public async Task Publish<TEvent>(TEvent @event) where TEvent : IIntegrationEvent
         {
             var eventName = @event.GetType().FullName;
 
@@ -28,7 +28,7 @@ namespace Aimrank.Common.Infrastructure.EventBus
             }
         }
 
-        public void Subscribe<TEvent>(IIntegrationEventHandler<TEvent> handler) where TEvent : IntegrationEvent
+        public void Subscribe<TEvent>(IIntegrationEventHandler<TEvent> handler) where TEvent : IIntegrationEvent
         {
             var eventName = typeof(TEvent).FullName;
 

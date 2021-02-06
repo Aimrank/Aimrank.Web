@@ -29,7 +29,7 @@ namespace Aimrank.Infrastructure.Configuration.Processing
         {
             var domainEvents = new Queue<IDomainEvent>(GetDomainEventsFromTrackedEntities());
             
-            var integrationEvents = new List<IntegrationEvent>();
+            var integrationEvents = new List<IIntegrationEvent>();
 
             while (domainEvents.Count > 0)
             {
@@ -60,7 +60,7 @@ namespace Aimrank.Infrastructure.Configuration.Processing
             AddIntegrationEventsToOutbox(integrationEvents);
         }
 
-        public void Dispatch(IntegrationEvent @event) => AddIntegrationEventsToOutbox(@event);
+        public void Dispatch(IIntegrationEvent @event) => AddIntegrationEventsToOutbox(@event);
 
         private IEnumerable<IDomainEvent> GetDomainEventsFromTrackedEntities()
         {
@@ -81,7 +81,7 @@ namespace Aimrank.Infrastructure.Configuration.Processing
             return domainEvents;
         }
 
-        private void AddIntegrationEventsToOutbox(IEnumerable<IntegrationEvent> events)
+        private void AddIntegrationEventsToOutbox(IEnumerable<IIntegrationEvent> events)
         {
             foreach (var integrationEvent in events)
             {
@@ -96,7 +96,7 @@ namespace Aimrank.Infrastructure.Configuration.Processing
             }
         }
 
-        private void AddIntegrationEventsToOutbox(params IntegrationEvent[] events)
+        private void AddIntegrationEventsToOutbox(params IIntegrationEvent[] events)
             => AddIntegrationEventsToOutbox(events.AsEnumerable());
     }
 }

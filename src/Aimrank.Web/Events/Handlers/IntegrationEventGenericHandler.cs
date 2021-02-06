@@ -8,7 +8,7 @@ using System.Threading;
 namespace Aimrank.Web.Events.Handlers
 {
     public class IntegrationEventGenericHandler<T> : IIntegrationEventHandler<T>
-        where T : IntegrationEvent
+        where T : IIntegrationEvent
     {
         private readonly ILifetimeScope _lifetimeScope;
 

@@ -1,21 +1,17 @@
-using Aimrank.Common.Application.Events;
 using System;
 
 namespace Aimrank.IntegrationEvents
 {
-    public class MatchFinishedEvent : IntegrationEvent
+    public class MatchFinishedEvent : IntegrationEventBase
     {
         public Guid MatchId { get; }
         public int ScoreT { get; }
         public int ScoreCT { get; }
 
         public MatchFinishedEvent(
-            Guid id,
             Guid matchId,
             int scoreT,
-            int scoreCt,
-            DateTime occurredAt)
-            : base(id, occurredAt)
+            int scoreCt)
         {
             MatchId = matchId;
             ScoreT = scoreT;

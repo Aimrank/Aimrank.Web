@@ -1,10 +1,9 @@
-﻿using Aimrank.Common.Application.Events;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 
 namespace Aimrank.IntegrationEvents
 {
-    public class MatchStartedEvent : IntegrationEvent
+    public class MatchStartedEvent : IntegrationEventBase
     {
         public Guid MatchId { get; }
         public string Address { get; }
@@ -12,13 +11,10 @@ namespace Aimrank.IntegrationEvents
         public IEnumerable<Guid> Players { get; }
 
         public MatchStartedEvent(
-            Guid id,
             Guid matchId,
             string address,
             string map,
-            IEnumerable<Guid> players,
-            DateTime occurredAt)
-            : base(id, occurredAt)
+            IEnumerable<Guid> players)
         {
             MatchId = matchId;
             Address = address;
