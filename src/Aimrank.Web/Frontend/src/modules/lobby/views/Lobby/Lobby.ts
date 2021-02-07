@@ -2,7 +2,7 @@ import { computed, defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUser } from "@/modules/user";
 import { useNotifications } from "@/modules/common/hooks/useNotifications";
-import { lobbyService, matchService } from "@/services";
+import { lobbyHub, lobbyService, matchService } from "@/services";
 import { ILobbyDto } from "../../services/LobbyService";
 import { IMatchDto } from "@/modules/match/services/MatchService";
 import BaseButton from "@/modules/common/components/BaseButton";
@@ -14,6 +14,7 @@ const useLobby = () => {
   const lobby = ref<ILobbyDto | null>();
   const match = ref<IMatchDto | null>();
   const map = ref("");
+  const inviteUserId = ref("");
   
   const member = computed(() => lobby.value?.members.find(m => m.userId === user.state.user?.id));
 
@@ -22,11 +23,13 @@ const useLobby = () => {
       return;
     }
 
-    const result = await lobbyService.getByUserId(user.state.user.id);
+    const result = await lobbyService.getForCurrentUser();
 
     if (result.isOk()) {
       lobby.value = result.value;
-      map.value = result.value.map;
+      map.value = result.value.configuration.map;
+
+      await lobbyHub.connect();
 
       if (lobby.value.matchId) {
         const matchResult = await matchService.getById(lobby.value.matchId);
@@ -42,8 +45,9 @@ const useLobby = () => {
     member,
     lobby,
     match,
-    map
-  }
+    map,
+    inviteUserId
+  };
 }
 
 const Lobby = defineComponent({
@@ -52,17 +56,17 @@ const Lobby = defineComponent({
     FormFieldInput
   },
   setup() {
-    const { member, lobby, match, map } = useLobby();
+    const { member, lobby, match, map, inviteUserId } = useLobby();
 
     const router = useRouter();
     const notifications = useNotifications();
 
-    const onCloseLobbyClick = async () => {
+    const onStartSearchingClick = async () => {
       if (!lobby.value) {
         return;
       }
 
-      const result = await lobbyService.close(lobby.value.id);
+      const result = await lobbyService.startSearching(lobby.value.id);
 
       if (result.isOk()) {
         notifications.success("Searching for available server...");
@@ -71,15 +75,25 @@ const Lobby = defineComponent({
       }
     }
 
-    const onChangeMapClick = async () => {
+    const onChangeConfigurationClick = async () => {
       if (!lobby.value) {
         return;
       }
 
-      const result = await lobbyService.changeMap(lobby.value.id, { name: map.value });
+      const result = await lobbyService.changeConfiguration(lobby.value.id, {
+        map: map.value,
+        name: lobby.value.configuration.name,
+        mode: lobby.value.configuration.mode
+      });
 
       if (result.isOk()) {
-        lobby.value = { ...lobby.value, map: map.value };
+        lobby.value = {
+          ...lobby.value,
+          configuration: {
+            ...lobby.value.configuration,
+            map: map.value
+          }
+        };
       } else {
         notifications.danger(result.error.title);
       }
@@ -93,7 +107,36 @@ const Lobby = defineComponent({
       const result = await lobbyService.leave(lobby.value.id);
 
       if (result.isOk()) {
-        router.push({ name: "lobbies" });
+        router.push({ name: "home" });
+      } else {
+        notifications.danger(result.error.title);
+      }
+    }
+
+    const onCreateLobbyClick = async () => {
+      const result = await lobbyService.create();
+
+      if (result.isOk()) {
+        const lobbyResult = await lobbyService.getForCurrentUser();
+
+        if (lobbyResult.isOk()) {
+          lobby.value = lobbyResult.value;
+          map.value = lobbyResult.value.configuration.map;
+        }
+      } else {
+        notifications.danger(result.error.title);
+      }
+    }
+
+    const onInviteUserClick = async () => {
+      if (!lobby.value) {
+        return;
+      }
+
+      const result = await lobbyService.invite(lobby.value.id, { invitedUserId: inviteUserId.value });
+
+      if (result.isOk()) {
+        notifications.success("User invited");
       } else {
         notifications.danger(result.error.title);
       }
@@ -104,9 +147,12 @@ const Lobby = defineComponent({
       lobby,
       match,
       member,
-      onCloseLobbyClick,
-      onChangeMapClick,
-      onLeaveLobbyClick
+      inviteUserId,
+      onStartSearchingClick,
+      onChangeConfigurationClick,
+      onLeaveLobbyClick,
+      onCreateLobbyClick,
+      onInviteUserClick
     };
   }
 });

@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import { createI18n } from "vue-i18n";
 import { router } from "@/router";
-import { httpClient, generalHub } from "@/services";
+import { generalHub, httpClient, lobbyHub } from "@/services";
 import { useAuth } from "./modules/authentication";
 import { useUser } from "./modules/user";
 import { useNotifications } from "./modules/common/hooks/useNotifications";
@@ -38,18 +38,7 @@ const initAuthentication = async () => {
     auth.setAuthenticated(true);
     await user.updateUser(userId);
 
-    generalHub.connection.on("MatchStarting", () => {
-      notifications.success("Starting new server...");
-    });
-
-    generalHub.connection.on("MatchStarted", (event) => {
-      notifications.success(`Match started: ${event.address}`);
-    });
-
-    generalHub.connection.on("MatchFinished", (event) => {
-      notifications.success(`Match finished: ${event.matchId}`);
-    });
-
+    await lobbyHub.connect();
     await generalHub.connect();
   }
 }

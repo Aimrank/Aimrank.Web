@@ -3,19 +3,43 @@ import { Service } from "@/modules/common/services/Service";
 
 enum LobbyStatus {
   Open,
-  Closed,
+  Searching,
+  MatchFound,
   InGame
 }
 
 export interface ILobbyDto {
   id: string;
   matchId: string;
-  map: string;
+  configuration: {
+    name: string;
+    map: string;
+    mode: number;
+  };
   status: LobbyStatus;
   members: {
     userId: string;
     isLeader: boolean;
   }[];
+}
+
+export interface ILobbyInvitationDto {
+  lobbyId: string;
+  invitingUserId: string;
+  invitingUserName: string;
+  invitedUserId: string;
+  invitedUserName: string;
+  createdAt: string;
+}
+
+export interface IInviteUserToLobbyRequest {
+  invitedUserId: string;
+}
+
+export interface IChangeLobbyConfigurationRequest {
+  name: string;
+  map: string;
+  mode: number;
 }
 
 export interface IChangeLobbyMapRequest {
@@ -25,46 +49,51 @@ export interface IChangeLobbyMapRequest {
 export class LobbyService extends Service {
   constructor(private readonly httpClient: HttpClient) {
     super({
-      getList: "/lobby",
-      getById: "/lobby/{id}",
-      getByUserId: "/lobby/user/{id}",
+      getForCurrentUser: "/lobby/current",
+      getInvitations: "/lobby/invitations",
       create: "/lobby",
-      join: "/lobby/{id}/members",
+      invite: "/lobby/{id}/invite",
+      inviteAccept: "/lobby/{id}/invite/accept",
+      inviteCancel: "/lobby/{id}/invite/cancel",
       leave: "/lobby/{id}/members",
-      changeMap: "/lobby/{id}/map",
-      close: "/lobby/{id}/close"
+      changeConfiguration: "/lobby/{id}/configuration",
+      startSearching: "/lobby/{id}/start"
     });
   }
 
-  public getList() {
-    return this.wrap<ILobbyDto[]>(this.httpClient.get(this.getRoute("getList")));
+  public getForCurrentUser() {
+    return this.wrap<ILobbyDto>(this.httpClient.get(this.getRoute("getForCurrentUser")));
   }
 
-  public getById(id: string) {
-    return this.wrap<ILobbyDto>(this.httpClient.get(this.getRoute("getById", { id })));
-  }
-
-  public getByUserId(id: string) {
-    return this.wrap<ILobbyDto>(this.httpClient.get(this.getRoute("getByUserId", { id })));
+  public getInvitations() {
+    return this.wrap<ILobbyInvitationDto[]>(this.httpClient.get(this.getRoute("getInvitations")));
   }
 
   public create() {
     return this.wrap<void>(this.httpClient.post(this.getRoute("create")));
   }
 
-  public join(id: string) {
-    return this.wrap<void>(this.httpClient.post(this.getRoute("join", { id })));
+  public invite(id: string, request: IInviteUserToLobbyRequest) {
+    return this.wrap<void>(this.httpClient.post(this.getRoute("invite", { id }), request));
+  }
+
+  public acceptInvitation(id: string) {
+    return this.wrap<void>(this.httpClient.post(this.getRoute("inviteAccept", { id })));
+  }
+
+  public cancelInvitation(id: string) {
+    return this.wrap<void>(this.httpClient.post(this.getRoute("inviteCancel", { id })));
   }
 
   public leave(id: string) {
     return this.wrap<void>(this.httpClient.delete(this.getRoute("leave", { id })));
   }
 
-  public changeMap(id: string, request: IChangeLobbyMapRequest) {
-    return this.wrap<void>(this.httpClient.post(this.getRoute("changeMap", { id }), request));
+  public changeConfiguration(id: string, request: IChangeLobbyConfigurationRequest) {
+    return this.wrap<void>(this.httpClient.post(this.getRoute("changeConfiguration", { id }), request));
   }
 
-  public close(id: string) {
-    return this.wrap<void>(this.httpClient.post(this.getRoute("close", { id })));
+  public startSearching(id: string) {
+    return this.wrap<void>(this.httpClient.post(this.getRoute("startSearching", { id })));
   }
 }

@@ -44,16 +44,14 @@
   },
   "lobby": {
     "views": {
-      "Lobbies": {
-        "title": "Opened lobbies",
-        "create": "Create new lobby",
+      "Invitations": {
+        "title": "Invitations",
         "table": {
-          "id": "Id",
-          "map": "Map",
-          "members": "Members"
+          "from": "From",
+          "date": "Date"
         },
-        "leader": "Leader",
-        "join": "Join"
+        "cancel": "Cancel",
+        "accept": "Accept"
       },
       "Lobby": {
         "title": "Current lobby",
@@ -63,11 +61,14 @@
           "map": "Map",
           "members": "Members"
         },
+        "invitationLabel": "Invite user id",
+        "invitations": "Invitations",
+        "invite": "Send invitation",
         "leader": "Leader",
         "match": "Match",
         "options": "Options",
         "optionsMap": "Map",
-        "changeMap": "Change map",
+        "changeConfiguration": "Change configuration",
         "start": "Start game",
         "empty": "You're not a member of any lobby"
       }
