@@ -1,8 +1,8 @@
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, toRef } from "vue";
 import { useRouter } from "vue-router";
 import { useNotifications } from "@/modules/common/hooks/useNotifications";
 import { lobbyHub, lobbyService } from "@/services";
-import { ILobbyInvitationDto } from "../../services/LobbyService";
+import { useInvitations } from "../../hooks/useInvitations";
 import BaseButton from "@/modules/common/components/BaseButton";
 
 const Invitations = defineComponent({
@@ -10,7 +10,7 @@ const Invitations = defineComponent({
     BaseButton
   },
   setup() {
-    const invitations = ref<ILobbyInvitationDto[]>([]);
+    const invitations = useInvitations();
 
     const router = useRouter();
     const notifications = useNotifications();
@@ -19,7 +19,7 @@ const Invitations = defineComponent({
       const result = await lobbyService.getInvitations();
 
       if (result.isOk()) {
-        invitations.value = result.value;
+        invitations.setInvitations(result.value);
       }
     });
 
@@ -27,6 +27,8 @@ const Invitations = defineComponent({
       const result = await lobbyService.acceptInvitation(lobbyId);
 
       if (result.isOk()) {
+        invitations.removeInvitation(lobbyId);
+
         lobbyHub.disconnect();
 
         router.push({ name: "lobby" });
@@ -39,14 +41,14 @@ const Invitations = defineComponent({
       const result = await lobbyService.cancelInvitation(lobbyId);
 
       if (result.isOk()) {
-        invitations.value = invitations.value.filter(i => i.lobbyId !== lobbyId);
+        invitations.removeInvitation(lobbyId);
       } else {
         notifications.danger(result.error.title);
       }
     }
 
     return {
-      invitations,
+      invitations: toRef(invitations.state, "invitations"),
       onInvitationAccept,
       onInvitationCancel
     };

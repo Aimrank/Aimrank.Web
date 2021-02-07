@@ -123,20 +123,6 @@ const Lobby = defineComponent({
       }
     }
 
-    const onInviteUserClick = async () => {
-      if (!lobby.isAvailable) {
-        return;
-      }
-
-      const result = await lobbyService.invite(lobby.state.lobby!.id, { invitedUserId: inviteUserId.value });
-
-      if (result.isOk()) {
-        notifications.success("Invitation sent.");
-      } else {
-        notifications.danger(result.error.title);
-      }
-    }
-
     return {
       map,
       lobby: computed(() => lobby.state.lobby),
@@ -145,8 +131,7 @@ const Lobby = defineComponent({
       onStartSearchingClick,
       onChangeConfigurationClick,
       onLeaveLobbyClick,
-      onCreateLobbyClick,
-      onInviteUserClick
+      onCreateLobbyClick
     };
   }
 });

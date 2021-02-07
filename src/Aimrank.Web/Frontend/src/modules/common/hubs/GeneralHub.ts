@@ -1,3 +1,5 @@
+import { lobbyService } from "@/services";
+import { useInvitations } from "@/modules/lobby";
 import { useNotifications } from "../hooks/useNotifications";
 import { Hub } from "./Hub";
 
@@ -9,6 +11,7 @@ interface IInvitationCreatedEvent {
 
 export class GeneralHub {
   private readonly notifications = useNotifications();
+  private readonly invitations = useInvitations();
 
   constructor(private readonly hub: Hub) {
     hub.connection.on("InvitationCreated", this.onInvitationCreated.bind(this));
@@ -22,7 +25,13 @@ export class GeneralHub {
     await this.hub.disconnect();
   }
 
-  private onInvitationCreated(event: IInvitationCreatedEvent) {
+  private async onInvitationCreated(event: IInvitationCreatedEvent) {
+    const result = await lobbyService.getInvitations();
+
+    if (result.isOk()) {
+      this.invitations.setInvitations(result.value);
+    }
+
     this.notifications.success("You have been invited to lobby");
   }
 }
