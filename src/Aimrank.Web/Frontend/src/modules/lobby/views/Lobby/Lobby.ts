@@ -6,12 +6,12 @@ import { useLobby } from "../../hooks/useLobby";
 import { lobbyHub, lobbyService, matchService } from "@/services";
 import BaseButton from "@/modules/common/components/BaseButton";
 import FormFieldInput from "@/modules/common/components/FormFieldInput";
+import InvitationForm from "../../components/InvitationForm";
 
 const useLobbyView = () => {
   const user = useUser();
   const lobby = useLobby();
 
-  const inviteUserId = ref("");
   const map = ref("");
   
   const currentUserMembership = computed(() => lobby.state.lobby?.members.find(m => m.userId === user.state.user?.id));
@@ -43,7 +43,6 @@ const useLobbyView = () => {
   return {
     map,
     lobby,
-    inviteUserId,
     currentUserMembership,
   };
 }
@@ -51,10 +50,11 @@ const useLobbyView = () => {
 const Lobby = defineComponent({
   components: {
     BaseButton,
-    FormFieldInput
+    FormFieldInput,
+    InvitationForm
   },
   setup() {
-    const { map, lobby, inviteUserId, currentUserMembership } = useLobbyView();
+    const { map, lobby, currentUserMembership } = useLobbyView();
 
     const router = useRouter();
     const notifications = useNotifications();
@@ -141,7 +141,6 @@ const Lobby = defineComponent({
       map,
       lobby: computed(() => lobby.state.lobby),
       match: computed(() => lobby.state.match),
-      inviteUserId,
       currentUserMembership,
       onStartSearchingClick,
       onChangeConfigurationClick,

@@ -3,7 +3,8 @@ import { computed, defineComponent } from "vue";
 const icons = {
   times: "fas fa-times",
   check: "fas fa-check",
-  steam: "fab fa-steam"
+  steam: "fab fa-steam",
+  envelope: "fas fa-envelope"
 };
 
 const Icon = defineComponent({

@@ -29,7 +29,7 @@ namespace Aimrank.Application.Commands.Lobbies.AcceptLobbyInvitation
             var lobby = await _lobbyRepository.GetByIdAsync(new LobbyId(request.LobbyId));
             var invitedUser = await _userRepository.GetByIdAsync(new UserId(_executionContextAccessor.UserId));
             
-            lobby.AcceptInvitation(invitedUser);
+            await lobby.AcceptInvitationAsync(invitedUser, _lobbyRepository);
             
             _lobbyRepository.Update(lobby);
             

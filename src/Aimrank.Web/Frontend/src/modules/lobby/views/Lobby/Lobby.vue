@@ -45,15 +45,7 @@
       </table>
       <div :class="$style.section">
         <h3>{{ $t("lobby.views.Lobby.invitations") }}</h3>
-        <div :class="$style.inviteForm">
-          <form-field-input
-            :label="$t('lobby.views.Lobby.invitationLabel')"
-            v-model="inviteUserId"
-          />
-          <base-button @click="onInviteUserClick">
-            {{ $t("lobby.views.Lobby.invite") }}
-          </base-button>
-        </div>
+        <invitation-form :lobby-id="lobby.id" />
       </div>
       <div
         v-if="match"

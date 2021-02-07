@@ -43,6 +43,12 @@
     }
   },
   "lobby": {
+    "components": {
+      "InvitationForm": {
+        "label": "Search for user",
+        "success": "Invitation sent"
+      }
+    },
     "views": {
       "Invitations": {
         "title": "Invitations",
@@ -62,9 +68,7 @@
           "map": "Map",
           "members": "Members"
         },
-        "invitationLabel": "Invite user id",
         "invitations": "Invitations",
-        "invite": "Send invitation",
         "leader": "Leader",
         "match": "Match",
         "options": "Options",

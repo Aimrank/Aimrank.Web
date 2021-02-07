@@ -66,11 +66,12 @@ namespace Aimrank.Domain.Lobbies
             AddDomainEvent(new InvitationCreatedDomainEvent(this, invitation));
         }
 
-        public void AcceptInvitation(User invitedUser)
+        public async Task AcceptInvitationAsync(User invitedUser, ILobbyRepository lobbyRepository)
         {
             BusinessRules.Check(new InvitationMustExistForUserRule(this, invitedUser.Id));
             BusinessRules.Check(new UserMustHaveConnectedSteamRule(invitedUser));
             BusinessRules.Check(new LobbyMustNotBeFullRule(this));
+            await BusinessRules.CheckAsync(new UserMustNotBeMemberOfAnyLobbyRule(lobbyRepository, invitedUser.Id));
 
             var invitation = _invitations.FirstOrDefault(i => i.InvitedUserId == invitedUser.Id);
             if (invitation is not null)
