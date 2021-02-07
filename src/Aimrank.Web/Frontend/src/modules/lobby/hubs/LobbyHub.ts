@@ -1,8 +1,11 @@
+import { useNotifications } from "@/modules/common/hooks/useNotifications";
 import { Hub } from "@/modules/common/hubs/Hub";
+import { MatchStatus } from "@/modules/match/services/MatchService";
+import { useLobby } from "../hooks/useLobby";
 import {
   IInvitationAcceptedEvent,
-  IInvitationCanceledEvent,
-  IInvitationCreatedEvent,
+  // IInvitationCanceledEvent,
+  // IInvitationCreatedEvent,
   ILobbyConfigurationChangedEvent,
   ILobbyStatusChangedEvent,
   IMatchFinishedEvent,
@@ -13,11 +16,14 @@ import {
 } from "./LobbyHubEvents";
 
 export class LobbyHub {
+  private readonly lobby = useLobby();
+  private readonly notifications = useNotifications();
+
   constructor(private readonly hub: Hub) {
     hub.connection.on("Disconnect", this.onDisconnect.bind(this));
     hub.connection.on("InvitationAccepted", this.onInvitationAccepted.bind(this));
-    hub.connection.on("InvitationCanceled", this.onInvitationCanceled.bind(this));
-    hub.connection.on("InvitationCreated", this.onInvitationCreated.bind(this));
+    // hub.connection.on("InvitationCanceled", this.onInvitationCanceled.bind(this));
+    // hub.connection.on("InvitationCreated", this.onInvitationCreated.bind(this));
     hub.connection.on("LobbyConfigurationChanged", this.onLobbyConfigurationChanged.bind(this));
     hub.connection.on("LobbyStatusChanged", this.onLobbyStatusChanged.bind(this));
     hub.connection.on("MatchFinished", this.onMatchFinished.bind(this));
@@ -40,42 +46,58 @@ export class LobbyHub {
   }
 
   private onInvitationAccepted(event: IInvitationAcceptedEvent) {
-    console.log("InvitationAccepted", event);
+    this.lobby.addMember({ userId: event.invitedUserId, isLeader: false });
   }
 
-  private onInvitationCanceled(event: IInvitationCanceledEvent) {
-    console.log("InvitationCanceled", event);
-  }
-
-  private onInvitationCreated(event: IInvitationCreatedEvent) {
-    console.log("InvitationCreated", event);
-  }
+  // private onInvitationCanceled(event: IInvitationCanceledEvent) {}
+  // private onInvitationCreated(event: IInvitationCreatedEvent) {}
 
   private onLobbyConfigurationChanged(event: ILobbyConfigurationChangedEvent) {
-    console.log("LobbyConfigurationChanged", event)
+    this.lobby.setLobbyConfiguration({
+      map: event.map,
+      name: event.name,
+      mode: event.mode
+    });
   }
 
   private onLobbyStatusChanged(event: ILobbyStatusChangedEvent) {
-    console.log("LobbyStatusChanged", event);
+    this.lobby.setLobbyStatus(event.status);
   }
 
   private onMatchStarting(event: IMatchStartingEvent) {
-    console.log("MatchStarting", event);
+    this.lobby.setMatch({
+      id: event.matchId,
+      map: event.map,
+      status: MatchStatus.Starting,
+      address: event.address
+    });
+
+    this.notifications.success("Searching for new game...");
   }
 
   private onMatchStarted(event: IMatchStartedEvent) {
-    console.log("MatchStarted", event);
+    this.lobby.setMatch({
+      id: event.matchId,
+      map: event.map,
+      status: MatchStatus.Started,
+      address: event.address
+    });
+
+    this.notifications.success(`Match created: ${event.address}`);
   }
 
   private onMatchFinished(event: IMatchFinishedEvent) {
-    console.log("MatchFinished", event);
+    this.lobby.clearLobby();
+    this.lobby.clearMatch();
+
+    this.notifications.success("Match finished.");
   }
 
   private onMemberLeft(event: IMemberLeftEvent) {
-    console.log("MemberLeft", event);
+    this.lobby.removeMember(event.userId);
   }
 
   private onMemberRoleChanged(event: IMemberRoleChangedEvent) {
-    console.log("MemberRoleChanged", event);
+    this.lobby.changeMemberRole(event.userId, event.role);
   }
 }

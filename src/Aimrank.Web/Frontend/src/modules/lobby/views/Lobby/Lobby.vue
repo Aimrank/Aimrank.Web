@@ -66,7 +66,7 @@
         <div>Address: {{ match.address }}</div>
       </div>
       <div
-        v-else-if="member && member.isLeader"
+        v-else-if="currentUserMembership && currentUserMembership.isLeader"
         :class="$style.section"
       >
         <h3>{{ $t("lobby.views.Lobby.options") }}</h3>

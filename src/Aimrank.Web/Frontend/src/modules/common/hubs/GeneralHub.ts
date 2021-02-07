@@ -1,3 +1,4 @@
+import { useNotifications } from "../hooks/useNotifications";
 import { Hub } from "./Hub";
 
 interface IInvitationCreatedEvent {
@@ -7,6 +8,8 @@ interface IInvitationCreatedEvent {
 }
 
 export class GeneralHub {
+  private readonly notifications = useNotifications();
+
   constructor(private readonly hub: Hub) {
     hub.connection.on("InvitationCreated", this.onInvitationCreated.bind(this));
   }
@@ -20,6 +23,6 @@ export class GeneralHub {
   }
 
   private onInvitationCreated(event: IInvitationCreatedEvent) {
-    console.log("[General] InvitationCreated", event);
+    this.notifications.success("You have been invited to lobby");
   }
 }

@@ -1,26 +1,30 @@
 import { HttpClient } from "@/modules/common/services/HttpClient";
 import { Service } from "@/modules/common/services/Service";
 
-enum LobbyStatus {
+export enum LobbyStatus {
   Open,
   Searching,
   MatchFound,
   InGame
 }
 
+export interface ILobbyConfiguration {
+  name: string;
+  map: string;
+  mode: number;
+}
+
+export interface ILobbyMember {
+  userId: string;
+  isLeader: boolean;
+}
+
 export interface ILobbyDto {
   id: string;
-  matchId: string;
-  configuration: {
-    name: string;
-    map: string;
-    mode: number;
-  };
+  matchId: string | null;
+  configuration: ILobbyConfiguration;
   status: LobbyStatus;
-  members: {
-    userId: string;
-    isLeader: boolean;
-  }[];
+  members: ILobbyMember[];
 }
 
 export interface ILobbyInvitationDto {

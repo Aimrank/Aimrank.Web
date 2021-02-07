@@ -1,7 +1,7 @@
 import { HttpClient } from "@/modules/common/services/HttpClient";
 import { Service } from "@/modules/common/services/Service";
 
-enum MatchStatus {
+export enum MatchStatus {
   Created,
   Starting,
   Started,

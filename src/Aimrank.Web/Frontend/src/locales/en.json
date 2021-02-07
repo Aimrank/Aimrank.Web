@@ -55,6 +55,7 @@
       },
       "Lobby": {
         "title": "Current lobby",
+        "create": "Create lobby",
         "leave": "Leave lobby",
         "table": {
           "id": "Id",
