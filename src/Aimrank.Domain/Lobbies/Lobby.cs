@@ -14,15 +14,25 @@ namespace Aimrank.Domain.Lobbies
     {
         private const int MaxMembers = 2;
         
-        private readonly HashSet<LobbyMember> _members = new();
-        private readonly HashSet<LobbyInvitation> _invitations = new();
+        private HashSet<LobbyMember> _members = new();
+        private HashSet<LobbyInvitation> _invitations = new();
         
         public LobbyId Id { get; }
         public MatchId MatchId { get; private set; }
         public LobbyStatus Status { get; private set; }
         public LobbyConfiguration Configuration { get; private set; }
-        public IEnumerable<LobbyMember> Members => _members;
-        public IEnumerable<LobbyInvitation> Invitations => _invitations;
+
+        public IEnumerable<LobbyMember> Members
+        {
+            get => _members;
+            private set => _members = new HashSet<LobbyMember>(value);
+        }
+
+        public IEnumerable<LobbyInvitation> Invitations
+        {
+            get => _invitations;
+            private set => _invitations = new HashSet<LobbyInvitation>(value);
+        }
         
         private Lobby() {}
 
@@ -63,12 +73,16 @@ namespace Aimrank.Domain.Lobbies
             BusinessRules.Check(new LobbyMustNotBeFullRule(this));
 
             var invitation = _invitations.FirstOrDefault(i => i.InvitedUserId == invitedUser.Id);
-
-            _invitations.Remove(invitation);
-
-            if (_members.Count == MaxMembers && _invitations.Any())
+            if (invitation is not null)
             {
-                _invitations.Clear();
+                _invitations.Remove(invitation);
+
+                if (_members.Count == MaxMembers && _invitations.Any())
+                {
+                    _invitations.Clear();
+                }
+
+                _members.Add(new LobbyMember(invitation.InvitedUserId, LobbyMemberRole.Normal));
             }
             
             AddDomainEvent(new InvitationAcceptedDomainEvent(this, invitation));

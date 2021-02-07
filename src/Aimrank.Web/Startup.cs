@@ -9,10 +9,12 @@ using Aimrank.Infrastructure.Configuration.CSGO;
 using Aimrank.Infrastructure.Configuration.Jwt;
 using Aimrank.Infrastructure.Configuration;
 using Aimrank.Infrastructure;
+using Aimrank.IntegrationEvents.Lobbies;
 using Aimrank.IntegrationEvents;
 using Aimrank.Web.Configuration.ExecutionContext;
 using Aimrank.Web.Configuration.Extensions;
 using Aimrank.Web.Configuration;
+using Aimrank.Web.Events.Handlers.Lobbies;
 using Aimrank.Web.Events.Handlers;
 using Aimrank.Web.Hubs;
 using Aimrank.Web.ProblemDetails;
@@ -23,6 +25,7 @@ using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -42,6 +45,7 @@ namespace Aimrank.Web
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
+            services.AddScoped<IUserIdProvider, HubUserIdProvider>();
 
             services.AddSignalR();
             services.AddSwagger();
@@ -80,6 +84,13 @@ namespace Aimrank.Web
             containerBuilder.RegisterType<MatchStartingEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchStartedEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchFinishedEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<InvitationAcceptedEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<InvitationCanceledEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<InvitationCreatedEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<LobbyConfigurationChangedEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<LobbyStatusChangedEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<MemberLeftEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<MemberRoleChangedEventHandler>().AsImplementedInterfaces();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -107,6 +118,7 @@ namespace Aimrank.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<GeneralHub>("/hubs/general");
+                endpoints.MapHub<LobbyHub>("/hubs/lobby");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{*all}",
@@ -118,6 +130,13 @@ namespace Aimrank.Web
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartingEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartedEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchFinishedEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<InvitationAcceptedEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<InvitationCanceledEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<InvitationCreatedEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<LobbyConfigurationChangedEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<LobbyStatusChangedEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<MemberLeftEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<MemberRoleChangedEvent>(container));
         }
 
         private void InitializeModules(ILifetimeScope container)

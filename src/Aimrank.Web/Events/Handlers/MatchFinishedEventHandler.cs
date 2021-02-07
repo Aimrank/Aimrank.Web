@@ -9,9 +9,9 @@ namespace Aimrank.Web.Events.Handlers
 {
     public class MatchFinishedEventHandler : IIntegrationEventHandler<MatchFinishedEvent>
     {
-        private readonly IHubContext<GeneralHub, IGeneralClient> _hubContext;
+        private readonly IHubContext<LobbyHub, ILobbyClient> _hubContext;
 
-        public MatchFinishedEventHandler(IHubContext<GeneralHub, IGeneralClient> hubContext)
+        public MatchFinishedEventHandler(IHubContext<LobbyHub, ILobbyClient> hubContext)
         {
             _hubContext = hubContext;
         }

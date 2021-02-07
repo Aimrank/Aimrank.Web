@@ -25,7 +25,7 @@ namespace Aimrank.Infrastructure.Domain.Lobbies
                 b.Property(c => c.Mode).HasColumnName("Configuration_Mode");
             });
 
-            builder.OwnsMany<LobbyMember>("_members", b =>
+            builder.OwnsMany(l => l.Members, b =>
             {
                 b.ToTable("LobbiesMembers", "aimrank");
                 b.HasKey(m => m.UserId);
@@ -35,23 +35,21 @@ namespace Aimrank.Infrastructure.Domain.Lobbies
                 b.WithOwner();
             });
 
-            builder.OwnsMany<LobbyInvitation>("_invitations", b =>
+            builder.OwnsMany(l => l.Invitations, b =>
             {
                 b.ToTable("LobbiesInvitations", "aimrank");
                 b.Property<LobbyId>("LobbyId");
-                b.Property(i => i.InvitingUserId).IsRequired().HasColumnName("InvitingUserId");
-                b.Property(i => i.InvitedUserId).IsRequired().HasColumnName("InvitedUserId");
+                b.Property(i => i.InvitingUserId).HasColumnName("InvitingUserId");
+                b.Property(i => i.InvitedUserId).HasColumnName("InvitedUserId").IsRequired();
                 b.Property(i => i.CreatedAt).HasColumnName("CreatedAt");
                 b.HasKey("LobbyId", "InvitingUserId", "InvitedUserId");
-                b.HasOne<UserModel>().WithMany().HasForeignKey("InvitingUserId");
+                b.HasOne<UserModel>().WithMany().HasForeignKey("InvitingUserId").OnDelete(DeleteBehavior.Restrict);
                 b.HasOne<UserModel>().WithMany().HasForeignKey("InvitedUserId");
                 b.WithOwner();
             });
             
             builder.HasOne<Match>().WithOne().HasForeignKey<Lobby>(l => l.MatchId);
 
-            builder.Ignore(l => l.Members);
-            builder.Ignore(l => l.Invitations);
             builder.Ignore(l => l.DomainEvents);
         }
     }

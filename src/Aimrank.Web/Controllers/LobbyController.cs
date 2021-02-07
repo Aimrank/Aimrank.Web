@@ -7,9 +7,11 @@ using Aimrank.Application.Commands.Lobbies.LeaveLobby;
 using Aimrank.Application.Commands.Lobbies.StartSearchingForGame;
 using Aimrank.Application.Contracts;
 using Aimrank.Application.Queries.GetLobbyForUser;
+using Aimrank.Application.Queries.GetLobbyInvitations;
 using Aimrank.Web.Attributes;
 using Aimrank.Web.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 
@@ -27,8 +29,8 @@ namespace Aimrank.Web.Controllers
             _aimrankModule = aimrankModule;
         }
 
-        [HttpGet("user")]
-        public async Task<ActionResult<LobbyDto>> GetByUserId()
+        [HttpGet("current")]
+        public async Task<ActionResult<LobbyDto>> GetForCurrentUser()
         {
             var lobby = await _aimrankModule.ExecuteQueryAsync(new GetLobbyForUserQuery());
             if (lobby is null)
@@ -37,6 +39,13 @@ namespace Aimrank.Web.Controllers
             }
             
             return lobby;
+        }
+
+        [HttpGet("invitations")]
+        public async Task<ActionResult<IEnumerable<LobbyInvitationDto>>> GetInvitations()
+        {
+            var invitations = await _aimrankModule.ExecuteQueryAsync(new GetLobbyInvitationsQuery());
+            return Ok(invitations);
         }
 
         [HttpPost]

@@ -39,6 +39,8 @@ namespace Aimrank.Application.Queries.GetLobbyForUser
                     [Lobby].[MatchId] AS [MatchId],
                     [Lobby].[Status] AS [Status],
                     [Lobby].[Configuration_Map] AS [Map],
+                    [Lobby].[Configuration_Name] AS [Name],
+                    [Lobby].[Configuration_Mode] AS [Mode],
                     [Member].[UserId] AS [UserId],
                     CASE [Member].[Role]
                         WHEN 0 THEN 0
@@ -50,9 +52,9 @@ namespace Aimrank.Application.Queries.GetLobbyForUser
 
             var lookup = new Dictionary<Guid, LobbyDto>();
             
-            await connection.QueryAsync<LobbyDto, LobbyMemberDto, LobbyDto>(
+            await connection.QueryAsync<LobbyDto, LobbyConfigurationDto, LobbyMemberDto, LobbyDto>(
                 sql,
-                (details, member) =>
+                (details, configuration, member) =>
                 {
                     if (!lookup.TryGetValue(details.Id, out var lobby))
                     {
@@ -60,8 +62,8 @@ namespace Aimrank.Application.Queries.GetLobbyForUser
                         {
                             Id = details.Id,
                             MatchId = details.MatchId,
-                            Map = details.Map,
                             Status = details.Status,
+                            Configuration = configuration,
                             Members = new List<LobbyMemberDto>()
                         };
                         
@@ -76,7 +78,7 @@ namespace Aimrank.Application.Queries.GetLobbyForUser
                     return lobby;
                 },
                 new {_executionContextAccessor.UserId},
-                splitOn: "UserId");
+                splitOn: "Map,UserId");
 
             return lookup.Values.FirstOrDefault();
         }

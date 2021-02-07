@@ -375,7 +375,7 @@ namespace Aimrank.Database.Migrator.Migrations
                                 .HasForeignKey("LobbyId");
                         });
 
-                    b.OwnsMany("Aimrank.Domain.Lobbies.LobbyInvitation", "_invitations", b1 =>
+                    b.OwnsMany("Aimrank.Domain.Lobbies.LobbyInvitation", "Invitations", b1 =>
                         {
                             b1.Property<Guid>("LobbyId")
                                 .HasColumnType("uniqueidentifier");
@@ -409,14 +409,14 @@ namespace Aimrank.Database.Migrator.Migrations
                             b1.HasOne("Aimrank.Infrastructure.Domain.Users.UserModel", null)
                                 .WithMany()
                                 .HasForeignKey("InvitingUserId")
-                                .OnDelete(DeleteBehavior.Cascade)
+                                .OnDelete(DeleteBehavior.Restrict)
                                 .IsRequired();
 
                             b1.WithOwner()
                                 .HasForeignKey("LobbyId");
                         });
 
-                    b.OwnsMany("Aimrank.Domain.Lobbies.LobbyMember", "_members", b1 =>
+                    b.OwnsMany("Aimrank.Domain.Lobbies.LobbyMember", "Members", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uniqueidentifier")
@@ -445,11 +445,11 @@ namespace Aimrank.Database.Migrator.Migrations
                                 .IsRequired();
                         });
 
-                    b.Navigation("_invitations");
-
-                    b.Navigation("_members");
-
                     b.Navigation("Configuration");
+
+                    b.Navigation("Invitations");
+
+                    b.Navigation("Members");
                 });
 
             modelBuilder.Entity("Aimrank.Domain.Matches.Match", b =>

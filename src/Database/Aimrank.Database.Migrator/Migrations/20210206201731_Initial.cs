@@ -309,7 +309,7 @@ namespace Aimrank.Database.Migrator.Migrations
                         principalSchema: "aimrank",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_LobbiesInvitations_Lobbies_LobbyId",
                         column: x => x.LobbyId,
