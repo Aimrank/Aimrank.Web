@@ -16,7 +16,7 @@ namespace Aimrank.Domain.Lobbies.Rules
         }
 
         public string Message => "You are not a lobby leader";
-        public string Code => "not_lobby_leader";
+        public string Code => "user_not_lobby_leader";
 
         public bool IsBroken() => !_lobby.Members.Any(m => m.UserId == _userId && m.Role == LobbyMemberRole.Leader);
     }

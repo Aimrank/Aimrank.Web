@@ -4,6 +4,6 @@ namespace Aimrank.Common.Application.Events
 {
     public interface IEventMapper
     {
-        IntegrationEvent Map(IDomainEvent @event);
+        IIntegrationEvent Map(IDomainEvent @event);
     }
 }

@@ -16,7 +16,7 @@ namespace Aimrank.Domain.Lobbies.Rules
         }
 
         public string Message => "You are already a member of other lobby";
-        public string Code => "user_already_lobby_member";
+        public string Code => "user_already_other_lobby_member";
 
         public Task<bool> IsBrokenAsync() => _lobbyRepository.ExistsForMemberAsync(_userId);
     }

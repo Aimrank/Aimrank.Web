@@ -1,32 +1,37 @@
-import { HubConnection, HubConnectionBuilder, HubConnectionState } from "@microsoft/signalr";
-import { httpClient } from "@/services";
+import { lobbyService } from "@/services";
+import { useInvitations } from "@/modules/lobby";
+import { useNotifications } from "../hooks/useNotifications";
+import { Hub } from "./Hub";
+
+interface IInvitationCreatedEvent {
+  lobbyId: string;
+  invitingUserId: string;
+  invitedUserId: string;
+}
 
 export class GeneralHub {
-  public readonly connection: HubConnection;
+  private readonly notifications = useNotifications();
+  private readonly invitations = useInvitations();
 
-  constructor(endpoint: string) {
-    this.connection = new HubConnectionBuilder()
-      .withUrl(endpoint, {
-        accessTokenFactory: httpClient.accessTokenFactory.bind(httpClient)
-      })
-      .build();
+  constructor(private readonly hub: Hub) {
+    hub.connection.on("InvitationCreated", this.onInvitationCreated.bind(this));
   }
 
   public async connect() {
-    if (this.connection.state === HubConnectionState.Disconnected) {
-      return this.connection.start();
-    }
+    await this.hub.connect();
   }
 
   public async disconnect() {
-    const states = [
-      HubConnectionState.Connected,
-      HubConnectionState.Connecting,
-      HubConnectionState.Reconnecting
-    ];
+    await this.hub.disconnect();
+  }
 
-    if (states.some(s => s === this.connection.state)) {
-      return this.connection.stop();
+  private async onInvitationCreated(event: IInvitationCreatedEvent) {
+    const result = await lobbyService.getInvitations();
+
+    if (result.isOk()) {
+      this.invitations.setInvitations(result.value);
     }
+
+    this.notifications.success("You have been invited to lobby");
   }
 }

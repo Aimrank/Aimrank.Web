@@ -2,111 +2,134 @@ import { computed, defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUser } from "@/modules/user";
 import { useNotifications } from "@/modules/common/hooks/useNotifications";
-import { lobbyService, matchService } from "@/services";
-import { ILobbyDto } from "../../services/LobbyService";
-import { IMatchDto } from "@/modules/match/services/MatchService";
+import { useLobby } from "../../hooks/useLobby";
+import { lobbyHub, lobbyService, matchService } from "@/services";
 import BaseButton from "@/modules/common/components/BaseButton";
-import FormFieldInput from "@/modules/common/components/FormFieldInput";
+import InvitationForm from "../../components/InvitationForm";
+import MapButton from "../../components/MapButton";
 
-const useLobby = () => {
+const maps = {
+  aim_map: require("@/assets/images/aim_map.jpg").default,
+  am_redline_14: require("@/assets/images/am_redline_14.jpg").default
+};
+
+const useLobbyView = () => {
   const user = useUser();
+  const lobby = useLobby();
 
-  const lobby = ref<ILobbyDto | null>();
-  const match = ref<IMatchDto | null>();
-  const map = ref("");
-  
-  const member = computed(() => lobby.value?.members.find(m => m.userId === user.state.user?.id));
+  const currentUserMembership = computed(() => lobby.state.lobby?.members.find(m => m.userId === user.state.user?.id));
 
   onMounted(async () => {
     if (!user.state.user) {
       return;
     }
 
-    const result = await lobbyService.getByUserId(user.state.user.id);
+    const result = await lobbyService.getForCurrentUser();
 
     if (result.isOk()) {
-      lobby.value = result.value;
-      map.value = result.value.map;
+      lobby.setLobby(result.value);
 
-      if (lobby.value.matchId) {
-        const matchResult = await matchService.getById(lobby.value.matchId);
+      await lobbyHub.connect();
+
+      if (result.value.matchId) {
+        const matchResult = await matchService.getById(result.value.matchId);
 
         if (matchResult.isOk()) {
-          match.value = matchResult.value;
+          lobby.setMatch(matchResult.value);
         }
       }
     }
   });
 
   return {
-    member,
     lobby,
-    match,
-    map
-  }
+    currentUserMembership,
+  };
 }
 
 const Lobby = defineComponent({
   components: {
     BaseButton,
-    FormFieldInput
+    InvitationForm,
+    MapButton
   },
   setup() {
-    const { member, lobby, match, map } = useLobby();
+    const { lobby, currentUserMembership } = useLobbyView();
 
     const router = useRouter();
     const notifications = useNotifications();
 
-    const onCloseLobbyClick = async () => {
-      if (!lobby.value) {
+    const onStartSearchingClick = async () => {
+      if (!lobby.isAvailable) {
         return;
       }
 
-      const result = await lobbyService.close(lobby.value.id);
+      const result = await lobbyService.startSearching(lobby.state.lobby!.id);
 
-      if (result.isOk()) {
-        notifications.success("Searching for available server...");
-      } else {
+      if (!result.isOk()) {
         notifications.danger(result.error.title);
       }
     }
 
-    const onChangeMapClick = async () => {
-      if (!lobby.value) {
+    const onChangeMapClick = async (name: string) => {
+      if (!lobby.isAvailable || name === lobby.state.lobby?.configuration.map) {
         return;
       }
 
-      const result = await lobbyService.changeMap(lobby.value.id, { name: map.value });
+      const result = await lobbyService.changeConfiguration(lobby.state.lobby!.id, {
+        map: name,
+        name: lobby.state.lobby!.configuration.name,
+        mode: lobby.state.lobby!.configuration.mode
+      });
 
       if (result.isOk()) {
-        lobby.value = { ...lobby.value, map: map.value };
+        lobby.setLobbyConfiguration({ ...lobby.state.lobby!.configuration, map: name });
       } else {
         notifications.danger(result.error.title);
       }
     }
 
     const onLeaveLobbyClick = async () => {
-      if (!lobby.value) {
+      if (!lobby.isAvailable) {
         return;
       }
 
-      const result = await lobbyService.leave(lobby.value.id);
+      const result = await lobbyService.leave(lobby.state.lobby!.id);
 
       if (result.isOk()) {
-        router.push({ name: "lobbies" });
+        lobbyHub.disconnect();
+        lobby.clearLobby();
+        lobby.clearMatch();
+
+        router.push({ name: "home" });
+      } else {
+        notifications.danger(result.error.title);
+      }
+    }
+
+    const onCreateLobbyClick = async () => {
+      const result = await lobbyService.create();
+
+      if (result.isOk()) {
+        const lobbyResult = await lobbyService.getForCurrentUser();
+
+        if (lobbyResult.isOk()) {
+          lobby.setLobby(lobbyResult.value);
+        }
       } else {
         notifications.danger(result.error.title);
       }
     }
 
     return {
-      map,
-      lobby,
-      match,
-      member,
-      onCloseLobbyClick,
-      onChangeMapClick,
-      onLeaveLobbyClick
+      maps,
+      lobby: computed(() => lobby.state.lobby),
+      match: computed(() => lobby.state.match),
+      currentUserMembership,
+      onStartSearchingClick,
+      onLeaveLobbyClick,
+      onCreateLobbyClick,
+      onChangeMapClick
     };
   }
 });

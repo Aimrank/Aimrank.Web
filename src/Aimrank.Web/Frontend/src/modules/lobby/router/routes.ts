@@ -1,13 +1,13 @@
 import { RouteRecordRaw } from "vue-router";
 import { authenticate } from "@/modules/authentication";
-import Lobbies from "../views/Lobbies";
+import Invitations from "../views/Invitations";
 import Lobby from "../views/Lobby";
 
 export const routes: RouteRecordRaw[] = [
   {
-    name: "lobbies",
-    path: "/lobbies",
-    component: Lobbies,
+    name: "lobbyInvitations",
+    path: "/lobbies/invitations",
+    component: Invitations,
     beforeEnter: authenticate
   },
   {

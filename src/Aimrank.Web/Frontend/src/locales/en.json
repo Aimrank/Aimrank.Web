@@ -43,31 +43,37 @@
     }
   },
   "lobby": {
+    "components": {
+      "InvitationForm": {
+        "label": "Search for user",
+        "success": "Invitation sent"
+      }
+    },
     "views": {
-      "Lobbies": {
-        "title": "Opened lobbies",
-        "create": "Create new lobby",
+      "Invitations": {
+        "title": "Invitations",
         "table": {
-          "id": "Id",
-          "map": "Map",
-          "members": "Members"
+          "from": "From",
+          "date": "Date"
         },
-        "leader": "Leader",
-        "join": "Join"
+        "cancel": "Cancel",
+        "accept": "Accept"
       },
       "Lobby": {
         "title": "Current lobby",
+        "create": "Create lobby",
         "leave": "Leave lobby",
         "table": {
           "id": "Id",
           "map": "Map",
           "members": "Members"
         },
+        "invitations": "Invitations",
         "leader": "Leader",
         "match": "Match",
         "options": "Options",
         "optionsMap": "Map",
-        "changeMap": "Change map",
+        "changeConfiguration": "Change configuration",
         "start": "Start game",
         "empty": "You're not a member of any lobby"
       }

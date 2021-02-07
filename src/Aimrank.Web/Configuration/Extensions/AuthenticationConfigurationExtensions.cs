@@ -43,7 +43,11 @@ namespace Aimrank.Web.Configuration.Extensions
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret))
                     };
 
-                    var hubs = new[] {"/hubs/general"};
+                    var hubs = new[]
+                    {
+                        "/hubs/general",
+                        "/hubs/lobby"
+                    };
 
                     options.Events = new JwtBearerEvents
                     {

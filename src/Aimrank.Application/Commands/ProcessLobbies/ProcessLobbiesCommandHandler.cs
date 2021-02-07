@@ -33,11 +33,11 @@ namespace Aimrank.Application.Commands.ProcessLobbies
 
         public async Task<Unit> Handle(ProcessLobbiesCommand request, CancellationToken cancellationToken)
         {
-            var lobbies = await _lobbyRepository.BrowseAsync(LobbyStatus.Closed);
+            var lobbies = await _lobbyRepository.BrowseAsync(LobbyStatus.Searching);
 
             foreach (var lobby in lobbies)
             {
-                if (lobby.Members.Count < 2)
+                if (lobby.Members.Count() != 2)
                 {
                     continue;
                 }
@@ -58,7 +58,11 @@ namespace Aimrank.Application.Commands.ProcessLobbies
                     match.Players.Select(p => p.SteamId),
                     match.Map);
                 
-                lobby.StartGame(matchId);
+                lobby.AssignMatch(matchId);
+                lobby.StartMatch();
+                
+                // Todo: StartMatch should be invoked after members accept game
+                
                 match.Start(address);
                 
                 _matchRepository.Add(match);

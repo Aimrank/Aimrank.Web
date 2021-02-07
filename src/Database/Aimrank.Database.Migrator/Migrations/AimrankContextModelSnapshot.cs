@@ -23,13 +23,16 @@ namespace Aimrank.Database.Migrator.Migrations
             modelBuilder.Entity("Aimrank.Domain.Lobbies.Lobby", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("Id");
 
                     b.Property<Guid?>("MatchId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("MatchId");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Status");
 
                     b.HasKey("Id");
 
@@ -43,31 +46,39 @@ namespace Aimrank.Database.Migrator.Migrations
             modelBuilder.Entity("Aimrank.Domain.Matches.Match", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("Id");
 
                     b.Property<string>("Address")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Address");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreatedAt");
 
-                    b.Property<DateTime>("FinishedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("FinishedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("FinishedAt");
 
                     b.Property<string>("Map")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Map");
 
                     b.Property<int>("ScoreCT")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ScoreCT");
 
                     b.Property<int>("ScoreT")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ScoreT");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Status");
 
                     b.HasKey("Id");
 
@@ -77,20 +88,25 @@ namespace Aimrank.Database.Migrator.Migrations
             modelBuilder.Entity("Aimrank.Domain.RefreshTokens.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("Id");
 
                     b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ExpiresAt");
 
                     b.Property<bool>("IsInvalidated")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsInvalidated");
 
                     b.Property<string>("Jwt")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Jwt");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("UserId");
 
                     b.HasKey("Id");
 
@@ -169,7 +185,8 @@ namespace Aimrank.Database.Migrator.Migrations
 
                     b.Property<string>("SteamId")
                         .HasMaxLength(17)
-                        .HasColumnType("nvarchar(17)");
+                        .HasColumnType("nvarchar(17)")
+                        .HasColumnName("SteamId");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -335,8 +352,20 @@ namespace Aimrank.Database.Migrator.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Map")
+                                .IsRequired()
                                 .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
+                                .HasColumnType("nvarchar(50)")
+                                .HasColumnName("Configuration_Map");
+
+                            b1.Property<int>("Mode")
+                                .HasColumnType("int")
+                                .HasColumnName("Configuration_Mode");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasMaxLength(450)
+                                .HasColumnType("nvarchar(450)")
+                                .HasColumnName("Configuration_Name");
 
                             b1.HasKey("LobbyId");
 
@@ -346,16 +375,59 @@ namespace Aimrank.Database.Migrator.Migrations
                                 .HasForeignKey("LobbyId");
                         });
 
+                    b.OwnsMany("Aimrank.Domain.Lobbies.LobbyInvitation", "Invitations", b1 =>
+                        {
+                            b1.Property<Guid>("LobbyId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<Guid>("InvitingUserId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("InvitingUserId");
+
+                            b1.Property<Guid>("InvitedUserId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("InvitedUserId");
+
+                            b1.Property<DateTime>("CreatedAt")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("CreatedAt");
+
+                            b1.HasKey("LobbyId", "InvitingUserId", "InvitedUserId");
+
+                            b1.HasIndex("InvitedUserId");
+
+                            b1.HasIndex("InvitingUserId");
+
+                            b1.ToTable("LobbiesInvitations", "aimrank");
+
+                            b1.HasOne("Aimrank.Infrastructure.Domain.Users.UserModel", null)
+                                .WithMany()
+                                .HasForeignKey("InvitedUserId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.HasOne("Aimrank.Infrastructure.Domain.Users.UserModel", null)
+                                .WithMany()
+                                .HasForeignKey("InvitingUserId")
+                                .OnDelete(DeleteBehavior.Restrict)
+                                .IsRequired();
+
+                            b1.WithOwner()
+                                .HasForeignKey("LobbyId");
+                        });
+
                     b.OwnsMany("Aimrank.Domain.Lobbies.LobbyMember", "Members", b1 =>
                         {
                             b1.Property<Guid>("UserId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UserId");
 
                             b1.Property<Guid>("LobbyId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<int>("Role")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("Role");
 
                             b1.HasKey("UserId");
 
@@ -375,6 +447,8 @@ namespace Aimrank.Database.Migrator.Migrations
 
                     b.Navigation("Configuration");
 
+                    b.Navigation("Invitations");
+
                     b.Navigation("Members");
                 });
 
@@ -386,24 +460,34 @@ namespace Aimrank.Database.Migrator.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<Guid>("UserId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UserId");
 
                             b1.Property<int>("Assists")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("Assists");
 
                             b1.Property<int>("Deaths")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("Deaths");
 
                             b1.Property<int>("Kills")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("Kills");
 
                             b1.Property<int>("Score")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("Score");
 
                             b1.Property<string>("SteamId")
                                 .IsRequired()
                                 .HasMaxLength(17)
-                                .HasColumnType("nvarchar(17)");
+                                .HasColumnType("nvarchar(17)")
+                                .HasColumnName("SteamId");
+
+                            b1.Property<int>("Team")
+                                .HasColumnType("int")
+                                .HasColumnName("Team");
 
                             b1.HasKey("MatchId", "UserId");
 

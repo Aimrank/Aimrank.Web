@@ -27,9 +27,7 @@ namespace Aimrank.Application.Queries.GetUserDetails
                   FROM [aimrank].[AspNetUsers] AS [User]
                   WHERE [User].[Id] = @UserId;";
 
-            var details = await connection.QueryFirstOrDefaultAsync<UserDetailsDto>(sql, new {request.UserId});
-
-            return details;
+            return await connection.QueryFirstOrDefaultAsync<UserDetailsDto>(sql, new {request.UserId});
         }
     }
 }

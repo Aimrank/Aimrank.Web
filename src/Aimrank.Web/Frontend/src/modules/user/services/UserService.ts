@@ -1,7 +1,7 @@
 import { HttpClient } from "@/modules/common/services/HttpClient";
 import { Service } from "@/modules/common/services/Service";
 
-interface IUserDetailsDto {
+export interface IUserDetailsDto {
   userId: string;
   steamId: string | null;
   username: string;
@@ -10,12 +10,16 @@ interface IUserDetailsDto {
 export class UserService extends Service {
   constructor(private readonly httpClient: HttpClient) {
     super({
+      browse: "/user",
       getUserDetails: "/user/{userId}"
     });
   }
 
-  public async getUserDetails(userId: string)
-  {
+  public async browse(name: string) {
+    return this.wrap<IUserDetailsDto[]>(this.httpClient.get(this.getRoute("browse"), { params: { name }}));
+  }
+
+  public async getUserDetails(userId: string) {
     return this.wrap<IUserDetailsDto>(this.httpClient.get(this.getRoute("getUserDetails", { userId })));
   }
 }
