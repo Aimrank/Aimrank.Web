@@ -24,7 +24,12 @@
       <table :class="$style.table">
         <tr>
           <th>{{ $t("lobby.views.Lobby.table.map") }}</th>
-          <td>{{ lobby.configuration.map }}</td>
+          <td>
+            <img
+              :src="maps[lobby.configuration.map]"
+              :alt="lobby.configuration.map"
+            />
+          </td>
         </tr>
         <tr>
           <th>{{ $t("lobby.views.Lobby.table.members") }}</th>

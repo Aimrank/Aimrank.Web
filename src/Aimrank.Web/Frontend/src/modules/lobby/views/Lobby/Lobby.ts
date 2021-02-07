@@ -8,6 +8,11 @@ import BaseButton from "@/modules/common/components/BaseButton";
 import FormFieldInput from "@/modules/common/components/FormFieldInput";
 import InvitationForm from "../../components/InvitationForm";
 
+const maps = {
+  aim_map: require("@/assets/images/aim_map.jpg").default,
+  am_redline_14: require("@/assets/images/am_redline_14.jpg").default
+};
+
 const useLobbyView = () => {
   const user = useUser();
   const lobby = useLobby();
@@ -125,6 +130,7 @@ const Lobby = defineComponent({
 
     return {
       map,
+      maps,
       lobby: computed(() => lobby.state.lobby),
       match: computed(() => lobby.state.match),
       currentUserMembership,

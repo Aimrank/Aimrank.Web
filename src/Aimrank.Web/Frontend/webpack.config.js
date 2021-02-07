@@ -6,7 +6,8 @@ const paths = {
   bundleEntry: path.join(__dirname, "src/main.ts"),
   bundleOutputPath: path.join(__dirname, "../wwwroot/base"),
   bundleOutputFilename: "main.js",
-  cssFilename: "main.css"
+  cssFilename: "main.css",
+  assetsImages: path.relative(__dirname, "images")
 }
 
 function createWebpackConfig(environment) {
@@ -53,6 +54,14 @@ function createWebpackConfig(environment) {
             },
             "sass-loader"
           ]
+        },
+        {
+          test: /\.(png|jpe?g)$/,
+          loader: "file-loader",
+          options: {
+            outputPath: paths.assetsImages,
+            name: "[name].[hash].[ext]"
+          }
         }
       ]
     },
