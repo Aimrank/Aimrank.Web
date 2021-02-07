@@ -67,13 +67,20 @@
         :class="$style.section"
       >
         <h3>{{ $t("lobby.views.Lobby.options") }}</h3>
-        <form-field-input
-          :label="$t('lobby.views.Lobby.optionsMap')"
-          v-model="map"
-        />
-        <base-button @click="onChangeConfigurationClick">
-          {{ $t("lobby.views.Lobby.changeConfiguration") }}
-        </base-button>
+        <div :class="$style.maps">
+          <map-button
+            name="aim_map"
+            :image="maps['aim_map']"
+            :selected="lobby.configuration.map === 'aim_map'"
+            @click="onChangeMapClick('aim_map')"
+          />
+          <map-button
+            name="am_redline_14"
+            :image="maps['am_redline_14']"
+            :selected="lobby.configuration.map === 'am_redline_14'"
+            @click="onChangeMapClick('am_redline_14')"
+          />
+        </div>
         <base-button
           primary
           @click="onStartSearchingClick"

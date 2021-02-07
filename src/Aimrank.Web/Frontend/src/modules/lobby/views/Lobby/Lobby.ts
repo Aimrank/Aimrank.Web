@@ -5,8 +5,8 @@ import { useNotifications } from "@/modules/common/hooks/useNotifications";
 import { useLobby } from "../../hooks/useLobby";
 import { lobbyHub, lobbyService, matchService } from "@/services";
 import BaseButton from "@/modules/common/components/BaseButton";
-import FormFieldInput from "@/modules/common/components/FormFieldInput";
 import InvitationForm from "../../components/InvitationForm";
+import MapButton from "../../components/MapButton";
 
 const maps = {
   aim_map: require("@/assets/images/aim_map.jpg").default,
@@ -17,8 +17,6 @@ const useLobbyView = () => {
   const user = useUser();
   const lobby = useLobby();
 
-  const map = ref("");
-  
   const currentUserMembership = computed(() => lobby.state.lobby?.members.find(m => m.userId === user.state.user?.id));
 
   onMounted(async () => {
@@ -30,8 +28,6 @@ const useLobbyView = () => {
 
     if (result.isOk()) {
       lobby.setLobby(result.value);
-
-      map.value = result.value.configuration.map;
 
       await lobbyHub.connect();
 
@@ -46,7 +42,6 @@ const useLobbyView = () => {
   });
 
   return {
-    map,
     lobby,
     currentUserMembership,
   };
@@ -55,11 +50,11 @@ const useLobbyView = () => {
 const Lobby = defineComponent({
   components: {
     BaseButton,
-    FormFieldInput,
-    InvitationForm
+    InvitationForm,
+    MapButton
   },
   setup() {
-    const { map, lobby, currentUserMembership } = useLobbyView();
+    const { lobby, currentUserMembership } = useLobbyView();
 
     const router = useRouter();
     const notifications = useNotifications();
@@ -76,19 +71,19 @@ const Lobby = defineComponent({
       }
     }
 
-    const onChangeConfigurationClick = async () => {
-      if (!lobby.isAvailable) {
+    const onChangeMapClick = async (name: string) => {
+      if (!lobby.isAvailable || name === lobby.state.lobby?.configuration.map) {
         return;
       }
 
       const result = await lobbyService.changeConfiguration(lobby.state.lobby!.id, {
-        map: map.value,
+        map: name,
         name: lobby.state.lobby!.configuration.name,
         mode: lobby.state.lobby!.configuration.mode
       });
 
       if (result.isOk()) {
-        lobby.setLobbyConfiguration({ ...lobby.state.lobby!.configuration, map: map.value });
+        lobby.setLobbyConfiguration({ ...lobby.state.lobby!.configuration, map: name });
       } else {
         notifications.danger(result.error.title);
       }
@@ -120,8 +115,6 @@ const Lobby = defineComponent({
 
         if (lobbyResult.isOk()) {
           lobby.setLobby(lobbyResult.value);
-
-          map.value = lobbyResult.value.configuration.map;
         }
       } else {
         notifications.danger(result.error.title);
@@ -129,15 +122,14 @@ const Lobby = defineComponent({
     }
 
     return {
-      map,
       maps,
       lobby: computed(() => lobby.state.lobby),
       match: computed(() => lobby.state.match),
       currentUserMembership,
       onStartSearchingClick,
-      onChangeConfigurationClick,
       onLeaveLobbyClick,
-      onCreateLobbyClick
+      onCreateLobbyClick,
+      onChangeMapClick
     };
   }
 });
