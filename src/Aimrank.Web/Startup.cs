@@ -16,6 +16,8 @@ using Aimrank.Web.Configuration.Extensions;
 using Aimrank.Web.Configuration;
 using Aimrank.Web.Events.Handlers.Lobbies;
 using Aimrank.Web.Events.Handlers;
+using Aimrank.Web.Hubs.General;
+using Aimrank.Web.Hubs.Lobbies;
 using Aimrank.Web.Hubs;
 using Aimrank.Web.ProblemDetails;
 using Autofac.Extensions.DependencyInjection;
@@ -84,9 +86,6 @@ namespace Aimrank.Web
             containerBuilder.RegisterType<MatchStartingEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchStartedEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchFinishedEventHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<InvitationAcceptedEventHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<InvitationCanceledEventHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<InvitationCreatedEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<LobbyConfigurationChangedEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<LobbyStatusChangedEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MemberLeftEventHandler>().AsImplementedInterfaces();
@@ -130,9 +129,6 @@ namespace Aimrank.Web
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartingEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartedEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchFinishedEvent>(container));
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<InvitationAcceptedEvent>(container));
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<InvitationCanceledEvent>(container));
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<InvitationCreatedEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<LobbyConfigurationChangedEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<LobbyStatusChangedEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MemberLeftEvent>(container));

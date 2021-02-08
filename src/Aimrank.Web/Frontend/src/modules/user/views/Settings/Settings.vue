@@ -3,14 +3,9 @@
 
 <template>
   <div :class="$style.container">
-    <h1 :class="$style.title">{{ $t("user.views.Settings.title") }}</h1>
+    <h3 :class="$style.title">{{ $t("user.views.Settings.title") }}</h3>
     <div v-if="userDetails">
       <table :class="$style.table">
-        <tr>
-          <th>User ID</th>
-          <td>{{ userDetails.userId }}</td>
-          <td></td>
-        </tr>
         <tr>
           <th>Name</th>
           <td>{{ userDetails.username }}</td>

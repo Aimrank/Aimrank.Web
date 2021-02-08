@@ -1,13 +1,13 @@
 using System;
 
-namespace Aimrank.IntegrationEvents.Lobbies
+namespace Aimrank.Web.Hubs.Lobbies
 {
-    public class InvitationAcceptedEvent : IntegrationEventBase
+    public class InvitationCanceledEvent
     {
         public Guid LobbyId { get; }
         public Guid InvitedUserId { get; }
 
-        public InvitationAcceptedEvent(Guid lobbyId, Guid invitedUserId)
+        public InvitationCanceledEvent(Guid lobbyId, Guid invitedUserId)
         {
             LobbyId = lobbyId;
             InvitedUserId = invitedUserId;

@@ -1,6 +1,6 @@
 using Aimrank.Common.Application.Events;
 using Aimrank.IntegrationEvents;
-using Aimrank.Web.Hubs;
+using Aimrank.Web.Hubs.Lobbies;
 using Microsoft.AspNetCore.SignalR;
 using System.Linq;
 using System.Threading.Tasks;

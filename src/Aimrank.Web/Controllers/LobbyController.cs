@@ -9,9 +9,13 @@ using Aimrank.Application.Contracts;
 using Aimrank.Application.Queries.GetLobbyForUser;
 using Aimrank.Application.Queries.GetLobbyInvitations;
 using Aimrank.Application.Queries.GetMatchForLobby;
+using Aimrank.Common.Application;
 using Aimrank.Web.Attributes;
 using Aimrank.Web.Contracts.Requests;
+using Aimrank.Web.Hubs.General;
+using Aimrank.Web.Hubs.Lobbies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
@@ -24,10 +28,20 @@ namespace Aimrank.Web.Controllers
     public class LobbyController : ControllerBase
     {
         private readonly IAimrankModule _aimrankModule;
+        private readonly IHubContext<GeneralHub, IGeneralClient> _generalHubContext;
+        private readonly IHubContext<LobbyHub, ILobbyClient> _lobbyHubContext;
+        private readonly IExecutionContextAccessor _executionContextAccessor;
 
-        public LobbyController(IAimrankModule aimrankModule)
+        public LobbyController(
+            IAimrankModule aimrankModule,
+            IHubContext<GeneralHub, IGeneralClient> generalHubContext,
+            IHubContext<LobbyHub, ILobbyClient> lobbyHubContext,
+            IExecutionContextAccessor executionContextAccessor)
         {
             _aimrankModule = aimrankModule;
+            _generalHubContext = generalHubContext;
+            _lobbyHubContext = lobbyHubContext;
+            _executionContextAccessor = executionContextAccessor;
         }
 
         [HttpGet("current")]
@@ -72,6 +86,12 @@ namespace Aimrank.Web.Controllers
         public async Task<IActionResult> Invite(Guid id, InviteUserToLobbyRequest request)
         {
             await _aimrankModule.ExecuteCommandAsync(new InviteUserToLobbyCommand(id, request.InvitedUserId));
+
+            var @event = new InvitationCreatedEvent(id, _executionContextAccessor.UserId, request.InvitedUserId);
+
+            await _lobbyHubContext.Clients.Group(id.ToString()).InvitationCreated(@event);
+            await _generalHubContext.Clients.User(request.InvitedUserId.ToString()).InvitationCreated(@event);
+            
             return Ok();
         }
 
@@ -79,6 +99,10 @@ namespace Aimrank.Web.Controllers
         public async Task<IActionResult> AcceptInvitation(Guid id)
         {
             await _aimrankModule.ExecuteCommandAsync(new AcceptLobbyInvitationCommand(id));
+
+            await _lobbyHubContext.Clients.Group(id.ToString())
+                .InvitationAccepted(new InvitationAcceptedEvent(id, _executionContextAccessor.UserId));
+            
             return Ok();
         }
 
@@ -86,6 +110,10 @@ namespace Aimrank.Web.Controllers
         public async Task<IActionResult> CancelInvitation(Guid id)
         {
             await _aimrankModule.ExecuteCommandAsync(new CancelLobbyInvitationCommand(id));
+            
+            await _lobbyHubContext.Clients.Group(id.ToString())
+                .InvitationCanceled(new InvitationCanceledEvent(id, _executionContextAccessor.UserId));
+            
             return Ok();
         }
 

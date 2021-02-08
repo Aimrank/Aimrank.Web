@@ -4,7 +4,12 @@
 <template>
   <header :class="$style.header">
     <div>
-      <router-link :to="{ name: 'home' }">Aimrank</router-link>
+      <router-link
+        :class="$style.brand"
+        :to="{ name: 'home' }"
+      >
+        Aimrank
+      </router-link>
     </div>
     <div v-if="authState.isAuthenticated">
       {{ $t("common.components.MainHeader.user", [userState.user.username]) }}

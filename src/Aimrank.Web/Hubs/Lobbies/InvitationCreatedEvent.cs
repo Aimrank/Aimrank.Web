@@ -1,8 +1,8 @@
 using System;
 
-namespace Aimrank.IntegrationEvents.Lobbies
+namespace Aimrank.Web.Hubs.Lobbies
 {
-    public class InvitationCreatedEvent : IntegrationEventBase
+    public class InvitationCreatedEvent
     {
         public Guid LobbyId { get; }
         public Guid InvitingUserId { get; }

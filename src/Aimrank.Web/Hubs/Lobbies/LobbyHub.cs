@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using System;
 
-namespace Aimrank.Web.Hubs
+namespace Aimrank.Web.Hubs.Lobbies
 {
     public interface ILobbyClient
     {

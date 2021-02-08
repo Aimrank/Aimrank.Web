@@ -1,4 +1,5 @@
-@use "@/styles/variables/colors";
+@use "@/styles/variables/colors" as colors;
+@use "@/styles/variables/fonts" as fonts;
 
 .header {
   height: 60px;
@@ -8,6 +9,17 @@
   justify-content: space-between;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   background: colors.$white;
+}
+
+.brand {
+  font-size: fonts.$sizeLg;
+  font-weight: fonts.$weightBold;
+  text-decoration: none;
+  color: colors.$black;
+
+  &:hover {
+    color: colors.$primary;
+  }
 }
 
 .button {

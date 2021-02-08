@@ -1,9 +1,9 @@
-using Aimrank.IntegrationEvents.Lobbies;
 using Aimrank.Web.Attributes;
+using Aimrank.Web.Hubs.Lobbies;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
-namespace Aimrank.Web.Hubs
+namespace Aimrank.Web.Hubs.General
 {
     public interface IGeneralClient
     {

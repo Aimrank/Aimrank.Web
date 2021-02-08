@@ -60,8 +60,6 @@ namespace Aimrank.Domain.Lobbies
             var invitation = new LobbyInvitation(invitingUser.Id, invitedUser.Id, DateTime.UtcNow);
 
             _invitations.Add(invitation);
-            
-            AddDomainEvent(new InvitationCreatedDomainEvent(this, invitation));
         }
 
         public async Task AcceptInvitationAsync(User invitedUser, ILobbyRepository lobbyRepository)
@@ -83,8 +81,6 @@ namespace Aimrank.Domain.Lobbies
 
                 _members.Add(new LobbyMember(invitation.InvitedUserId, LobbyMemberRole.Normal));
             }
-            
-            AddDomainEvent(new InvitationAcceptedDomainEvent(this, invitation));
         }
 
         public void CancelInvitation(User invitedUser)
@@ -93,8 +89,6 @@ namespace Aimrank.Domain.Lobbies
             if (invitation is not null)
             {
                 _invitations.Remove(invitation);
-                
-                AddDomainEvent(new InvitationCanceledDomainEvent(this, invitation));
             }
         }
 
