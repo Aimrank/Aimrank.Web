@@ -30,7 +30,11 @@ export abstract class Service {
 
       return Result.success(res.data);
     } catch (error) {
-      return Result.fail(ErrorResponse.create(error.response.data));
+      if (error.response?.data) {
+        return Result.fail(ErrorResponse.create(error.response.data));
+      }
+
+      return Result.fail(new ErrorResponse("error", "An error occurred while processing request", 500));
     }
   }
 }

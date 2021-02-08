@@ -1,5 +1,4 @@
 using Aimrank.Domain.Lobbies;
-using Aimrank.Domain.Matches;
 using Aimrank.Infrastructure.Domain.Users;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +14,6 @@ namespace Aimrank.Infrastructure.Domain.Lobbies
             builder.HasKey(l => l.Id);
 
             builder.Property(l => l.Id).HasColumnName("Id");
-            builder.Property(l => l.MatchId).HasColumnName("MatchId");
             builder.Property(l => l.Status).HasColumnName("Status");
             
             builder.OwnsOne(l => l.Configuration, b =>
@@ -48,8 +46,6 @@ namespace Aimrank.Infrastructure.Domain.Lobbies
                 b.WithOwner();
             });
             
-            builder.HasOne<Match>().WithOne().HasForeignKey<Lobby>(l => l.MatchId);
-
             builder.Ignore(l => l.DomainEvents);
         }
     }

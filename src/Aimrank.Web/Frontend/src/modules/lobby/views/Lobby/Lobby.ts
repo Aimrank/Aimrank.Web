@@ -31,12 +31,10 @@ const useLobbyView = () => {
 
       await lobbyHub.connect();
 
-      if (result.value.matchId) {
-        const matchResult = await matchService.getById(result.value.matchId);
+      const matchResult = await matchService.getByLobbyId(result.value.id);
 
-        if (matchResult.isOk()) {
-          lobby.setMatch(matchResult.value);
-        }
+      if (matchResult.isOk() && matchResult.value) {
+        lobby.setMatch(matchResult.value);
       }
     }
   });

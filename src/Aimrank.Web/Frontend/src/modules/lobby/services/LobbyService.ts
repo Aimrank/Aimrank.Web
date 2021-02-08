@@ -21,7 +21,6 @@ export interface ILobbyMember {
 
 export interface ILobbyDto {
   id: string;
-  matchId: string | null;
   configuration: ILobbyConfiguration;
   status: LobbyStatus;
   members: ILobbyMember[];

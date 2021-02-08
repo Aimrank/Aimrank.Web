@@ -1,6 +1,7 @@
 import { useNotifications } from "@/modules/common/hooks/useNotifications";
 import { Hub } from "@/modules/common/hubs/Hub";
 import { MatchStatus } from "@/modules/match/services/MatchService";
+import { LobbyStatus } from "../services/LobbyService";
 import { useUser } from "@/modules/user";
 import { useLobby } from "../hooks/useLobby";
 import {
@@ -89,8 +90,8 @@ export class LobbyHub {
   }
 
   private onMatchFinished(event: IMatchFinishedEvent) {
-    this.lobby.clearLobby();
     this.lobby.clearMatch();
+    this.lobby.setLobbyStatus(LobbyStatus.Open);
 
     this.notifications.success("Match finished.");
   }

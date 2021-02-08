@@ -1,7 +1,6 @@
 using Aimrank.Common.Domain;
 using Aimrank.Domain.Lobbies.Events;
 using Aimrank.Domain.Lobbies.Rules;
-using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +17,6 @@ namespace Aimrank.Domain.Lobbies
         private HashSet<LobbyInvitation> _invitations = new();
         
         public LobbyId Id { get; }
-        public MatchId MatchId { get; private set; }
         public LobbyStatus Status { get; private set; }
         public LobbyConfiguration Configuration { get; private set; }
 
@@ -150,28 +148,23 @@ namespace Aimrank.Domain.Lobbies
 
             ChangeStatus(LobbyStatus.Open);
         }
-
-        public void AssignMatch(MatchId matchId)
+        
+        public void MatchFound()
         {
             BusinessRules.Check(new LobbyStatusMustMatchRule(this, LobbyStatus.Searching));
 
-            MatchId = matchId;
-            
             ChangeStatus(LobbyStatus.MatchFound);
         }
 
         public void StartMatch()
         {
             BusinessRules.Check(new LobbyStatusMustMatchRule(this, LobbyStatus.MatchFound));
-            BusinessRules.Check(new LobbyMustHaveMatchAssignedRule(this));
             
             ChangeStatus(LobbyStatus.InGame);
         }
 
         public void Open()
         {
-            MatchId = null;
-            
             ChangeStatus(LobbyStatus.Open);
         }
 

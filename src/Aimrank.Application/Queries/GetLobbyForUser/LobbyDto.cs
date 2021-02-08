@@ -6,7 +6,6 @@ namespace Aimrank.Application.Queries.GetLobbyForUser
     public class LobbyDto
     {
         public Guid Id { get; set; }
-        public Guid? MatchId { get; set; }
         public int Status { get; set; }
         public LobbyConfigurationDto Configuration { get; set; }
         public List<LobbyMemberDto> Members { get; set; }
