@@ -39,10 +39,10 @@
                 v-for="member in lobby.members"
                 :key="member.userId"
               >
-                {{ member.userId }}
-                <span v-if="member.isLeader">
+                {{ member.username }}
+                <strong v-if="member.isLeader">
                   ({{ $t("lobby.views.Lobby.leader") }})
-                </span>
+                </strong>
               </li>
             </ul>
           </td>

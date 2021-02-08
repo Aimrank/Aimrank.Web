@@ -27,27 +27,29 @@ namespace Aimrank.Application.Queries.GetLobbyForUser
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
             
-            const string sql =
-                @"DECLARE @id AS NVARCHAR(450);
+            const string sql = @"
+                DECLARE @id AS NVARCHAR(450);
 
-                  SELECT @id = [LobbyId]
-                  FROM [aimrank].[LobbiesMembers]
-                  WHERE [UserId] = @UserId;
+                SELECT @id = [LobbyId]
+                FROM [aimrank].[LobbiesMembers]
+                WHERE [UserId] = @UserId;
 
-                  SELECT
-                    [Lobby].[Id] AS [Id],
-                    [Lobby].[Status] AS [Status],
-                    [Lobby].[Configuration_Map] AS [Map],
-                    [Lobby].[Configuration_Name] AS [Name],
-                    [Lobby].[Configuration_Mode] AS [Mode],
-                    [Member].[UserId] AS [UserId],
-                    CASE [Member].[Role]
+                SELECT
+                    [L].[Id] AS [Id],
+                    [L].[Status] AS [Status],
+                    [L].[Configuration_Map] AS [Map],
+                    [L].[Configuration_Name] AS [Name],
+                    [L].[Configuration_Mode] AS [Mode],
+                    [M].[UserId] AS [UserId],
+                    [U].[UserName] AS [Username],
+                    CASE [M].[Role]
                         WHEN 0 THEN 0
                         WHEN 1 THEN 1
                     END AS [IsLeader]
-                  FROM [aimrank].[Lobbies] AS [Lobby]
-                  LEFT JOIN [aimrank].[LobbiesMembers] AS [Member] ON [Lobby].[Id] = [Member].[LobbyId]
-                  WHERE [Lobby].[Id] = @id;";
+                FROM [aimrank].[Lobbies] AS [L]
+                LEFT JOIN [aimrank].[LobbiesMembers] AS [M] ON [L].[Id] = [M].[LobbyId]
+                LEFT JOIN [aimrank].[AspNetUsers] AS [U] ON [U].[Id] = [M].[UserId]
+                WHERE [L].[Id] = @id;";
 
             var lookup = new Dictionary<Guid, LobbyDto>();
             

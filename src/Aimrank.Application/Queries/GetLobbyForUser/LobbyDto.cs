@@ -21,6 +21,7 @@ namespace Aimrank.Application.Queries.GetLobbyForUser
     public class LobbyMemberDto
     {
         public Guid UserId { get; set; }
+        public string Username { get; set; }
         public bool IsLeader { get; set; }
     }
 }

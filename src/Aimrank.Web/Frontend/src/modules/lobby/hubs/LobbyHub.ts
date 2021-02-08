@@ -16,6 +16,7 @@ import {
   IMemberLeftEvent,
   IMemberRoleChangedEvent
 } from "./LobbyHubEvents";
+import { userService } from "@/services";
 
 export class LobbyHub {
   private readonly user = useUser();
@@ -48,8 +49,16 @@ export class LobbyHub {
     await this.hub.disconnect();
   }
 
-  private onInvitationAccepted(event: IInvitationAcceptedEvent) {
-    this.lobby.addMember({ userId: event.invitedUserId, isLeader: false });
+  private async onInvitationAccepted(event: IInvitationAcceptedEvent) {
+    const result = await userService.getUserDetails(event.invitedUserId);
+
+    if (result.isOk()) {
+      this.lobby.addMember({
+        userId: result.value.userId,
+        username: result.value.username,
+        isLeader: false
+      });
+    }
   }
 
   // private onInvitationCanceled(event: IInvitationCanceledEvent) {}

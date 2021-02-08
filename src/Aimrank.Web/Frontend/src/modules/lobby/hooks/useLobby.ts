@@ -52,6 +52,7 @@ export const useLobby = () => {
       const members = state.lobby.members.map(m => {
         return {
           userId: m.userId,
+          username: m.username,
           isLeader: m.userId === userId ? (role === 1) : m.isLeader
         };
       });
