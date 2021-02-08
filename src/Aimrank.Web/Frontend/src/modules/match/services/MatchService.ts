@@ -40,7 +40,7 @@ export class MatchService extends Service {
   constructor(private readonly httpClient: HttpClient) {
     super({
       browse: "/match",
-      getById: "/match/{id}"
+      getByLobbyId: "/lobby/{id}/match"
     });
   }
 
@@ -48,7 +48,7 @@ export class MatchService extends Service {
     return this.wrap<IMatchHistoryDto[]>(this.httpClient.get(this.getRoute("browse"), { params: { userId }}));
   }
 
-  public getById(id: string) {
-    return this.wrap<IMatchDto>(this.httpClient.get(this.getRoute("getById", { id })));
+  public getByLobbyId(id: string) {
+    return this.wrap<IMatchDto | undefined>(this.httpClient.get(this.getRoute("getByLobbyId", { id })));
   }
 }

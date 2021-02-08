@@ -2,6 +2,7 @@
 using Aimrank.IntegrationEvents;
 using Aimrank.Web.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -17,6 +18,6 @@ namespace Aimrank.Web.Events.Handlers
         }
 
         public async Task HandleAsync(MatchStartingEvent @event, CancellationToken cancellationToken = default)
-            => await _hubContext.Clients.All.MatchStarting(@event);
+            => await _hubContext.Clients.Groups(@event.Lobbies.Select(l => l.ToString())).MatchStarting(@event);
     }
 }

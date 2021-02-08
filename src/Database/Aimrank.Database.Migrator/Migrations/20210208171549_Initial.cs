@@ -53,6 +53,22 @@ namespace Aimrank.Database.Migrator.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Lobbies",
+                schema: "aimrank",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Configuration_Name = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    Configuration_Map = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Configuration_Mode = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Lobbies", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Matches",
                 schema: "aimrank",
                 columns: table => new
@@ -227,63 +243,6 @@ namespace Aimrank.Database.Migrator.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Lobbies",
-                schema: "aimrank",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MatchId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Configuration_Name = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
-                    Configuration_Map = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Configuration_Mode = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Lobbies", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Lobbies_Matches_MatchId",
-                        column: x => x.MatchId,
-                        principalSchema: "aimrank",
-                        principalTable: "Matches",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MatchesPlayers",
-                schema: "aimrank",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MatchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SteamId = table.Column<string>(type: "nvarchar(17)", maxLength: 17, nullable: false),
-                    Team = table.Column<int>(type: "int", nullable: false),
-                    Kills = table.Column<int>(type: "int", nullable: false),
-                    Assists = table.Column<int>(type: "int", nullable: false),
-                    Deaths = table.Column<int>(type: "int", nullable: false),
-                    Score = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MatchesPlayers", x => new { x.MatchId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_MatchesPlayers_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalSchema: "aimrank",
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_MatchesPlayers_Matches_MatchId",
-                        column: x => x.MatchId,
-                        principalSchema: "aimrank",
-                        principalTable: "Matches",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "LobbiesInvitations",
                 schema: "aimrank",
                 columns: table => new
@@ -347,6 +306,66 @@ namespace Aimrank.Database.Migrator.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "MatchesLobbies",
+                schema: "aimrank",
+                columns: table => new
+                {
+                    LobbyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MatchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MatchesLobbies", x => new { x.MatchId, x.LobbyId });
+                    table.ForeignKey(
+                        name: "FK_MatchesLobbies_Lobbies_LobbyId",
+                        column: x => x.LobbyId,
+                        principalSchema: "aimrank",
+                        principalTable: "Lobbies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MatchesLobbies_Matches_MatchId",
+                        column: x => x.MatchId,
+                        principalSchema: "aimrank",
+                        principalTable: "Matches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MatchesPlayers",
+                schema: "aimrank",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MatchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SteamId = table.Column<string>(type: "nvarchar(17)", maxLength: 17, nullable: false),
+                    Team = table.Column<int>(type: "int", nullable: false),
+                    Kills = table.Column<int>(type: "int", nullable: false),
+                    Assists = table.Column<int>(type: "int", nullable: false),
+                    Deaths = table.Column<int>(type: "int", nullable: false),
+                    Score = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MatchesPlayers", x => new { x.MatchId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_MatchesPlayers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "aimrank",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MatchesPlayers_Matches_MatchId",
+                        column: x => x.MatchId,
+                        principalSchema: "aimrank",
+                        principalTable: "Matches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 schema: "aimrank",
@@ -402,14 +421,6 @@ namespace Aimrank.Database.Migrator.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lobbies_MatchId",
-                schema: "aimrank",
-                table: "Lobbies",
-                column: "MatchId",
-                unique: true,
-                filter: "[MatchId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_LobbiesInvitations_InvitedUserId",
                 schema: "aimrank",
                 table: "LobbiesInvitations",
@@ -426,6 +437,13 @@ namespace Aimrank.Database.Migrator.Migrations
                 schema: "aimrank",
                 table: "LobbiesMembers",
                 column: "LobbyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MatchesLobbies_LobbyId",
+                schema: "aimrank",
+                table: "MatchesLobbies",
+                column: "LobbyId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MatchesPlayers_UserId",
@@ -471,6 +489,10 @@ namespace Aimrank.Database.Migrator.Migrations
                 schema: "aimrank");
 
             migrationBuilder.DropTable(
+                name: "MatchesLobbies",
+                schema: "aimrank");
+
+            migrationBuilder.DropTable(
                 name: "MatchesPlayers",
                 schema: "aimrank");
 
@@ -491,11 +513,11 @@ namespace Aimrank.Database.Migrator.Migrations
                 schema: "aimrank");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers",
+                name: "Matches",
                 schema: "aimrank");
 
             migrationBuilder.DropTable(
-                name: "Matches",
+                name: "AspNetUsers",
                 schema: "aimrank");
         }
     }

@@ -13,11 +13,14 @@ namespace Aimrank.Infrastructure.Configuration.Processing
         public IIntegrationEvent Map(IDomainEvent @event)
             => @event switch
             {
-                MatchStartingDomainEvent e => new MatchStartingEvent(e.Match.Id, e.Match.Address, e.Match.Map,
-                    e.Match.Players.Select(p => p.UserId.Value)),
-                MatchStartedDomainEvent e => new MatchStartedEvent(e.Match.Id, e.Match.Address, e.Match.Map,
-                    e.Match.Players.Select(p => p.UserId.Value)),
-                MatchFinishedDomainEvent e => new MatchFinishedEvent(e.Match.Id, e.Match.ScoreT, e.Match.ScoreCT),
+                MatchStartingDomainEvent e => new MatchStartingEvent(e.Match.Id, e.Match.Map, e.Match.Address,
+                    e.Match.Players.Select(p => p.UserId.Value),
+                    e.Match.Lobbies.Select(l => l.LobbyId.Value)),
+                MatchStartedDomainEvent e => new MatchStartedEvent(e.Match.Id, e.Match.Map, e.Match.Address,
+                    e.Match.Players.Select(p => p.UserId.Value),
+                    e.Match.Lobbies.Select(l => l.LobbyId.Value)),
+                MatchFinishedDomainEvent e => new MatchFinishedEvent(e.Match.Id, e.Match.ScoreT, e.Match.ScoreCT,
+                    e.Lobbies.Select(l => l.Value)),
                 InvitationAcceptedDomainEvent e => new InvitationAcceptedEvent(e.Lobby.Id, e.Invitation.InvitedUserId),
                 InvitationCanceledDomainEvent e => new InvitationCanceledEvent(e.Lobby.Id, e.Invitation.InvitedUserId),
                 InvitationCreatedDomainEvent e => new InvitationCreatedEvent(e.Lobby.Id, e.Invitation.InvitingUserId,

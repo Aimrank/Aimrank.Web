@@ -65,10 +65,6 @@ export const useLobby = () => {
   }
 
   const clearMatch = () => {
-    if (state.lobby) {
-      state.lobby.matchId = null;
-    }
-
     state.match = null;
   }
 

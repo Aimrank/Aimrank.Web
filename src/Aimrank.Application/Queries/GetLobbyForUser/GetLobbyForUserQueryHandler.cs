@@ -36,7 +36,6 @@ namespace Aimrank.Application.Queries.GetLobbyForUser
 
                   SELECT
                     [Lobby].[Id] AS [Id],
-                    [Lobby].[MatchId] AS [MatchId],
                     [Lobby].[Status] AS [Status],
                     [Lobby].[Configuration_Map] AS [Map],
                     [Lobby].[Configuration_Name] AS [Name],
@@ -61,7 +60,6 @@ namespace Aimrank.Application.Queries.GetLobbyForUser
                         lobby = new LobbyDto
                         {
                             Id = details.Id,
-                            MatchId = details.MatchId,
                             Status = details.Status,
                             Configuration = configuration,
                             Members = new List<LobbyMemberDto>()

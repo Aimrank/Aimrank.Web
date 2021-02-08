@@ -1,6 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import { router } from "@/router";
 import { parseJwt } from "@/modules/authentication/utilities/tokenParser";
 import { paramsSerializer } from "@/modules/common/utilities/paramsSerializer";
+import { useAuth } from "@/modules/authentication";
+import { useUser } from "@/modules/user";
 
 interface IHttpClientConfig {
   baseUrl?: string;
@@ -90,8 +93,19 @@ export class HttpClient {
         });
 
         this.setAuthorizationToken(res.data.jwt, res.data.refreshToken);
-      } catch (error) {
-        // Session expired - send user to sign in page
+      } catch {
+        const auth = useAuth();
+        const user = useUser();
+
+        auth.setAuthenticated(false);
+        user.setUser(null);
+
+        this.authorizationToken = "";
+        this.refreshToken = "";
+
+        window.localStorage.removeItem("HttpClient");
+
+        router.replace({ name: "signIn" });
       }
     }
   }

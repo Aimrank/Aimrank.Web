@@ -4,7 +4,6 @@ using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;
 using MediatR;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
@@ -33,7 +32,7 @@ namespace Aimrank.Application.Commands.ProcessLobbies
 
         public async Task<Unit> Handle(ProcessLobbiesCommand request, CancellationToken cancellationToken)
         {
-            var lobbies = await _lobbyRepository.BrowseAsync(LobbyStatus.Searching);
+            var lobbies = await _lobbyRepository.BrowseByStatusAsync(LobbyStatus.Searching);
 
             foreach (var lobby in lobbies)
             {
@@ -47,18 +46,25 @@ namespace Aimrank.Application.Commands.ProcessLobbies
 
                 var matchId = new MatchId(Guid.NewGuid());
 
-                var match = new Match(matchId, lobby.Configuration.Map, new List<MatchPlayer>
-                {
-                    new(p1.Id, p1.SteamId, MatchTeam.Terrorists),
-                    new(p2.Id, p2.SteamId, MatchTeam.CounterTerrorists)
-                });
+                var match = new Match(
+                    matchId,
+                    lobby.Configuration.Map,
+                    new MatchPlayer[]
+                    {
+                        new(p1.Id, p1.SteamId, MatchTeam.Terrorists),
+                        new(p2.Id, p2.SteamId, MatchTeam.CounterTerrorists)
+                    },
+                    new MatchLobby[]
+                    {
+                        new(lobby.Id)
+                    });
 
                 var address = _serverProcessManager.StartServer(
                     match.Id.Value,
                     match.Players.Select(p => p.SteamId),
                     match.Map);
                 
-                lobby.AssignMatch(matchId);
+                lobby.MatchFound();
                 lobby.StartMatch();
                 
                 // Todo: StartMatch should be invoked after members accept game

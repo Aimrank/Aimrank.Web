@@ -1,3 +1,4 @@
+using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Matches;
 using Aimrank.Infrastructure.Domain.Users;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -25,7 +26,7 @@ namespace Aimrank.Infrastructure.Domain.Matches
             builder.OwnsMany(m => m.Players, b =>
             {
                 b.ToTable("MatchesPlayers", "aimrank");
-                b.Property<MatchId>("MatchId").IsRequired();
+                b.Property<MatchId>("MatchId");
                 b.Property(p => p.UserId).HasColumnName("UserId").IsRequired();
                 b.Property(p => p.SteamId).HasColumnName("SteamId").IsRequired().HasMaxLength(17);
                 b.Property(p => p.Team).HasColumnName("Team");
@@ -35,6 +36,16 @@ namespace Aimrank.Infrastructure.Domain.Matches
                 b.Property(p => p.Score).HasColumnName("Score");
                 b.HasKey("MatchId", "UserId");
                 b.HasOne<UserModel>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
+                b.WithOwner().HasForeignKey("MatchId");
+            });
+
+            builder.OwnsMany(m => m.Lobbies, b =>
+            {
+                b.ToTable("MatchesLobbies", "aimrank");
+                b.Property<MatchId>("MatchId");
+                b.Property<LobbyId>("LobbyId");
+                b.HasKey("MatchId", "LobbyId");
+                b.HasOne<Lobby>().WithOne().HasForeignKey<MatchLobby>("LobbyId");
                 b.WithOwner().HasForeignKey("MatchId");
             });
 

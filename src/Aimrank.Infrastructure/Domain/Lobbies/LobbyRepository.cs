@@ -1,6 +1,5 @@
 using Aimrank.Common.Application.Exceptions;
 using Aimrank.Domain.Lobbies;
-using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -18,23 +17,15 @@ namespace Aimrank.Infrastructure.Domain.Lobbies
             _context = context;
         }
 
-        public async Task<IEnumerable<Lobby>> BrowseAsync(LobbyStatus? status)
+        public async Task<IEnumerable<Lobby>> BrowseByStatusAsync(LobbyStatus? status)
             => await _context.Lobbies.Where(l => !status.HasValue || l.Status == status).ToListAsync();
-        
+
+        public async Task<IEnumerable<Lobby>> BrowseByIdAsync(IEnumerable<LobbyId> ids)
+            => await _context.Lobbies.Where(l => ids.Contains(l.Id)).ToListAsync();
+
         public async Task<Lobby> GetByIdAsync(LobbyId id)
         {
             var lobby = await _context.Lobbies.FirstOrDefaultAsync(l => l.Id == id);
-            if (lobby is null)
-            {
-                throw new EntityNotFoundException();
-            }
-
-            return lobby;
-        }
-
-        public async Task<Lobby> GetByMatchIdAsync(MatchId id)
-        {
-            var lobby = await _context.Lobbies.FirstOrDefaultAsync(l => l.MatchId == id);
             if (lobby is null)
             {
                 throw new EntityNotFoundException();
@@ -49,6 +40,8 @@ namespace Aimrank.Infrastructure.Domain.Lobbies
         public void Add(Lobby lobby) => _context.Lobbies.Add(lobby);
 
         public void Update(Lobby lobby) => _context.Lobbies.Update(lobby);
+
+        public void UpdateRange(IEnumerable<Lobby> lobbies) => _context.Lobbies.UpdateRange(lobbies);
 
         public void Delete(Lobby lobby) => _context.Lobbies.Remove(lobby);
     }

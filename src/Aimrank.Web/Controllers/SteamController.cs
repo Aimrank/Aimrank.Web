@@ -54,7 +54,7 @@ namespace Aimrank.Web.Controllers
                 TempData["error"] = exception.BrokenRule.Message;
             }
             
-            return Redirect("/settings");
+            return Redirect("/app/settings");
         }
         
         [JwtAuth]

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 
 namespace Aimrank.IntegrationEvents
@@ -7,15 +8,14 @@ namespace Aimrank.IntegrationEvents
         public Guid MatchId { get; }
         public int ScoreT { get; }
         public int ScoreCT { get; }
+        public IEnumerable<Guid> Lobbies { get; }
 
-        public MatchFinishedEvent(
-            Guid matchId,
-            int scoreT,
-            int scoreCt)
+        public MatchFinishedEvent(Guid matchId, int scoreT, int scoreCt, IEnumerable<Guid> lobbies)
         {
             MatchId = matchId;
             ScoreT = scoreT;
             ScoreCT = scoreCt;
+            Lobbies = lobbies;
         }
     }
 }

@@ -8,6 +8,7 @@ using Aimrank.Application.Commands.Lobbies.StartSearchingForGame;
 using Aimrank.Application.Contracts;
 using Aimrank.Application.Queries.GetLobbyForUser;
 using Aimrank.Application.Queries.GetLobbyInvitations;
+using Aimrank.Application.Queries.GetMatchForLobby;
 using Aimrank.Web.Attributes;
 using Aimrank.Web.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +36,7 @@ namespace Aimrank.Web.Controllers
             var lobby = await _aimrankModule.ExecuteQueryAsync(new GetLobbyForUserQuery());
             if (lobby is null)
             {
-                return NotFound();
+                return NoContent();
             }
             
             return lobby;
@@ -46,6 +47,18 @@ namespace Aimrank.Web.Controllers
         {
             var invitations = await _aimrankModule.ExecuteQueryAsync(new GetLobbyInvitationsQuery());
             return Ok(invitations);
+        }
+
+        [HttpGet("{id}/match")]
+        public async Task<ActionResult<MatchDto>> GetMatch(Guid id)
+        {
+            var match = await _aimrankModule.ExecuteQueryAsync(new GetMatchForLobbyQuery(id));
+            if (match is null)
+            {
+                return NoContent();
+            }
+
+            return match;
         }
 
         [HttpPost]

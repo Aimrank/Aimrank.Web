@@ -3,6 +3,7 @@ export interface IMatchStartingEvent {
   address: string;
   map: string;
   players: string[];
+  lobbies: string[];
 }
 
 export interface IMatchStartedEvent {
@@ -10,12 +11,14 @@ export interface IMatchStartedEvent {
   address: string;
   map: string;
   players: string[];
+  lobbies: string[];
 }
 
 export interface IMatchFinishedEvent {
   matchId: string;
   scoreT: number;
   scoreCT: number;
+  lobbies: string[];
 }
 
 export interface IInvitationAcceptedEvent {

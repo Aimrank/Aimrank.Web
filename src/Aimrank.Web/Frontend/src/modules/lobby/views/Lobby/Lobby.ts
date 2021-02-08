@@ -26,17 +26,15 @@ const useLobbyView = () => {
 
     const result = await lobbyService.getForCurrentUser();
 
-    if (result.isOk()) {
+    if (result.isOk() && result.value) {
       lobby.setLobby(result.value);
 
       await lobbyHub.connect();
 
-      if (result.value.matchId) {
-        const matchResult = await matchService.getById(result.value.matchId);
+      const matchResult = await matchService.getByLobbyId(result.value.id);
 
-        if (matchResult.isOk()) {
-          lobby.setMatch(matchResult.value);
-        }
+      if (matchResult.isOk() && matchResult.value) {
+        lobby.setMatch(matchResult.value);
       }
     }
   });
@@ -113,8 +111,9 @@ const Lobby = defineComponent({
       if (result.isOk()) {
         const lobbyResult = await lobbyService.getForCurrentUser();
 
-        if (lobbyResult.isOk()) {
+        if (lobbyResult.isOk() && lobbyResult.value) {
           lobby.setLobby(lobbyResult.value);
+          lobbyHub.connect();
         }
       } else {
         notifications.danger(result.error.title);

@@ -4,7 +4,6 @@ import { router } from "@/router";
 import { generalHub, httpClient, lobbyHub } from "@/services";
 import { useAuth } from "./modules/authentication";
 import { useUser } from "./modules/user";
-import { useNotifications } from "./modules/common/hooks/useNotifications";
 
 import App from "./App.vue";
 
@@ -27,7 +26,6 @@ const init = async () => {
 const initAuthentication = async () => {
   const auth = useAuth();
   const user = useUser();
-  const notifications = useNotifications();
 
   httpClient.loadTokens();
 
@@ -37,7 +35,6 @@ const initAuthentication = async () => {
   if (userId && userEmail) {
     auth.setAuthenticated(true);
     await user.updateUser(userId);
-
     await lobbyHub.connect();
     await generalHub.connect();
   }

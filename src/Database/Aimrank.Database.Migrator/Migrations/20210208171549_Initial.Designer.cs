@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aimrank.Database.Migrator.Migrations
 {
     [DbContext(typeof(AimrankContext))]
-    [Migration("20210206201731_Initial")]
+    [Migration("20210208171549_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,19 +28,11 @@ namespace Aimrank.Database.Migrator.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("Id");
 
-                    b.Property<Guid?>("MatchId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("MatchId");
-
                     b.Property<int>("Status")
                         .HasColumnType("int")
                         .HasColumnName("Status");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MatchId")
-                        .IsUnique()
-                        .HasFilter("[MatchId] IS NOT NULL");
 
                     b.ToTable("Lobbies", "aimrank");
                 });
@@ -344,10 +336,6 @@ namespace Aimrank.Database.Migrator.Migrations
 
             modelBuilder.Entity("Aimrank.Domain.Lobbies.Lobby", b =>
                 {
-                    b.HasOne("Aimrank.Domain.Matches.Match", null)
-                        .WithOne()
-                        .HasForeignKey("Aimrank.Domain.Lobbies.Lobby", "MatchId");
-
                     b.OwnsOne("Aimrank.Domain.Lobbies.LobbyConfiguration", "Configuration", b1 =>
                         {
                             b1.Property<Guid>("LobbyId")
@@ -456,6 +444,31 @@ namespace Aimrank.Database.Migrator.Migrations
 
             modelBuilder.Entity("Aimrank.Domain.Matches.Match", b =>
                 {
+                    b.OwnsMany("Aimrank.Domain.Matches.MatchLobby", "Lobbies", b1 =>
+                        {
+                            b1.Property<Guid>("MatchId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<Guid>("LobbyId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.HasKey("MatchId", "LobbyId");
+
+                            b1.HasIndex("LobbyId")
+                                .IsUnique();
+
+                            b1.ToTable("MatchesLobbies", "aimrank");
+
+                            b1.HasOne("Aimrank.Domain.Lobbies.Lobby", null)
+                                .WithOne()
+                                .HasForeignKey("Aimrank.Domain.Matches.MatchLobby", "LobbyId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.WithOwner()
+                                .HasForeignKey("MatchId");
+                        });
+
                     b.OwnsMany("Aimrank.Domain.Matches.MatchPlayer", "Players", b1 =>
                         {
                             b1.Property<Guid>("MatchId")
@@ -506,6 +519,8 @@ namespace Aimrank.Database.Migrator.Migrations
                                 .OnDelete(DeleteBehavior.Restrict)
                                 .IsRequired();
                         });
+
+                    b.Navigation("Lobbies");
 
                     b.Navigation("Players");
                 });
