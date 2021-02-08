@@ -10,11 +10,7 @@ namespace Aimrank.IntegrationEvents
         public string Map { get; }
         public IEnumerable<Guid> Players { get; }
 
-        public MatchStartedEvent(
-            Guid matchId,
-            string address,
-            string map,
-            IEnumerable<Guid> players)
+        public MatchStartedEvent(Guid matchId, string address, string map, IEnumerable<Guid> players)
         {
             MatchId = matchId;
             Address = address;

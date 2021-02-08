@@ -1,6 +1,7 @@
 import { useNotifications } from "@/modules/common/hooks/useNotifications";
 import { Hub } from "@/modules/common/hubs/Hub";
 import { MatchStatus } from "@/modules/match/services/MatchService";
+import { useUser } from "@/modules/user";
 import { useLobby } from "../hooks/useLobby";
 import {
   IInvitationAcceptedEvent,
@@ -16,6 +17,7 @@ import {
 } from "./LobbyHubEvents";
 
 export class LobbyHub {
+  private readonly user = useUser();
   private readonly lobby = useLobby();
   private readonly notifications = useNotifications();
 
@@ -99,5 +101,9 @@ export class LobbyHub {
 
   private onMemberRoleChanged(event: IMemberRoleChangedEvent) {
     this.lobby.changeMemberRole(event.userId, event.role);
+
+    if (this.user.state.user?.id === event.userId && event.role === 1) {
+      this.notifications.success("You are now lobby leader");
+    }
   }
 }

@@ -35,7 +35,7 @@ namespace Aimrank.Web.Controllers
             var lobby = await _aimrankModule.ExecuteQueryAsync(new GetLobbyForUserQuery());
             if (lobby is null)
             {
-                return NotFound();
+                return NoContent();
             }
             
             return lobby;

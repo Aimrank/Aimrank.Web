@@ -117,10 +117,12 @@ namespace Aimrank.Domain.Lobbies
                 var first = _members.FirstOrDefault();
                 if (first is not null)
                 {
-                    _members.Remove(first);
-                    _members.Add(first with {Role = LobbyMemberRole.Leader});
+                    var updated = first with {Role = LobbyMemberRole.Leader};
                     
-                    AddDomainEvent(new MemberRoleChangedDomainEvent(this, first));
+                    _members.Remove(first);
+                    _members.Add(updated);
+                    
+                    AddDomainEvent(new MemberRoleChangedDomainEvent(this, updated));
                 }
             }
         }
@@ -160,7 +162,7 @@ namespace Aimrank.Domain.Lobbies
 
         public void StartMatch()
         {
-            BusinessRules.Check(new LobbyStatusMustMatchRule(this, LobbyStatus.Searching));
+            BusinessRules.Check(new LobbyStatusMustMatchRule(this, LobbyStatus.MatchFound));
             BusinessRules.Check(new LobbyMustHaveMatchAssignedRule(this));
             
             ChangeStatus(LobbyStatus.InGame);

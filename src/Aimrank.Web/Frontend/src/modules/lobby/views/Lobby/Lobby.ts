@@ -26,7 +26,7 @@ const useLobbyView = () => {
 
     const result = await lobbyService.getForCurrentUser();
 
-    if (result.isOk()) {
+    if (result.isOk() && result.value) {
       lobby.setLobby(result.value);
 
       await lobbyHub.connect();
@@ -113,8 +113,9 @@ const Lobby = defineComponent({
       if (result.isOk()) {
         const lobbyResult = await lobbyService.getForCurrentUser();
 
-        if (lobbyResult.isOk()) {
+        if (lobbyResult.isOk() && lobbyResult.value) {
           lobby.setLobby(lobbyResult.value);
+          lobbyHub.connect();
         }
       } else {
         notifications.danger(result.error.title);

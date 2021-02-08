@@ -13,8 +13,8 @@ namespace Aimrank.Domain.Lobbies.Rules
             _lobbyStatus = lobbyStatus;
         }
 
-        public string Message => "Lobby is not closed";
-        public string Code => "lobby_not_closed";
+        public string Message => "Lobby has invalid status for this operation";
+        public string Code => "invalid_lobby_status";
 
         public bool IsBroken() => _lobby.Status != _lobbyStatus;
     }

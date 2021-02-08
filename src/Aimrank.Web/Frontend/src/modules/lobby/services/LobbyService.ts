@@ -66,7 +66,7 @@ export class LobbyService extends Service {
   }
 
   public getForCurrentUser() {
-    return this.wrap<ILobbyDto>(this.httpClient.get(this.getRoute("getForCurrentUser")));
+    return this.wrap<ILobbyDto | undefined>(this.httpClient.get(this.getRoute("getForCurrentUser")));
   }
 
   public getInvitations() {

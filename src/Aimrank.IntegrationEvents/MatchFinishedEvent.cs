@@ -8,10 +8,7 @@ namespace Aimrank.IntegrationEvents
         public int ScoreT { get; }
         public int ScoreCT { get; }
 
-        public MatchFinishedEvent(
-            Guid matchId,
-            int scoreT,
-            int scoreCt)
+        public MatchFinishedEvent(Guid matchId, int scoreT, int scoreCt)
         {
             MatchId = matchId;
             ScoreT = scoreT;
