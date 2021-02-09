@@ -38,3 +38,16 @@
 .maps {
   margin-bottom: 20px;
 }
+
+.code {
+  margin: 10px 0;
+  padding: 10px;
+  display: block;
+  border: 1px solid rgba(0, 0, 0, .125);
+  border-radius: 3px;
+  background: colors.$lightGray;
+
+  pre {
+    white-space: pre-line;
+  }
+}

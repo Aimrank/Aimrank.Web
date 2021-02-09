@@ -60,7 +60,18 @@
         <div>Id: {{ match.id }}</div>
         <div>Map: {{ match.map }}</div>
         <div>Status: {{ ["Created", "Starting", "Started", "Canceled", "Finished"][match.status] }}</div>
-        <div>Address: {{ match.address }}</div>
+        <template v-if="match.status > 1">
+          <div>
+            Address: aimrank.pl{{ match.address.slice(match.address.indexOf(":")) }}
+          </div>
+          <code :class="$style.code">
+            <pre>
+              sv_allowupload 1;
+              sv_allowdownload 1;
+              connect aimrank.pl{{ match.address.slice(match.address.indexOf(":")) }}
+            </pre>
+          </code>
+        </template>
       </div>
       <div
         v-else-if="currentUserMembership && currentUserMembership.isLeader"

@@ -95,7 +95,7 @@ export class LobbyHub {
       address: event.address
     });
 
-    this.notifications.success(`Match created: ${event.address}`);
+    this.notifications.success(`Match created: aimrank.pl${event.address.slice(event.address.indexOf(":"))}`);
   }
 
   private onMatchFinished(event: IMatchFinishedEvent) {
