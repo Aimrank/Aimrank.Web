@@ -5,6 +5,7 @@ using Aimrank.Domain.Users;
 using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
+using Aimrank.Domain.Matches;
 
 namespace Aimrank.Application.Commands.Lobbies.ChangeLobbyConfiguration
 {
@@ -29,7 +30,7 @@ namespace Aimrank.Application.Commands.Lobbies.ChangeLobbyConfiguration
             lobby.ChangeConfiguration(userId, new LobbyConfiguration(
                 request.Name,
                 request.Map,
-                (LobbyMatchMode) request.Mode));
+                (MatchMode) request.Mode));
             
             _lobbyRepository.Update(lobby);
             

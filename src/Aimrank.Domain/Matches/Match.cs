@@ -1,29 +1,28 @@
 ﻿using Aimrank.Common.Domain;
 using Aimrank.Domain.Matches.Events;
 using System.Collections.Generic;
-using System;
 using System.Linq;
+using System;
 
 namespace Aimrank.Domain.Matches
 {
     public class Match : Entity
     {
-        private readonly HashSet<MatchPlayer> _players = new();
         private readonly HashSet<MatchLobby> _lobbies = new();
+        private readonly HashSet<MatchTeam> _teams = new();
         
         public MatchId Id { get; }
-        public int ScoreT { get; private set; }
-        public int ScoreCT { get; private set; }
         public string Map { get; private set; }
         public string Address { get; private set; }
+        public MatchMode Mode { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime? FinishedAt { get; private set; }
         public MatchStatus Status { get; private set; }
 
-        public IEnumerable<MatchPlayer> Players
+        public IEnumerable<MatchTeam> Teams
         {
-            get => _players;
-            private init => _players = new HashSet<MatchPlayer>(value);
+            get => _teams;
+            private init => _teams = new HashSet<MatchTeam>(value);
         }
 
         public IEnumerable<MatchLobby> Lobbies
@@ -37,19 +36,22 @@ namespace Aimrank.Domain.Matches
         public Match(
             MatchId id,
             string map,
-            IEnumerable<MatchPlayer> players,
+            MatchMode mode,
+            IEnumerable<MatchTeam> teams,
             IEnumerable<MatchLobby> lobbies)
         {
             Id = id;
             Map = map;
-            Players = players;
+            Teams = teams;
             Lobbies = lobbies;
             Status = MatchStatus.Created;
             CreatedAt = DateTime.UtcNow;
         }
 
-        public void Finish(int scoreT, int scoreCT)
+        public void Finish(MatchTeam team1, MatchTeam team2)
         {
+            var p1 = team1.Players.FirstOrDefault().SteamId;
+            var p2 = team2.Players.FirstOrDefault().SteamId;
             ScoreT = scoreT;
             ScoreCT = scoreCT;
             Status = MatchStatus.Finished;
