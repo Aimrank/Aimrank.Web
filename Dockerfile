@@ -109,7 +109,8 @@ WORKDIR ${STEAM_DIR}/sourcemod/plugins
 
 RUN tar -xzf build.tar.gz \
   && chmod +x ./build/sourcemod/scripting/spcomp \
-  && ./build/sourcemod/scripting/spcomp aimrank.sp
+  && ./build/sourcemod/scripting/spcomp aimrank_events.sp \
+  && ./build/sourcemod/scripting/spcomp aimrank_teamlock.sp
 
 # -- Step 4 -- Startup
 
