@@ -10,16 +10,13 @@
 #define CLIENT_NAME_LENGTH 33
 #define CLIENT_ID_LENGTH 18
 
-#define MAX_CLIENTS 2
-
 ConVar g_aimrankServerId;
-ConVar g_aimrankWhitelist;
 
 public Plugin myinfo =
 {
-    name = "Aimrank",
-    author = "Mariusz Baran",
-    description = "Aimrank plugin that sends game events to web application.",
+    name = "Aimrank Events",
+    author = "Aimrank",
+    description = "Sending game events as json to web application.",
     version = "1.0.0",
     url = ""
 };
@@ -27,13 +24,18 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
     g_aimrankServerId = CreateConVar("aimrank_server_id", "00000000-0000-0000-0000-000000000000", "Aimrank server identifier");
-    g_aimrankWhitelist = CreateConVar("aimrank_whitelist", "0", "SteamID list of whitelisted players.");
     
     HookEvent("cs_win_panel_match", Event_MatchEnd);
-    HookEvent("round_end", Event_PublishScoreboard);
-    HookEvent("round_start", Event_PublishScoreboard);
-    HookEvent("player_activate", Event_PublishScoreboard);
-    HookEvent("player_disconnect", Event_PublishScoreboard);
+}
+
+public void OnMapStart()
+{
+    PublishEvent(CreateIntegrationEvent("map_start", null));
+}
+
+public Action Event_MatchEnd(Event event, const char[] name, bool dontBroadcast)
+{
+    PublishEvent(CreateIntegrationEvent("match_end", GetScoreboard()));
 }
 
 public void PublishEvent(JSON_Object data)
@@ -56,8 +58,17 @@ public void PublishEvent(JSON_Object data)
     data.Cleanup();
 }
 
+
 public void HttpResponseCallback(bool success, const char[] error, System2HTTPRequest request, System2HTTPResponse response, HTTPRequestMethod method)
 {
+}
+
+public JSON_Object CreateIntegrationEvent(const char[] name, JSON_Object data)
+{
+    JSON_Object event = new JSON_Object();
+    event.SetString("name", name);
+    event.SetObject("data", data);
+    return event;
 }
 
 public JSON_Object GetScoreboard()
@@ -112,51 +123,7 @@ public JSON_Object GetScoreboard()
     return scoreboard;
 }
 
-public JSON_Object CreateIntegrationEvent(const char[] name, JSON_Object data)
-{
-    JSON_Object event = new JSON_Object();
-    event.SetString("name", name);
-    event.SetObject("data", data);
-    return event;
-}
-
-public Action Event_PublishScoreboard(Event event, const char[] name, bool dontBroadcast)
-{
-    PublishEvent(CreateIntegrationEvent("scoreboard_changed", GetScoreboard()));
-}
-
-public Action Event_MatchEnd(Event event, const char[] name, bool dontBroadcast)
-{
-    PublishEvent(CreateIntegrationEvent("match_end", GetScoreboard()));
-}
-
-public void OnMapStart()
-{
-    PublishEvent(CreateIntegrationEvent("map_start", null));
-}
-
-public void OnClientPutInServer(int client)
-{
-    if (IsFakeClient(client))
-    {
-        return;
-    }
-
-    char clientId[CLIENT_ID_LENGTH];
-    char whitelist[CLIENT_ID_LENGTH * MAX_CLIENTS];
-
-    GetClientSteamId(client, clientId, sizeof(clientId));
-    GetConVarString(g_aimrankWhitelist, whitelist, sizeof(whitelist));
-
-    if (StrContains(whitelist, clientId) == -1)
-    {
-        KickClient(client, "You are not whitelisted");
-    }
-}
-
 public void GetClientSteamId(int client, char[] output, int maxlen)
 {
     GetClientAuthId(client, AuthId_SteamID64, output, maxlen);
 }
-
-// When warmup ends and not all players are connected - cancel the game
