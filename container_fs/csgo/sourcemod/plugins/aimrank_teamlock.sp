@@ -1,12 +1,12 @@
 #include <sourcemod>
 #include <cstrike>
 
-#define CLIENT_NAME_LENGTH 33
-#define CLIENT_ID_LENGTH 18
+#define CLIENT_WHITELIST_ENTRY_LENGTH 20    // {steam id 64}:{team index}
 
 #define MAX_CLIENTS 4
 
 ConVar g_aimrankWhitelist;
+ConVar g_mpMaxRounds;
 
 public Plugin myinfo =
 {
@@ -20,6 +20,7 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
     g_aimrankWhitelist = CreateConVar("aimrank_whitelist", "0", "SteamID list of whitelisted players.");
+    g_mpMaxRounds = FindConVar("mp_maxrounds");
 
     AddCommandListener(Command_JoinTeam, "jointeam");
     
@@ -33,8 +34,8 @@ public void OnClientPutInServer(int client)
         return;
     }
 
-    char clientId[CLIENT_ID_LENGTH];
-    char whitelist[CLIENT_ID_LENGTH * MAX_CLIENTS];
+    char clientId[CLIENT_WHITELIST_ENTRY_LENGTH];
+    char whitelist[CLIENT_WHITELIST_ENTRY_LENGTH * MAX_CLIENTS];
 
     GetClientSteamId(client, clientId, sizeof(clientId));
     GetConVarString(g_aimrankWhitelist, whitelist, sizeof(whitelist));
@@ -88,7 +89,31 @@ public Action Command_JoinTeam(int client, const char[] command, int argc)
 
 public int GetClientTeamFromCVar(int client)
 {
-    return CS_TEAM_CT;
+    char clientId[CLIENT_WHITELIST_ENTRY_LENGTH];
+    char whitelist[CLIENT_WHITELIST_ENTRY_LENGTH * MAX_CLIENTS];
+
+    GetClientSteamId(client, clientId, sizeof(clientId));
+    GetConVarString(g_aimrankWhitelist, whitelist, sizeof(whitelist));
+
+    int index = StrContains(whitelist, clientId);
+    if (index == -1)
+    {
+        return CS_TEAM_CT;
+    }
+
+    int team = StringToInt(whitelist[index + 18]);
+    
+    int score1 = CS_GetTeamScore(CS_TEAM_T);
+    int score2 = CS_GetTeamScore(CS_TEAM_CT);
+
+    int maxRounds = GetConVarInt(g_mpMaxRounds);
+
+    if (score1 + score2 >= maxRounds / 2)
+    {
+        team = team == CS_TEAM_T ? CS_TEAM_CT : CS_TEAM_T;
+    }
+
+    return team;
 }
 
 public void GetClientSteamId(int client, char[] output, int maxlen)

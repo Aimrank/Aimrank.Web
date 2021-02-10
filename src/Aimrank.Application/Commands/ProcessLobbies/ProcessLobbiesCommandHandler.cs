@@ -61,7 +61,7 @@ namespace Aimrank.Application.Commands.ProcessLobbies
 
                 var address = _serverProcessManager.StartServer(
                     match.Id.Value,
-                    match.Players.Select(p => p.SteamId),
+                    match.Players.Select((p, i) => $"{p.SteamId}:{i % 2 + 2}"),
                     match.Map);
                 
                 lobby.MatchFound();
