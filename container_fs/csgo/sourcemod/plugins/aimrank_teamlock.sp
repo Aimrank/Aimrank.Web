@@ -73,18 +73,7 @@ public Action Command_JoinTeam(int client, const char[] command, int argc)
         return Plugin_Continue;
     }
 
-    char teamString[4];
-    GetCmdArg(1, teamString, sizeof(teamString));
-
-    int team = GetClientTeamFromCVar(client);
-    int team_to = StringToInt(teamString);
-
-    if (team_to != team)
-    {
-        return Plugin_Handled;
-    }
-
-    return Plugin_Continue;
+    return Plugin_Handled;
 }
 
 public int GetClientTeamFromCVar(int client)
