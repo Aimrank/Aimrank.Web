@@ -109,3 +109,8 @@ public void GetClientSteamId(int client, char[] output, int maxlen)
 {
     GetClientAuthId(client, AuthId_SteamID64, output, maxlen);
 }
+
+// 1. On warmup end - emit cancel game with not connected players
+// 2. On player leave - pause game at beginning of new round for 2 mins
+    // Rejoined - resume game
+    // Not joined - get scoreboard and mark match as lost for leaver
