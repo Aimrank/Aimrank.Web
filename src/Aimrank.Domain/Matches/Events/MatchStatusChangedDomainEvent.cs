@@ -2,11 +2,11 @@ using Aimrank.Common.Domain;
 
 namespace Aimrank.Domain.Matches.Events
 {
-    public class MatchStartingDomainEvent : IDomainEvent
+    public class MatchStatusChangedDomainEvent : IDomainEvent
     {
         public Match Match { get; }
 
-        public MatchStartingDomainEvent(Match match)
+        public MatchStatusChangedDomainEvent(Match match)
         {
             Match = match;
         }

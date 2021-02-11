@@ -4,7 +4,6 @@ namespace Aimrank.Domain.Lobbies
     {
         Open,
         Searching,
-        MatchFound,
-        InGame
+        Closed
     }
 }

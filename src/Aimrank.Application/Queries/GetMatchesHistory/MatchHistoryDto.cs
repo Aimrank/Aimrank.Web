@@ -9,6 +9,7 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
         public string Map { get; set; }
         public int ScoreT { get; set; }
         public int ScoreCT { get; set; }
+        public int Mode { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime FinishedAt { get; set; }
         public List<MatchHistoryPlayerDto> TeamTerrorists { get; set; }
@@ -19,6 +20,7 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
     {
         public Guid Id { get; set; }
         public string Username { get; set; }
+        public int Team { get; set; }
         public int Kills { get; set; }
         public int Assists { get; set; }
         public int Deaths { get; set; }

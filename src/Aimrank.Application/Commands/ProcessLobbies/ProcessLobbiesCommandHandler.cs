@@ -4,6 +4,7 @@ using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;
 using MediatR;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
@@ -46,30 +47,28 @@ namespace Aimrank.Application.Commands.ProcessLobbies
 
                 var matchId = new MatchId(Guid.NewGuid());
 
-                var match = new Match(
-                    matchId,
-                    lobby.Configuration.Map,
-                    new MatchPlayer[]
-                    {
-                        new(p1.Id, p1.SteamId, MatchTeam.Terrorists),
-                        new(p2.Id, p2.SteamId, MatchTeam.CounterTerrorists)
-                    },
-                    new MatchLobby[]
-                    {
-                        new(lobby.Id)
-                    });
+                var match = new Match(matchId, lobby.Configuration.Map, lobby.Configuration.Mode);
+                
+                match.AddPlayer(p1.Id, p1.SteamId, MatchTeam.T);
+                match.AddPlayer(p2.Id, p2.SteamId, MatchTeam.CT);
 
+                var whitelist = new List<string>
+                {
+                    $"{p1.SteamId}:{MatchTeam.T}",
+                    $"{p2.SteamId}:{MatchTeam.CT}"
+                };
+
+                // This should only lock server for accepting period and start after all players accepted game
+                
                 var address = _serverProcessManager.StartServer(
                     match.Id.Value,
-                    match.Players.Select((p, i) => $"{p.SteamId}:{i % 2 + 2}"),
-                    match.Map);
+                    match.Map,
+                    whitelist);
                 
-                lobby.MatchFound();
-                lobby.StartMatch();
+                match.SetReady(address);
+                match.SetStarting(); // This should be called when all players accept game and server is starting
                 
-                // Todo: StartMatch should be invoked after members accept game
-                
-                match.Start(address);
+                lobby.Close();
                 
                 _matchRepository.Add(match);
                 _lobbyRepository.Update(lobby);

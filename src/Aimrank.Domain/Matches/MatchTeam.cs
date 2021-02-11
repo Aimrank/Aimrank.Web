@@ -2,9 +2,7 @@ namespace Aimrank.Domain.Matches
 {
     public enum MatchTeam
     {
-        None,
-        Spectator,
-        CounterTerrorists,
-        Terrorists
+        T = 2,
+        CT = 3
     }
 }

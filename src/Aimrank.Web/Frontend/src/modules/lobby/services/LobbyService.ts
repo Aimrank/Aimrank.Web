@@ -4,8 +4,7 @@ import { Service } from "@/modules/common/services/Service";
 export enum LobbyStatus {
   Open,
   Searching,
-  MatchFound,
-  InGame
+  Closed
 }
 
 export interface ILobbyConfiguration {

@@ -19,6 +19,7 @@ namespace Aimrank.Infrastructure.Domain.Matches
             builder.Property(m => m.ScoreCT).HasColumnName("ScoreCT");
             builder.Property(m => m.Map).HasColumnName("Map").IsRequired().HasMaxLength(50);
             builder.Property(m => m.Address).HasColumnName("Address").HasMaxLength(50);
+            builder.Property(m => m.Mode).HasColumnName("Mode");
             builder.Property(m => m.CreatedAt).HasColumnName("CreatedAt");
             builder.Property(m => m.FinishedAt).HasColumnName("FinishedAt");
             builder.Property(m => m.Status).HasColumnName("Status");
@@ -30,15 +31,19 @@ namespace Aimrank.Infrastructure.Domain.Matches
                 b.Property(p => p.UserId).HasColumnName("UserId").IsRequired();
                 b.Property(p => p.SteamId).HasColumnName("SteamId").IsRequired().HasMaxLength(17);
                 b.Property(p => p.Team).HasColumnName("Team");
-                b.Property(p => p.Kills).HasColumnName("Kills");
-                b.Property(p => p.Assists).HasColumnName("Assists");
-                b.Property(p => p.Deaths).HasColumnName("Deaths");
-                b.Property(p => p.Score).HasColumnName("Score");
                 b.HasKey("MatchId", "UserId");
                 b.HasOne<UserModel>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
                 b.WithOwner().HasForeignKey("MatchId");
-            });
 
+                b.OwnsOne(p => p.Stats, x =>
+                {
+                    x.Property(s => s.Kills).HasColumnName("Stats_Kills");
+                    x.Property(s => s.Assists).HasColumnName("Stats_Assists");
+                    x.Property(s => s.Deaths).HasColumnName("Stats_Deaths");
+                    x.Property(s => s.Score).HasColumnName("Stats_Score");
+                });
+            });
+            
             builder.OwnsMany(m => m.Lobbies, b =>
             {
                 b.ToTable("MatchesLobbies", "aimrank");

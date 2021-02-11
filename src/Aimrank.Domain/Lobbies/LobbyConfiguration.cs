@@ -1,5 +1,6 @@
 using Aimrank.Common.Domain;
 using Aimrank.Domain.Lobbies.Rules;
+using Aimrank.Domain.Matches;
 
 namespace Aimrank.Domain.Lobbies
 {
@@ -7,11 +8,11 @@ namespace Aimrank.Domain.Lobbies
     {
         public string Name { get; }
         public string Map { get; }
-        public LobbyMatchMode Mode { get; }
+        public MatchMode Mode { get; }
         
         private LobbyConfiguration() {}
 
-        public LobbyConfiguration(string name, string map, LobbyMatchMode mode)
+        public LobbyConfiguration(string name, string map, MatchMode mode)
         {
             BusinessRules.Check(new MapMustBeSupportedRule(map));
             

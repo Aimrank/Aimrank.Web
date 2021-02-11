@@ -43,15 +43,17 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
 						[Match].[Id] AS [Id],
 						[Match].[ScoreT] AS [ScoreT],
 						[Match].[ScoreCT] AS [ScoreCT],
+						[Match].[Mode] AS [Mode],
 						[Match].[CreatedAt] AS [CreatedAt],
 						[Match].[FinishedAt] AS [FinishedAt],
 						[Match].[Map] AS [Map],
 						[User].[Id] AS [User_Id],
 						[User].[UserName] AS [User_Username],
-						[Player].[Kills] AS [User_Kills],
-						[Player].[Assists] AS [User_Assists],
-						[Player].[Deaths] AS [User_Deaths],
-						[Player].[Score] AS [User_Score]
+						[Player].[Team] AS [User_Team],
+						[Player].[Stats_Kills] AS [User_Kills],
+						[Player].[Stats_Assists] AS [User_Assists],
+						[Player].[Stats_Deaths] AS [User_Deaths],
+						[Player].[Stats_Score] AS [User_Score]
 					FROM [aimrank].[Matches] AS [Match]
 					INNER JOIN [aimrank].[MatchesPlayers] AS [Player] ON [Match].[Id] = [Player].[MatchId]
 					INNER JOIN [aimrank].[AspNetUsers] AS [User] ON [Player].[UserId] = [User].[Id]
@@ -77,13 +79,14 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
 		            {
 			            Id = player.User_Id,
 			            Username = player.User_Username,
+			            Team = player.User_Team,
 			            Kills = player.User_Kills,
 			            Assists = player.User_Assists,
 			            Deaths = player.User_Deaths,
 			            Score = player.User_Score
 		            };
 
-		            if (result.ScoreT == playerDto.Kills)
+		            if (playerDto.Team == 2)
 		            {
 			            result.TeamTerrorists.Add(playerDto);
 		            }
@@ -104,6 +107,7 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
 		{
 			public Guid User_Id { get; init; }
 			public string User_Username { get; init; }
+			public int User_Team { get; set; }
 			public int User_Kills { get; init; }
 			public int User_Assists { get; init; }
 			public int User_Deaths { get; init; }

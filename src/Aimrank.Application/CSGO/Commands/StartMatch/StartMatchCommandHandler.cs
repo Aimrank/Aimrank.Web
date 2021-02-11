@@ -18,7 +18,7 @@ namespace Aimrank.Application.CSGO.Commands.StartMatch
         {
             var match = await _matchRepository.GetByIdAsync(new MatchId(request.ServerId));
             
-            match.MarkAsStarted();
+            match.SetStarted();
             
             _matchRepository.Update(match);
             

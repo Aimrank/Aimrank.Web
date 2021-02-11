@@ -30,23 +30,20 @@ namespace Aimrank.Application.CSGO.Commands.FinishMatch
             var match = await _matchRepository.GetByIdAsync(new MatchId(request.ServerId));
             var lobbies = await _lobbyRepository.BrowseByIdAsync(match.Lobbies.Select(l => l.LobbyId));
             
-            foreach (var player in match.Players)
+            match.UpdateScore(
+                request.TeamTerrorists.Score, 
+                request.TeamCounterTerrorists.Score);
+            
+            foreach (var client in request.TeamTerrorists.Clients.Concat(request.TeamCounterTerrorists.Clients))
             {
-                var client =
-                    request.TeamTerrorists.Clients.FirstOrDefault(c => c.SteamId == player.SteamId) ??
-                    request.TeamCounterTerrorists.Clients.FirstOrDefault(c => c.SteamId == player.SteamId);
-            
-                if (client is null)
-                {
-                    continue;
-                }
-            
-                player.UpdateStats(client.Kills, client.Assists, client.Deaths, client.Score);
+                match.UpdatePlayerStats(client.SteamId, new MatchPlayerStats(
+                    client.Kills,
+                    client.Assists,
+                    client.Deaths,
+                    client.Score));
             }
             
-            match.Finish(
-                request.TeamTerrorists.Score,
-                request.TeamCounterTerrorists.Score);
+            match.Finish();
 
             foreach (var lobby in lobbies)
             {

@@ -1,6 +1,7 @@
 using Aimrank.Common.Domain;
 using Aimrank.Domain.Lobbies.Events;
 using Aimrank.Domain.Lobbies.Rules;
+using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,8 @@ namespace Aimrank.Domain.Lobbies
     {
         private const int MaxMembers = 2;
         
-        private HashSet<LobbyMember> _members = new();
-        private HashSet<LobbyInvitation> _invitations = new();
+        private readonly HashSet<LobbyMember> _members = new();
+        private readonly HashSet<LobbyInvitation> _invitations = new();
         
         public LobbyId Id { get; }
         public LobbyStatus Status { get; private set; }
@@ -23,13 +24,13 @@ namespace Aimrank.Domain.Lobbies
         public IEnumerable<LobbyMember> Members
         {
             get => _members;
-            private set => _members = new HashSet<LobbyMember>(value);
+            private init => _members = new HashSet<LobbyMember>(value);
         }
 
         public IEnumerable<LobbyInvitation> Invitations
         {
             get => _invitations;
-            private set => _invitations = new HashSet<LobbyInvitation>(value);
+            private init => _invitations = new HashSet<LobbyInvitation>(value);
         }
         
         private Lobby() {}
@@ -39,7 +40,7 @@ namespace Aimrank.Domain.Lobbies
             BusinessRules.Check(new UserMustHaveConnectedSteamRule(user));
             
             Id = id;
-            Configuration = new LobbyConfiguration($"team_{user.Username}", Maps.AimMap, LobbyMatchMode.OneVsOne);
+            Configuration = new LobbyConfiguration($"team_{user.Username}", Maps.AimMap, MatchMode.OneVsOne);
             _members.Add(new LobbyMember(user.Id, LobbyMemberRole.Leader));
         }
 
@@ -142,24 +143,15 @@ namespace Aimrank.Domain.Lobbies
 
             ChangeStatus(LobbyStatus.Open);
         }
-        
-        public void MatchFound()
-        {
-            BusinessRules.Check(new LobbyStatusMustMatchRule(this, LobbyStatus.Searching));
-
-            ChangeStatus(LobbyStatus.MatchFound);
-        }
-
-        public void StartMatch()
-        {
-            BusinessRules.Check(new LobbyStatusMustMatchRule(this, LobbyStatus.MatchFound));
-            
-            ChangeStatus(LobbyStatus.InGame);
-        }
 
         public void Open()
         {
             ChangeStatus(LobbyStatus.Open);
+        }
+
+        public void Close()
+        {
+            ChangeStatus(LobbyStatus.Closed);
         }
 
         public bool IsFull() => _members.Count == MaxMembers;
