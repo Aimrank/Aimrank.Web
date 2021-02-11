@@ -60,6 +60,10 @@ namespace Aimrank.Database.Migrator.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("Map");
 
+                    b.Property<int>("Mode")
+                        .HasColumnType("int")
+                        .HasColumnName("Mode");
+
                     b.Property<int>("ScoreCT")
                         .HasColumnType("int")
                         .HasColumnName("ScoreCT");
@@ -476,22 +480,6 @@ namespace Aimrank.Database.Migrator.Migrations
                                 .HasColumnType("uniqueidentifier")
                                 .HasColumnName("UserId");
 
-                            b1.Property<int>("Assists")
-                                .HasColumnType("int")
-                                .HasColumnName("Assists");
-
-                            b1.Property<int>("Deaths")
-                                .HasColumnType("int")
-                                .HasColumnName("Deaths");
-
-                            b1.Property<int>("Kills")
-                                .HasColumnType("int")
-                                .HasColumnName("Kills");
-
-                            b1.Property<int>("Score")
-                                .HasColumnType("int")
-                                .HasColumnName("Score");
-
                             b1.Property<string>("SteamId")
                                 .IsRequired()
                                 .HasMaxLength(17)
@@ -516,6 +504,40 @@ namespace Aimrank.Database.Migrator.Migrations
                                 .HasForeignKey("UserId")
                                 .OnDelete(DeleteBehavior.Restrict)
                                 .IsRequired();
+
+                            b1.OwnsOne("Aimrank.Domain.Matches.MatchPlayerStats", "Stats", b2 =>
+                                {
+                                    b2.Property<Guid>("MatchPlayerMatchId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<Guid>("MatchPlayerUserId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<int>("Assists")
+                                        .HasColumnType("int")
+                                        .HasColumnName("Stats_Assists");
+
+                                    b2.Property<int>("Deaths")
+                                        .HasColumnType("int")
+                                        .HasColumnName("Stats_Deaths");
+
+                                    b2.Property<int>("Kills")
+                                        .HasColumnType("int")
+                                        .HasColumnName("Stats_Kills");
+
+                                    b2.Property<int>("Score")
+                                        .HasColumnType("int")
+                                        .HasColumnName("Stats_Score");
+
+                                    b2.HasKey("MatchPlayerMatchId", "MatchPlayerUserId");
+
+                                    b2.ToTable("MatchesPlayers");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("MatchPlayerMatchId", "MatchPlayerUserId");
+                                });
+
+                            b1.Navigation("Stats");
                         });
 
                     b.Navigation("Lobbies");

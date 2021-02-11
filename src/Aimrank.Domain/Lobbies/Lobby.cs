@@ -1,12 +1,12 @@
 using Aimrank.Common.Domain;
 using Aimrank.Domain.Lobbies.Events;
 using Aimrank.Domain.Lobbies.Rules;
+using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-using Aimrank.Domain.Matches;
 
 namespace Aimrank.Domain.Lobbies
 {
@@ -143,24 +143,15 @@ namespace Aimrank.Domain.Lobbies
 
             ChangeStatus(LobbyStatus.Open);
         }
-        
-        public void MatchFound()
-        {
-            BusinessRules.Check(new LobbyStatusMustMatchRule(this, LobbyStatus.Searching));
-
-            ChangeStatus(LobbyStatus.MatchFound);
-        }
-
-        public void StartMatch()
-        {
-            BusinessRules.Check(new LobbyStatusMustMatchRule(this, LobbyStatus.MatchFound));
-            
-            ChangeStatus(LobbyStatus.InGame);
-        }
 
         public void Open()
         {
             ChangeStatus(LobbyStatus.Open);
+        }
+
+        public void Close()
+        {
+            ChangeStatus(LobbyStatus.Closed);
         }
 
         public bool IsFull() => _members.Count == MaxMembers;

@@ -3,10 +3,21 @@ import { Service } from "@/modules/common/services/Service";
 
 export enum MatchStatus {
   Created,
+  Ready,
+  Canceled,
   Starting,
   Started,
-  Canceled,
   Finished
+}
+
+export enum MatchMode {
+  OneVsOne,
+  TwoVsTwo
+}
+
+export enum MatchTeam {
+  T = 2,
+  CT = 3
 }
 
 export interface IMatchDto {
@@ -18,6 +29,7 @@ export interface IMatchDto {
 
 export interface IMatchHistoryDto {
   id: string;
+  mode: MatchMode;
   scoreT: number;
   scoreCT: number;
   createdAt: string;
@@ -30,6 +42,7 @@ export interface IMatchHistoryDto {
 export interface IMatchHistoryPlayerDto {
   id: string;
   username: string;
+  team: MatchTeam;
   kills: number;
   assists: number;
   deaths: number;

@@ -78,6 +78,7 @@ namespace Aimrank.Database.Migrator.Migrations
                     ScoreCT = table.Column<int>(type: "int", nullable: false),
                     Map = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Mode = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FinishedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false)
@@ -342,10 +343,10 @@ namespace Aimrank.Database.Migrator.Migrations
                     MatchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SteamId = table.Column<string>(type: "nvarchar(17)", maxLength: 17, nullable: false),
                     Team = table.Column<int>(type: "int", nullable: false),
-                    Kills = table.Column<int>(type: "int", nullable: false),
-                    Assists = table.Column<int>(type: "int", nullable: false),
-                    Deaths = table.Column<int>(type: "int", nullable: false),
-                    Score = table.Column<int>(type: "int", nullable: false)
+                    Stats_Kills = table.Column<int>(type: "int", nullable: true),
+                    Stats_Assists = table.Column<int>(type: "int", nullable: true),
+                    Stats_Deaths = table.Column<int>(type: "int", nullable: true),
+                    Stats_Score = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

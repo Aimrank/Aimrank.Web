@@ -84,7 +84,7 @@ export class LobbyHub {
       address: event.address
     });
 
-    this.notifications.success("Searching for new game...");
+    this.notifications.success("Starting server...");
   }
 
   private onMatchStarted(event: IMatchStartedEvent) {

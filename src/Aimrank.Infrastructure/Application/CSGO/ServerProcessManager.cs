@@ -29,7 +29,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
             _availablePorts.Enqueue(27019);
         }
 
-        public string StartServer(Guid serverId, IEnumerable<string> whitelist, string map)
+        public string StartServer(Guid serverId, string map, IEnumerable<string> whitelist)
         {
             lock (_locker)
             {

@@ -1,5 +1,6 @@
 ﻿using Aimrank.Common.Domain;
 using Aimrank.Domain.Matches.Events;
+using Aimrank.Domain.Users;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -9,9 +10,11 @@ namespace Aimrank.Domain.Matches
     public class Match : Entity
     {
         private readonly HashSet<MatchLobby> _lobbies = new();
-        private readonly HashSet<MatchTeam> _teams = new();
+        private readonly HashSet<MatchPlayer> _players = new();
         
         public MatchId Id { get; }
+        public int ScoreT { get; private set; }
+        public int ScoreCT { get; private set; }
         public string Map { get; private set; }
         public string Address { get; private set; }
         public MatchMode Mode { get; private set; }
@@ -19,10 +22,10 @@ namespace Aimrank.Domain.Matches
         public DateTime? FinishedAt { get; private set; }
         public MatchStatus Status { get; private set; }
 
-        public IEnumerable<MatchTeam> Teams
+        public IEnumerable<MatchPlayer> Players
         {
-            get => _teams;
-            private init => _teams = new HashSet<MatchTeam>(value);
+            get => _players;
+            private init => _players = new HashSet<MatchPlayer>(value);
         }
 
         public IEnumerable<MatchLobby> Lobbies
@@ -36,26 +39,41 @@ namespace Aimrank.Domain.Matches
         public Match(
             MatchId id,
             string map,
-            MatchMode mode,
-            IEnumerable<MatchTeam> teams,
-            IEnumerable<MatchLobby> lobbies)
+            MatchMode mode)
         {
             Id = id;
             Map = map;
-            Teams = teams;
-            Lobbies = lobbies;
+            Mode = mode;
             Status = MatchStatus.Created;
             CreatedAt = DateTime.UtcNow;
         }
 
-        public void Finish(MatchTeam team1, MatchTeam team2)
+        public void AddPlayer(UserId userId, string steamId, MatchTeam team)
         {
-            var p1 = team1.Players.FirstOrDefault().SteamId;
-            var p2 = team2.Players.FirstOrDefault().SteamId;
+            var player = new MatchPlayer(userId, steamId, team);
+            
+            _players.Add(player);
+        }
+
+        public void UpdateScore(int scoreT, int scoreCT)
+        {
             ScoreT = scoreT;
             ScoreCT = scoreCT;
+        }
+
+        public void UpdatePlayerStats(string steamId, MatchPlayerStats stats)
+        {
+            var player = _players.FirstOrDefault(p => p.SteamId == steamId);
+            
+            player?.UpdateStats(stats);
+        }
+
+        public void Finish()
+        {
             Status = MatchStatus.Finished;
             FinishedAt = DateTime.UtcNow;
+            
+            // Update players rating
 
             var @event = new MatchFinishedDomainEvent(this, Lobbies.Select(l => l.LobbyId).ToList());
             
@@ -69,27 +87,34 @@ namespace Aimrank.Domain.Matches
             Status = MatchStatus.Canceled;
             FinishedAt = DateTime.UtcNow;
             
-            AddDomainEvent(new MatchCanceledDomainEvent(this));
+            AddDomainEvent(new MatchStatusChangedDomainEvent(this));
         }
 
-        public void Start(string address)
+        public void SetReady(string address)
         {
-            Status = MatchStatus.Starting;
+            Status = MatchStatus.Ready;
             Address = address;
             
-            AddDomainEvent(new MatchStartingDomainEvent(this));
+            AddDomainEvent(new MatchStatusChangedDomainEvent(this));
         }
 
-        public void MarkAsStarted()
+        public void SetStarting()
+        {
+            Status = MatchStatus.Starting;
+            
+            AddDomainEvent(new MatchStatusChangedDomainEvent(this));
+        }
+
+        public void SetStarted()
         {
             if (Status != MatchStatus.Starting)
             {
                 return;
             }
-            
+
             Status = MatchStatus.Started;
-                
-            AddDomainEvent(new MatchStartedDomainEvent(this));
+            
+            AddDomainEvent(new MatchStatusChangedDomainEvent(this));
         }
     }
 }
