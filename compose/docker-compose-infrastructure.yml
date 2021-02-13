@@ -8,3 +8,8 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - 1433:1433
+
+  redis:
+    image: redis:6.0.10-alpine
+    ports:
+      - 6379:6379

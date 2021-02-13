@@ -17,5 +17,8 @@ services:
     volumes:
       - mssql_data:/var/opt/mssql
 
+  redis:
+    image: redis:6.0.10-alpine
+
 volumes:
   mssql_data:
