@@ -9,6 +9,7 @@ using Aimrank.Infrastructure.Configuration.CSGO;
 using Aimrank.Infrastructure.Configuration.Jwt;
 using Aimrank.Infrastructure.Configuration;
 using Aimrank.Infrastructure;
+using Aimrank.Infrastructure.Configuration.Redis;
 using Aimrank.IntegrationEvents.Lobbies;
 using Aimrank.IntegrationEvents;
 using Aimrank.Web.Configuration.ExecutionContext;
@@ -140,8 +141,10 @@ namespace Aimrank.Web
             var executionContextAccessor = container.Resolve<IExecutionContextAccessor>();
             var jwtSettings = new JwtSettings();
             var csgoSettings = new CSGOSettings();
+            var redisSettings = new RedisSettings();
             _configuration.GetSection(nameof(JwtSettings)).Bind(jwtSettings);
             _configuration.GetSection(nameof(CSGOSettings)).Bind(csgoSettings);
+            _configuration.GetSection(nameof(RedisSettings)).Bind(redisSettings);
 
             var connectionString = _configuration.GetConnectionString("Database");
             
@@ -150,7 +153,8 @@ namespace Aimrank.Web
                 executionContextAccessor,
                 _eventBus,
                 jwtSettings,
-                csgoSettings);
+                csgoSettings,
+                redisSettings);
         }
     }
 }

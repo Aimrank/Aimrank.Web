@@ -7,6 +7,7 @@ using Aimrank.Infrastructure.Configuration.Jwt;
 using Aimrank.Infrastructure.Configuration.Mediator;
 using Aimrank.Infrastructure.Configuration.Processing;
 using Aimrank.Infrastructure.Configuration.Quartz;
+using Aimrank.Infrastructure.Configuration.Redis;
 using Autofac;
 
 namespace Aimrank.Infrastructure.Configuration
@@ -20,14 +21,16 @@ namespace Aimrank.Infrastructure.Configuration
             IExecutionContextAccessor executionContextAccessor,
             IEventBus eventBus,
             JwtSettings jwtSettings,
-            CSGOSettings csgoSettings)
+            CSGOSettings csgoSettings,
+            RedisSettings redisSettings)
         {
             ConfigureCompositionRoot(
                 connectionString,
                 executionContextAccessor,
                 eventBus,
                 jwtSettings,
-                csgoSettings);
+                csgoSettings,
+                redisSettings);
             
             QuartzStartup.Initialize();
         }
@@ -37,7 +40,8 @@ namespace Aimrank.Infrastructure.Configuration
             IExecutionContextAccessor executionContextAccessor,
             IEventBus eventBus,
             JwtSettings jwtSettings,
-            CSGOSettings csgoSettings)
+            CSGOSettings csgoSettings,
+            RedisSettings redisSettings)
         {
             var containerBuilder = new ContainerBuilder();
 
@@ -48,6 +52,7 @@ namespace Aimrank.Infrastructure.Configuration
             containerBuilder.RegisterModule(new CSGOModule(csgoSettings));
             containerBuilder.RegisterModule(new JwtModule(jwtSettings));
             containerBuilder.RegisterModule(new QuartzModule());
+            containerBuilder.RegisterModule(new RedisModule(redisSettings));
             containerBuilder.RegisterInstance(executionContextAccessor);
             containerBuilder.RegisterInstance(eventBus);
 
