@@ -16,7 +16,7 @@ namespace Aimrank.Application.CSGO.Commands.StartMatch
 
         public async Task<Unit> Handle(StartMatchCommand request, CancellationToken cancellationToken)
         {
-            var match = await _matchRepository.GetByIdAsync(new MatchId(request.ServerId));
+            var match = await _matchRepository.GetByIdAsync(new MatchId(request.MatchId));
             
             match.SetStarted();
             

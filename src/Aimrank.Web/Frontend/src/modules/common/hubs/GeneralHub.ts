@@ -1,6 +1,6 @@
-import { lobbyService } from "@/services";
-import { useInvitations } from "@/modules/lobby";
-import { useNotifications } from "../hooks/useNotifications";
+import { lobbyService } from "~/services";
+import { useInvitations } from "@/lobby/hooks/useInvitations";
+import { useNotifications } from "@/common/hooks/useNotifications";
 import { Hub } from "./Hub";
 
 interface IInvitationCreatedEvent {

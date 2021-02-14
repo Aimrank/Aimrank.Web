@@ -10,6 +10,7 @@
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.2" />
       <PackageReference Include="Quartz" Version="3.2.4" />
+      <PackageReference Include="StackExchange.Redis" Version="2.2.4" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,8 +1,8 @@
 using Aimrank.Common.Application.Exceptions;
 
-namespace Aimrank.Application.CSGO
+namespace Aimrank.Infrastructure.Application.CSGO
 {
-    public class ServerProcessStartException : ApplicationException
+    internal class ServerProcessStartException : ApplicationException
     {
         public override string Code => "csgo_server_start_failed";
         

@@ -1,9 +1,9 @@
 using Aimrank.Application.CSGO.Commands.FinishMatch;
+using Aimrank.Application.CSGO.Commands.StartMatch;
 using Aimrank.Application.CSGO;
 using Aimrank.Infrastructure.Application.CSGO;
 using System.Text.Json;
 using System;
-using Aimrank.Application.CSGO.Commands.StartMatch;
 using Xunit;
 
 namespace Aimrank.IntegrationTests.Infrastructure
@@ -16,16 +16,16 @@ namespace Aimrank.IntegrationTests.Infrastructure
         public void ServerEventMapper_Creates_Command_If_Event_Name_Is_Tracked()
         {
             // Arrange
-            var serverId = Guid.NewGuid();
+            var matchId = Guid.NewGuid();
             var serverEventName = "match_end";
             var serverEventData = CreateServerEvent();
             
             // Act
-            var command = _serverEventMapper.Map(serverId, serverEventName, serverEventData) as FinishMatchCommand;
+            var command = _serverEventMapper.Map(matchId, serverEventName, serverEventData) as FinishMatchCommand;
             
             // Assert
             Assert.NotNull(command);
-            Assert.Equal(serverId, command.ServerId);
+            Assert.Equal(matchId, command.MatchId);
             Assert.Equal(8, command.TeamTerrorists.Score);
             Assert.Equal(0, command.TeamCounterTerrorists.Score);
         }
@@ -34,11 +34,11 @@ namespace Aimrank.IntegrationTests.Infrastructure
         public void ServerEventMapper_Returns_Null_If_Event_Name_Is_Not_Tracked()
         {
             // Arrange
-            var serverId = Guid.NewGuid();
+            var matchId = Guid.NewGuid();
             var serverEventName = "test";
             
             // Act
-            var command = _serverEventMapper.Map(serverId, serverEventName, null);
+            var command = _serverEventMapper.Map(matchId, serverEventName, null);
             
             // Assert
             Assert.Null(command);
@@ -48,15 +48,15 @@ namespace Aimrank.IntegrationTests.Infrastructure
         public void ServerEventMapper_Creates_Command_If_Event_Data_Is_Null()
         {
             // Arrange
-            var serverId = Guid.NewGuid();
+            var matchId = Guid.NewGuid();
             var serverEventName = "map_start";
             
             // Act
-            var command = _serverEventMapper.Map(serverId, serverEventName, null) as StartMatchCommand;
+            var command = _serverEventMapper.Map(matchId, serverEventName, null) as StartMatchCommand;
             
             // Assert
             Assert.NotNull(command);
-            Assert.Equal(serverId, command.ServerId);
+            Assert.Equal(matchId, command.MatchId);
         }
 
         private static dynamic CreateServerEvent()

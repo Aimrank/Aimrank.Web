@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from "vue-router";
-import Matches from "../views/Matches";
+import Matches from "@/match/views/Matches";
 
 export const routes: RouteRecordRaw[] = [
   {

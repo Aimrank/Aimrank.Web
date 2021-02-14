@@ -1,21 +1,24 @@
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { useUser } from "@/modules/user";
-import { useNotifications } from "@/modules/common/hooks/useNotifications";
-import { useLobby } from "../../hooks/useLobby";
-import { lobbyHub, lobbyService, matchService } from "@/services";
-import BaseButton from "@/modules/common/components/BaseButton";
-import InvitationForm from "../../components/InvitationForm";
-import MapButton from "../../components/MapButton";
+import { lobbyHub, lobbyService, matchService } from "~/services";
+import { useUser } from "@/user/hooks/useUser";
+import { useMatch } from "@/match/hooks/useMatch";
+import { useLobby } from "@/lobby/hooks/useLobby";
+import { useNotifications } from "@/common/hooks/useNotifications";
+import { MatchStatus } from "@/match/services/MatchService";
+import BaseButton from "@/common/components/BaseButton";
+import InvitationForm from "@/lobby/components/InvitationForm";
+import MapButton from "@/lobby/components/MapButton";
 
 const maps = {
-  aim_map: require("@/assets/images/aim_map.jpg").default,
-  am_redline_14: require("@/assets/images/am_redline_14.jpg").default
+  aim_map: require("~/assets/images/aim_map.jpg").default,
+  am_redline_14: require("~/assets/images/am_redline_14.jpg").default
 };
 
 const useLobbyView = () => {
   const user = useUser();
   const lobby = useLobby();
+  const match = useMatch();
 
   const currentUserMembership = computed(() => lobby.state.lobby?.members.find(m => m.userId === user.state.user?.id));
 
@@ -34,13 +37,14 @@ const useLobbyView = () => {
       const matchResult = await matchService.getByLobbyId(result.value.id);
 
       if (matchResult.isOk() && matchResult.value) {
-        lobby.setMatch(matchResult.value);
+        match.setMatch(matchResult.value);
       }
     }
   });
 
   return {
     lobby,
+    match,
     currentUserMembership,
   };
 }
@@ -52,7 +56,7 @@ const Lobby = defineComponent({
     MapButton
   },
   setup() {
-    const { lobby, currentUserMembership } = useLobbyView();
+    const { lobby, match, currentUserMembership } = useLobbyView();
 
     const router = useRouter();
     const notifications = useNotifications();
@@ -97,7 +101,7 @@ const Lobby = defineComponent({
       if (result.isOk()) {
         lobbyHub.disconnect();
         lobby.clearLobby();
-        lobby.clearMatch();
+        match.clearMatch();
 
         router.push({ name: "home" });
       } else {
@@ -123,12 +127,13 @@ const Lobby = defineComponent({
     return {
       maps,
       lobby: computed(() => lobby.state.lobby),
-      match: computed(() => lobby.state.match),
+      match: computed(() => match.state.match),
       currentUserMembership,
       onStartSearchingClick,
       onLeaveLobbyClick,
       onCreateLobbyClick,
-      onChangeMapClick
+      onChangeMapClick,
+      MatchStatus: Object.freeze(MatchStatus)
     };
   }
 });

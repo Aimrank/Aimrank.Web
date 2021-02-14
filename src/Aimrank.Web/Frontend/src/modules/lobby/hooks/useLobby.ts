@@ -1,22 +1,15 @@
 import { computed, reactive, readonly } from "vue";
-import { IMatchDto } from "@/modules/match/services/MatchService";
-import { ILobbyConfiguration, ILobbyDto, ILobbyMember, LobbyStatus } from "../services/LobbyService";
+import { ILobbyConfiguration, ILobbyDto, ILobbyMember, LobbyStatus } from "@/lobby/services/LobbyService";
 
 interface ILobbyState {
   lobby: ILobbyDto | null;
-  match: IMatchDto | null;
 }
 
 const state = reactive<ILobbyState>({
-  lobby: null,
-  match: null
+  lobby: null
 });
 
 export const useLobby = () => {
-  const setMatch = (match: IMatchDto | null) => {
-    state.match = match;
-  }
-
   const setLobby = (lobby: ILobbyDto | null) => {
     state.lobby = lobby;
   }
@@ -65,23 +58,17 @@ export const useLobby = () => {
     state.lobby = null;
   }
 
-  const clearMatch = () => {
-    state.match = null;
-  }
-
   const isAvailable = computed(() => state.lobby !== null);
 
   return {
     state: readonly(state),
     isAvailable,
-    setMatch,
     setLobby,
     setLobbyStatus,
     setLobbyConfiguration,
     addMember,
     removeMember,
     changeMemberRole,
-    clearLobby,
-    clearMatch
+    clearLobby
   };
 }

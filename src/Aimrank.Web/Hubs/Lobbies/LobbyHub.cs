@@ -1,8 +1,9 @@
 using Aimrank.Application.Contracts;
 using Aimrank.Application.Queries.GetLobbyForUser;
 using Aimrank.IntegrationEvents.Lobbies;
-using Aimrank.IntegrationEvents;
+using Aimrank.IntegrationEvents.Matches;
 using Aimrank.Web.Attributes;
+using Aimrank.Web.Hubs.Lobbies.Messages;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using System;
@@ -12,7 +13,10 @@ namespace Aimrank.Web.Hubs.Lobbies
     public interface ILobbyClient
     {
         Task Disconnect();
+        Task MatchAccepted(MatchAcceptedEvent @event);
+        Task MatchReady(MatchReadyEventMessage @event);
         Task MatchStarting(MatchStartingEvent @event);
+        Task MatchTimedOut(MatchTimedOutEvent @event);
         Task MatchStarted(MatchStartedEvent @event);
         Task MatchFinished(MatchFinishedEvent @event);
         Task InvitationAccepted(InvitationAcceptedEvent @event);

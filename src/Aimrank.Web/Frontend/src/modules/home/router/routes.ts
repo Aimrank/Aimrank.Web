@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from "vue-router";
-import Home from "../views/Home";
+import Home from "@/home/views/Home";
 
 export const routes: RouteRecordRaw[] = [
   {

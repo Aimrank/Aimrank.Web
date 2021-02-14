@@ -1,6 +1,6 @@
 import { computed, defineComponent } from "vue";
 import { v4 as uuid } from "uuid";
-import FormFieldErrors from "../FormFieldErrors";
+import FormFieldErrors from "@/common/components/FormFieldErrors";
 
 const FormFieldInput = defineComponent({
   inheritAttrs: false,

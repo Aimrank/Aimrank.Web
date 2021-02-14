@@ -1,3 +1,4 @@
+using Aimrank.Application.Commands.Matches.AcceptMatch;
 using Aimrank.Application.Contracts;
 using Aimrank.Application.Queries.GetMatchesHistory;
 using Aimrank.Web.Attributes;
@@ -25,6 +26,13 @@ namespace Aimrank.Web.Controllers
         {
             var result = await _aimrankModule.ExecuteQueryAsync(new GetMatchesHistoryQuery(userId));
             return Ok(result);
+        }
+
+        [HttpPost("{id}/accept")]
+        public async Task<IActionResult> Accept(Guid id)
+        {
+            await _aimrankModule.ExecuteCommandAsync(new AcceptMatchCommand(id));
+            return Ok();
         }
     }
 }

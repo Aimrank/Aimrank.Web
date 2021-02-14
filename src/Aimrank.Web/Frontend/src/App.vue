@@ -1,18 +1,22 @@
 <template>
   <div>
     <main-header />
+    <match-dialog />
     <notifications-list />
     <router-view />
+    <div id="dialogs" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import MainHeader from "@/modules/common/components/MainHeader";
-import NotificationsList from "@/modules/common/components/NotificationsList";
+import MatchDialog from "@/match/components/MatchDialog";
+import MainHeader from "@/common/components/MainHeader";
+import NotificationsList from "@/common/components/NotificationsList";
 
 export default defineComponent({
   components: {
+    MatchDialog,
     MainHeader,
     NotificationsList
   }
@@ -20,7 +24,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@use "@/styles/variables/fonts" as fonts;
+@use "~/styles/variables/fonts" as fonts;
 
 * {
   margin: 0;

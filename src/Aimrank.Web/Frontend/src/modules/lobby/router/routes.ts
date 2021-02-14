@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from "vue-router";
-import Invitations from "../views/Invitations";
-import Lobby from "../views/Lobby";
+import Invitations from "@/lobby/views/Invitations";
+import Lobby from "@/lobby/views/Lobby";
 
 export const routes: RouteRecordRaw[] = [
   {

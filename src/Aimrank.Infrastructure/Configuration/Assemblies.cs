@@ -1,6 +1,6 @@
 using Aimrank.Application.Contracts;
 using Aimrank.Domain.Matches;
-using Aimrank.IntegrationEvents;
+using Aimrank.IntegrationEvents.Matches;
 using System.Reflection;
 
 namespace Aimrank.Infrastructure.Configuration

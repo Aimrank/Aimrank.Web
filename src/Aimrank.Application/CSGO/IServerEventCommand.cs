@@ -5,6 +5,6 @@ namespace Aimrank.Application.CSGO
 {
     public interface IServerEventCommand : ICommand
     {
-        Guid ServerId { get; set; }
+        Guid MatchId { get; set; }
     }
 }

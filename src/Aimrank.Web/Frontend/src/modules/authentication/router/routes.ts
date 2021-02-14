@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from "vue-router";
-import SignIn from "../views/SignIn";
-import SignUp from "../views/SignUp";
+import SignIn from "@/authentication/views/SignIn";
+import SignUp from "@/authentication/views/SignUp";
 
 export const routes: RouteRecordRaw[] = [
   {

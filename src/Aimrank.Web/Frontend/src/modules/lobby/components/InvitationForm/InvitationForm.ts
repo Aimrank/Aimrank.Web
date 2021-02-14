@@ -1,11 +1,11 @@
 import { defineComponent, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { lobbyService, userService } from "@/services";
-import { useNotifications } from "@/modules/common/hooks/useNotifications";
-import { IUserDetailsDto } from "@/modules/user/services/UserService";
-import { debounce } from "@/modules/common/utilities/debounce";
-import FormFieldInput from "@/modules/common/components/FormFieldInput";
-import Icon from "@/modules/common/components/Icon";
+import { lobbyService, userService } from "~/services";
+import { useNotifications } from "@/common/hooks/useNotifications";
+import { IUserDetailsDto } from "@/user/services/UserService";
+import { debounce } from "@/common/utilities/debounce";
+import FormFieldInput from "@/common/components/FormFieldInput";
+import Icon from "@/common/components/Icon";
 
 const InvitationForm = defineComponent({
   components: {

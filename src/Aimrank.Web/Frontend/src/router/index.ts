@@ -1,12 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import { routes as home } from "@/modules/home";
-import { routes as authentication, authenticate } from "@/modules/authentication";
-import { routes as user } from "@/modules/user";
-import { routes as lobby } from "@/modules/lobby";
-import { routes as match } from "@/modules/match";
+import { authenticate } from "@/authentication/router/authenticationGuard";
 
-import AppAuthenticated from "@/AppAuthenticated.vue";
+import { routes as authentication } from "@/authentication/router/routes";
+import { routes as home } from "@/home/router/routes";
+import { routes as user } from "@/user/router/routes";
+import { routes as lobby } from "@/lobby/router/routes";
+import { routes as match } from "@/match/router/routes";
+
+import AppAuthenticated from "~/AppAuthenticated.vue";
 
 export const router = createRouter({
   history: createWebHistory(),

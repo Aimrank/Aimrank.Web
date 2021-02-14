@@ -1,5 +1,7 @@
 using Aimrank.Application.CSGO;
+using Aimrank.Application.Services;
 using Aimrank.Infrastructure.Application.CSGO;
+using Aimrank.Infrastructure.Application.Services.Matches;
 using Autofac;
 
 namespace Aimrank.Infrastructure.Configuration.CSGO
@@ -18,6 +20,7 @@ namespace Aimrank.Infrastructure.Configuration.CSGO
             builder.RegisterType<ServerProcessManager>().As<IServerProcessManager>().SingleInstance();
             builder.RegisterType<ServerEventMapper>().As<IServerEventMapper>().SingleInstance();
             builder.RegisterInstance(_csgoSettings).SingleInstance();
+            builder.RegisterType<MatchService>().As<IMatchService>().InstancePerLifetimeScope();
         }
     }
 }

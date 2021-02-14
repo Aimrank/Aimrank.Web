@@ -11,11 +11,15 @@ services:
       - ../container_data:/home/steam/csgo
     depends_on:
       - db
+      - redis
 
   db:
     image: mcr.microsoft.com/mssql/server
     volumes:
       - mssql_data:/var/opt/mssql
+
+  redis:
+    image: redis:6.0.10-alpine
 
 volumes:
   mssql_data:

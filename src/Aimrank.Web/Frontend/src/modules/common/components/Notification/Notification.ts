@@ -1,6 +1,6 @@
 import { defineComponent } from "vue";
-import { INotification, NotificationColor } from "@/modules/common/hooks/useNotifications";
-import Icon from "@/modules/common/components/Icon";
+import { INotification, NotificationColor } from "@/common/hooks/useNotifications";
+import Icon from "@/common/components/Icon";
 
 const Notification = defineComponent({
   emits: ["close"],

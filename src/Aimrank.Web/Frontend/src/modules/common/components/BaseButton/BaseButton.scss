@@ -1,5 +1,5 @@
-@use "@/styles/variables/fonts";
-@use "@/styles/variables/colors";
+@use "~/styles/variables/fonts";
+@use "~/styles/variables/colors";
 
 .button {
   --color-background-hover: #{colors.$lightGray};

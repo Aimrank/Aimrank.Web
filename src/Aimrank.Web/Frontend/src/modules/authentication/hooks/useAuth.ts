@@ -1,8 +1,8 @@
 import { reactive, readonly } from "vue";
-import { authService, httpClient } from "@/services";
-import { router } from "@/router";
-import { useUser } from "@/modules/user";
-import { ISignInRequest, ISignUpRequest } from "../services/AuthService";
+import { authService, httpClient } from "~/services";
+import { router } from "~/router";
+import { useUser } from "@/user/hooks/useUser";
+import { ISignInRequest, ISignUpRequest } from "@/authentication/services/AuthService";
 
 interface IAuthState {
   isAuthenticated: boolean;

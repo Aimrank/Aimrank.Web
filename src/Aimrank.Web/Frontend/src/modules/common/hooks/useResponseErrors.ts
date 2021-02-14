@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import { ErrorResponse, IFieldErrors } from "../models/ErrorResponse";
+import { ErrorResponse, IFieldErrors } from "@/common/models/ErrorResponse";
 
 interface IResponseErrorsState {
   errorMessage: string;

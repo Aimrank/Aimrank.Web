@@ -137,6 +137,13 @@ namespace Aimrank.Domain.Lobbies
             ChangeStatus(LobbyStatus.Searching);
         }
 
+        public void RestoreSearching()
+        {
+            if (Status != LobbyStatus.Closed) return;
+            
+            ChangeStatus(LobbyStatus.Searching);
+        }
+
         public void CancelSearching(UserId userId)
         {
             BusinessRules.Check(new UserMustBeLobbyLeaderRule(this, userId));

@@ -1,8 +1,23 @@
+export interface IMatchReadyEvent {
+  matchId: string;
+  map: string;
+  expiresAt: string;
+  lobbies: string[];
+}
+
+export interface IMatchAcceptedEvent {
+  matchId: string;
+  userId: string;
+  lobbies: string[];
+}
+
+export interface IMatchTimedOutEvent {
+  matchId: string;
+  lobbies: string[];
+}
+
 export interface IMatchStartingEvent {
   matchId: string;
-  address: string;
-  map: string;
-  players: string[];
   lobbies: string[];
 }
 
@@ -10,6 +25,7 @@ export interface IMatchStartedEvent {
   matchId: string;
   address: string;
   map: string;
+  mode: number;
   players: string[];
   lobbies: string[];
 }

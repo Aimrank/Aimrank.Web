@@ -18,6 +18,8 @@ namespace Aimrank.Infrastructure.Application.CSGO
         
         private readonly ConcurrentDictionary<Guid, ServerProcess> _processes = new();
 
+        private readonly ConcurrentDictionary<Guid, ServerReservation> _reservations = new();
+
         private readonly CSGOSettings _csgoSettings;
 
         public ServerProcessManager(CSGOSettings csgoSettings)
@@ -29,61 +31,81 @@ namespace Aimrank.Infrastructure.Application.CSGO
             _availablePorts.Enqueue(27019);
         }
 
-        public string StartServer(Guid serverId, string map, IEnumerable<string> whitelist)
+        public void CreateReservation(Guid matchId)
         {
             lock (_locker)
             {
-                if (_processes.ContainsKey(serverId))
+                if (_processes.ContainsKey(matchId))
                 {
-                    throw new ServerProcessStartException();
+                    throw new ServerReservationException();
                 }
 
-                if (_availablePorts.TryDequeue(out var port))
+                if (!_availablePorts.TryDequeue(out var port))
                 {
-                    var steamKey =
-                        _csgoSettings.SteamKeys.FirstOrDefault(k =>
-                            _processes.Values.All(p => p.Configuration.Token != k));
+                    throw new ServerReservationException();
+                }
+                
+                var steamKey = GetUnusedSteamKey();
 
-                    if (steamKey is null)
-                    {
-                        throw new ServerProcessStartException();
-                    }
-                    
-                    var process = new ServerProcess(serverId, new ServerConfiguration(steamKey, port, whitelist.ToList(), map));
+                var reservation = new ServerReservation(matchId, steamKey, port);
 
-                    if (_processes.TryAdd(serverId, process))
+                _reservations.TryAdd(reservation.MatchId, reservation);
+            }
+        }
+
+        public void DeleteReservation(Guid reservationId)
+        {
+            lock (_locker)
+            {
+                if (_reservations.TryRemove(reservationId, out var reservation))
+                {
+                    _availablePorts.Enqueue(reservation.Port);
+                }
+            }
+        }
+
+        public string StartServer(Guid matchId, string map, IEnumerable<string> whitelist)
+        {
+            lock (_locker)
+            {
+                if (_reservations.TryRemove(matchId, out var reservation))
+                {
+                    var process = new ServerProcess(reservation.MatchId, new ServerConfiguration(
+                        reservation.SteamKey, reservation.Port, whitelist.ToList(), map));
+
+                    if (_processes.TryAdd(reservation.MatchId, process))
                     {
                         process.Start();
 
-                        return $"{GetLocalIpAddress()}:{port}";
+                        return $"{GetLocalIpAddress()}:{reservation.Port}";
                     }
                 }
-                
+
                 throw new ServerProcessStartException();
             }
         }
 
-        public void StopServer(Guid serverId)
+        public void StopServer(Guid matchId)
         {
-            if (_processes.TryRemove(serverId, out var process))
+            if (_processes.TryRemove(matchId, out var process))
             {
                 Task.Run(async () =>
                 {
                     await Task.Delay(TimeSpan.FromSeconds(20));
                     await process.StopAsync();
                     process.Dispose();
-                    _availablePorts.Enqueue(process.Configuration.Port);
+                    
+                    lock (_locker)
+                    {
+                        _availablePorts.Enqueue(process.Configuration.Port);
+                    }
                 });
-                
-                return;
             }
-
-            throw new ServerProcessStopException();
         }
 
-        public async Task ExecuteCommandAsync(Guid serverId, string command)
+        public async Task ExecuteCommandAsync(Guid matchId, string command)
         {
-            if (_processes.TryGetValue(serverId, out var process))
+            if (_processes.TryGetValue(matchId, out var process))
             {
                 await process.ExecuteAsync(command);
             }
@@ -95,6 +117,21 @@ namespace Aimrank.Infrastructure.Application.CSGO
             {
                 process.Dispose();
             }
+        }
+        
+        private string GetUnusedSteamKey()
+        {
+            var steamKey =
+                _csgoSettings.SteamKeys.FirstOrDefault(k =>
+                    _processes.Values.All(p => p.Configuration.SteamKey != k) &&
+                    _reservations.Values.All(r => r.SteamKey != k));
+
+            if (steamKey is null)
+            {
+                throw new ServerReservationException();
+            }
+
+            return steamKey;
         }
 
         private static string GetLocalIpAddress()

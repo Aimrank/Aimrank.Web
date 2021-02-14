@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System;
 
-namespace Aimrank.IntegrationEvents
+namespace Aimrank.IntegrationEvents.Matches
 {
     public class MatchStartedEvent : IntegrationEventBase
     {
         public Guid MatchId { get; }
         public string Map { get; }
         public string Address { get; }
+        public int Mode { get; }
         public IEnumerable<Guid> Players { get; }
         public IEnumerable<Guid> Lobbies { get; }
 
@@ -15,6 +16,7 @@ namespace Aimrank.IntegrationEvents
             Guid matchId,
             string map,
             string address,
+            int mode,
             IEnumerable<Guid> players,
             IEnumerable<Guid> lobbies)
         {
@@ -23,6 +25,7 @@ namespace Aimrank.IntegrationEvents
             Address = address;
             Players = players;
             Lobbies = lobbies;
+            Mode = mode;
         }
     }
 }

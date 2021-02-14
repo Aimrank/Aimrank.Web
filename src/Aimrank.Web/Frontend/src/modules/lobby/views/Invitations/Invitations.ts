@@ -1,9 +1,9 @@
 import { defineComponent, onMounted, toRef } from "vue";
 import { useRouter } from "vue-router";
-import { useNotifications } from "@/modules/common/hooks/useNotifications";
-import { lobbyHub, lobbyService } from "@/services";
-import { useInvitations } from "../../hooks/useInvitations";
-import BaseButton from "@/modules/common/components/BaseButton";
+import { lobbyHub, lobbyService } from "~/services";
+import { useNotifications } from "@/common/hooks/useNotifications";
+import { useInvitations } from "@/lobby/hooks/useInvitations";
+import BaseButton from "@/common/components/BaseButton";
 
 const Invitations = defineComponent({
   components: {

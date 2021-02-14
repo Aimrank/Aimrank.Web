@@ -1,12 +1,12 @@
 ﻿using Aimrank.Common.Application.Events;
-using Aimrank.IntegrationEvents;
+using Aimrank.IntegrationEvents.Matches;
 using Aimrank.Web.Hubs.Lobbies;
 using Microsoft.AspNetCore.SignalR;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Web.Events.Handlers
+namespace Aimrank.Web.Events.Handlers.Matches
 {
     public class MatchStartingEventHandler : IIntegrationEventHandler<MatchStartingEvent>
     {
