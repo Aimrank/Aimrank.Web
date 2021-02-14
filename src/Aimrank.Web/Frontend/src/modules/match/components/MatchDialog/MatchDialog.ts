@@ -1,7 +1,9 @@
-import { computed, defineComponent, onBeforeUnmount, ref, watch } from "vue";
+import { computed, defineComponent, watch } from "vue";
 import { matchService } from "@/services";
 import { useMatch } from "../../hooks/useMatch";
+import { useUser } from "@/modules/user";
 import { MatchMode } from "../../services/MatchService";
+import { useExpirationTime } from "./helpers/useExpirationTime";
 import BaseButton from "@/modules/common/components/BaseButton";
 import BaseDialog from "@/modules/common/components/BaseDialog";
 import Icon from "@/modules/common/components/Icon";
@@ -13,18 +15,20 @@ const MatchDialog = defineComponent({
     Icon
   },
   setup() {
-    const { state, isDialogVisible } = useMatch();
+    const { state: userState } = useUser();
+
+    const { state: matchState, isDialogVisible } = useMatch();
 
     const { time, start } = useExpirationTime();
 
     const onAcceptClick = async () => {
-      if (state.match) {
-        await matchService.accept(state.match?.id);
+      if (matchState.match) {
+        await matchService.accept(matchState.match?.id);
       }
     }
 
     const totalAcceptationsNeeded = computed(() => {
-      if (!state.match) {
+      if (!matchState.match) {
         return 0;
       }
 
@@ -33,16 +37,18 @@ const MatchDialog = defineComponent({
         [MatchMode.TwoVsTwo]: 4
       };
 
-      return map[state.match.mode];
+      return map[matchState.match.mode];
     });
 
-    const totalAcceptations = computed(() => state.acceptations);
+    const totalAcceptations = computed(() => matchState.acceptations.length);
+
+    const isAcceptedByUser = computed(() => matchState.acceptations.includes(userState.user!.id));
 
     watch(
       () => isDialogVisible.value,
       () => {
         if (isDialogVisible.value) {
-          start(state.match!.expiresAt!);
+          start(matchState.match!.expiresAt!);
         }
       }
     );
@@ -52,47 +58,10 @@ const MatchDialog = defineComponent({
       totalAcceptationsNeeded,
       totalAcceptations,
       isDialogVisible,
+      isAcceptedByUser,
       onAcceptClick
     };
   }
 });
-
-const useExpirationTime = () => {
-  const time = ref(0);
-
-  let interval: any;
-
-  const getTimeDifference = (t1: string, t2: string) => {
-    const a = new Date(t1).getTime();
-    const b = new Date(t2).getTime();
-
-    return Math.round((a - b) / 1000);
-  }
-
-  onBeforeUnmount(() => clearInterval(interval));
-
-  const start = (expiresAt: string) => {
-    if (interval) {
-      clearInterval(interval);
-    }
-
-    time.value = getTimeDifference(expiresAt, new Date().toUTCString());
-
-    interval = setInterval(
-      () => {
-        time.value = getTimeDifference(expiresAt, new Date().toUTCString());
-
-        if (time.value <= 0) {
-          time.value = 0;
-
-          clearInterval(interval);
-        }
-      },
-      1000
-    );
-  }
-
-  return { time, start };
-}
 
 export default MatchDialog;

@@ -35,6 +35,7 @@
             >
               <slot name="header" />
               <icon
+                v-if="!hideCloseIcon"
                 :class="$style.headerCloseButton"
                 name="times"
                 @click="onCloseClick"

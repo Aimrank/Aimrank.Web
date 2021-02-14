@@ -12,12 +12,12 @@ interface IMatch {
 
 interface IMatchState {
   match: IMatch | null;
-  acceptations: number;
+  acceptations: string[];
 }
 
 const state = reactive<IMatchState>({
   match: null,
-  acceptations: 0
+  acceptations: []
 });
 
 export const useMatch = () => {
@@ -31,13 +31,13 @@ export const useMatch = () => {
     }
   }
 
-  const incrementAcceptations = () => {
-    state.acceptations++;
+  const addAcceptation = (userId: string) => {
+    state.acceptations = [ ...state.acceptations, userId ];
   }
 
   const clearMatch = () => {
     state.match = null;
-    state.acceptations = 0;
+    state.acceptations = []
   }
 
   const isDialogVisible = computed(() => state.match?.status === MatchStatus.Ready);
@@ -47,7 +47,7 @@ export const useMatch = () => {
     isDialogVisible,
     setMatch,
     setMatchStatus,
-    incrementAcceptations,
+    addAcceptation,
     clearMatch
   };
 }

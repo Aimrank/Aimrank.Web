@@ -2,7 +2,7 @@
 <style src="./MatchDialog.scss" lang="scss" module></style>
 
 <template>
-  <base-dialog :visible="isDialogVisible">
+  <base-dialog :visible="isDialogVisible" hide-close-icon>
     <template #header>
       {{ $t("match.components.MatchDialog.header") }}
     </template>
@@ -20,12 +20,16 @@
       </div>
     </div>
     <template #footer>
-      <base-button
-        primary
-        @click="onAcceptClick"
-      >
-        {{ $t("match.components.MatchDialog.submit") }}
-      </base-button>
+      <div :class="$style.footer">
+        <base-button
+          primary
+          :loading="isAcceptedByUser && totalAcceptations === totalAcceptationsNeeded"
+          :disabled="isAcceptedByUser && totalAcceptations < totalAcceptationsNeeded"
+          @click="onAcceptClick"
+        >
+          {{ $t("match.components.MatchDialog.submit") }}
+        </base-button>
+      </div>
     </template>
   </base-dialog>
 </template>

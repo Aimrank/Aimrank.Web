@@ -12,7 +12,8 @@ const BaseDialog = defineComponent({
     },
     width: Number,
     minWidth: Number,
-    maxWidth: Number
+    maxWidth: Number,
+    hideCloseIcon: Boolean
   },
   setup(props, { emit }) {
     const container = ref<HTMLElement | null>(null);

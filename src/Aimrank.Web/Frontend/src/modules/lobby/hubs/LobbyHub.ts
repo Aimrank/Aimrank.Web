@@ -96,7 +96,7 @@ export class LobbyHub {
   }
 
   private onMatchAccepted(event: IMatchAcceptedEvent) {
-    this.match.incrementAcceptations();
+    this.match.addAcceptation(event.userId);
   }
 
   private onMatchTimedOut(event: IMatchTimedOutEvent) {
