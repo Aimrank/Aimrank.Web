@@ -1,6 +1,6 @@
-@use "@/styles/mixins";
-@use "@/styles/variables/fonts";
-@use "@/styles/variables/colors";
+@use "~/styles/mixins";
+@use "~/styles/variables/fonts";
+@use "~/styles/variables/colors";
 
 .teleport {
   display: none;

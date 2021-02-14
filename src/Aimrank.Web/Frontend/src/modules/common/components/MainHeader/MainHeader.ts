@@ -1,7 +1,7 @@
 import { defineComponent } from "vue";
-import { useAuth } from "@/modules/authentication";
-import { useUser } from "@/modules/user";
-import BaseButton from "@/modules/common/components/BaseButton";
+import { useAuth } from "@/authentication/hooks/useAuth";
+import { useUser } from "@/user/hooks/useUser";
+import BaseButton from "@/common/components/BaseButton";
 
 const MainHeader = defineComponent({
   components: {

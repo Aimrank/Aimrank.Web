@@ -1,15 +1,15 @@
-import { API_URL } from "@/constants";
+import { API_URL } from "~/constants";
 
-import { HttpClient } from "@/modules/common/services/HttpClient";
-import { UserService } from "@/modules/user/services/UserService";
-import { AuthService } from "@/modules/authentication/services/AuthService";
-import { SteamService } from "@/modules/user/services/SteamService";
-import { LobbyService } from "@/modules/lobby/services/LobbyService";
-import { MatchService } from "@/modules/match/services/MatchService";
+import { HttpClient } from "@/common/services/HttpClient";
+import { UserService } from "@/user/services/UserService";
+import { AuthService } from "@/authentication/services/AuthService";
+import { SteamService } from "@/user/services/SteamService";
+import { LobbyService } from "@/lobby/services/LobbyService";
+import { MatchService } from "@/match/services/MatchService";
 
-import { Hub } from "@/modules/common/hubs/Hub";
-import { GeneralHub } from "@/modules/common/hubs/GeneralHub";
-import { LobbyHub } from "@/modules/lobby/hubs/LobbyHub";
+import { Hub } from "@/common/hubs/Hub";
+import { GeneralHub } from "@/common/hubs/GeneralHub";
+import { LobbyHub } from "@/lobby/hubs/LobbyHub";
 
 export const httpClient = new HttpClient({
   baseUrl: API_URL,

@@ -1,6 +1,6 @@
-import { userService } from "@/services";
 import { reactive, readonly } from "vue";
-import { IUser } from "../models/IUser";
+import { userService } from "~/services";
+import { IUser } from "@/user/models/IUser";
 
 interface IUserState {
   user: IUser | null;

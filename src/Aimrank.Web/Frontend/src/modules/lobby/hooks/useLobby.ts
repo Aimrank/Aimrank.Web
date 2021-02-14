@@ -1,5 +1,5 @@
 import { computed, reactive, readonly } from "vue";
-import { ILobbyConfiguration, ILobbyDto, ILobbyMember, LobbyStatus } from "../services/LobbyService";
+import { ILobbyConfiguration, ILobbyDto, ILobbyMember, LobbyStatus } from "@/lobby/services/LobbyService";
 
 interface ILobbyState {
   lobby: ILobbyDto | null;

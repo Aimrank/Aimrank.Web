@@ -1,7 +1,7 @@
 import { defineComponent, ref, onMounted, computed } from "vue";
-import { matchService } from "@/services";
-import { useUser } from "@/modules/user";
-import { IMatchHistoryDto } from "../../services/MatchService";
+import { matchService } from "~/services";
+import { useUser } from "@/user/hooks/useUser";
+import { IMatchHistoryDto } from "@/match/services/MatchService";
 
 const getMatchResult = (match: IMatchHistoryDto, userId?: string) => {
   const p1 = match.teamTerrorists[0];

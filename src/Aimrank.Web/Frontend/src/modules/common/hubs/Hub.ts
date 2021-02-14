@@ -1,6 +1,6 @@
 
 import { HubConnection, HubConnectionBuilder, HubConnectionState } from "@microsoft/signalr";
-import { httpClient } from "@/services";
+import { httpClient } from "~/services";
 
 export class Hub {
   public readonly connection: HubConnection;

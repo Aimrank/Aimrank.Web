@@ -1,10 +1,10 @@
 import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { useAuth } from "@/modules/authentication";
-import { useResponseErrors } from "@/modules/common/hooks/useResponseErrors";
-import BaseButton from "@/modules/common/components/BaseButton";
-import FormFieldInput from "@/modules/common/components/FormFieldInput";
-import ValidationSummary from "@/modules/common/components/ValidationSummary";
+import { useAuth } from "@/authentication/hooks/useAuth";
+import { useResponseErrors } from "@/common/hooks/useResponseErrors";
+import BaseButton from "@/common/components/BaseButton";
+import FormFieldInput from "@/common/components/FormFieldInput";
+import ValidationSummary from "@/common/components/ValidationSummary";
 
 const SignUp = defineComponent({
   components: {

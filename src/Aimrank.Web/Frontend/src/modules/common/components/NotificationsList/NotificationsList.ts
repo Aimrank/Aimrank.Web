@@ -1,6 +1,6 @@
 import { defineComponent } from "vue";
-import { useNotifications } from "@/modules/common/hooks/useNotifications";
-import Notification from "@/modules/common/components/Notification";
+import { useNotifications } from "@/common/hooks/useNotifications";
+import Notification from "@/common/components/Notification";
 
 const NotificationsList = defineComponent({
   components: {

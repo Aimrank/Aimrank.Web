@@ -1,9 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import { router } from "@/router";
-import { parseJwt } from "@/modules/authentication/utilities/tokenParser";
-import { paramsSerializer } from "@/modules/common/utilities/paramsSerializer";
-import { useAuth } from "@/modules/authentication";
-import { useUser } from "@/modules/user";
+import { router } from "~/router";
+import { parseJwt } from "@/authentication/utilities/tokenParser";
+import { paramsSerializer } from "@/common/utilities/paramsSerializer";
+import { useAuth } from "@/authentication/hooks/useAuth";
+import { useUser } from "@/user/hooks/useUser";
 
 interface IHttpClientConfig {
   baseUrl?: string;

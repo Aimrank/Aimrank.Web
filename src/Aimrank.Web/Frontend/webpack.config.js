@@ -68,7 +68,8 @@ function createWebpackConfig(environment) {
     resolve: {
       extensions: [".ts", ".js", ".vue"],
       alias: {
-        "@": path.resolve(__dirname, "src")
+        "@": path.resolve(__dirname, "src", "modules"),
+        "~": path.resolve(__dirname, "src")
       }
     },
     plugins: [

@@ -1,8 +1,8 @@
-import { AsyncResult, Result } from "@/modules/common/models/Result";
-import { ErrorResponse } from "@/modules/common/models/ErrorResponse";
-import { HttpClient } from "@/modules/common/services/HttpClient";
-import { Service } from "@/modules/common/services/Service";
-import { httpClient } from "@/services";
+import { httpClient } from "~/services";
+import { AsyncResult, Result } from "@/common/models/Result";
+import { ErrorResponse } from "@/common/models/ErrorResponse";
+import { HttpClient } from "@/common/services/HttpClient";
+import { Service } from "@/common/services/Service";
 
 export class SteamService extends Service {
   constructor(private readonly httpClient: HttpClient) {

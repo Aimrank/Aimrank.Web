@@ -1,12 +1,12 @@
 import { computed, defineComponent, watch } from "vue";
-import { matchService } from "@/services";
-import { useMatch } from "../../hooks/useMatch";
-import { useUser } from "@/modules/user";
-import { MatchMode } from "../../services/MatchService";
+import { matchService } from "~/services";
+import { MatchMode } from "@/match/services/MatchService";
+import { useMatch } from "@/match/hooks/useMatch";
+import { useUser } from "@/user/hooks/useUser";
 import { useExpirationTime } from "./helpers/useExpirationTime";
-import BaseButton from "@/modules/common/components/BaseButton";
-import BaseDialog from "@/modules/common/components/BaseDialog";
-import Icon from "@/modules/common/components/Icon";
+import BaseButton from "@/common/components/BaseButton";
+import BaseDialog from "@/common/components/BaseDialog";
+import Icon from "@/common/components/Icon";
 
 const MatchDialog = defineComponent({
   components: {

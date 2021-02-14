@@ -1,18 +1,18 @@
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { useUser } from "@/modules/user";
-import { useNotifications } from "@/modules/common/hooks/useNotifications";
-import { useMatch } from "@/modules/match/hooks/useMatch";
-import { useLobby } from "../../hooks/useLobby";
-import { lobbyHub, lobbyService, matchService } from "@/services";
-import { MatchStatus } from "@/modules/match/services/MatchService";
-import BaseButton from "@/modules/common/components/BaseButton";
-import InvitationForm from "../../components/InvitationForm";
-import MapButton from "../../components/MapButton";
+import { lobbyHub, lobbyService, matchService } from "~/services";
+import { useUser } from "@/user/hooks/useUser";
+import { useMatch } from "@/match/hooks/useMatch";
+import { useLobby } from "@/lobby/hooks/useLobby";
+import { useNotifications } from "@/common/hooks/useNotifications";
+import { MatchStatus } from "@/match/services/MatchService";
+import BaseButton from "@/common/components/BaseButton";
+import InvitationForm from "@/lobby/components/InvitationForm";
+import MapButton from "@/lobby/components/MapButton";
 
 const maps = {
-  aim_map: require("@/assets/images/aim_map.jpg").default,
-  am_redline_14: require("@/assets/images/am_redline_14.jpg").default
+  aim_map: require("~/assets/images/aim_map.jpg").default,
+  am_redline_14: require("~/assets/images/am_redline_14.jpg").default
 };
 
 const useLobbyView = () => {

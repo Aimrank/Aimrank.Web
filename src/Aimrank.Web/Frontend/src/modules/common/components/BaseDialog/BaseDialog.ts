@@ -1,5 +1,5 @@
 import { defineComponent, reactive, watch, ref } from "vue";
-import Icon from "@/modules/common/components/Icon";
+import Icon from "@/common/components/Icon";
 
 const BaseDialog = defineComponent({
   components: {

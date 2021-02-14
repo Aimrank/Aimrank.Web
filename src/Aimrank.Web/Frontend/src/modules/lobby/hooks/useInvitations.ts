@@ -1,5 +1,5 @@
 import { reactive, readonly } from "vue";
-import { ILobbyInvitationDto } from "../services/LobbyService";
+import { ILobbyInvitationDto } from "@/lobby/services/LobbyService";
 
 interface IInvitationsState {
   invitations: ILobbyInvitationDto[];

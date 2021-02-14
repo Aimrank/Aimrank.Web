@@ -1,5 +1,5 @@
-import { HttpClient } from "@/modules/common/services/HttpClient";
-import { Service } from "@/modules/common/services/Service";
+import { HttpClient } from "@/common/services/HttpClient";
+import { Service } from "@/common/services/Service";
 
 export interface ISignUpRequest {
   email: string;

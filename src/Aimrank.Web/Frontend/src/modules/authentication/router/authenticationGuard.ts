@@ -1,5 +1,5 @@
 import { RouteLocationNormalized, NavigationGuardNext } from "vue-router";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "@/authentication/hooks/useAuth";
 
 export const authenticate = (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
   const { state } = useAuth();

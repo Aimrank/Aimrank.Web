@@ -1,10 +1,10 @@
 import { defineComponent, onMounted, ref } from "vue";
-import { useUser } from "@/modules/user";
-import { useNotifications } from "@/modules/common/hooks/useNotifications";
-import { useInitialState } from "@/modules/common/hooks/useInitialState";
-import { steamService, userService } from "@/services";
-import BaseButton from "@/modules/common/components/BaseButton";
-import Icon from "@/modules/common/components/Icon";
+import { steamService, userService } from "~/services";
+import { useUser } from "@/user/hooks/useUser";
+import { useNotifications } from "@/common/hooks/useNotifications";
+import { useInitialState } from "@/common/hooks/useInitialState";
+import BaseButton from "@/common/components/BaseButton";
+import Icon from "@/common/components/Icon";
 
 interface IUserDetails {
   userId: string;

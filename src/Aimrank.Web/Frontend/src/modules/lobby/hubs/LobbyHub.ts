@@ -1,10 +1,10 @@
-import { useNotifications } from "@/modules/common/hooks/useNotifications";
-import { Hub } from "@/modules/common/hubs/Hub";
-import { MatchStatus } from "@/modules/match/services/MatchService";
-import { LobbyStatus } from "../services/LobbyService";
-import { useUser } from "@/modules/user";
-import { useMatch } from "@/modules/match/hooks/useMatch";
-import { useLobby } from "../hooks/useLobby";
+import { Hub } from "@/common/hubs/Hub";
+import { MatchStatus } from "@/match/services/MatchService";
+import { LobbyStatus } from "@/lobby/services/LobbyService";
+import { useUser } from "@/user/hooks/useUser";
+import { useMatch } from "@/match/hooks/useMatch";
+import { useLobby } from "@/lobby/hooks/useLobby";
+import { useNotifications } from "@/common/hooks/useNotifications";
 import {
   IInvitationAcceptedEvent,
   // IInvitationCanceledEvent,
@@ -20,7 +20,7 @@ import {
   IMatchAcceptedEvent,
   IMatchTimedOutEvent,
 } from "./LobbyHubEvents";
-import { matchService, userService } from "@/services";
+import { userService } from "~/services";
 
 export class LobbyHub {
   private readonly user = useUser();

@@ -1,5 +1,5 @@
-import { AsyncResult, Result } from "@/modules/common/models/Result";
-import { ErrorResponse } from "@/modules/common/models/ErrorResponse";
+import { AsyncResult, Result } from "@/common/models/Result";
+import { ErrorResponse } from "@/common/models/ErrorResponse";
 
 interface IEndpoints {
   [name: string]: string;

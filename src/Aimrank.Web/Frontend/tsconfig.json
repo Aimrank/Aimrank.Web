@@ -9,7 +9,8 @@
     "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/modules/*"],
+      "~/*": ["src/*"]
     },
     "lib": [
       "esnext",
