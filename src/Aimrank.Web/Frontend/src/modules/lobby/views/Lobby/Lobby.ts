@@ -5,6 +5,7 @@ import { useNotifications } from "@/modules/common/hooks/useNotifications";
 import { useMatch } from "@/modules/match/hooks/useMatch";
 import { useLobby } from "../../hooks/useLobby";
 import { lobbyHub, lobbyService, matchService } from "@/services";
+import { MatchStatus } from "@/modules/match/services/MatchService";
 import BaseButton from "@/modules/common/components/BaseButton";
 import InvitationForm from "../../components/InvitationForm";
 import MapButton from "../../components/MapButton";
@@ -131,7 +132,8 @@ const Lobby = defineComponent({
       onStartSearchingClick,
       onLeaveLobbyClick,
       onCreateLobbyClick,
-      onChangeMapClick
+      onChangeMapClick,
+      MatchStatus: Object.freeze(MatchStatus)
     };
   }
 });

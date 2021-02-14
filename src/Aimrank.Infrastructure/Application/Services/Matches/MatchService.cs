@@ -6,12 +6,11 @@ using Aimrank.Domain.Users;
 using Aimrank.Infrastructure.Configuration.Redis;
 using Aimrank.IntegrationEvents.Matches;
 using StackExchange.Redis;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
 
-namespace Aimrank.Infrastructure.Application.Services
+namespace Aimrank.Infrastructure.Application.Services.Matches
 {
     internal class MatchService : IMatchService
     {
@@ -31,27 +30,15 @@ namespace Aimrank.Infrastructure.Application.Services
         
         public async Task AcceptMatchAsync(Match match, UserId userId)
         {
-            var key = $"acceptations:{match.Id}";
-                
-            var acceptations = await _database.GetJsonAsync<MatchAcceptations>(key);
-            if (acceptations is null)
-            {
-                acceptations = new MatchAcceptations();
-            }
+            var key = $"acceptations:{match.Id.Value}";
 
-            if (match.Players.All(p => p.UserId != userId))
-            {
-                throw new Exception("You cannot accept this match");
-            }
+            var acceptations = await _database.GetJsonAsync<MatchAcceptations>(key) ??
+                               new MatchAcceptations(match.Players.Select(p => p.UserId.Value),
+                                   Enumerable.Empty<Guid>());
 
-            acceptations.Users.Add(userId);
+            acceptations.Accept(userId);
 
-
-            if (acceptations.Users.Count != match.Players.Count())
-            {
-                await _database.SetJsonAsync(key, acceptations, TimeSpan.FromSeconds(10));
-            }
-            else
+            if (acceptations.IsAccepted())
             {
                 await _database.KeyDeleteAsync(key);
                 
@@ -60,13 +47,12 @@ namespace Aimrank.Infrastructure.Application.Services
                 
                 match.SetStarting(address);
             }
+            else
+            {
+                await _database.SetJsonAsync(key, acceptations, TimeSpan.FromSeconds(30));
+            }
 
             await _eventBus.Publish(new MatchAcceptedEvent(match.Id, userId, match.Lobbies.Select(l => l.LobbyId.Value)));
         }
-    }
-
-    public class MatchAcceptations
-    {
-        public HashSet<Guid> Users { get; init; } = new();
     }
 }

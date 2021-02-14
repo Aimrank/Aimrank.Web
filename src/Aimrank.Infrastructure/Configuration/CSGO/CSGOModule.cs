@@ -1,7 +1,7 @@
 using Aimrank.Application.CSGO;
 using Aimrank.Application.Services;
 using Aimrank.Infrastructure.Application.CSGO;
-using Aimrank.Infrastructure.Application.Services;
+using Aimrank.Infrastructure.Application.Services.Matches;
 using Autofac;
 
 namespace Aimrank.Infrastructure.Configuration.CSGO
