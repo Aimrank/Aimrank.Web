@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System;
 
 namespace Aimrank.Infrastructure.Application.Services.Matches
@@ -36,5 +37,7 @@ namespace Aimrank.Infrastructure.Application.Services.Matches
         }
 
         public bool IsAccepted() => _users.Count == _usersAccepted.Count;
+
+        public IEnumerable<Guid> GetPendingUsers() => _users.Except(_usersAccepted);
     }
 }

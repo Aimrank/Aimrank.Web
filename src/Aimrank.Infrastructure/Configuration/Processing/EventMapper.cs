@@ -18,7 +18,6 @@ namespace Aimrank.Infrastructure.Configuration.Processing
                 MatchStatusChangedDomainEvent e => e switch
                 {
                     {Match: {Status: MatchStatus.Ready}} => new MatchReadyEvent(e.Match.Id, e.Match.Map,
-                        DateTime.UtcNow.AddSeconds(30),
                         e.Match.Lobbies.Select(l => l.LobbyId.Value)),
                     {Match: {Status: MatchStatus.Starting}} => new MatchStartingEvent(e.Match.Id,
                         e.Match.Lobbies.Select(l => l.LobbyId.Value)),

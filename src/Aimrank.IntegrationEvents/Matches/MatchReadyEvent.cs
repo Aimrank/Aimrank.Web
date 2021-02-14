@@ -7,14 +7,12 @@ namespace Aimrank.IntegrationEvents.Matches
     {
         public Guid MatchId { get; }
         public string Map { get; }
-        public DateTime ExpiresAt { get; }
         public IEnumerable<Guid> Lobbies { get; }
 
-        public MatchReadyEvent(Guid matchId, string map, DateTime expiresAt, IEnumerable<Guid> lobbies)
+        public MatchReadyEvent(Guid matchId, string map, IEnumerable<Guid> lobbies)
         {
             MatchId = matchId;
             Map = map;
-            ExpiresAt = expiresAt;
             Lobbies = lobbies;
         }
     }

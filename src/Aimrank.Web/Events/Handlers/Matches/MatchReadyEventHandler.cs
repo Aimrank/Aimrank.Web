@@ -2,6 +2,7 @@ using Aimrank.Application.Commands.Matches.TimeoutReadyMatch;
 using Aimrank.Application.Contracts;
 using Aimrank.Common.Application.Events;
 using Aimrank.IntegrationEvents.Matches;
+using Aimrank.Web.Hubs.Lobbies.Messages;
 using Aimrank.Web.Hubs.Lobbies;
 using Microsoft.AspNetCore.SignalR;
 using System.Linq;
@@ -26,9 +27,7 @@ namespace Aimrank.Web.Events.Handlers.Matches
         {
             #pragma warning disable 4014
 
-            var timeout = (int) (@event.ExpiresAt - DateTime.UtcNow).TotalMilliseconds;
-
-            Task.Delay(timeout, cancellationToken)
+            Task.Delay(30000, cancellationToken)
                 .ContinueWith(async (task) =>
                 {
                     await _aimrankModule.ExecuteCommandAsync(new TimeoutReadyMatchCommand(@event.MatchId));
@@ -36,8 +35,16 @@ namespace Aimrank.Web.Events.Handlers.Matches
                 .ConfigureAwait(false);
             
             #pragma warning restore 4014
-            
-            await _hubContext.Clients.Groups(@event.Lobbies.Select(l => l.ToString())).MatchReady(@event);
+
+            var message = new MatchReadyEventMessage
+            {
+                Map = @event.Map,
+                MatchId = @event.MatchId,
+                Lobbies = @event.Lobbies,
+                ExpiresAt = DateTime.UtcNow.AddSeconds(30)
+            };
+
+            await _hubContext.Clients.Groups(@event.Lobbies.Select(l => l.ToString())).MatchReady(message);
         }
     }
 }

@@ -1,13 +1,16 @@
 using Aimrank.Application.CSGO;
 using Aimrank.Application.Contracts;
+using Aimrank.Application.Services;
 using Aimrank.Common.Application.Events;
 using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Matches;
 using Aimrank.IntegrationEvents.Matches;
 using MediatR;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
+using System;
 
 namespace Aimrank.Application.Commands.Matches.TimeoutReadyMatch
 {
@@ -17,17 +20,20 @@ namespace Aimrank.Application.Commands.Matches.TimeoutReadyMatch
         private readonly ILobbyRepository _lobbyRepository;
         private readonly IMatchRepository _matchRepository;
         private readonly IEventDispatcher _eventDispatcher;
+        private readonly IMatchService _matchService;
 
         public TimeoutReadyMatchCommandHandler(
             IServerProcessManager serverProcessManager,
             ILobbyRepository lobbyRepository,
             IMatchRepository matchRepository,
-            IEventDispatcher eventDispatcher)
+            IEventDispatcher eventDispatcher,
+            IMatchService matchService)
         {
             _serverProcessManager = serverProcessManager;
             _lobbyRepository = lobbyRepository;
             _matchRepository = matchRepository;
             _eventDispatcher = eventDispatcher;
+            _matchService = matchService;
         }
 
         public async Task<Unit> Handle(TimeoutReadyMatchCommand request, CancellationToken cancellationToken)
@@ -44,9 +50,18 @@ namespace Aimrank.Application.Commands.Matches.TimeoutReadyMatch
             
             var lobbies = await _lobbyRepository.BrowseByIdAsync(match.Lobbies.Select(l => l.LobbyId));
 
+            var notAcceptedUsers = new HashSet<Guid>(await _matchService.GetNotAcceptedUsersAsync(match.Id));
+
             foreach (var lobby in lobbies)
             {
-                lobby.RestoreSearching();
+                if (lobby.Members.Any(m => notAcceptedUsers.Contains(m.UserId)))
+                {
+                    lobby.Open();
+                }
+                else
+                {
+                    lobby.RestoreSearching();
+                }
             }
             
             _lobbyRepository.UpdateRange(lobbies);

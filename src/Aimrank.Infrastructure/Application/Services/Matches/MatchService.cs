@@ -6,6 +6,7 @@ using Aimrank.Domain.Users;
 using Aimrank.Infrastructure.Configuration.Redis;
 using Aimrank.IntegrationEvents.Matches;
 using StackExchange.Redis;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
@@ -30,7 +31,7 @@ namespace Aimrank.Infrastructure.Application.Services.Matches
         
         public async Task AcceptMatchAsync(Match match, UserId userId)
         {
-            var key = $"acceptations:{match.Id.Value}";
+            var key = GetKey(match.Id);
 
             var acceptations = await _database.GetJsonAsync<MatchAcceptations>(key) ??
                                new MatchAcceptations(match.Players.Select(p => p.UserId.Value),
@@ -49,10 +50,20 @@ namespace Aimrank.Infrastructure.Application.Services.Matches
             }
             else
             {
-                await _database.SetJsonAsync(key, acceptations, TimeSpan.FromSeconds(30));
+                await _database.SetJsonAsync(key, acceptations, TimeSpan.FromMinutes(1));
             }
 
             await _eventBus.Publish(new MatchAcceptedEvent(match.Id, userId, match.Lobbies.Select(l => l.LobbyId.Value)));
         }
+
+        public async Task<IEnumerable<Guid>> GetNotAcceptedUsersAsync(MatchId matchId)
+        {
+            var key = GetKey(matchId);
+
+            var acceptations = await _database.GetJsonAsync<MatchAcceptations>(key);
+            return acceptations is null ? Enumerable.Empty<Guid>() : acceptations.GetPendingUsers();
+        }
+
+        private static string GetKey(MatchId matchId) => $"acceptations:{matchId.Value}";
     }
 }

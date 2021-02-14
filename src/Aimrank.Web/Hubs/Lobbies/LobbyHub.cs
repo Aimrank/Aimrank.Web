@@ -3,6 +3,7 @@ using Aimrank.Application.Queries.GetLobbyForUser;
 using Aimrank.IntegrationEvents.Lobbies;
 using Aimrank.IntegrationEvents.Matches;
 using Aimrank.Web.Attributes;
+using Aimrank.Web.Hubs.Lobbies.Messages;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using System;
@@ -13,7 +14,7 @@ namespace Aimrank.Web.Hubs.Lobbies
     {
         Task Disconnect();
         Task MatchAccepted(MatchAcceptedEvent @event);
-        Task MatchReady(MatchReadyEvent @event);
+        Task MatchReady(MatchReadyEventMessage @event);
         Task MatchStarting(MatchStartingEvent @event);
         Task MatchTimedOut(MatchTimedOutEvent @event);
         Task MatchStarted(MatchStartedEvent @event);
