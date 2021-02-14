@@ -28,11 +28,11 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
 					INNER JOIN [aimrank].[MatchesPlayers] AS [P] on [M].[Id] = [P].[MatchId]
 					WHERE
 						[P].[UserId] = @UserId AND
-						[M].[Status] = 4
+						[M].[Status] = 5
 					ORDER BY [M].[FinishedAt] DESC
 				)";
 
-            const string sqlWhereStatus = "WHERE [Match].[Status] = 4";
+            const string sqlWhereStatus = "WHERE [Match].[Status] = 5";
 
             var conditions = request.UserId.HasValue ? sqlWhereUser : sqlWhereStatus;
             

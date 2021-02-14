@@ -42,9 +42,9 @@ namespace Aimrank.Infrastructure.Application.Services.Matches
             if (acceptations.IsAccepted())
             {
                 await _database.KeyDeleteAsync(key);
-                
+
                 var address = _serverProcessManager.StartServer(
-                   match.Id, match.Map, match.Players.Select(p => $"{p.SteamId}:{p.Team}"));
+                    match.Id, match.Map, match.Players.Select(p => $"{p.SteamId}:{(int) p.Team}"));
                 
                 match.SetStarting(address);
             }
