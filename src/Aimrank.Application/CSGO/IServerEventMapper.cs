@@ -4,6 +4,6 @@ namespace Aimrank.Application.CSGO
 {
     public interface IServerEventMapper
     {
-        IServerEventCommand Map(Guid serverId, string name, dynamic data);
+        IServerEventCommand Map(Guid matchId, string name, dynamic data);
     }
 }

@@ -1,27 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
 using System;
 
 namespace Aimrank.Infrastructure.Application.CSGO
 {
-    internal record ServerConfiguration(string Token, int Port, List<string> Whitelist, string Map);
-    
     internal class ServerProcess : IDisposable
     {
         private readonly Process _process;
         
-        public Guid Id { get; }
+        public Guid MatchId { get; }
         public ServerConfiguration Configuration { get; }
         public bool IsRunning { get; private set; }
         
-        public ServerProcess(Guid id, ServerConfiguration configuration)
+        public ServerProcess(Guid matchId, ServerConfiguration configuration)
         {
             var whitelist = string.Join(',', configuration.Whitelist);
             
-            var shellCommand = $"cd /home/steam/csgo && su steam -s /home/steam/start-csgo.sh {id} {configuration.Token} {configuration.Port} {whitelist} {configuration.Map}";
+            var shellCommand = $"cd /home/steam/csgo && su steam -s /home/steam/start-csgo.sh {matchId} {configuration.SteamKey} {configuration.Port} {whitelist} {configuration.Map}";
             
-            Id = id;
+            MatchId = matchId;
             Configuration = configuration;
             
             _process = new Process
@@ -78,7 +75,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "su",
-                    Arguments = $"- steam -c \"screen -p 0 -S {Id} -X {command}\"",
+                    Arguments = $"- steam -c \"screen -p 0 -S {MatchId} -X {command}\"",
                     CreateNoWindow = true,
                     UseShellExecute = false,
                     RedirectStandardError = true,

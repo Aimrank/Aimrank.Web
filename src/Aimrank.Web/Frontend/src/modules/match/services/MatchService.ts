@@ -23,6 +23,7 @@ export enum MatchTeam {
 export interface IMatchDto {
   id: string;
   map: string;
+  mode: MatchMode;
   status: MatchStatus;
   address: string;
 }
@@ -53,7 +54,8 @@ export class MatchService extends Service {
   constructor(private readonly httpClient: HttpClient) {
     super({
       browse: "/match",
-      getByLobbyId: "/lobby/{id}/match"
+      accept: "/match/{matchId}/accept",
+      getByLobbyId: "/lobby/{lobbyId}/match"
     });
   }
 
@@ -61,7 +63,11 @@ export class MatchService extends Service {
     return this.wrap<IMatchHistoryDto[]>(this.httpClient.get(this.getRoute("browse"), { params: { userId }}));
   }
 
-  public getByLobbyId(id: string) {
-    return this.wrap<IMatchDto | undefined>(this.httpClient.get(this.getRoute("getByLobbyId", { id })));
+  public getByLobbyId(lobbyId: string) {
+    return this.wrap<IMatchDto | undefined>(this.httpClient.get(this.getRoute("getByLobbyId", { lobbyId })));
+  }
+
+  public accept(matchId: string) {
+    return this.wrap<undefined>(this.httpClient.post(this.getRoute("accept", { matchId })));
   }
 }

@@ -15,7 +15,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
             ["map_start"] = typeof(StartMatchCommand)
         };
         
-        public IServerEventCommand Map(Guid serverId, string name, dynamic data)
+        public IServerEventCommand Map(Guid matchId, string name, dynamic data)
         {
             var settings = new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
 
@@ -27,7 +27,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
             
             var content = data is null ? "{}" : JsonSerializer.Serialize<dynamic>(data, settings);
             var command = JsonSerializer.Deserialize(content, commandType, settings);
-            command.ServerId = serverId;
+            command.MatchId = matchId;
 
             return command;
         }

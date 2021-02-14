@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 
-namespace Aimrank.IntegrationEvents
+namespace Aimrank.IntegrationEvents.Matches
 {
     public class MatchFinishedEvent : IntegrationEventBase
     {

@@ -7,15 +7,16 @@ using Aimrank.Common.Infrastructure.EventBus;
 using Aimrank.Common.Infrastructure;
 using Aimrank.Infrastructure.Configuration.CSGO;
 using Aimrank.Infrastructure.Configuration.Jwt;
+using Aimrank.Infrastructure.Configuration.Redis;
 using Aimrank.Infrastructure.Configuration;
 using Aimrank.Infrastructure;
-using Aimrank.Infrastructure.Configuration.Redis;
 using Aimrank.IntegrationEvents.Lobbies;
-using Aimrank.IntegrationEvents;
+using Aimrank.IntegrationEvents.Matches;
 using Aimrank.Web.Configuration.ExecutionContext;
 using Aimrank.Web.Configuration.Extensions;
 using Aimrank.Web.Configuration;
 using Aimrank.Web.Events.Handlers.Lobbies;
+using Aimrank.Web.Events.Handlers.Matches;
 using Aimrank.Web.Events.Handlers;
 using Aimrank.Web.Hubs.General;
 using Aimrank.Web.Hubs.Lobbies;
@@ -84,6 +85,9 @@ namespace Aimrank.Web
         {
             containerBuilder.RegisterModule(new AimrankAutofacModule());
 
+            containerBuilder.RegisterType<MatchReadyEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<MatchAcceptedEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<MatchTimedOutEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchStartingEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchStartedEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchFinishedEventHandler>().AsImplementedInterfaces();
@@ -127,6 +131,9 @@ namespace Aimrank.Web
         }
         private void InitializeEventBus(ILifetimeScope container)
         {
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchReadyEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchAcceptedEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchTimedOutEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartingEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartedEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchFinishedEvent>(container));

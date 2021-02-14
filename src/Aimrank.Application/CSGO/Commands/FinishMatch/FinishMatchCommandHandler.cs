@@ -25,9 +25,9 @@ namespace Aimrank.Application.CSGO.Commands.FinishMatch
 
         public async Task<Unit> Handle(FinishMatchCommand request, CancellationToken cancellationToken)
         {
-            _serverProcessManager.StopServer(request.ServerId);
+            _serverProcessManager.StopServer(request.MatchId);
             
-            var match = await _matchRepository.GetByIdAsync(new MatchId(request.ServerId));
+            var match = await _matchRepository.GetByIdAsync(new MatchId(request.MatchId));
             var lobbies = await _lobbyRepository.BrowseByIdAsync(match.Lobbies.Select(l => l.LobbyId));
             
             match.UpdateScore(

@@ -1,0 +1,133 @@
+@use "@/styles/mixins";
+@use "@/styles/variables/fonts";
+@use "@/styles/variables/colors";
+
+.teleport {
+  display: none;
+}
+
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+.overlay {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.wrapper {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container {
+  --container-width: auto;
+  --container-width-min: 420px;
+  --container-width-max: 100%;
+
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
+  color: colors.$black;
+  background: colors.$white;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+
+  @include mixins.media('>tablet') {
+    width: var(--container-width);
+    min-width: var(--container-width-min);
+    max-width: var(--container-width-max);
+  }
+}
+
+.header,
+.footer {
+  padding: 15px;
+}
+
+.header {
+  position: relative;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
+  font-weight: fonts.$weightBold;
+  background: colors.$white;
+}
+
+.headerCloseButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.footer {
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.content {
+  padding: 15px;
+}
+
+.fade {
+  &EnterActive {
+    .overlay {
+      transition: opacity .125s linear;
+    }
+
+    .container {
+      transition: opacity .3s linear, transform .125s ease-in;
+      transition-delay: .1s;
+    }
+  }
+
+  &LeaveActive {
+    transition: opacity .25s linear;
+
+    .overlay {
+      transition: opacity .125s linear;
+      transition-delay: .125s;
+    }
+
+    .container {
+      transition: opacity .125s linear, transform .125s ease-in;
+    }
+  }
+
+  &EnterFrom,
+  &LeaveTo {
+    .overlay,
+    .container {
+      opacity: 0;
+    }
+  }
+
+  &EnterFrom,
+  &LeaveTo {
+    .container {
+      transform: translateY(-10px);
+    }
+  }
+}

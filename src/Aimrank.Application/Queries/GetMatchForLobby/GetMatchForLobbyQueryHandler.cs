@@ -23,6 +23,7 @@ namespace Aimrank.Application.Queries.GetMatchForLobby
                 SELECT
                     [M].[Id] AS [Id],
                     [M].[Map] AS [Map],
+                    [M].[Mode] AS [Mode],
                     [M].[Status] AS [Status],
                     [M].[Address] AS [Address]
                 FROM [aimrank].[Matches] AS [M]

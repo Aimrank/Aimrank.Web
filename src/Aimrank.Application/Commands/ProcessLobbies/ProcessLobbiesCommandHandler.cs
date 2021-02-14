@@ -4,7 +4,6 @@ using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;
 using MediatR;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
@@ -47,28 +46,15 @@ namespace Aimrank.Application.Commands.ProcessLobbies
 
                 var matchId = new MatchId(Guid.NewGuid());
 
-                var match = new Match(matchId, lobby.Configuration.Map, lobby.Configuration.Mode);
+                var match = new Match(matchId, lobby.Configuration.Map, lobby.Configuration.Mode, new [] {lobby.Id});
                 
                 match.AddPlayer(p1.Id, p1.SteamId, MatchTeam.T);
                 match.AddPlayer(p2.Id, p2.SteamId, MatchTeam.CT);
+                
+                _serverProcessManager.CreateReservation(matchId);
 
-                var whitelist = new List<string>
-                {
-                    $"{p1.SteamId}:{MatchTeam.T}",
-                    $"{p2.SteamId}:{MatchTeam.CT}"
-                };
-
-                // This should only lock server for accepting period and start after all players accepted game
-                
-                var address = _serverProcessManager.StartServer(
-                    match.Id.Value,
-                    match.Map,
-                    whitelist);
-                
-                match.SetReady(address);
-                match.SetStarting(); // This should be called when all players accept game and server is starting
-                
                 lobby.Close();
+                match.SetReady();
                 
                 _matchRepository.Add(match);
                 _lobbyRepository.Update(lobby);

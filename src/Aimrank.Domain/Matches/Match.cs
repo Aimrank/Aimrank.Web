@@ -1,4 +1,5 @@
 ﻿using Aimrank.Common.Domain;
+using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Matches.Events;
 using Aimrank.Domain.Users;
 using System.Collections.Generic;
@@ -39,13 +40,15 @@ namespace Aimrank.Domain.Matches
         public Match(
             MatchId id,
             string map,
-            MatchMode mode)
+            MatchMode mode,
+            IEnumerable<LobbyId> lobbies)
         {
             Id = id;
             Map = map;
             Mode = mode;
             Status = MatchStatus.Created;
             CreatedAt = DateTime.UtcNow;
+            Lobbies = lobbies.Select(l => new MatchLobby(l));
         }
 
         public void AddPlayer(UserId userId, string steamId, MatchTeam team)
@@ -70,6 +73,8 @@ namespace Aimrank.Domain.Matches
 
         public void Finish()
         {
+            if (Status == MatchStatus.Finished) return;
+            
             Status = MatchStatus.Finished;
             FinishedAt = DateTime.UtcNow;
             
@@ -84,33 +89,36 @@ namespace Aimrank.Domain.Matches
 
         public void Cancel()
         {
+            if (Status == MatchStatus.Canceled) return;
+            
             Status = MatchStatus.Canceled;
             FinishedAt = DateTime.UtcNow;
             
             AddDomainEvent(new MatchStatusChangedDomainEvent(this));
         }
 
-        public void SetReady(string address)
+        public void SetReady()
         {
+            if (Status == MatchStatus.Ready) return;
+            
             Status = MatchStatus.Ready;
-            Address = address;
             
             AddDomainEvent(new MatchStatusChangedDomainEvent(this));
         }
 
-        public void SetStarting()
+        public void SetStarting(string address)
         {
+            if (Status == MatchStatus.Starting) return;
+            
             Status = MatchStatus.Starting;
+            Address = address;
             
             AddDomainEvent(new MatchStatusChangedDomainEvent(this));
         }
 
         public void SetStarted()
         {
-            if (Status != MatchStatus.Starting)
-            {
-                return;
-            }
+            if (Status != MatchStatus.Starting) return;
 
             Status = MatchStatus.Started;
             

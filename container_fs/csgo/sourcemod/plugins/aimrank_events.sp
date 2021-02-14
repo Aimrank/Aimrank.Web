@@ -45,7 +45,7 @@ public void PublishEvent(JSON_Object data)
 
     GetConVarString(g_aimrankServerId, serverId, sizeof(serverId));
 
-    data.SetString("serverId", serverId);
+    data.SetString("matchId", serverId);
     data.Encode(event, sizeof(event));
     
     System2HTTPRequest httpRequest = new System2HTTPRequest(HttpResponseCallback, "http://localhost/api/server");

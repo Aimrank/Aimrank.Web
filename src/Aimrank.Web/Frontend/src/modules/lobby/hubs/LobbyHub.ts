@@ -3,6 +3,7 @@ import { Hub } from "@/modules/common/hubs/Hub";
 import { MatchStatus } from "@/modules/match/services/MatchService";
 import { LobbyStatus } from "../services/LobbyService";
 import { useUser } from "@/modules/user";
+import { useMatch } from "@/modules/match/hooks/useMatch";
 import { useLobby } from "../hooks/useLobby";
 import {
   IInvitationAcceptedEvent,
@@ -14,13 +15,17 @@ import {
   IMatchStartingEvent,
   IMatchStartedEvent,
   IMemberLeftEvent,
-  IMemberRoleChangedEvent
+  IMemberRoleChangedEvent,
+  IMatchReadyEvent,
+  IMatchAcceptedEvent,
+  IMatchTimedOutEvent,
 } from "./LobbyHubEvents";
-import { userService } from "@/services";
+import { matchService, userService } from "@/services";
 
 export class LobbyHub {
   private readonly user = useUser();
   private readonly lobby = useLobby();
+  private readonly match = useMatch();
   private readonly notifications = useNotifications();
 
   constructor(private readonly hub: Hub) {
@@ -30,9 +35,12 @@ export class LobbyHub {
     // hub.connection.on("InvitationCreated", this.onInvitationCreated.bind(this));
     hub.connection.on("LobbyConfigurationChanged", this.onLobbyConfigurationChanged.bind(this));
     hub.connection.on("LobbyStatusChanged", this.onLobbyStatusChanged.bind(this));
-    hub.connection.on("MatchFinished", this.onMatchFinished.bind(this));
+    hub.connection.on("MatchReady", this.onMatchReady.bind(this));
+    hub.connection.on("MatchAccepted", this.onMatchAccepted.bind(this));
+    hub.connection.on("MatchTimedOut", this.onMatchTimedOut.bind(this));
     hub.connection.on("MatchStarting", this.onMatchStarting.bind(this));
     hub.connection.on("MatchStarted", this.onMatchStarted.bind(this));
+    hub.connection.on("MatchFinished", this.onMatchFinished.bind(this));
     hub.connection.on("MemberLeft", this.onMemberLeft.bind(this));
     hub.connection.on("MemberRoleChanged", this.onMemberRoleChanged.bind(this));
   }
@@ -76,21 +84,38 @@ export class LobbyHub {
     this.lobby.setLobbyStatus(event.status);
   }
 
-  private onMatchStarting(event: IMatchStartingEvent) {
-    this.lobby.setMatch({
+  private async onMatchReady(event: IMatchReadyEvent) {
+    this.match.setMatch({
       id: event.matchId,
       map: event.map,
-      status: MatchStatus.Starting,
-      address: event.address
+      mode: 0,
+      status: MatchStatus.Ready,
+      address: "",
+      expiresAt: event.expiresAt
     });
+  }
+
+  private onMatchAccepted(event: IMatchAcceptedEvent) {
+    this.match.incrementAcceptations();
+  }
+
+  private onMatchTimedOut(event: IMatchTimedOutEvent) {
+    this.match.clearMatch();
+
+    this.notifications.danger("Some users failed to accept game.");
+  }
+
+  private onMatchStarting(event: IMatchStartingEvent) {
+    this.match.setMatchStatus(MatchStatus.Starting);
 
     this.notifications.success("Starting server...");
   }
 
   private onMatchStarted(event: IMatchStartedEvent) {
-    this.lobby.setMatch({
+    this.match.setMatch({
       id: event.matchId,
       map: event.map,
+      mode: event.mode,
       status: MatchStatus.Started,
       address: event.address
     });
@@ -99,7 +124,7 @@ export class LobbyHub {
   }
 
   private onMatchFinished(event: IMatchFinishedEvent) {
-    this.lobby.clearMatch();
+    this.match.clearMatch();
     this.lobby.setLobbyStatus(LobbyStatus.Open);
 
     this.notifications.success("Match finished.");

@@ -21,7 +21,7 @@ namespace Aimrank.Web.Controllers
         public async Task<IActionResult> ProcessServerEvent(ProcessServerEventRequest request)
         {
             await _aimrankModule.ExecuteCommandAsync(new ProcessServerEventCommand(
-                request.ServerId,
+                request.MatchId,
                 request.Name,
                 request.Data));
             

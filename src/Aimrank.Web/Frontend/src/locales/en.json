@@ -78,5 +78,14 @@
         "empty": "You're not a member of any lobby"
       }
     }
+  },
+  "match": {
+    "components": {
+      "MatchDialog": {
+        "header": "Your match is ready",
+        "content": "You have <strong>{0}</strong> seconds to accept the game.",
+        "submit": "Accept"
+      }
+    }
   }
 }

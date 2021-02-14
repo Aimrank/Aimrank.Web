@@ -2,6 +2,7 @@ import { computed, defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUser } from "@/modules/user";
 import { useNotifications } from "@/modules/common/hooks/useNotifications";
+import { useMatch } from "@/modules/match/hooks/useMatch";
 import { useLobby } from "../../hooks/useLobby";
 import { lobbyHub, lobbyService, matchService } from "@/services";
 import BaseButton from "@/modules/common/components/BaseButton";
@@ -16,6 +17,7 @@ const maps = {
 const useLobbyView = () => {
   const user = useUser();
   const lobby = useLobby();
+  const match = useMatch();
 
   const currentUserMembership = computed(() => lobby.state.lobby?.members.find(m => m.userId === user.state.user?.id));
 
@@ -34,13 +36,14 @@ const useLobbyView = () => {
       const matchResult = await matchService.getByLobbyId(result.value.id);
 
       if (matchResult.isOk() && matchResult.value) {
-        lobby.setMatch(matchResult.value);
+        match.setMatch(matchResult.value);
       }
     }
   });
 
   return {
     lobby,
+    match,
     currentUserMembership,
   };
 }
@@ -52,7 +55,7 @@ const Lobby = defineComponent({
     MapButton
   },
   setup() {
-    const { lobby, currentUserMembership } = useLobbyView();
+    const { lobby, match, currentUserMembership } = useLobbyView();
 
     const router = useRouter();
     const notifications = useNotifications();
@@ -97,7 +100,7 @@ const Lobby = defineComponent({
       if (result.isOk()) {
         lobbyHub.disconnect();
         lobby.clearLobby();
-        lobby.clearMatch();
+        match.clearMatch();
 
         router.push({ name: "home" });
       } else {
@@ -123,7 +126,7 @@ const Lobby = defineComponent({
     return {
       maps,
       lobby: computed(() => lobby.state.lobby),
-      match: computed(() => lobby.state.match),
+      match: computed(() => match.state.match),
       currentUserMembership,
       onStartSearchingClick,
       onLeaveLobbyClick,

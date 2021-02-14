@@ -5,13 +5,13 @@ namespace Aimrank.Application.Commands.ProcessServerEvent
 {
     public class ProcessServerEventCommand : ICommand
     {
-        public Guid ServerId { get; }
+        public Guid MatchId { get; }
         public string Name { get; }
         public dynamic Data { get; }
 
-        public ProcessServerEventCommand(Guid serverId, string name, dynamic data)
+        public ProcessServerEventCommand(Guid matchId, string name, dynamic data)
         {
-            ServerId = serverId;
+            MatchId = matchId;
             Name = name;
             Data = data;
         }
