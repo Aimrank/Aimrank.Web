@@ -1,5 +1,6 @@
 import { HttpClient } from "@/common/services/HttpClient";
 import { Service } from "@/common/services/Service";
+import { MatchMode } from "@/match/services/MatchService";
 
 export enum LobbyStatus {
   Open,
@@ -10,7 +11,7 @@ export enum LobbyStatus {
 export interface ILobbyConfiguration {
   name: string;
   map: string;
-  mode: number;
+  mode: MatchMode;
 }
 
 export interface ILobbyMember {
@@ -42,7 +43,7 @@ export interface IInviteUserToLobbyRequest {
 export interface IChangeLobbyConfigurationRequest {
   name: string;
   map: string;
-  mode: number;
+  mode: MatchMode;
 }
 
 export interface IChangeLobbyMapRequest {
