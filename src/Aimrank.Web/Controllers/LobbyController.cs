@@ -13,6 +13,7 @@ using Aimrank.Common.Application;
 using Aimrank.Web.Attributes;
 using Aimrank.Web.Contracts.Requests;
 using Aimrank.Web.Hubs.General;
+using Aimrank.Web.Hubs.Lobbies.Messages;
 using Aimrank.Web.Hubs.Lobbies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -87,7 +88,7 @@ namespace Aimrank.Web.Controllers
         {
             await _aimrankModule.ExecuteCommandAsync(new InviteUserToLobbyCommand(id, request.InvitedUserId));
 
-            var @event = new InvitationCreatedEvent(id, _executionContextAccessor.UserId, request.InvitedUserId);
+            var @event = new InvitationCreatedEventMessage(id, _executionContextAccessor.UserId, request.InvitedUserId);
 
             await _lobbyHubContext.Clients.Group(id.ToString()).InvitationCreated(@event);
             await _generalHubContext.Clients.User(request.InvitedUserId.ToString()).InvitationCreated(@event);
@@ -101,7 +102,7 @@ namespace Aimrank.Web.Controllers
             await _aimrankModule.ExecuteCommandAsync(new AcceptLobbyInvitationCommand(id));
 
             await _lobbyHubContext.Clients.Group(id.ToString())
-                .InvitationAccepted(new InvitationAcceptedEvent(id, _executionContextAccessor.UserId));
+                .InvitationAccepted(new InvitationAcceptedEventMessage(id, _executionContextAccessor.UserId));
             
             return Ok();
         }
@@ -112,7 +113,7 @@ namespace Aimrank.Web.Controllers
             await _aimrankModule.ExecuteCommandAsync(new CancelLobbyInvitationCommand(id));
             
             await _lobbyHubContext.Clients.Group(id.ToString())
-                .InvitationCanceled(new InvitationCanceledEvent(id, _executionContextAccessor.UserId));
+                .InvitationCanceled(new InvitationCanceledEventMessage(id, _executionContextAccessor.UserId));
             
             return Ok();
         }
@@ -132,6 +133,10 @@ namespace Aimrank.Web.Controllers
                 request.Map,
                 request.Name,
                 request.Mode));
+
+            await _lobbyHubContext.Clients.Group(id.ToString())
+                .LobbyConfigurationChanged(
+                    new LobbyConfigurationChangedEventMessage(id, request.Map, request.Name, request.Mode));
             
             return Ok();
         }

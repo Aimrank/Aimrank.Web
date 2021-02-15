@@ -6,7 +6,6 @@ using Aimrank.Domain.Matches;
 using Aimrank.IntegrationEvents.Lobbies;
 using Aimrank.IntegrationEvents.Matches;
 using System.Linq;
-using System;
 
 namespace Aimrank.Infrastructure.Configuration.Processing
 {
@@ -30,8 +29,6 @@ namespace Aimrank.Infrastructure.Configuration.Processing
                 },
                 MatchFinishedDomainEvent e => new MatchFinishedEvent(e.Match.Id, e.Match.ScoreT, e.Match.ScoreCT,
                     e.Lobbies.Select(l => l.Value)),
-                LobbyConfigurationChangedDomainEvent e => new LobbyConfigurationChangedEvent(e.Lobby.Id,
-                    e.Lobby.Configuration.Map, e.Lobby.Configuration.Name, (int) e.Lobby.Configuration.Mode),
                 LobbyStatusChangedDomainEvent e => new LobbyStatusChangedEvent(e.Lobby.Id, (int) e.Lobby.Status),
                 MemberLeftDomainEvent e => new MemberLeftEvent(e.Lobby.Id, e.Member.UserId),
                 MemberRoleChangedDomainEvent e => new MemberRoleChangedEvent(e.Lobby.Id, e.Member.UserId,

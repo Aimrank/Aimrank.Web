@@ -1,15 +1,15 @@
 using System;
 
-namespace Aimrank.IntegrationEvents.Lobbies
+namespace Aimrank.Web.Hubs.Lobbies.Messages
 {
-    public class LobbyConfigurationChangedEvent : IntegrationEventBase
+    public class LobbyConfigurationChangedEventMessage
     {
         public Guid LobbyId { get; }
         public string Map { get; }
         public string Name { get; }
         public int Mode { get; }
 
-        public LobbyConfigurationChangedEvent(Guid lobbyId, string map, string name, int mode)
+        public LobbyConfigurationChangedEventMessage(Guid lobbyId, string map, string name, int mode)
         {
             LobbyId = lobbyId;
             Map = map;

@@ -5,9 +5,17 @@ namespace Aimrank.Web.Hubs.Lobbies.Messages
 {
     public class MatchReadyEventMessage
     {
-        public Guid MatchId { get; init; }
-        public string Map { get; init; }
-        public DateTime ExpiresAt { get; init; }
-        public IEnumerable<Guid> Lobbies { get; init; }
+        public Guid MatchId { get; }
+        public string Map { get; }
+        public DateTime ExpiresAt { get; }
+        public IEnumerable<Guid> Lobbies { get; }
+
+        public MatchReadyEventMessage(Guid matchId, string map, DateTime expiresAt, IEnumerable<Guid> lobbies)
+        {
+            MatchId = matchId;
+            Map = map;
+            ExpiresAt = expiresAt;
+            Lobbies = lobbies;
+        }
     }
 }

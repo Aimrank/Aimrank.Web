@@ -126,8 +126,6 @@ namespace Aimrank.Domain.Lobbies
             BusinessRules.Check(new LobbyStatusMustMatchRule(this, LobbyStatus.Open));
 
             Configuration = configuration;
-            
-            AddDomainEvent(new LobbyConfigurationChangedDomainEvent(this));
         }
 
         public void StartSearching(UserId userId)

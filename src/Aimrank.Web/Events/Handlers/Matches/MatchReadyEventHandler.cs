@@ -36,13 +36,11 @@ namespace Aimrank.Web.Events.Handlers.Matches
             
             #pragma warning restore 4014
 
-            var message = new MatchReadyEventMessage
-            {
-                Map = @event.Map,
-                MatchId = @event.MatchId,
-                Lobbies = @event.Lobbies,
-                ExpiresAt = DateTime.UtcNow.AddSeconds(30)
-            };
+            var message = new MatchReadyEventMessage(
+                @event.MatchId,
+                @event.Map, 
+                DateTime.UtcNow.AddSeconds(30),
+                @event.Lobbies);
 
             await _hubContext.Clients.Groups(@event.Lobbies.Select(l => l.ToString())).MatchReady(message);
         }
