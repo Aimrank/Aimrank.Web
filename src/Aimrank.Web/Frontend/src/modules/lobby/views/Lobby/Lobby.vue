@@ -23,6 +23,10 @@
     <div v-else>
       <table :class="$style.table">
         <tr>
+          <th>Mode</th>
+          <td>{{ ["One vs One", "Two vs Two"][lobby.configuration.mode] }}</td>
+        </tr>
+        <tr>
           <th>{{ $t("lobby.views.Lobby.table.map") }}</th>
           <td>
             <img
@@ -76,22 +80,9 @@
         v-else-if="currentUserMembership && currentUserMembership.isLeader"
         :class="$style.section"
       >
-        <h3>{{ $t("lobby.views.Lobby.options") }}</h3>
-        <div :class="$style.maps">
-          <map-button
-            name="aim_map"
-            :image="maps['aim_map']"
-            :selected="lobby.configuration.map === 'aim_map'"
-            @click="onChangeMapClick('aim_map')"
-          />
-          <map-button
-            name="am_redline_14"
-            :image="maps['am_redline_14']"
-            :selected="lobby.configuration.map === 'am_redline_14'"
-            @click="onChangeMapClick('am_redline_14')"
-          />
-        </div>
+        <lobby-configuration />
         <base-button
+          :class="$style.startButton"
           primary
           @click="onStartSearchingClick"
         >

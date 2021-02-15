@@ -8,7 +8,7 @@ import { useNotifications } from "@/common/hooks/useNotifications";
 import { MatchStatus } from "@/match/services/MatchService";
 import BaseButton from "@/common/components/BaseButton";
 import InvitationForm from "@/lobby/components/InvitationForm";
-import MapButton from "@/lobby/components/MapButton";
+import LobbyConfiguration from "@/lobby/components/LobbyConfiguration";
 
 const maps = {
   aim_map: require("~/assets/images/aim_map.jpg").default,
@@ -53,7 +53,7 @@ const Lobby = defineComponent({
   components: {
     BaseButton,
     InvitationForm,
-    MapButton
+    LobbyConfiguration
   },
   setup() {
     const { lobby, match, currentUserMembership } = useLobbyView();
@@ -69,24 +69,6 @@ const Lobby = defineComponent({
       const result = await lobbyService.startSearching(lobby.state.lobby!.id);
 
       if (!result.isOk()) {
-        notifications.danger(result.error.title);
-      }
-    }
-
-    const onChangeMapClick = async (name: string) => {
-      if (!lobby.isAvailable || name === lobby.state.lobby?.configuration.map) {
-        return;
-      }
-
-      const result = await lobbyService.changeConfiguration(lobby.state.lobby!.id, {
-        map: name,
-        name: lobby.state.lobby!.configuration.name,
-        mode: lobby.state.lobby!.configuration.mode
-      });
-
-      if (result.isOk()) {
-        lobby.setLobbyConfiguration({ ...lobby.state.lobby!.configuration, map: name });
-      } else {
         notifications.danger(result.error.title);
       }
     }
@@ -132,7 +114,6 @@ const Lobby = defineComponent({
       onStartSearchingClick,
       onLeaveLobbyClick,
       onCreateLobbyClick,
-      onChangeMapClick,
       MatchStatus: Object.freeze(MatchStatus)
     };
   }

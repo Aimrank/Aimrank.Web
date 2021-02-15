@@ -47,6 +47,14 @@
       "InvitationForm": {
         "label": "Search for user",
         "success": "Invitation sent"
+      },
+      "LobbyConfiguration": {
+        "selectMapHeadline": "Select match map",
+        "selectModeHeadline": "Select match mode",
+        "mode": {
+          "OneVsOne": "One vs One",
+          "TwoVsTwo": "Two vs Two"
+        }
       }
     },
     "views": {
@@ -71,8 +79,6 @@
         "invitations": "Invitations",
         "leader": "Leader",
         "match": "Match",
-        "options": "Options",
-        "optionsMap": "Map",
         "changeConfiguration": "Change configuration",
         "start": "Start game",
         "empty": "You're not a member of any lobby"
