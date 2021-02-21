@@ -2,6 +2,8 @@ using Aimrank.Common.Application.Exceptions;
 using Aimrank.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Aimrank.Infrastructure.Domain.Users
@@ -16,6 +18,11 @@ namespace Aimrank.Infrastructure.Domain.Users
             _userManager = userManager;
             _context = context;
         }
+
+        public async Task<IEnumerable<User>> BrowseByIdAsync(IEnumerable<UserId> ids)
+            => await _context.Users.AsNoTracking()
+                .Where(u => ids.Contains(u.Id)).Select(u => u.AsUser())
+                .ToListAsync();
 
         public async Task<User> GetByIdAsync(UserId id)
         {
