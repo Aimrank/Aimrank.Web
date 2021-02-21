@@ -51,9 +51,9 @@ namespace Aimrank.Domain.Matches
             Lobbies = lobbies.Select(l => new MatchLobby(l));
         }
 
-        public void AddPlayer(UserId userId, string steamId, MatchTeam team)
+        public void AddPlayer(UserId userId, string steamId, MatchTeam team, int rating = 1200)
         {
-            var player = new MatchPlayer(userId, steamId, team);
+            var player = new MatchPlayer(userId, steamId, team, rating);
             
             _players.Add(player);
         }
@@ -77,8 +77,28 @@ namespace Aimrank.Domain.Matches
             
             Status = MatchStatus.Finished;
             FinishedAt = DateTime.UtcNow;
+
+            var avgT = (int) Players.Where(p => p.Team == MatchTeam.T).Average(p => p.RatingStart);
+            var avgCT = (int) Players.Where(p => p.Team == MatchTeam.CT).Average(p => p.RatingStart);
             
-            // Update players rating
+            foreach (var player in Players)
+            {
+                double score;
+
+                if (ScoreT == ScoreCT)
+                {
+                    score = 0.5;
+                }
+                else
+                {
+                    score = player.Team == MatchTeam.T && ScoreT > ScoreCT ||
+                            player.Team == MatchTeam.CT && ScoreCT > ScoreT
+                        ? 1
+                        : 0;
+                }
+                
+                player.CalculateNewRating(score, player.Team == MatchTeam.T ? avgCT : avgT);
+            }
 
             var @event = new MatchFinishedDomainEvent(this, Lobbies.Select(l => l.LobbyId).ToList());
             

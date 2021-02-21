@@ -31,6 +31,8 @@ namespace Aimrank.Infrastructure.Domain.Matches
                 b.Property(p => p.UserId).HasColumnName("UserId").IsRequired();
                 b.Property(p => p.SteamId).HasColumnName("SteamId").IsRequired().HasMaxLength(17);
                 b.Property(p => p.Team).HasColumnName("Team");
+                b.Property(p => p.RatingStart).HasColumnName("RatingStart");
+                b.Property(p => p.RatingEnd).HasColumnName("RatingEnd");
                 b.HasKey("MatchId", "UserId");
                 b.HasOne<UserModel>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
                 b.WithOwner().HasForeignKey("MatchId");
