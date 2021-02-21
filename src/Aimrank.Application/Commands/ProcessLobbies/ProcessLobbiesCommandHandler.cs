@@ -34,13 +34,13 @@ namespace Aimrank.Application.Commands.ProcessLobbies
         public async Task<Unit> Handle(ProcessLobbiesCommand request, CancellationToken cancellationToken)
         {
             var lobbiesSearching = await _lobbyRepository.BrowseByStatusAsync(LobbyStatus.Searching);
-            var usersIds = lobbiesSearching.SelectMany(l => l.Members.Select(m => m.UserId));
-            var users = (await _userRepository.BrowseByIdAsync(usersIds)).ToDictionary(u => u.Id);
-
-            var lobbiesWithMode = GetLobbiesWithMode(lobbiesSearching);
+            var lobbiesGrouped = GetLobbiesWithMode(lobbiesSearching);
+            var lobbiesUsers = await GetUsersForLobbiesAsync(lobbiesSearching);
             
-            foreach (var (mode, lobbies) in lobbiesWithMode)
+            foreach (var (mode, lobbies) in lobbiesGrouped)
             {
+                var ratings = await GetRatingForUsersAsync(lobbies, mode);
+                
                 var sorted = lobbies.OrderByDescending(l => l.Members.Count());
 
                 var buffer = new List<Lobby>();
@@ -68,7 +68,7 @@ namespace Aimrank.Application.Commands.ProcessLobbies
                         {
                             foreach (var member in buffer[i].Members)
                             {
-                                teams[i % 2].Add(users[member.UserId]);
+                                teams[i % 2].Add(lobbiesUsers[member.UserId]);
                             }
                         }
                         
@@ -87,7 +87,7 @@ namespace Aimrank.Application.Commands.ProcessLobbies
                         {
                             foreach (var user in teams[j])
                             {
-                                var rating = await _matchRepository.GetPlayerRatingAsync(user.Id, match.Mode);
+                                var rating = ratings.ContainsKey(user.Id) ? ratings[user.Id] : 1200;
                                 
                                 match.AddPlayer(user.Id, user.SteamId, j % 2 == 0 ? MatchTeam.T : MatchTeam.CT, rating);
                             }
@@ -113,6 +113,19 @@ namespace Aimrank.Application.Commands.ProcessLobbies
             }
             
             return Unit.Value;
+        }
+        
+        private async Task<Dictionary<UserId, User>> GetUsersForLobbiesAsync(IEnumerable<Lobby> lobbies)
+        {
+            var usersIds = lobbies.SelectMany(l => l.Members.Select(m => m.UserId));
+            var users = await _userRepository.BrowseByIdAsync(usersIds);
+            return users.ToDictionary(u => u.Id);
+        }
+
+        private async Task<Dictionary<UserId, int>> GetRatingForUsersAsync(IEnumerable<Lobby> lobbies, MatchMode mode)
+        {
+            var members = lobbies.SelectMany(l => l.Members).Select(m => m.UserId).Distinct();
+            return await _matchRepository.BrowsePlayersRatingAsync(members, mode);
         }
         
         private static Dictionary<MatchMode, List<Lobby>> GetLobbiesWithMode(IEnumerable<Lobby> lobbies)

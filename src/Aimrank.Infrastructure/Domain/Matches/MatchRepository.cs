@@ -1,6 +1,7 @@
 using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,18 +16,17 @@ namespace Aimrank.Infrastructure.Domain.Matches
             _context = context;
         }
 
+        public async Task<Dictionary<UserId, int>> BrowsePlayersRatingAsync(IEnumerable<UserId> ids, MatchMode mode)
+            => await _context.Matches.AsNoTracking()
+                .Where(m => m.Mode == mode && m.Status == MatchStatus.Finished && m.Players.Any(p => ids.Contains(p.UserId)))
+                .OrderByDescending(m => m.FinishedAt)
+                .SelectMany(m => m.Players)
+                .GroupBy(p => p.UserId)
+                .Select(g => g.First())
+                .ToDictionaryAsync(p => p.UserId, p => p.RatingEnd);
+
         public Task<Match> GetByIdAsync(MatchId id)
             => _context.Matches.FirstOrDefaultAsync(m => m.Id == id);
-
-        public async Task<int> GetPlayerRatingAsync(UserId id, MatchMode mode)
-        {
-            var match = await _context.Matches.AsNoTracking()
-                .Where(m => m.Status == MatchStatus.Finished && m.Players.Any(p => p.UserId == id))
-                .OrderByDescending(m => m.FinishedAt)
-                .FirstOrDefaultAsync();
-
-            return match?.Players.First(p => p.UserId == id).RatingEnd ?? 1200;
-        }
 
         public void Add(Match match) => _context.Matches.Add(match);
 

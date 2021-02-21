@@ -13,6 +13,20 @@ namespace Aimrank.UnitTests.Mock
 
         public IEnumerable<Match> Matches => _matches.Values;
 
+        public Task<Dictionary<UserId, int>> BrowsePlayersRatingAsync(IEnumerable<UserId> ids, MatchMode mode)
+        {
+            var result = _matches.Values
+                .Where(m => m.Mode == mode && m.Status == MatchStatus.Finished &&
+                            m.Players.Any(p => ids.Contains(p.UserId)))
+                .OrderByDescending(m => m.FinishedAt)
+                .SelectMany(m => m.Players)
+                .GroupBy(p => p.UserId)
+                .Select(g => g.First())
+                .ToDictionary(p => p.UserId, p => p.RatingEnd);
+
+            return Task.FromResult(result);
+        }
+
         public Task<Match> GetByIdAsync(MatchId id)
         {
             var match = _matches.GetValueOrDefault(id);
@@ -22,16 +36,6 @@ namespace Aimrank.UnitTests.Mock
             }
 
             return Task.FromResult(match);
-        }
-
-        public Task<int> GetPlayerRatingAsync(UserId id, MatchMode mode)
-        {
-            var match = _matches.Values
-                .Where(m => m.Status == MatchStatus.Finished && m.Players.Any(p => p.UserId == id))
-                .OrderByDescending(m => m.FinishedAt)
-                .FirstOrDefault();
-
-            return Task.FromResult(match?.Players.First(p => p.UserId == id).RatingEnd ?? 1200);
         }
 
         public void Add(Match match) => _matches.Add(match.Id, match);
