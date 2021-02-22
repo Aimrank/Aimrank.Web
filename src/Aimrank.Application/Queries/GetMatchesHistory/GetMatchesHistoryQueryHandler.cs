@@ -22,41 +22,43 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
             var connection = _sqlConnectionFactory.GetOpenConnection();
             
             const string sqlWhereUser = @"
-				WHERE [Match].[Id] IN (
-					SELECT TOP 30 [M].[Id]
-					FROM [aimrank].[Matches] AS [M]
-					INNER JOIN [aimrank].[MatchesPlayers] AS [P] on [M].[Id] = [P].[MatchId]
+				WHERE [M].[Id] IN (
+					SELECT TOP 30 [M2].[Id]
+					FROM [aimrank].[Matches] AS [M2]
+					INNER JOIN [aimrank].[MatchesPlayers] AS [P] on [M2].[Id] = [P].[MatchId]
 					WHERE
 						[P].[UserId] = @UserId AND
-						[M].[Status] = 5
-					ORDER BY [M].[FinishedAt] DESC
+						[M2].[Status] = 5
+					ORDER BY [M2].[FinishedAt] DESC
 				)";
 
-            const string sqlWhereStatus = "WHERE [Match].[Status] = 5";
+            const string sqlWhereStatus = "WHERE [M].[Status] = 5";
 
             var conditions = request.UserId.HasValue ? sqlWhereUser : sqlWhereStatus;
             
             var sql = @$"
 				WITH [Result] AS (
 					SELECT
-						DENSE_RANK() OVER(ORDER BY [Match].[FinishedAt] DESC) AS [Row],
-						[Match].[Id] AS [Id],
-						[Match].[ScoreT] AS [ScoreT],
-						[Match].[ScoreCT] AS [ScoreCT],
-						[Match].[Mode] AS [Mode],
-						[Match].[CreatedAt] AS [CreatedAt],
-						[Match].[FinishedAt] AS [FinishedAt],
-						[Match].[Map] AS [Map],
-						[User].[Id] AS [User_Id],
-						[User].[UserName] AS [User_Username],
-						[Player].[Team] AS [User_Team],
-						[Player].[Stats_Kills] AS [User_Kills],
-						[Player].[Stats_Assists] AS [User_Assists],
-						[Player].[Stats_Deaths] AS [User_Deaths],
-						[Player].[Stats_Score] AS [User_Score]
-					FROM [aimrank].[Matches] AS [Match]
-					INNER JOIN [aimrank].[MatchesPlayers] AS [Player] ON [Match].[Id] = [Player].[MatchId]
-					INNER JOIN [aimrank].[AspNetUsers] AS [User] ON [Player].[UserId] = [User].[Id]
+						DENSE_RANK() OVER(ORDER BY [M].[FinishedAt] DESC) AS [Row],
+						[M].[Id] AS [Id],
+						[M].[ScoreT] AS [ScoreT],
+						[M].[ScoreCT] AS [ScoreCT],
+						[M].[Mode] AS [Mode],
+						[M].[CreatedAt] AS [CreatedAt],
+						[M].[FinishedAt] AS [FinishedAt],
+						[M].[Map] AS [Map],
+						[U].[Id] AS [User_Id],
+						[U].[UserName] AS [User_Username],
+						[P].[Team] AS [User_Team],
+						[P].[Stats_Kills] AS [User_Kills],
+						[P].[Stats_Assists] AS [User_Assists],
+						[P].[Stats_Deaths] AS [User_Deaths],
+						[P].[Stats_Score] AS [User_Score],
+						[P].[RatingStart] AS [User_RatingStart],
+						[P].[RatingEnd] AS [User_RatingEnd],
+					FROM [aimrank].[Matches] AS [M]
+					INNER JOIN [aimrank].[MatchesPlayers] AS [P] ON [M].[Id] = [P].[MatchId]
+					INNER JOIN [aimrank].[AspNetUsers] AS [U] ON [P].[UserId] = [U].[Id]
 					{conditions}
 				)
 				SELECT * FROM [Result] WHERE [Row] <= 30;";
@@ -83,7 +85,9 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
 			            Kills = player.User_Kills,
 			            Assists = player.User_Assists,
 			            Deaths = player.User_Deaths,
-			            Score = player.User_Score
+			            Score = player.User_Score,
+			            RatingStart = player.User_RatingStart,
+			            RatingEnd = player.User_RatingEnd
 		            };
 
 		            if (playerDto.Team == 2)
@@ -112,6 +116,8 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
 			public int User_Assists { get; init; }
 			public int User_Deaths { get; init; }
 			public int User_Score { get; init; }
+			public int User_RatingStart { get; set; }
+			public int User_RatingEnd { get; set; }
 		}
     }
 }
