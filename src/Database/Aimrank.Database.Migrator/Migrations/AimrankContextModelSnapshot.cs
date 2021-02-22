@@ -480,6 +480,14 @@ namespace Aimrank.Database.Migrator.Migrations
                                 .HasColumnType("uniqueidentifier")
                                 .HasColumnName("UserId");
 
+                            b1.Property<int>("RatingEnd")
+                                .HasColumnType("int")
+                                .HasColumnName("RatingEnd");
+
+                            b1.Property<int>("RatingStart")
+                                .HasColumnType("int")
+                                .HasColumnName("RatingStart");
+
                             b1.Property<string>("SteamId")
                                 .IsRequired()
                                 .HasMaxLength(17)

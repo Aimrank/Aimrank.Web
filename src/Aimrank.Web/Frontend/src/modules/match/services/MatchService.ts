@@ -48,6 +48,8 @@ export interface IMatchHistoryPlayerDto {
   assists: number;
   deaths: number;
   score: number;
+  ratingStart: number;
+  ratingEnd: number;
 }
 
 export class MatchService extends Service {

@@ -346,7 +346,9 @@ namespace Aimrank.Database.Migrator.Migrations
                     Stats_Kills = table.Column<int>(type: "int", nullable: true),
                     Stats_Assists = table.Column<int>(type: "int", nullable: true),
                     Stats_Deaths = table.Column<int>(type: "int", nullable: true),
-                    Stats_Score = table.Column<int>(type: "int", nullable: true)
+                    Stats_Score = table.Column<int>(type: "int", nullable: true),
+                    RatingStart = table.Column<int>(type: "int", nullable: false),
+                    RatingEnd = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

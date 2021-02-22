@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CB3E8F47
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.IntegrationTests", "src\Tests\Aimrank.IntegrationTests\Aimrank.IntegrationTests.csproj", "{02C22F76-4932-47BF-A178-26ADE78CF652}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.UnitTests", "src\Tests\Aimrank.UnitTests\Aimrank.UnitTests.csproj", "{D404757D-1EFF-4375-B885-E03E70421DD0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,7 @@ Global
 		{5276BAA4-EE27-46B0-B70F-5236F9028B99} = {C78F478D-3405-4762-9E09-99316337F172}
 		{C6E0FC8F-5007-497C-9A01-137786081A25} = {C78F478D-3405-4762-9E09-99316337F172}
 		{02C22F76-4932-47BF-A178-26ADE78CF652} = {CB3E8F47-FF5F-44D3-B79B-7B7930E78289}
+		{D404757D-1EFF-4375-B885-E03E70421DD0} = {CB3E8F47-FF5F-44D3-B79B-7B7930E78289}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{528383BC-4260-41C0-89CE-F00138B63F4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -79,5 +82,9 @@ Global
 		{02C22F76-4932-47BF-A178-26ADE78CF652}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02C22F76-4932-47BF-A178-26ADE78CF652}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02C22F76-4932-47BF-A178-26ADE78CF652}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D404757D-1EFF-4375-B885-E03E70421DD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D404757D-1EFF-4375-B885-E03E70421DD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D404757D-1EFF-4375-B885-E03E70421DD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D404757D-1EFF-4375-B885-E03E70421DD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

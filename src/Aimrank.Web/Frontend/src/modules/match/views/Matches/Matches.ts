@@ -16,6 +16,16 @@ const getMatchResult = (match: IMatchHistoryDto, userId?: string) => {
   return winner === userId ? 1 : -1;
 }
 
+const getMatchPlayerResult = (match: IMatchHistoryDto, userId?: string) => {
+  const player = [...match.teamTerrorists, ...match.teamCounterTerrorists].find(p => p.id === userId);
+
+  if (player) {
+    return { rating: player?.ratingEnd, difference: player?.ratingEnd - player?.ratingStart };
+  }
+
+  return { rating: 0, difference: 0 };
+}
+
 const Matches = defineComponent({
   setup() {
     const user = useUser();
@@ -35,7 +45,11 @@ const Matches = defineComponent({
     });
 
     const matchesWithStatus = computed(() => matches.value.map(m =>
-      ({ ...m, matchResult: getMatchResult(m, user.state.user?.id) })
+      ({
+        ...m,
+        matchResult: getMatchResult(m, user.state.user?.id),
+        matchPlayerResult: getMatchPlayerResult(m, user.state.user?.id)
+      })
     ));
 
     return { matchesWithStatus };

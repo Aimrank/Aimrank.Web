@@ -14,6 +14,7 @@ COPY src/Aimrank.Domain/*.csproj ./src/Aimrank.Domain/
 COPY src/Aimrank.Application/*.csproj ./src/Aimrank.Application/
 COPY src/Aimrank.Infrastructure/*.csproj ./src/Aimrank.Infrastructure/
 COPY src/Aimrank.IntegrationEvents/*.csproj ./src/Aimrank.IntegrationEvents/
+COPY src/Tests/Aimrank.UnitTests/*.csproj ./src/Tests/Aimrank.UnitTests/
 COPY src/Tests/Aimrank.IntegrationTests/*.csproj ./src/Tests/Aimrank.IntegrationTests/
 COPY src/Common/Aimrank.Common.Domain/*.csproj ./src/Common/Aimrank.Common.Domain/
 COPY src/Common/Aimrank.Common.Application/*.csproj ./src/Common/Aimrank.Common.Application/
