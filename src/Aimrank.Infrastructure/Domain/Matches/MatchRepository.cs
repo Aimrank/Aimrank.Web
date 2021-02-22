@@ -18,11 +18,10 @@ namespace Aimrank.Infrastructure.Domain.Matches
 
         public async Task<Dictionary<UserId, int>> BrowsePlayersRatingAsync(IEnumerable<UserId> ids, MatchMode mode)
             => await _context.Matches.AsNoTracking()
-                .Where(m => m.Mode == mode && m.Status == MatchStatus.Finished && m.Players.Any(p => ids.Contains(p.UserId)))
+                .Where(m => m.Mode == mode && m.Status == MatchStatus.Finished &&
+                            m.Players.Any(p => ids.Contains(p.UserId)))
                 .OrderByDescending(m => m.FinishedAt)
                 .SelectMany(m => m.Players)
-                .GroupBy(p => p.UserId)
-                .Select(g => g.First())
                 .ToDictionaryAsync(p => p.UserId, p => p.RatingEnd);
 
         public Task<Match> GetByIdAsync(MatchId id)

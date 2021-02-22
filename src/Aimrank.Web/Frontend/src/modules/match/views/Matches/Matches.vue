@@ -41,7 +41,7 @@
             [$style.loser]: match.matchPlayerResult.difference < 0
           }"
         >
-          {{ match.matchPlayerResult.rating }} ({{ match.matchPlayerResult.difference }})
+          {{ match.matchPlayerResult.rating }} ({{ match.matchPlayerResult.difference >= 0 ? `+${match.matchPlayerResult.difference}` : match.matchPlayerResult.difference }})
         </td>
       </tr>
     </table>

@@ -55,7 +55,7 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
 						[P].[Stats_Deaths] AS [User_Deaths],
 						[P].[Stats_Score] AS [User_Score],
 						[P].[RatingStart] AS [User_RatingStart],
-						[P].[RatingEnd] AS [User_RatingEnd],
+						[P].[RatingEnd] AS [User_RatingEnd]
 					FROM [aimrank].[Matches] AS [M]
 					INNER JOIN [aimrank].[MatchesPlayers] AS [P] ON [M].[Id] = [P].[MatchId]
 					INNER JOIN [aimrank].[AspNetUsers] AS [U] ON [P].[UserId] = [U].[Id]
