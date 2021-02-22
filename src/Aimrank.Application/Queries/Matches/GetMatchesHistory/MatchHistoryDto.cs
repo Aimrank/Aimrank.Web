@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 
-namespace Aimrank.Application.Queries.GetMatchesHistory
+namespace Aimrank.Application.Queries.Matches.GetMatchesHistory
 {
     public class MatchHistoryDto
     {
@@ -14,18 +14,5 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
         public DateTime FinishedAt { get; set; }
         public List<MatchHistoryPlayerDto> TeamTerrorists { get; set; }
         public List<MatchHistoryPlayerDto> TeamCounterTerrorists { get; set; }
-    }
-
-    public class MatchHistoryPlayerDto
-    {
-        public Guid Id { get; set; }
-        public string Username { get; set; }
-        public int Team { get; set; }
-        public int Kills { get; set; }
-        public int Assists { get; set; }
-        public int Deaths { get; set; }
-        public int Score { get; set; }
-        public int RatingStart { get; set; }
-        public int RatingEnd { get; set; }
     }
 }
