@@ -58,7 +58,6 @@ public void PublishEvent(JSON_Object data)
     data.Cleanup();
 }
 
-
 public void HttpResponseCallback(bool success, const char[] error, System2HTTPRequest request, System2HTTPResponse response, HTTPRequestMethod method)
 {
 }
@@ -110,10 +109,12 @@ public JSON_Object GetScoreboard()
     JSON_Object teamT = new JSON_Object();
     JSON_Object teamCt = new JSON_Object();
 
-    teamT.SetInt("score", GetTeamScore(CS_TEAM_T));
+    // Teams score has to be swapped here
+    
+    teamT.SetInt("score", GetTeamScore(CS_TEAM_CT));
     teamT.SetObject("clients", clientsT);
 
-    teamCt.SetInt("score", GetTeamScore(CS_TEAM_CT));
+    teamCt.SetInt("score", GetTeamScore(CS_TEAM_T));
     teamCt.SetObject("clients", clientsCt);
 
     JSON_Object scoreboard = new JSON_Object();
