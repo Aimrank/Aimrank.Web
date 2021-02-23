@@ -47,7 +47,7 @@ namespace Aimrank.Application.Queries.Matches.GetMatchesHistory
             var sqlOuter = @$"
 				WITH [Result] AS (
 					SELECT
-						DENSE_RANK() OVER(ORDER BY [M].[FinishedAt] DESC) AS [Row],
+						DENSE_RANK() OVER(ORDER BY [M].[FinishedAt] DESC) + 1 AS [Row],
 						[M].[Id] AS [Id],
 						[M].[ScoreT] AS [ScoreT],
 						[M].[ScoreCT] AS [ScoreCT],

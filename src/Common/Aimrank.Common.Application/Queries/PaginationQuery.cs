@@ -16,10 +16,10 @@ namespace Aimrank.Common.Application.Queries
         public int Size
         {
             get => _size;
-            private init => _size = Math.Max(0, value);
+            private init => _size = Math.Max(1, value);
         }
 
-        public PaginationQuery(int page = 1, int size = 30)
+        public PaginationQuery(int page = 1, int size = 1)
         {
             Page = page;
             Size = size;
