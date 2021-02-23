@@ -1,6 +1,6 @@
 import { HttpClient } from "@/common/services/HttpClient";
 import { Service } from "@/common/services/Service";
-import { MatchMode } from "@/match/services/MatchService";
+import { MatchMode } from "@/match/models/MatchMode";
 
 export enum LobbyStatus {
   Open,

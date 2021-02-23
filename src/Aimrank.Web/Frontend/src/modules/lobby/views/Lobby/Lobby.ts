@@ -5,7 +5,7 @@ import { useUser } from "@/user/hooks/useUser";
 import { useMatch } from "@/match/hooks/useMatch";
 import { useLobby } from "@/lobby/hooks/useLobby";
 import { useNotifications } from "@/common/hooks/useNotifications";
-import { MatchStatus } from "@/match/services/MatchService";
+import { MatchStatus } from "@/match/models/MatchStatus";
 import BaseButton from "@/common/components/BaseButton";
 import InvitationForm from "@/lobby/components/InvitationForm";
 import LobbyConfiguration from "@/lobby/components/LobbyConfiguration";

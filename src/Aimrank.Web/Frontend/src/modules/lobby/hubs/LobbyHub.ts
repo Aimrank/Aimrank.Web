@@ -1,5 +1,6 @@
+import { userService } from "~/services";
 import { Hub } from "@/common/hubs/Hub";
-import { MatchStatus } from "@/match/services/MatchService";
+import { MatchStatus } from "@/match/models/MatchStatus";
 import { LobbyStatus } from "@/lobby/services/LobbyService";
 import { useUser } from "@/user/hooks/useUser";
 import { useMatch } from "@/match/hooks/useMatch";
@@ -20,7 +21,6 @@ import {
   IMatchAcceptedEvent,
   IMatchTimedOutEvent,
 } from "./LobbyHubEvents";
-import { userService } from "~/services";
 
 export class LobbyHub {
   private readonly user = useUser();
