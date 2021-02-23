@@ -21,7 +21,7 @@ namespace Aimrank.Application.Queries.Users.GetUserDetails
 
             const string sql =
                 @"SELECT
-                    [User].[Id] AS [UserId],
+                    [User].[Id] AS [Id],
                     [User].[SteamId] as [SteamId],
                     [User].[UserName] as [Username]
                   FROM [aimrank].[AspNetUsers] AS [User]

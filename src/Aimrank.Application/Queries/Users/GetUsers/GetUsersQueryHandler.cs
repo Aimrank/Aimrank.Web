@@ -23,7 +23,7 @@ namespace Aimrank.Application.Queries.Users.GetUsers
 
             const string sql = @"
                 SELECT TOP(20)
-                    [U].[Id] AS [UserId],
+                    [U].[Id] AS [Id],
                     [U].[SteamId] AS [SteamId],
                     [U].[UserName] AS [Username]
                 FROM [aimrank].[AspNetUsers] AS [U]

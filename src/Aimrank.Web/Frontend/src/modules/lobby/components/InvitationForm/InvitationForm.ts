@@ -2,8 +2,8 @@ import { defineComponent, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { lobbyService, userService } from "~/services";
 import { useNotifications } from "@/common/hooks/useNotifications";
-import { IUserDetailsDto } from "@/user/services/UserService";
 import { debounce } from "@/common/utilities/debounce";
+import { IUserDto } from "@/user/models/IUserDto";
 import FormFieldInput from "@/common/components/FormFieldInput";
 import Icon from "@/common/components/Icon";
 
@@ -20,7 +20,7 @@ const InvitationForm = defineComponent({
   },
   setup(props) {
     const username = ref("");
-    const users = ref<IUserDetailsDto[]>([]);
+    const users = ref<IUserDto[]>([]);
 
     const notifications = useNotifications();
     const i18n = useI18n();

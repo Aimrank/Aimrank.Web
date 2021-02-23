@@ -62,7 +62,7 @@ export class LobbyHub {
 
     if (result.isOk()) {
       this.lobby.addMember({
-        userId: result.value.userId,
+        userId: result.value.id,
         username: result.value.username,
         isLeader: false
       });

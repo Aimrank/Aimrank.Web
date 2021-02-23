@@ -1,11 +1,6 @@
 import { HttpClient } from "@/common/services/HttpClient";
 import { Service } from "@/common/services/Service";
-
-export interface IUserDetailsDto {
-  userId: string;
-  steamId: string | null;
-  username: string;
-}
+import { IUserDto } from "@/user/models/IUserDto";
 
 export class UserService extends Service {
   constructor(private readonly httpClient: HttpClient) {
@@ -16,10 +11,10 @@ export class UserService extends Service {
   }
 
   public async browse(name: string) {
-    return this.wrap<IUserDetailsDto[]>(this.httpClient.get(this.getRoute("browse"), { params: { name }}));
+    return this.wrap<IUserDto[]>(this.httpClient.get(this.getRoute("browse"), { params: { name }}));
   }
 
   public async getUserDetails(userId: string) {
-    return this.wrap<IUserDetailsDto>(this.httpClient.get(this.getRoute("getUserDetails", { userId })));
+    return this.wrap<IUserDto>(this.httpClient.get(this.getRoute("getUserDetails", { userId })));
   }
 }
