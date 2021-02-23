@@ -4,7 +4,7 @@ using Dapper;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Application.Queries.GetMatchForLobby
+namespace Aimrank.Application.Queries.Matches.GetMatchForLobby
 {
     public class GetMatchForLobbyQueryHandler : IQueryHandler<GetMatchForLobbyQuery, MatchDto>
     {

@@ -1,8 +1,8 @@
 import { defineComponent } from "vue";
 import { lobbyService } from "~/services";
 import { useLobby } from "@/lobby/hooks/useLobby";
-import { MatchMode } from "@/match/services/MatchService";
 import { useNotifications } from "@/common/hooks/useNotifications";
+import { MatchMode } from "@/match/models/MatchMode";
 import MapButton from "@/lobby/components/MapButton";
 
 const maps = {

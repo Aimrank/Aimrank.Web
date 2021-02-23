@@ -1,14 +1,16 @@
 ﻿using Aimrank.Application.Contracts;
 using Aimrank.Common.Application.Data;
+using Aimrank.Common.Application.Queries;
+using Aimrank.Domain.Matches;
 using Dapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
 
-namespace Aimrank.Application.Queries.GetMatchesHistory
+namespace Aimrank.Application.Queries.Matches.GetMatchesHistory
 {
-    public class GetMatchesHistoryQueryHandler : IQueryHandler<GetMatchesHistoryQuery, IEnumerable<MatchHistoryDto>>
+    public class GetMatchesHistoryQueryHandler : IQueryHandler<GetMatchesHistoryQuery, PaginationDto<MatchHistoryDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
@@ -17,29 +19,35 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<IEnumerable<MatchHistoryDto>> Handle(GetMatchesHistoryQuery request, CancellationToken cancellationToken)
+        public async Task<PaginationDto<MatchHistoryDto>> Handle(GetMatchesHistoryQuery request, CancellationToken cancellationToken)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
-            
-            const string sqlWhereUser = @"
-				WHERE [M].[Id] IN (
-					SELECT TOP 30 [M2].[Id]
-					FROM [aimrank].[Matches] AS [M2]
-					INNER JOIN [aimrank].[MatchesPlayers] AS [P] on [M2].[Id] = [P].[MatchId]
-					WHERE
-						[P].[UserId] = @UserId AND
-						[M2].[Status] = 5
-					ORDER BY [M2].[FinishedAt] DESC
-				)";
 
-            const string sqlWhereStatus = "WHERE [M].[Status] = 5";
+            var sqlParams = new
+            {
+	            request.UserId,
+	            request.Pagination.Offset,
+	            request.Pagination.Fetch,
+	            request.Filter.Map,
+	            request.Filter.Mode,
+	            Status = MatchStatus.Finished
+            };
 
-            var conditions = request.UserId.HasValue ? sqlWhereUser : sqlWhereStatus;
+            var sqlInner = $@"
+				FROM [aimrank].[Matches] AS [MI]
+				INNER JOIN [aimrank].[MatchesPlayers] AS [PI] on [MI].[Id] = [PI].[MatchId]
+				WHERE
+					[PI].[UserId] = @UserId AND
+					[MI].[Status] = @Status
+					{(request.Filter.Mode.HasValue ? "AND [MI].[Mode] = @Mode " : "")}
+					{(!string.IsNullOrEmpty(request.Filter.Map) ? "AND [MI].[Map] LIKE @Map" : "")}";
+
+            var sqlCount = $"SELECT COUNT ([MI].[Id]) {sqlInner}";
             
-            var sql = @$"
+            var sqlOuter = @$"
 				WITH [Result] AS (
 					SELECT
-						DENSE_RANK() OVER(ORDER BY [M].[FinishedAt] DESC) AS [Row],
+						DENSE_RANK() OVER(ORDER BY [M].[FinishedAt] DESC) + 1 AS [Row],
 						[M].[Id] AS [Id],
 						[M].[ScoreT] AS [ScoreT],
 						[M].[ScoreCT] AS [ScoreCT],
@@ -59,14 +67,21 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
 					FROM [aimrank].[Matches] AS [M]
 					INNER JOIN [aimrank].[MatchesPlayers] AS [P] ON [M].[Id] = [P].[MatchId]
 					INNER JOIN [aimrank].[AspNetUsers] AS [U] ON [P].[UserId] = [U].[Id]
-					{conditions}
+					WHERE [M].[Id] IN (
+						SELECT [MI].[Id]
+						{sqlInner}
+						ORDER BY [MI].[FinishedAt] DESC
+						OFFSET @Offset ROWS FETCH NEXT @Fetch ROWS ONLY
+					)
 				)
-				SELECT * FROM [Result] WHERE [Row] <= 30;";
+				SELECT * FROM [Result] WHERE [Row] BETWEEN @Offset AND (@Offset + @Fetch);";
+
+            var count = await connection.ExecuteScalarAsync<int>(sqlCount, sqlParams);
 
             var lookup = new Dictionary<Guid, MatchHistoryDto>();
 
             await connection.QueryAsync<MatchHistoryDto, MatchHistoryPlayerQueryResult, MatchHistoryDto>(
-	            sql,
+	            sqlOuter,
 	            (match, player) =>
 	            {
 		            if (!lookup.TryGetValue(match.Id, out var result))
@@ -101,23 +116,10 @@ namespace Aimrank.Application.Queries.GetMatchesHistory
 		            
 		            return result;
 	            },
-	            new {request.UserId},
+	            sqlParams,
 	            splitOn: "User_Id");
 
-            return lookup.Values;
+            return new PaginationDto<MatchHistoryDto>(lookup.Values, count);
         }
-        
-		private class MatchHistoryPlayerQueryResult
-		{
-			public Guid User_Id { get; init; }
-			public string User_Username { get; init; }
-			public int User_Team { get; set; }
-			public int User_Kills { get; init; }
-			public int User_Assists { get; init; }
-			public int User_Deaths { get; init; }
-			public int User_Score { get; init; }
-			public int User_RatingStart { get; set; }
-			public int User_RatingEnd { get; set; }
-		}
     }
 }

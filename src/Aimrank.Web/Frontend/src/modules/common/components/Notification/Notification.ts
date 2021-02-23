@@ -10,7 +10,7 @@ const Notification = defineComponent({
   props: {
     data: {
       type: Object as () => INotification,
-      required: true,
+      required: true
     }
   },
   setup(props, { emit }) {

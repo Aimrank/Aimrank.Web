@@ -3,47 +3,21 @@
 
 <template>
   <div :class="$style.container">
-    <div :class="$style.header">
-      <h3>Matches history</h3>
+    <select
+      :class="$style.select"
+      :disabled="state.isLoading"
+      v-model="state.mode"
+    >
+      <option :value="MatchMode.OneVsOne">1 vs 1</option>
+      <option :value="MatchMode.TwoVsTwo">2 vs 2</option>
+    </select>
+    <div :class="$style.section">
+      <h3 :class="$style.headline">Your rating in last 20 matches</h3>
+      <rating-chart :matches="matchesWithStatus" />
     </div>
-    <table :class="$style.table">
-      <tr>
-        <th>Date</th>
-        <th>Mode</th>
-        <th>Team A</th>
-        <th>Score</th>
-        <th>Team B</th>
-        <th>Status</th>
-        <th>Rating</th>
-      </tr>
-      <tr
-        v-for="match in matchesWithStatus"
-        :key="match.id"
-      >
-        <td>{{ new Date(match.finishedAt).toLocaleDateString() }}</td>
-        <td>{{ ["1 vs 1", "2 vs 2"][match.mode] }}</td>
-        <td>{{ match.teamTerrorists[0].username }}</td>
-        <td>
-          <strong>{{ match.scoreT }} : {{ match.scoreCT }}</strong>
-        </td>
-        <td>{{ match.teamCounterTerrorists[0].username }}</td>
-        <td
-          :class="{
-            [$style.winner]: match.matchResult > 0,
-            [$style.loser]: match.matchResult < 0
-          }"
-        >
-          {{ match.matchResult === 0 ? "DRAW" : (match.matchResult > 0 ? "WIN" : "LOSS") }}
-        </td>
-        <td
-          :class="{
-            [$style.winner]: match.matchPlayerResult.difference > 0,
-            [$style.loser]: match.matchPlayerResult.difference < 0
-          }"
-        >
-          {{ match.matchPlayerResult.rating }} ({{ match.matchPlayerResult.difference >= 0 ? `+${match.matchPlayerResult.difference}` : match.matchPlayerResult.difference }})
-        </td>
-      </tr>
-    </table>
+    <div :class="$style.section">
+      <h3 :class="$style.headline">Last 20 matches</h3>
+      <matches-table :matches="matchesWithStatus" />
+    </div>
   </div>
 </template>

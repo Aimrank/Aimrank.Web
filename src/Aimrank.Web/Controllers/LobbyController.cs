@@ -8,7 +8,7 @@ using Aimrank.Application.Commands.Lobbies.StartSearchingForGame;
 using Aimrank.Application.Contracts;
 using Aimrank.Application.Queries.GetLobbyForUser;
 using Aimrank.Application.Queries.GetLobbyInvitations;
-using Aimrank.Application.Queries.GetMatchForLobby;
+using Aimrank.Application.Queries.Matches.GetMatchForLobby;
 using Aimrank.Common.Application;
 using Aimrank.Web.Attributes;
 using Aimrank.Web.Contracts.Requests;

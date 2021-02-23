@@ -1,12 +1,15 @@
 using Aimrank.Application.Contracts;
 using Aimrank.Application.Queries.GetUserDetails;
 using Aimrank.Application.Queries.GetUsers;
+using Aimrank.Application.Queries.Matches.GetMatchesHistory;
+using Aimrank.Common.Application.Queries;
 using Aimrank.Web.Attributes;
+using Aimrank.Web.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System;
-using System.Linq;
 
 namespace Aimrank.Web.Controllers
 {
@@ -44,6 +47,17 @@ namespace Aimrank.Web.Controllers
             }
             
             return result;
+        }
+
+        [HttpGet("{id}/matches")]
+        public async Task<ActionResult<PaginationDto<MatchHistoryDto>>> GetUserMatches(Guid id, [FromQuery] GetMatchesHistoryRequest request)
+        {
+            var query = new GetMatchesHistoryQuery(
+                id,
+                new MatchHistoryFilter(request.Mode, request.Map),
+                new PaginationQuery(request.Page, request.Size));
+
+            return await _aimrankModule.ExecuteQueryAsync(query);
         }
     }
 }

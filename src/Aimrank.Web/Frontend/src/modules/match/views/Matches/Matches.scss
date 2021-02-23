@@ -1,35 +1,17 @@
-@use "~/styles/variables/colors" as colors;
-@use "~/styles/variables/fonts" as fonts;
-
 .container {
   padding: 20px;
 }
 
-.header {
+.section {
+  &:not(:last-child) {
+    margin-bottom: 20px;
+  }
+}
+
+.headline {
   margin-bottom: 20px;
 }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-
-  th,
-  td {
-    padding: 10px;
-    border: 1px solid colors.$lightGray;
-    text-align: left;
-  }
-
-  td:nth-child(6),
-  td:nth-child(7) {
-    font-weight: fonts.$weightBold;
-  }
-}
-
-.winner {
-  color: colors.$success;
-}
-
-.loser {
-  color: colors.$danger;
+.select {
+  margin-bottom: 20px;
 }

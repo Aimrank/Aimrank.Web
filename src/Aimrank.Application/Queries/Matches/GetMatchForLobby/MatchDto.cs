@@ -1,6 +1,6 @@
 using System;
 
-namespace Aimrank.Application.Queries.GetMatchForLobby
+namespace Aimrank.Application.Queries.Matches.GetMatchForLobby
 {
     public class MatchDto
     {

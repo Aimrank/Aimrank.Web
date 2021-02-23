@@ -1,68 +1,30 @@
+import { IPaginationResponse } from "@/common/models/IPaginationResponse";
 import { HttpClient } from "@/common/services/HttpClient";
 import { Service } from "@/common/services/Service";
+import { MatchMode } from "@/match/models/MatchMode";
+import { IMatchDto } from "@/match/models/IMatchDto";
+import { IMatchHistoryDto } from "@/match/models/IMatchHistoryDto";
 
-export enum MatchStatus {
-  Created,
-  Ready,
-  Canceled,
-  Starting,
-  Started,
-  Finished
-}
-
-export enum MatchMode {
-  OneVsOne,
-  TwoVsTwo
-}
-
-export enum MatchTeam {
-  T = 2,
-  CT = 3
-}
-
-export interface IMatchDto {
-  id: string;
-  map: string;
-  mode: MatchMode;
-  status: MatchStatus;
-  address: string;
-}
-
-export interface IMatchHistoryDto {
-  id: string;
-  mode: MatchMode;
-  scoreT: number;
-  scoreCT: number;
-  createdAt: string;
-  finishedAt: string;
-  map: string;
-  teamTerrorists: IMatchHistoryPlayerDto[];
-  teamCounterTerrorists: IMatchHistoryPlayerDto[];
-}
-
-export interface IMatchHistoryPlayerDto {
-  id: string;
-  username: string;
-  team: MatchTeam;
-  kills: number;
-  assists: number;
-  deaths: number;
-  score: number;
-  ratingStart: number;
-  ratingEnd: number;
+export interface IBrowseMatchesQuery {
+  page?: number;
+  size?: number;
+  map?: string;
+  mode?: MatchMode;
 }
 
 export class MatchService extends Service {
   constructor(private readonly httpClient: HttpClient) {
     super({
-      browse: "/match",
+      browse: "/user/{userId}/matches",
       accept: "/match/{matchId}/accept",
       getByLobbyId: "/lobby/{lobbyId}/match"
     });
   }
 
-  public browse(userId: string) {
-    return this.wrap<IMatchHistoryDto[]>(this.httpClient.get(this.getRoute("browse"), { params: { userId }}));
+  public browse(userId: string, query?: IBrowseMatchesQuery) {
+    return this.wrap<IPaginationResponse<IMatchHistoryDto>>(
+      this.httpClient.get(this.getRoute("browse", { userId }), { params: query })
+    );
   }
 
   public getByLobbyId(lobbyId: string) {

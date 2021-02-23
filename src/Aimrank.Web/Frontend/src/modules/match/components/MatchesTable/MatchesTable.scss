@@ -1,0 +1,27 @@
+@use "~/styles/variables/colors" as colors;
+@use "~/styles/variables/fonts" as fonts;
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 10px;
+    border: 1px solid colors.$lightGray;
+    text-align: left;
+  }
+
+  td:nth-child(6),
+  td:nth-child(7) {
+    font-weight: fonts.$weightBold;
+  }
+}
+
+.winner {
+  color: colors.$success;
+}
+
+.loser {
+  color: colors.$danger;
+}
