@@ -2,14 +2,14 @@ import { defineComponent, onMounted, computed, watch, reactive } from "vue";
 import { matchService } from "~/services";
 import { useUser } from "@/user/hooks/useUser";
 import { MatchMode } from "@/match/models/MatchMode";
-import { IMatchHistoryDto } from "@/match/models/IMatchHistoryDto";
+import { IMatchDto } from "@/match/models/IMatchDto";
 import { getMatchEntries } from "@/match/models/MatchEntry";
 import MatchesTable from "@/match/components/MatchesTable";
 import RatingChart from "@/match/components/RatingChart";
 
 interface IState {
   isLoading: boolean;
-  matches: IMatchHistoryDto[];
+  matches: IMatchDto[];
   mode: MatchMode;
 }
 

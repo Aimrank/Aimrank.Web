@@ -1,43 +1,16 @@
 import { HttpClient } from "@/common/services/HttpClient";
 import { Service } from "@/common/services/Service";
 import { MatchMode } from "@/match/models/MatchMode";
-
-export enum LobbyStatus {
-  Open,
-  Searching,
-  Closed
-}
-
-export interface ILobbyConfiguration {
-  name: string;
-  map: string;
-  mode: MatchMode;
-}
-
-export interface ILobbyMember {
-  userId: string;
-  username: string;
-  isLeader: boolean;
-}
-
-export interface ILobbyDto {
-  id: string;
-  configuration: ILobbyConfiguration;
-  status: LobbyStatus;
-  members: ILobbyMember[];
-}
-
-export interface ILobbyInvitationDto {
-  lobbyId: string;
-  invitingUserId: string;
-  invitingUserName: string;
-  invitedUserId: string;
-  invitedUserName: string;
-  createdAt: string;
-}
+import { ILobbyMatchDto } from "@/lobby/models/ILobbyMatchDto";
+import { ILobbyDto } from "@/lobby/models/ILobbyDto";
+import { ILobbyInvitationDto } from "@/lobby/models/ILobbyInvitationDto";
 
 export interface IInviteUserToLobbyRequest {
   invitedUserId: string;
+}
+
+export interface IChangeLobbyMapRequest {
+  name: string;
 }
 
 export interface IChangeLobbyConfigurationRequest {
@@ -46,22 +19,19 @@ export interface IChangeLobbyConfigurationRequest {
   mode: MatchMode;
 }
 
-export interface IChangeLobbyMapRequest {
-  name: string;
-}
-
 export class LobbyService extends Service {
   constructor(private readonly httpClient: HttpClient) {
     super({
       getForCurrentUser: "/lobby/current",
       getInvitations: "/lobby/invitations",
+      getMatch: "/lobby/{id}/match",
       create: "/lobby",
       invite: "/lobby/{id}/invite",
       inviteAccept: "/lobby/{id}/invite/accept",
       inviteCancel: "/lobby/{id}/invite/cancel",
       leave: "/lobby/{id}/members",
       changeConfiguration: "/lobby/{id}/configuration",
-      startSearching: "/lobby/{id}/start"
+      startSearching: "/lobby/{id}/start",
     });
   }
 
@@ -71,6 +41,10 @@ export class LobbyService extends Service {
 
   public getInvitations() {
     return this.wrap<ILobbyInvitationDto[]>(this.httpClient.get(this.getRoute("getInvitations")));
+  }
+
+  public getMatch(id: string) {
+    return this.wrap<ILobbyMatchDto | undefined>(this.httpClient.get(this.getRoute("getMatch", { id })));
   }
 
   public create() {

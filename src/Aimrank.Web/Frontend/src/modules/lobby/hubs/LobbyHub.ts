@@ -1,7 +1,7 @@
 import { userService } from "~/services";
 import { Hub } from "@/common/hubs/Hub";
 import { MatchStatus } from "@/match/models/MatchStatus";
-import { LobbyStatus } from "@/lobby/services/LobbyService";
+import { LobbyStatus } from "@/lobby/models/ILobbyStatus";
 import { useUser } from "@/user/hooks/useUser";
 import { useMatch } from "@/match/hooks/useMatch";
 import { useLobby } from "@/lobby/hooks/useLobby";
