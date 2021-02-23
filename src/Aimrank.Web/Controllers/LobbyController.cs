@@ -6,9 +6,9 @@ using Aimrank.Application.Commands.Lobbies.InviteUserToLobby;
 using Aimrank.Application.Commands.Lobbies.LeaveLobby;
 using Aimrank.Application.Commands.Lobbies.StartSearchingForGame;
 using Aimrank.Application.Contracts;
-using Aimrank.Application.Queries.GetLobbyForUser;
-using Aimrank.Application.Queries.GetLobbyInvitations;
-using Aimrank.Application.Queries.Matches.GetMatchForLobby;
+using Aimrank.Application.Queries.Lobbies.GetLobbyForUser;
+using Aimrank.Application.Queries.Lobbies.GetLobbyInvitations;
+using Aimrank.Application.Queries.Lobbies.GetLobbyMatch;
 using Aimrank.Common.Application;
 using Aimrank.Web.Attributes;
 using Aimrank.Web.Contracts.Requests;
@@ -65,9 +65,9 @@ namespace Aimrank.Web.Controllers
         }
 
         [HttpGet("{id}/match")]
-        public async Task<ActionResult<MatchDto>> GetMatch(Guid id)
+        public async Task<ActionResult<LobbyMatchDto>> GetMatch(Guid id)
         {
-            var match = await _aimrankModule.ExecuteQueryAsync(new GetMatchForLobbyQuery(id));
+            var match = await _aimrankModule.ExecuteQueryAsync(new GetLobbyMatchQuery(id));
             if (match is null)
             {
                 return NoContent();

@@ -1,10 +1,26 @@
 import { MatchMode } from "./MatchMode";
-import { MatchStatus } from "./MatchStatus";
+import { MatchTeam } from "./MatchTeam";
+
+interface IMatchPlayerDto {
+  id: string;
+  username: string;
+  team: MatchTeam;
+  kills: number;
+  assists: number;
+  deaths: number;
+  score: number;
+  ratingStart: number;
+  ratingEnd: number;
+}
 
 export interface IMatchDto {
   id: string;
-  map: string;
   mode: MatchMode;
-  status: MatchStatus;
-  address: string;
+  scoreT: number;
+  scoreCT: number;
+  createdAt: string;
+  finishedAt: string;
+  map: string;
+  teamTerrorists: IMatchPlayerDto[];
+  teamCounterTerrorists: IMatchPlayerDto[];
 }

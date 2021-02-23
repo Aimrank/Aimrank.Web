@@ -1,6 +1,6 @@
-import { IMatchHistoryDto } from "./IMatchHistoryDto";
+import { IMatchDto } from "./IMatchDto";
 
-export interface IMatchEntry extends IMatchHistoryDto {
+export interface IMatchEntry extends IMatchDto {
   matchResult: -1 | 0 | 1;
   matchPlayerResult: {
     rating: number;
@@ -8,7 +8,7 @@ export interface IMatchEntry extends IMatchHistoryDto {
   }
 }
 
-const getMatchResult = (match: IMatchHistoryDto, userId?: string) => {
+const getMatchResult = (match: IMatchDto, userId?: string) => {
   const p1 = match.teamTerrorists[0];
   const p2 = match.teamCounterTerrorists[0];
 
@@ -21,7 +21,7 @@ const getMatchResult = (match: IMatchHistoryDto, userId?: string) => {
   return winner === userId ? 1 : -1;
 }
 
-const getMatchPlayerResult = (match: IMatchHistoryDto, userId?: string) => {
+const getMatchPlayerResult = (match: IMatchDto, userId?: string) => {
   const player = [...match.teamTerrorists, ...match.teamCounterTerrorists].find(p => p.id === userId);
 
   if (player) {
@@ -31,7 +31,7 @@ const getMatchPlayerResult = (match: IMatchHistoryDto, userId?: string) => {
   return { rating: 0, difference: 0 };
 }
 
-export const getMatchEntries = (matches: IMatchHistoryDto[], userId?: string): IMatchEntry[] => matches.map(m =>
+export const getMatchEntries = (matches: IMatchDto[], userId?: string): IMatchEntry[] => matches.map(m =>
   ({
     ...m,
     matchResult: getMatchResult(m, userId),

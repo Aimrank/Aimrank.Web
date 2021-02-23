@@ -1,4 +1,4 @@
-using Aimrank.Application.Commands.ProcessServerEvent;
+using Aimrank.Application.CSGO.Commands.ProcessServerEvent;
 using Aimrank.Application.Contracts;
 using Aimrank.Web.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;

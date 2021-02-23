@@ -1,16 +1,16 @@
 import { reactive, readonly } from "vue";
 import { userService } from "~/services";
-import { IUser } from "@/user/models/IUser";
+import { IUserDto } from "@/user/models/IUserDto";
 
 interface IUserState {
-  user: IUser | null;
+  user: IUserDto | null;
 }
 
 const state = reactive<IUserState>({
   user: null
 });
 
-const setUser = (user: IUser | null) => {
+const setUser = (user: IUserDto | null) => {
   state.user = user;
 }
 
@@ -19,7 +19,7 @@ const updateUser = async (userId: string) => {
 
   if (result.isOk()) {
     setUser({
-      id: result.value.userId,
+      id: result.value.id,
       steamId: result.value.steamId,
       username: result.value.username
     });

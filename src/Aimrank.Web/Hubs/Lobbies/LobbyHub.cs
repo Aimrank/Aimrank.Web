@@ -1,5 +1,5 @@
 using Aimrank.Application.Contracts;
-using Aimrank.Application.Queries.GetLobbyForUser;
+using Aimrank.Application.Queries.Lobbies.GetLobbyForUser;
 using Aimrank.Web.Attributes;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;

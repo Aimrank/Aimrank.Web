@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { lobbyHub, lobbyService, matchService } from "~/services";
 import { useUser } from "@/user/hooks/useUser";
@@ -34,7 +34,7 @@ const useLobbyView = () => {
 
       await lobbyHub.connect();
 
-      const matchResult = await matchService.getByLobbyId(result.value.id);
+      const matchResult = await lobbyService.getMatch(result.value.id);
 
       if (matchResult.isOk() && matchResult.value) {
         match.setMatch(matchResult.value);

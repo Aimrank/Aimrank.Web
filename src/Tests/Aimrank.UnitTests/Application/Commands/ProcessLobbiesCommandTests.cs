@@ -1,5 +1,5 @@
 using Aimrank.Application.CSGO;
-using Aimrank.Application.Commands.ProcessLobbies;
+using Aimrank.Application.Commands.Lobbies.ProcessLobbies;
 using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Matches;
 using Aimrank.Domain.Users;

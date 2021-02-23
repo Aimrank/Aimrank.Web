@@ -1,4 +1,4 @@
-using Aimrank.Application.Commands.UpdateUserSteamDetails;
+using Aimrank.Application.Commands.Users.UpdateUserSteamDetails;
 using Aimrank.Application.Contracts;
 using Aimrank.Common.Application;
 using Aimrank.Common.Domain;

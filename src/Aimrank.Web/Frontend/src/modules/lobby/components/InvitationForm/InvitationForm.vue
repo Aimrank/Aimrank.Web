@@ -13,14 +13,14 @@
     >
       <li
         v-for="user in users"
-        :key="user.userId"
+        :key="user.id"
         :class="$style.listItem"
       >
         {{ user.username }}
         <icon
           :class="$style.listItemIcon"
           name="envelope"
-          @click="onInviteClick(user.userId)"
+          @click="onInviteClick(user.id)"
         />
       </li>
     </ul>

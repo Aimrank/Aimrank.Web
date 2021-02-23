@@ -1,5 +1,5 @@
-using Aimrank.Application.Commands.SignIn;
-using Aimrank.Application.Commands.SignUp;
+using Aimrank.Application.Commands.Users.SignIn;
+using Aimrank.Application.Commands.Users.SignUp;
 using Aimrank.Common.Application.Exceptions;
 using Aimrank.Common.Application;
 using Aimrank.Common.Domain;

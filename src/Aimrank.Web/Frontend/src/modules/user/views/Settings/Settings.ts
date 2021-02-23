@@ -3,14 +3,9 @@ import { steamService, userService } from "~/services";
 import { useUser } from "@/user/hooks/useUser";
 import { useNotifications } from "@/common/hooks/useNotifications";
 import { useInitialState } from "@/common/hooks/useInitialState";
+import { IUserDto } from "@/user/models/IUserDto";
 import BaseButton from "@/common/components/BaseButton";
 import Icon from "@/common/components/Icon";
-
-interface IUserDetails {
-  userId: string;
-  steamId: string | null;
-  username: string;
-}
 
 const Settings = defineComponent({
   components: {
@@ -18,7 +13,7 @@ const Settings = defineComponent({
     Icon
   },
   setup() {
-    const userDetails = ref<IUserDetails | null>(null);
+    const userDetails = ref<IUserDto | null>(null);
 
     const user = useUser();
     const notifications = useNotifications();

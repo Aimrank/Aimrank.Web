@@ -1,7 +1,7 @@
 using Aimrank.Application.Contracts;
-using Aimrank.Application.Queries.GetUserDetails;
-using Aimrank.Application.Queries.GetUsers;
-using Aimrank.Application.Queries.Matches.GetMatchesHistory;
+using Aimrank.Application.Queries.Matches.GetFinishedMatches;
+using Aimrank.Application.Queries.Users.GetUserDetails;
+using Aimrank.Application.Queries.Users.GetUsers;
 using Aimrank.Common.Application.Queries;
 using Aimrank.Web.Attributes;
 using Aimrank.Web.Contracts.Requests;
@@ -26,11 +26,11 @@ namespace Aimrank.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDetailsDto>>> Browse([FromQuery] string name)
+        public async Task<ActionResult<IEnumerable<UserDto>>> Browse([FromQuery] string name)
         {
             if (string.IsNullOrEmpty(name))
             {
-                return Ok(Enumerable.Empty<UserDetailsDto>());
+                return Ok(Enumerable.Empty<UserDto>());
             }
             
             var result = await _aimrankModule.ExecuteQueryAsync(new GetUsersQuery(name));
@@ -38,7 +38,7 @@ namespace Aimrank.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDetailsDto>> GetUserDetails(Guid id)
+        public async Task<ActionResult<UserDto>> GetUserDetails(Guid id)
         {
             var result = await _aimrankModule.ExecuteQueryAsync(new GetUserDetailsQuery(id));
             if (result is null)
@@ -50,11 +50,11 @@ namespace Aimrank.Web.Controllers
         }
 
         [HttpGet("{id}/matches")]
-        public async Task<ActionResult<PaginationDto<MatchHistoryDto>>> GetUserMatches(Guid id, [FromQuery] GetMatchesHistoryRequest request)
+        public async Task<ActionResult<PaginationDto<MatchDto>>> GetUserMatches(Guid id, [FromQuery] GetMatchesHistoryRequest request)
         {
-            var query = new GetMatchesHistoryQuery(
+            var query = new GetFinishedMatchesQuery(
                 id,
-                new MatchHistoryFilter(request.Mode, request.Map),
+                new FinishedMatchesFilter(request.Mode, request.Map),
                 new PaginationQuery(request.Page, request.Size));
 
             return await _aimrankModule.ExecuteQueryAsync(query);

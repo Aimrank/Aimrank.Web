@@ -1,4 +1,4 @@
-using Aimrank.Application.Commands.ProcessLobbies;
+using Aimrank.Application.Commands.Lobbies.ProcessLobbies;
 using Quartz;
 using System.Threading.Tasks;
 

@@ -1,4 +1,4 @@
-using Aimrank.Application.Commands.SignIn;
+using Aimrank.Application.Commands.Users.SignIn;
 using Microsoft.AspNetCore.Http;
 
 namespace Aimrank.Web.ProblemDetails
