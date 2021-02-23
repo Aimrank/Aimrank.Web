@@ -1,5 +1,5 @@
 <script src="./RatingChart.ts" lang="ts"></script>
 
 <template>
-  <div>Rating chart</div>
+  <canvas ref="root" style="width: 100%; height: 200px;"></canvas>
 </template>
