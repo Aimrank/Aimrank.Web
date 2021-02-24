@@ -50,7 +50,7 @@ namespace Aimrank.Web.Controllers
         }
 
         [HttpGet("{id}/matches")]
-        public async Task<ActionResult<PaginationDto<MatchDto>>> GetUserMatches(Guid id, [FromQuery] GetMatchesHistoryRequest request)
+        public async Task<ActionResult<PaginationDto<MatchDto>>> GetUserMatches(Guid id, [FromQuery] GetMatchesRequest request)
         {
             var query = new GetFinishedMatchesQuery(
                 id,

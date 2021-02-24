@@ -62,6 +62,11 @@ namespace Aimrank.Application.Queries.Matches.GetFinishedMatches
 						[P].[Stats_Assists] AS [User_Assists],
 						[P].[Stats_Deaths] AS [User_Deaths],
 						[P].[Stats_Score] AS [User_Score],
+						CASE
+							WHEN [P].[Stats_Kills] = 0 THEN 0
+							ELSE CAST([P].[Stats_Hs] AS float) / CAST([P].[Stats_Kills] AS float) * 100
+						END
+							AS [User_HsPercentage],
 						[P].[RatingStart] AS [User_RatingStart],
 						[P].[RatingEnd] AS [User_RatingEnd]
 					FROM [aimrank].[Matches] AS [M]
@@ -101,6 +106,7 @@ namespace Aimrank.Application.Queries.Matches.GetFinishedMatches
 			            Assists = player.User_Assists,
 			            Deaths = player.User_Deaths,
 			            Score = player.User_Score,
+			            HsPercentage = player.User_HsPercentage,
 			            RatingStart = player.User_RatingStart,
 			            RatingEnd = player.User_RatingEnd
 		            };
