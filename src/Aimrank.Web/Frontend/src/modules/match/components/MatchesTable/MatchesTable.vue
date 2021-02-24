@@ -9,6 +9,8 @@
       <th></th>
       <th>Score</th>
       <th></th>
+      <th>K/D Ratio</th>
+      <th>Headshots %</th>
       <th>Status</th>
       <th>Rating</th>
     </tr>
@@ -23,6 +25,8 @@
         <strong>{{ match.scoreT }} : {{ match.scoreCT }}</strong>
       </td>
       <td>{{ match.teamCounterTerrorists[0].username }}</td>
+      <td>{{ (match.matchPlayerResult.kills === 0 ? 0 : match.matchPlayerResult.kills / match.matchPlayerResult.deaths).toFixed(2) }}</td>
+      <td>{{ Math.round(match.matchPlayerResult.hsPercentage) }}</td>
       <td
         :class="{
           [$style.winner]: match.matchResult > 0,
