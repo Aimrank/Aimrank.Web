@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aimrank.Database.Migrator.Migrations
 {
     [DbContext(typeof(AimrankContext))]
-    [Migration("20210221161152_Initial")]
+    [Migration("20210224183058_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -531,6 +531,10 @@ namespace Aimrank.Database.Migrator.Migrations
                                         .HasColumnType("int")
                                         .HasColumnName("Stats_Deaths");
 
+                                    b2.Property<int>("Hs")
+                                        .HasColumnType("int")
+                                        .HasColumnName("Stats_Hs");
+
                                     b2.Property<int>("Kills")
                                         .HasColumnType("int")
                                         .HasColumnName("Stats_Kills");
@@ -547,7 +551,8 @@ namespace Aimrank.Database.Migrator.Migrations
                                         .HasForeignKey("MatchPlayerMatchId", "MatchPlayerUserId");
                                 });
 
-                            b1.Navigation("Stats");
+                            b1.Navigation("Stats")
+                                .IsRequired();
                         });
 
                     b.Navigation("Lobbies");

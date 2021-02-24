@@ -529,6 +529,10 @@ namespace Aimrank.Database.Migrator.Migrations
                                         .HasColumnType("int")
                                         .HasColumnName("Stats_Deaths");
 
+                                    b2.Property<int>("Hs")
+                                        .HasColumnType("int")
+                                        .HasColumnName("Stats_Hs");
+
                                     b2.Property<int>("Kills")
                                         .HasColumnType("int")
                                         .HasColumnName("Stats_Kills");
@@ -545,7 +549,8 @@ namespace Aimrank.Database.Migrator.Migrations
                                         .HasForeignKey("MatchPlayerMatchId", "MatchPlayerUserId");
                                 });
 
-                            b1.Navigation("Stats");
+                            b1.Navigation("Stats")
+                                .IsRequired();
                         });
 
                     b.Navigation("Lobbies");

@@ -3,8 +3,11 @@ import { IMatchDto } from "./IMatchDto";
 export interface IMatchEntry extends IMatchDto {
   matchResult: -1 | 0 | 1;
   matchPlayerResult: {
+    kills: number;
+    deaths: number;
     rating: number;
     difference: number;
+    hsPercentage: number;
   }
 }
 
@@ -25,10 +28,16 @@ const getMatchPlayerResult = (match: IMatchDto, userId?: string) => {
   const player = [...match.teamTerrorists, ...match.teamCounterTerrorists].find(p => p.id === userId);
 
   if (player) {
-    return { rating: player?.ratingEnd, difference: player?.ratingEnd - player?.ratingStart };
+    return {
+      kills: player.kills,
+      deaths: player.deaths,
+      rating: player.ratingEnd,
+      difference: player.ratingEnd - player.ratingStart,
+      hsPercentage: player.hsPercentage
+    };
   }
 
-  return { rating: 0, difference: 0 };
+  return { kills: 0, deaths: 0, rating: 0, difference: 0, hsPercentage: 0 };
 }
 
 export const getMatchEntries = (matches: IMatchDto[], userId?: string): IMatchEntry[] => matches.map(m =>

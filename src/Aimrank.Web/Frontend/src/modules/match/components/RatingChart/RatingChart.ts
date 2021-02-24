@@ -34,7 +34,7 @@ const RatingChart = defineComponent({
       new Chart(root.value, {
         type: "line",
         data: {
-          labels: matchesSorted.value.map(m => new Date(m.finishedAt).toDateString()),
+          labels: matchesSorted.value.map(m => new Date(m.finishedAt).toDateString().slice(0, 3)),
           datasets: [{
             fill: true,
             data: rating.value,
