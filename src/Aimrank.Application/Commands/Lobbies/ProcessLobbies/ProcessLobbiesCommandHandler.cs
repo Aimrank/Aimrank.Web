@@ -95,7 +95,7 @@ namespace Aimrank.Application.Commands.Lobbies.ProcessLobbies
                         
                         match.SetReady();
 
-                        var lobbiesToClose = await _lobbyRepository.BrowseByIdAsync(lobbiesIds);
+                        var lobbiesToClose = lobbiesSearching.Where(l => lobbiesIds.Contains(l.Id));
 
                         foreach (var lobbyToClose in lobbiesToClose)
                         {

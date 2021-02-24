@@ -38,12 +38,14 @@ namespace Aimrank.Infrastructure.Domain.Matches
                 b.WithOwner().HasForeignKey("MatchId");
 
                 b.OwnsOne(p => p.Stats, x =>
-                {
-                    x.Property(s => s.Kills).HasColumnName("Stats_Kills");
-                    x.Property(s => s.Assists).HasColumnName("Stats_Assists");
-                    x.Property(s => s.Deaths).HasColumnName("Stats_Deaths");
-                    x.Property(s => s.Score).HasColumnName("Stats_Score");
-                });
+                    {
+                        x.Property(s => s.Kills).HasColumnName("Stats_Kills");
+                        x.Property(s => s.Assists).HasColumnName("Stats_Assists");
+                        x.Property(s => s.Deaths).HasColumnName("Stats_Deaths");
+                        x.Property(s => s.Score).HasColumnName("Stats_Score");
+                        x.Property(s => s.Hs).HasColumnName("Stats_Hs");
+                    })
+                    .Navigation(p => p.Stats).IsRequired();
             });
             
             builder.OwnsMany(m => m.Lobbies, b =>
