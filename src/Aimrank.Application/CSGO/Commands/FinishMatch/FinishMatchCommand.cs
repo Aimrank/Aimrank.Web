@@ -6,15 +6,18 @@ namespace Aimrank.Application.CSGO.Commands.FinishMatch
     public class FinishMatchCommand : IServerEventCommand
     {
         public Guid MatchId { get; set; }
+        public int Winner { get; }
         public MatchEndEventTeam TeamTerrorists { get; }
         public MatchEndEventTeam TeamCounterTerrorists { get; }
 
         public FinishMatchCommand(
             Guid matchId,
+            int winner,
             MatchEndEventTeam teamTerrorists,
             MatchEndEventTeam teamCounterTerrorists)
         {
             MatchId = matchId;
+            Winner = winner;
             TeamTerrorists = teamTerrorists;
             TeamCounterTerrorists = teamCounterTerrorists;
         }

@@ -1,4 +1,5 @@
 ﻿using Aimrank.Common.Domain;
+using Aimrank.Domain.Matches.Events;
 using Aimrank.Domain.Users;
 using System;
 
@@ -12,6 +13,7 @@ namespace Aimrank.Domain.Matches
         public MatchPlayerStats Stats { get; private set; }
         public int RatingStart { get; private set; }
         public int RatingEnd { get; private set; }
+        public bool IsLeaver { get; private set; }
 
         private MatchPlayer() {}
 
@@ -22,15 +24,34 @@ namespace Aimrank.Domain.Matches
             Team = team;
             Stats = new MatchPlayerStats(0, 0, 0, 0, 0);
             RatingStart = rating;
+            IsLeaver = false;
         }
 
         internal void UpdateStats(MatchPlayerStats stats) => Stats = stats;
+        
+        internal void MarkAsLeaver()
+        {
+            if (IsLeaver)
+            {
+                return;
+            }
+            
+            IsLeaver = true;
+            
+            AddDomainEvent(new MatchPlayerLeftDomainEvent(this));
+        }
 
         internal void CalculateNewRating(double score, int enemyRating)
         {
-            var estimated = Math.Round(1.0 / (1 + Math.Pow(10, (enemyRating - RatingStart) / 400.0)), 2);
-
-            RatingEnd = (int) Math.Round(RatingStart + GetK() * (score - estimated));
+            if (IsLeaver)
+            {
+                RatingEnd = RatingStart - GetK();
+            }
+            else
+            {
+                var estimated = Math.Round(1.0 / (1 + Math.Pow(10, (enemyRating - RatingStart) / 400.0)), 2);
+                RatingEnd = (int) Math.Round(RatingStart + GetK() * (score - estimated));
+            }
         }
 
         private int GetK() => RatingStart switch

@@ -15,6 +15,7 @@ namespace Aimrank.Infrastructure.Domain.Matches
             builder.HasKey(m => m.Id);
 
             builder.Property(m => m.Id).HasColumnName("Id");
+            builder.Property(m => m.Winner).HasColumnName("Winner");
             builder.Property(m => m.ScoreT).HasColumnName("ScoreT");
             builder.Property(m => m.ScoreCT).HasColumnName("ScoreCT");
             builder.Property(m => m.Map).HasColumnName("Map").IsRequired().HasMaxLength(50);
@@ -33,6 +34,7 @@ namespace Aimrank.Infrastructure.Domain.Matches
                 b.Property(p => p.Team).HasColumnName("Team");
                 b.Property(p => p.RatingStart).HasColumnName("RatingStart");
                 b.Property(p => p.RatingEnd).HasColumnName("RatingEnd");
+                b.Property(p => p.IsLeaver).HasColumnName("IsLeaver");
                 b.HasKey("MatchId", "UserId");
                 b.HasOne<UserModel>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
                 b.WithOwner().HasForeignKey("MatchId");

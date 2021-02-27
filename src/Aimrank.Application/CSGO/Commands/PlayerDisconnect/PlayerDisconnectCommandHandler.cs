@@ -1,17 +1,28 @@
-﻿using MediatR;
+﻿using Aimrank.Domain.Matches;
+using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
-using System;
 
 namespace Aimrank.Application.CSGO.Commands.PlayerDisconnect
 {
     public class PlayerDisconnectCommandHandler : IServerEventCommandHandler<PlayerDisconnectCommand>
     {
-        public Task<Unit> Handle(PlayerDisconnectCommand request, CancellationToken cancellationToken)
+        private readonly IMatchRepository _matchRepository;
+
+        public PlayerDisconnectCommandHandler(IMatchRepository matchRepository)
         {
-            Console.WriteLine($"Player disconnected from match ({request.MatchId}) and failed to reconnect within specified time: {request.SteamId}");
+            _matchRepository = matchRepository;
+        }
+
+        public async Task<Unit> Handle(PlayerDisconnectCommand request, CancellationToken cancellationToken)
+        {
+            var match = await _matchRepository.GetByIdAsync(new MatchId(request.MatchId));
+
+            match.MarkPlayerAsLeaver(request.SteamId);
             
-            return Task.FromResult(Unit.Value);
+            _matchRepository.Update(match);
+            
+            return Unit.Value;
         }
     }
 }

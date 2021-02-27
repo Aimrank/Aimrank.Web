@@ -76,6 +76,10 @@ namespace Aimrank.Database.Migrator.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Status");
 
+                    b.Property<int>("Winner")
+                        .HasColumnType("int")
+                        .HasColumnName("Winner");
+
                     b.HasKey("Id");
 
                     b.ToTable("Matches", "aimrank");
@@ -479,6 +483,10 @@ namespace Aimrank.Database.Migrator.Migrations
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uniqueidentifier")
                                 .HasColumnName("UserId");
+
+                            b1.Property<bool>("IsLeaver")
+                                .HasColumnType("bit")
+                                .HasColumnName("IsLeaver");
 
                             b1.Property<int>("RatingEnd")
                                 .HasColumnType("int")

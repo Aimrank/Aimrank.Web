@@ -28,7 +28,7 @@ const RatingChart = defineComponent({
 
     const matchesSorted = computed(() => [...props.matches].reverse());
 
-    const rating = computed(() => matchesSorted.value.map((m => m.matchPlayerResult.rating)));
+    const rating = computed(() => matchesSorted.value.map((m => m.matchPlayerResult?.rating ?? 0)));
 
     const renderChart = () => {
       new Chart(root.value, {

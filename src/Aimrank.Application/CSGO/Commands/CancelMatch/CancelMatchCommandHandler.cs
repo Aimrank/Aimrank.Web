@@ -1,17 +1,51 @@
-﻿using MediatR;
+﻿using Aimrank.Common.Application.Events;
+using Aimrank.Domain.Lobbies;
+using Aimrank.Domain.Matches;
+using Aimrank.IntegrationEvents.Matches;
+using MediatR;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
-using System;
 
 namespace Aimrank.Application.CSGO.Commands.CancelMatch
 {
     public class CancelMatchCommandHandler : IServerEventCommandHandler<CancelMatchCommand>
     {
-        public Task<Unit> Handle(CancelMatchCommand request, CancellationToken cancellationToken)
-        {
-            Console.WriteLine($"Canceling match: {request.MatchId}");
+        private readonly IServerProcessManager _serverProcessManager;
+        private readonly IMatchRepository _matchRepository;
+        private readonly ILobbyRepository _lobbyRepository;
+        private readonly IEventDispatcher _eventDispatcher;
 
-            return Task.FromResult(Unit.Value);
+        public CancelMatchCommandHandler(
+            IServerProcessManager serverProcessManager,
+            IMatchRepository matchRepository,
+            ILobbyRepository lobbyRepository,
+            IEventDispatcher eventDispatcher)
+        {
+            _serverProcessManager = serverProcessManager;
+            _matchRepository = matchRepository;
+            _lobbyRepository = lobbyRepository;
+            _eventDispatcher = eventDispatcher;
+        }
+
+        public async Task<Unit> Handle(CancelMatchCommand request, CancellationToken cancellationToken)
+        {
+            _serverProcessManager.StopServer(request.MatchId);
+
+            var match = await _matchRepository.GetByIdAsync(new MatchId(request.MatchId));
+            var lobbies = await _lobbyRepository.BrowseByIdAsync(match.Lobbies.Select(l => l.LobbyId));
+            
+            foreach (var lobby in lobbies)
+            {
+                lobby.Open();
+            }
+            
+            _matchRepository.Delete(match);
+            _lobbyRepository.UpdateRange(lobbies);
+            
+            _eventDispatcher.Dispatch(new MatchCanceledEvent(match.Id, lobbies.Select(l => l.Id.Value)));
+
+            return Unit.Value;
         }
     }
 }

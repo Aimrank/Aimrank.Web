@@ -73,12 +73,12 @@ namespace Aimrank.Web
                     options.LocalizationEnabled = false;
                 });
 
-            // services.AddDbContext<AimrankContext>(options =>
-            // {
-            //     options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
-            //     options.UseSqlServer(_configuration.GetConnectionString("Database"),
-            //         x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
-            // });
+            services.AddDbContext<AimrankContext>(options =>
+            {
+                options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
+                options.UseSqlServer(_configuration.GetConnectionString("Database"),
+                    x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
+            });
         }
 
         public void ConfigureContainer(ContainerBuilder containerBuilder)
@@ -90,7 +90,9 @@ namespace Aimrank.Web
             containerBuilder.RegisterType<MatchTimedOutEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchStartingEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchStartedEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<MatchCanceledEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchFinishedEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<MatchPlayerLeftEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<LobbyStatusChangedEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MemberLeftEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MemberRoleChangedEventHandler>().AsImplementedInterfaces();
@@ -135,7 +137,9 @@ namespace Aimrank.Web
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchTimedOutEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartingEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartedEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchCanceledEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchFinishedEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchPlayerLeftEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<LobbyStatusChangedEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MemberLeftEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MemberRoleChangedEvent>(container));

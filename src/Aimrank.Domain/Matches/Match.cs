@@ -14,6 +14,7 @@ namespace Aimrank.Domain.Matches
         private readonly HashSet<MatchPlayer> _players = new();
         
         public MatchId Id { get; }
+        public MatchWinner Winner { get; private set; }
         public int ScoreT { get; private set; }
         public int ScoreCT { get; private set; }
         public string Map { get; private set; }
@@ -58,8 +59,9 @@ namespace Aimrank.Domain.Matches
             _players.Add(player);
         }
 
-        public void UpdateScore(int scoreT, int scoreCT)
+        public void UpdateScore(MatchWinner winner, int scoreT, int scoreCT)
         {
+            Winner = winner;
             ScoreT = scoreT;
             ScoreCT = scoreCT;
         }
@@ -69,6 +71,13 @@ namespace Aimrank.Domain.Matches
             var player = _players.FirstOrDefault(p => p.SteamId == steamId);
             
             player?.UpdateStats(stats);
+        }
+
+        public void MarkPlayerAsLeaver(string steamId)
+        {
+            var player = _players.FirstOrDefault(p => p.SteamId == steamId);
+
+            player?.MarkAsLeaver();
         }
 
         public void Finish()
@@ -85,14 +94,14 @@ namespace Aimrank.Domain.Matches
             {
                 double score;
 
-                if (ScoreT == ScoreCT)
+                if (Winner == MatchWinner.Draw)
                 {
                     score = 0.5;
                 }
                 else
                 {
-                    score = player.Team == MatchTeam.T && ScoreT > ScoreCT ||
-                            player.Team == MatchTeam.CT && ScoreCT > ScoreT
+                    score = player.Team == MatchTeam.T && Winner == MatchWinner.T ||
+                            player.Team == MatchTeam.CT && Winner == MatchWinner.CT
                         ? 1
                         : 0;
                 }
@@ -105,16 +114,6 @@ namespace Aimrank.Domain.Matches
             _lobbies.Clear();
             
             AddDomainEvent(@event);
-        }
-
-        public void Cancel()
-        {
-            if (Status == MatchStatus.Canceled) return;
-            
-            Status = MatchStatus.Canceled;
-            FinishedAt = DateTime.UtcNow;
-            
-            AddDomainEvent(new MatchStatusChangedDomainEvent(this));
         }
 
         public void SetReady()

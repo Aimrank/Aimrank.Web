@@ -7,6 +7,7 @@ namespace Aimrank.Application.Queries.Matches.GetFinishedMatches
     {
         public Guid Id { get; set; }
         public string Map { get; set; }
+        public int Winner { get; set; }
         public int ScoreT { get; set; }
         public int ScoreCT { get; set; }
         public int Mode { get; set; }

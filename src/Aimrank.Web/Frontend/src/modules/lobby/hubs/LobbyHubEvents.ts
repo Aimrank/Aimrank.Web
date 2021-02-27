@@ -30,11 +30,20 @@ export interface IMatchStartedEvent {
   lobbies: string[];
 }
 
+export interface IMatchCanceledEvent {
+  matchId: string;
+  lobbies: string[];
+}
+
 export interface IMatchFinishedEvent {
   matchId: string;
   scoreT: number;
   scoreCT: number;
   lobbies: string[];
+}
+
+export interface IMatchPlayerLeftEvent {
+  userId: string;
 }
 
 export interface IInvitationAcceptedEvent {

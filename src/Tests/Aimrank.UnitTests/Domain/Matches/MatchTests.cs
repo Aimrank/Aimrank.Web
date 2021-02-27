@@ -37,7 +37,7 @@ namespace Aimrank.UnitTests.Domain.Matches
         public void Finish_UpdatesPlayersRating_WhenTerroristsWin()
         {
 
-            _match.UpdateScore(16, 0);
+            _match.UpdateScore(MatchWinner.T, 16, 0);
             _match.UpdatePlayerStats(P1Steam, new MatchPlayerStats(16, 0, 0, 32, 0));
             _match.UpdatePlayerStats(P2Steam, new MatchPlayerStats(0, 0, 16, 0, 0));
             
@@ -51,7 +51,7 @@ namespace Aimrank.UnitTests.Domain.Matches
         public void Finish_UpdatesPlayersRating_WhenCounterTerroristsWin()
         {
 
-            _match.UpdateScore(0, 16);
+            _match.UpdateScore(MatchWinner.CT, 0, 16);
             _match.UpdatePlayerStats(P1Steam, new MatchPlayerStats(0, 0, 16, 0, 0));
             _match.UpdatePlayerStats(P2Steam, new MatchPlayerStats(16, 0, 0, 32, 0));
             
@@ -65,7 +65,7 @@ namespace Aimrank.UnitTests.Domain.Matches
         public void Finish_UpdatesPlayersRating_WhenDraw()
         {
 
-            _match.UpdateScore(15, 15);
+            _match.UpdateScore(MatchWinner.Draw, 15, 15);
             _match.UpdatePlayerStats(P1Steam, new MatchPlayerStats(15, 0, 15, 30, 0));
             _match.UpdatePlayerStats(P2Steam, new MatchPlayerStats(15, 0, 15, 30, 0));
             

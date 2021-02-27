@@ -62,7 +62,7 @@
       >
         <h3>{{ $t("lobby.views.Lobby.match") }}</h3>
         <div>Map: {{ match.map }}</div>
-        <div>Status: {{ ["Created", "Ready", "Canceled", "Starting", "Started", "Finished"][match.status] }}</div>
+        <div>Status: {{ ["Created", "Ready", "Starting", "Started", "Finished"][match.status] }}</div>
         <template v-if="match.status === MatchStatus.Started">
           <div>
             Address: aimrank.pl{{ match.address.slice(match.address.indexOf(":")) }}
