@@ -9,6 +9,7 @@
 #include "utils/events.sp"
 #include "utils/game.sp"
 #include "utils/teams.sp"
+#include "utils/clients.sp"
 
 public Plugin myinfo =
 {
@@ -37,15 +38,7 @@ public void InitializeEvents()
     HookUserMessage(GetUserMessageId("VGUIMenu"), OnTeamMenu, true);
 }
 
-public Action Command_JoinTeam(int client, const char[] command, int argc)
-{
-    if (!client || !IsClientInGame(client) || IsFakeClient(client))
-    {
-        return Plugin_Continue;
-    }
-
-    return Plugin_Handled;
-}
+/* Forwards */
 
 public void OnMapStart()
 {
@@ -67,9 +60,23 @@ public void OnClientPutInServer(int client)
     ClientConnected(client);
 }
 
+/* Commands */
+
+public Action Command_JoinTeam(int client, const char[] command, int argc)
+{
+    if (!client || !IsClientInGame(client) || IsFakeClient(client))
+    {
+        return Plugin_Continue;
+    }
+
+    return Plugin_Handled;
+}
+
+/* Events */
+
 public Action Event_MatchEnd(Event event, const char[] name, bool dontBroadcast)
 {
-    PublishEvent(CreateIntegrationEvent("match_end", GetScoreboard()));
+    PublishEvent(CreateIntegrationEvent("match_end", GetScoreboard(0)));
 }
 
 public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -102,16 +109,20 @@ public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadca
     {
         if (IsClientConnected(i) && IsClientInGame(i))
         {
+            char steamId[CLIENT_ID_LENGTH + 1];
             int stats[STATS_SIZE];
 
-            GetClientStats(i, stats)
+            GetClientSteamId(i, steamId);
+            GetClientStats(steamId, stats)
 
             stats[STATS_INDEX_KILLS] = GetEntProp(i, Prop_Data, "m_iFrags");
             stats[STATS_INDEX_ASSISTS] = CS_GetClientAssists(i);
             stats[STATS_INDEX_DEATHS] = GetEntProp(i, Prop_Data, "m_iDeaths");
             stats[STATS_INDEX_HS] = stats[STATS_INDEX_HS] + (i == clientId && headshot ? 1 : 0);
 
-            SetClientStats(i, stats);
+            PrintToServer("Player stats: %s - %d/%d/%d, hs: %d", steamId, stats[STATS_INDEX_KILLS], stats[STATS_INDEX_ASSISTS], stats[STATS_INDEX_DEATHS], stats[STATS_INDEX_HS]);
+
+            SetClientStats(steamId, stats);
         }
     }
 

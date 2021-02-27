@@ -1,5 +1,9 @@
-#define CLIENT_WHITELIST_ENTRY_LENGTH 20  // {steam_id}:{team}
-#define CLIENT_ID_LENGTH 18
+#define SERVER_MAX_CLIENTS 10
+
+#define CLIENT_ID_LENGTH 17
+#define CLIENT_WHITELIST_ENTRY_LENGTH 19  // {steam_id}:{team}
+
+#define WHITELIST_LENGTH CLIENT_WHITELIST_ENTRY_LENGTH * SERVER_MAX_CLIENTS + (SERVER_MAX_CLIENTS - 1) + 1
 
 #define STATS_SIZE 4
 #define STATS_INDEX_KILLS 0
@@ -13,7 +17,10 @@ bool g_gamePaused;
 bool g_gameStarted;
 
 StringMap g_scoreboard;
-StringMap g_clients;
+StringMap g_clientsTeams;
+StringMap g_clientsConnected;
+
+char g_clients[SERVER_MAX_CLIENTS][CLIENT_ID_LENGTH + 1];
 
 ConVar g_serverId;
 ConVar g_whitelist;
@@ -25,32 +32,48 @@ public void InitializeGlobals()
     g_whitelist = CreateConVar("aimrank_whitelist", "0", "SteamID list of whitelisted players.");
     g_maxRounds = FindConVar("mp_maxrounds");
 
-    g_maxClients = GetClientsLimit();
     g_scoreboard = new StringMap();
-    g_clients = new StringMap();
+
+    g_clientsTeams = new StringMap();
+    g_clientsConnected = new StringMap();
+
+    LoadClientsFromWhitelist();
 }
 
 public void GetClientSteamId(int client, char[] output)
 {
-    GetClientAuthId(client, AuthId_SteamID64, output, CLIENT_ID_LENGTH);
+    GetClientAuthId(client, AuthId_SteamID64, output, CLIENT_ID_LENGTH + 1);
 }
 
-int GetClientsLimit()
+void LoadClientsFromWhitelist()
 {
     int count = 0;
-    int length = CLIENT_WHITELIST_ENTRY_LENGTH * 10;
-    char[] whitelist = new char[length];
 
-    GetConVarString(g_whitelist, whitelist, length);
+    char whitelist[WHITELIST_LENGTH];
 
-    for (int i = 0; i < length; i++)
+    GetConVarString(g_whitelist, whitelist, WHITELIST_LENGTH);
+
+    for (int i = 0; i < WHITELIST_LENGTH - 1; i += 20)
     {
-        if (whitelist[i] == 0) break;
-        if (whitelist[i] == ',')
+        if (whitelist[i] == 0)
         {
-            count++;
+            break;
         }
+
+        char clientTeam[2];
+
+        strcopy(g_clients[count], CLIENT_ID_LENGTH + 1, whitelist[i]);
+        strcopy(clientTeam, 2, whitelist[i + CLIENT_ID_LENGTH + 1]);
+
+        PrintToServer("[Aimrank] Client {%s} - Team {%s}", g_clients[count], clientTeam);
+        
+        g_clientsTeams.SetValue(g_clients[count], clientTeam[0] == '2' ? CS_TEAM_T : CS_TEAM_CT);
+        g_clientsConnected.SetValue(g_clients[count], false);
+
+        count++;
     }
 
-    return count + 1;
+    g_maxClients = count;
+
+    PrintToServer("[Aimrank] Max clients: %d", g_maxClients);
 }

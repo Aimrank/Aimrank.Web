@@ -26,11 +26,11 @@ public void AbandonGame(int client)
     int countT = GetTeamClientCount(CS_TEAM_T);
     int countCT = GetTeamClientCount(CS_TEAM_CT);
 
-    if (countT > 0 && countCt > 0)
+    if (countT > 0 && countCT > 0)
     {
-        PrintToServer("Client disconnected. He will be issued a cooldown.");
+        PrintToServer("[Aimrank] Client disconnected. He will be issued a cooldown.");
 
-        char steamId[CLIENT_ID_LENGTH];
+        char steamId[CLIENT_ID_LENGTH + 1];
         GetClientSteamId(client, steamId);
 
         JSON_Object data = new JSON_Object();
@@ -40,10 +40,10 @@ public void AbandonGame(int client)
     }
     else
     {
-        int loser = GetClientTeam(client);
+        int loser = GetClientTeamFromMap(client);
         int winner = loser == CS_TEAM_T ? CS_TEAM_CT : CS_TEAM_T;
 
-        PrintToServer("All enemies disconnected and failed to reconnect. The game is abandoned.");
+        PrintToServer("[Aimrank] All enemies disconnected and failed to reconnect. The game is abandoned.");
         PublishEvent(CreateIntegrationEvent("match_end", GetScoreboard(winner)));
     }
 }
