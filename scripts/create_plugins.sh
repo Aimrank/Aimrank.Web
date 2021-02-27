@@ -5,5 +5,4 @@ rm -rf build
 tar -xzf build.tar.gz
 chmod +x ./build/sourcemod/scripting/spcomp
 
-./build/sourcemod/scripting/spcomp aimrank_events.sp
-./build/sourcemod/scripting/spcomp aimrank_teamlock.sp
+./build/sourcemod/scripting/spcomp aimrank.sp

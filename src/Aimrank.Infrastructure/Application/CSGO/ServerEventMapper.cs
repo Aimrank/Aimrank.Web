@@ -1,4 +1,6 @@
+using Aimrank.Application.CSGO.Commands.CancelMatch;
 using Aimrank.Application.CSGO.Commands.FinishMatch;
+using Aimrank.Application.CSGO.Commands.PlayerDisconnect;
 using Aimrank.Application.CSGO.Commands.StartMatch;
 using Aimrank.Application.CSGO;
 using System.Collections.Generic;
@@ -11,8 +13,10 @@ namespace Aimrank.Infrastructure.Application.CSGO
     {
         private readonly Dictionary<string, Type> _commands = new()
         {
+            ["map_start"] = typeof(StartMatchCommand),
             ["match_end"] = typeof(FinishMatchCommand),
-            ["map_start"] = typeof(StartMatchCommand)
+            ["match_cancel"] = typeof(CancelMatchCommand),
+            ["player_disconnect"] = typeof(PlayerDisconnectCommand)
         };
         
         public IServerEventCommand Map(Guid matchId, string name, dynamic data)
