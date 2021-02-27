@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aimrank.Database.Migrator.Migrations
 {
     [DbContext(typeof(AimrankContext))]
-    [Migration("20210224183058_Initial")]
+    [Migration("20210227180552_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -481,6 +481,10 @@ namespace Aimrank.Database.Migrator.Migrations
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uniqueidentifier")
                                 .HasColumnName("UserId");
+
+                            b1.Property<bool>("IsLeaver")
+                                .HasColumnType("bit")
+                                .HasColumnName("IsLeaver");
 
                             b1.Property<int>("RatingEnd")
                                 .HasColumnType("int")

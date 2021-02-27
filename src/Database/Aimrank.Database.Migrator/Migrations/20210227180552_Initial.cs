@@ -349,7 +349,8 @@ namespace Aimrank.Database.Migrator.Migrations
                     Stats_Score = table.Column<int>(type: "int", nullable: false),
                     Stats_Hs = table.Column<int>(type: "int", nullable: false),
                     RatingStart = table.Column<int>(type: "int", nullable: false),
-                    RatingEnd = table.Column<int>(type: "int", nullable: false)
+                    RatingEnd = table.Column<int>(type: "int", nullable: false),
+                    IsLeaver = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

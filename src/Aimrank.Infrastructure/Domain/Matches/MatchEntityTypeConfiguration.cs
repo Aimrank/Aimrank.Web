@@ -33,6 +33,7 @@ namespace Aimrank.Infrastructure.Domain.Matches
                 b.Property(p => p.Team).HasColumnName("Team");
                 b.Property(p => p.RatingStart).HasColumnName("RatingStart");
                 b.Property(p => p.RatingEnd).HasColumnName("RatingEnd");
+                b.Property(p => p.IsLeaver).HasColumnName("IsLeaver");
                 b.HasKey("MatchId", "UserId");
                 b.HasOne<UserModel>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
                 b.WithOwner().HasForeignKey("MatchId");

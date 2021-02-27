@@ -42,6 +42,10 @@ export interface IMatchFinishedEvent {
   lobbies: string[];
 }
 
+export interface IMatchPlayerLeftEvent {
+  userId: string;
+}
+
 export interface IInvitationAcceptedEvent {
   lobbyId: string;
   invitedUserId: string;

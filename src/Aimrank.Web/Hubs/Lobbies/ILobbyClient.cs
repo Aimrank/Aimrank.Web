@@ -15,6 +15,7 @@ namespace Aimrank.Web.Hubs.Lobbies
         Task MatchCanceled(MatchCanceledEvent @event);
         Task MatchStarted(MatchStartedEvent @event);
         Task MatchFinished(MatchFinishedEvent @event);
+        Task MatchPlayerLeft(MatchPlayerLeftEvent @event);
         Task InvitationAccepted(InvitationAcceptedEventMessage eventMessage);
         Task InvitationCanceled(InvitationCanceledEventMessage eventMessage);
         Task InvitationCreated(InvitationCreatedEventMessage eventMessage);

@@ -21,6 +21,7 @@ import {
   IMatchAcceptedEvent,
   IMatchTimedOutEvent,
   IMatchCanceledEvent,
+  IMatchPlayerLeftEvent,
 } from "./LobbyHubEvents";
 
 export class LobbyHub {
@@ -43,6 +44,7 @@ export class LobbyHub {
     hub.connection.on("MatchStarted", this.onMatchStarted.bind(this));
     hub.connection.on("MatchCanceled", this.onMatchCanceled.bind(this));
     hub.connection.on("MatchFinished", this.onMatchFinished.bind(this));
+    hub.connection.on("MatchPlayerLeft", this.onMatchPlayerLeft.bind(this));
     hub.connection.on("MemberLeft", this.onMemberLeft.bind(this));
     hub.connection.on("MemberRoleChanged", this.onMemberRoleChanged.bind(this));
   }
@@ -137,6 +139,10 @@ export class LobbyHub {
     this.lobby.setLobbyStatus(LobbyStatus.Open);
 
     this.notifications.success("Match finished.");
+  }
+
+  private onMatchPlayerLeft(event: IMatchPlayerLeftEvent) {
+    this.notifications.warning("Failed to reconnect. You will be penalized for leaving early when the match is over.");
   }
 
   private onMemberLeft(event: IMemberLeftEvent) {

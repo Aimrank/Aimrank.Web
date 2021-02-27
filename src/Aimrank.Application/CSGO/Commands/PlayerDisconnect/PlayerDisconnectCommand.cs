@@ -5,9 +5,9 @@ namespace Aimrank.Application.CSGO.Commands.PlayerDisconnect
     public class PlayerDisconnectCommand : IServerEventCommand
     {
         public Guid MatchId { get; set; }
-        public Guid SteamId { get; }
+        public string SteamId { get; }
 
-        public PlayerDisconnectCommand(Guid matchId, Guid steamId)
+        public PlayerDisconnectCommand(Guid matchId, string steamId)
         {
             MatchId = matchId;
             SteamId = steamId;

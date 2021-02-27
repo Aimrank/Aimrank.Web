@@ -71,6 +71,13 @@ namespace Aimrank.Domain.Matches
             player?.UpdateStats(stats);
         }
 
+        public void MarkPlayerAsLeaver(string steamId)
+        {
+            var player = _players.FirstOrDefault(p => p.SteamId == steamId);
+
+            player?.MarkAsLeaver();
+        }
+
         public void Finish()
         {
             if (Status == MatchStatus.Finished) return;
