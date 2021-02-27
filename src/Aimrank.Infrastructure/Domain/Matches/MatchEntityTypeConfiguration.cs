@@ -15,6 +15,7 @@ namespace Aimrank.Infrastructure.Domain.Matches
             builder.HasKey(m => m.Id);
 
             builder.Property(m => m.Id).HasColumnName("Id");
+            builder.Property(m => m.Winner).HasColumnName("Winner");
             builder.Property(m => m.ScoreT).HasColumnName("ScoreT");
             builder.Property(m => m.ScoreCT).HasColumnName("ScoreCT");
             builder.Property(m => m.Map).HasColumnName("Map").IsRequired().HasMaxLength(50);

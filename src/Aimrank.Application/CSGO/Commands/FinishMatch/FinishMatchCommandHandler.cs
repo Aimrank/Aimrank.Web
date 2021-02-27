@@ -29,9 +29,10 @@ namespace Aimrank.Application.CSGO.Commands.FinishMatch
             
             var match = await _matchRepository.GetByIdAsync(new MatchId(request.MatchId));
             var lobbies = await _lobbyRepository.BrowseByIdAsync(match.Lobbies.Select(l => l.LobbyId));
-            
+
             match.UpdateScore(
-                request.TeamTerrorists.Score, 
+                (MatchWinner) request.Winner,
+                request.TeamTerrorists.Score,
                 request.TeamCounterTerrorists.Score);
             
             foreach (var client in request.TeamTerrorists.Clients.Concat(request.TeamCounterTerrorists.Clients))
