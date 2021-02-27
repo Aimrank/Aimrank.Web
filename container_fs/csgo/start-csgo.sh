@@ -63,7 +63,6 @@ SRCDS_ARGUMENTS=(
   "-net_port_try 1"
   "-ip 0.0.0.0"
   "-nohltv"
-  "-maxplayers 2"
   "+game_type 0"
   "+game_mode 1"
   "+map $SERVER_MAP"

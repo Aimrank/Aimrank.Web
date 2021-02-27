@@ -36,7 +36,7 @@ public void AbandonGame(int client)
         JSON_Object data = new JSON_Object();
         data.SetString("steamId", steamId);
 
-        PublishEvent(CreateIntegrationEvent("player_disconnected", data));
+        PublishEvent(CreateIntegrationEvent("player_disconnect", data));
 
         Unpause();
     }
