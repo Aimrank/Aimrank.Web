@@ -74,6 +74,7 @@ namespace Aimrank.Database.Migrator.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Winner = table.Column<int>(type: "int", nullable: false),
                     ScoreT = table.Column<int>(type: "int", nullable: false),
                     ScoreCT = table.Column<int>(type: "int", nullable: false),
                     Map = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),

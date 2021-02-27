@@ -1,4 +1,5 @@
 import { IMatchDto } from "./IMatchDto";
+import { MatchWinner } from "./MatchWinner";
 
 export interface IMatchEntry extends IMatchDto {
   matchResult: -1 | 0 | 1;
@@ -8,20 +9,21 @@ export interface IMatchEntry extends IMatchDto {
     rating: number;
     difference: number;
     hsPercentage: number;
-  }
+  } | null;
 }
 
 const getMatchResult = (match: IMatchDto, userId?: string) => {
-  const p1 = match.teamTerrorists[0];
-  const p2 = match.teamCounterTerrorists[0];
-
-  if (p1.score == p2.score) {
+  if (match.winner === MatchWinner.Draw) {
     return 0;
   }
 
-  const winner = p1.score > p2.score ? p1.id : p2.id;
+  if (match.winner === MatchWinner.T && match.teamTerrorists.some(m => m.id === userId) ||
+      match.winner === MatchWinner.CT && match.teamCounterTerrorists.some(m => m.id === userId))
+  {
+    return 1;
+  }
 
-  return winner === userId ? 1 : -1;
+  return -1;
 }
 
 const getMatchPlayerResult = (match: IMatchDto, userId?: string) => {
@@ -37,7 +39,7 @@ const getMatchPlayerResult = (match: IMatchDto, userId?: string) => {
     };
   }
 
-  return { kills: 0, deaths: 0, rating: 0, difference: 0, hsPercentage: 0 };
+  return null;
 }
 
 export const getMatchEntries = (matches: IMatchDto[], userId?: string): IMatchEntry[] => matches.map(m =>

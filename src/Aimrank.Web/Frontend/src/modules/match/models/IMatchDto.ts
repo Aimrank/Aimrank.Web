@@ -1,5 +1,6 @@
 import { MatchMode } from "./MatchMode";
 import { MatchTeam } from "./MatchTeam";
+import { MatchWinner } from "./MatchWinner";
 
 interface IMatchPlayerDto {
   id: string;
@@ -17,6 +18,7 @@ interface IMatchPlayerDto {
 export interface IMatchDto {
   id: string;
   mode: MatchMode;
+  winner: MatchWinner;
   scoreT: number;
   scoreCT: number;
   createdAt: string;

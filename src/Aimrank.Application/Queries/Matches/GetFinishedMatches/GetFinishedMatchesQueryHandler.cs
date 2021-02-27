@@ -49,6 +49,7 @@ namespace Aimrank.Application.Queries.Matches.GetFinishedMatches
 					SELECT
 						DENSE_RANK() OVER(ORDER BY [M].[FinishedAt] DESC) + 1 AS [Row],
 						[M].[Id] AS [Id],
+						[M].[Winner] AS [Winner],
 						[M].[ScoreT] AS [ScoreT],
 						[M].[ScoreCT] AS [ScoreCT],
 						[M].[Mode] AS [Mode],
