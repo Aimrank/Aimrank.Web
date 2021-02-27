@@ -13,7 +13,7 @@ public void ClientConnected(int client)
     {
         if (GetConnectedClientsCount() == g_maxClients)
         {
-            PrintToServer("All clients connected. Unpausing game.");
+            PrintToChatAll("All players connected. Unpausing game.");
             Unpause();
         }
     }

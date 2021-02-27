@@ -120,8 +120,6 @@ public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadca
             stats[STATS_INDEX_DEATHS] = GetEntProp(i, Prop_Data, "m_iDeaths");
             stats[STATS_INDEX_HS] = stats[STATS_INDEX_HS] + (i == clientId && headshot ? 1 : 0);
 
-            PrintToServer("Player stats: %s - %d/%d/%d, hs: %d", steamId, stats[STATS_INDEX_KILLS], stats[STATS_INDEX_ASSISTS], stats[STATS_INDEX_DEATHS], stats[STATS_INDEX_HS]);
-
             SetClientStats(steamId, stats);
         }
     }
@@ -135,15 +133,12 @@ public Action Event_PlayerDisconnect(Event event, const char[] name, bool dontBr
 
     if (!IsWarmup() && IsClientOnList(client))
     {
-        char clientName[64];
-        GetClientName(client, clientName, sizeof(clientName));
-
-        PrintToServer("[Aimrank] Match will be paused at the beginning of next round for 1 minute.");
-        PrintToServer("[Aimrank] Waiting for %s to reconnect.", clientName);
+        PrintToChatAll("Match will be paused at the beginning of next round for 1 minute.");
+        PrintToChatAll("Waiting for all players to reconnect.");
 
         ClientDisconnected(client);
 
-        CreateTimer(60.0, OnPauseTimer, client);
+        CreateTimer(120.0, OnPauseTimer, client);
     }
 }
 

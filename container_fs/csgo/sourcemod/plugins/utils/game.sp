@@ -17,8 +17,8 @@ public bool IsWarmup()
 
 public void CancelGame()
 {
-    PrintToServer("[Aimrank] Match canceled. Some players failed to connect.");
-    PublishEvent(CreateIntegrationEvent("match_canceled", null));
+    PrintToChatAll("Match canceled. Some players failed to connect.");
+    PublishEvent(CreateIntegrationEvent("match_cancel", null));
 }
 
 public void AbandonGame(int client)
@@ -28,7 +28,7 @@ public void AbandonGame(int client)
 
     if (countT > 0 && countCT > 0)
     {
-        PrintToServer("[Aimrank] Client disconnected. He will be issued a cooldown.");
+        PrintToChatAll("Player failed to reconnect within the specified time. He will be issued a cooldown.");
 
         char steamId[CLIENT_ID_LENGTH + 1];
         GetClientSteamId(client, steamId);
@@ -37,6 +37,8 @@ public void AbandonGame(int client)
         data.SetString("steamId", steamId);
 
         PublishEvent(CreateIntegrationEvent("player_disconnected", data));
+
+        Unpause();
     }
     else
     {
@@ -44,6 +46,7 @@ public void AbandonGame(int client)
         int winner = loser == CS_TEAM_T ? CS_TEAM_CT : CS_TEAM_T;
 
         PrintToServer("[Aimrank] All enemies disconnected and failed to reconnect. The game is abandoned.");
+
         PublishEvent(CreateIntegrationEvent("match_end", GetScoreboard(winner)));
     }
 }

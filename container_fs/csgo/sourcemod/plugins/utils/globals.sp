@@ -65,8 +65,6 @@ void LoadClientsFromWhitelist()
         strcopy(g_clients[count], CLIENT_ID_LENGTH + 1, whitelist[i]);
         strcopy(clientTeam, 2, whitelist[i + CLIENT_ID_LENGTH + 1]);
 
-        PrintToServer("[Aimrank] Client {%s} - Team {%s}", g_clients[count], clientTeam);
-        
         g_clientsTeams.SetValue(g_clients[count], clientTeam[0] == '2' ? CS_TEAM_T : CS_TEAM_CT);
         g_clientsConnected.SetValue(g_clients[count], false);
 
@@ -74,6 +72,4 @@ void LoadClientsFromWhitelist()
     }
 
     g_maxClients = count;
-
-    PrintToServer("[Aimrank] Max clients: %d", g_maxClients);
 }
