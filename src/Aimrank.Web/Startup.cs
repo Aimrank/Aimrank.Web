@@ -90,6 +90,7 @@ namespace Aimrank.Web
             containerBuilder.RegisterType<MatchTimedOutEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchStartingEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchStartedEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<MatchCanceledEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MatchFinishedEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<LobbyStatusChangedEventHandler>().AsImplementedInterfaces();
             containerBuilder.RegisterType<MemberLeftEventHandler>().AsImplementedInterfaces();
@@ -135,6 +136,7 @@ namespace Aimrank.Web
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchTimedOutEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartingEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartedEvent>(container));
+            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchCanceledEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchFinishedEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<LobbyStatusChangedEvent>(container));
             _eventBus.Subscribe(new IntegrationEventGenericHandler<MemberLeftEvent>(container));

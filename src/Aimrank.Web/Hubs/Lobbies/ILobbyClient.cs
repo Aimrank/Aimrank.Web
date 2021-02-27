@@ -12,6 +12,7 @@ namespace Aimrank.Web.Hubs.Lobbies
         Task MatchReady(MatchReadyEventMessage @event);
         Task MatchStarting(MatchStartingEvent @event);
         Task MatchTimedOut(MatchTimedOutEvent @event);
+        Task MatchCanceled(MatchCanceledEvent @event);
         Task MatchStarted(MatchStartedEvent @event);
         Task MatchFinished(MatchFinishedEvent @event);
         Task InvitationAccepted(InvitationAcceptedEventMessage eventMessage);

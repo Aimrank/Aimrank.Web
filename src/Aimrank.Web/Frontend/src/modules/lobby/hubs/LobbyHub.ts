@@ -20,6 +20,7 @@ import {
   IMatchReadyEvent,
   IMatchAcceptedEvent,
   IMatchTimedOutEvent,
+  IMatchCanceledEvent,
 } from "./LobbyHubEvents";
 
 export class LobbyHub {
@@ -40,6 +41,7 @@ export class LobbyHub {
     hub.connection.on("MatchTimedOut", this.onMatchTimedOut.bind(this));
     hub.connection.on("MatchStarting", this.onMatchStarting.bind(this));
     hub.connection.on("MatchStarted", this.onMatchStarted.bind(this));
+    hub.connection.on("MatchCanceled", this.onMatchCanceled.bind(this));
     hub.connection.on("MatchFinished", this.onMatchFinished.bind(this));
     hub.connection.on("MemberLeft", this.onMemberLeft.bind(this));
     hub.connection.on("MemberRoleChanged", this.onMemberRoleChanged.bind(this));
@@ -121,6 +123,13 @@ export class LobbyHub {
     });
 
     this.notifications.success(`Match created: aimrank.pl${event.address.slice(event.address.indexOf(":"))}`);
+  }
+
+  private onMatchCanceled(event: IMatchCanceledEvent) {
+    this.match.clearMatch();
+    this.lobby.setLobbyStatus(LobbyStatus.Open);
+
+    this.notifications.warning("Some players failed to connect. Match is canceled.");
   }
 
   private onMatchFinished(event: IMatchFinishedEvent) {
