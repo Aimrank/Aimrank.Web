@@ -35,7 +35,7 @@ const getMatchPlayerResult = (match: IMatchDto, userId?: string) => {
       deaths: player.deaths,
       rating: player.ratingEnd,
       difference: player.ratingEnd - player.ratingStart,
-      hsPercentage: player.hsPercentage
+      hsPercentage: player.kills === 0 ? 0 : player.hs / player.kills * 100
     };
   }
 
