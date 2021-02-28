@@ -10,8 +10,7 @@ namespace Aimrank.Application.Queries.Matches.GetFinishedMatches
 		public int User_Kills { get; set; }
 		public int User_Assists { get; set; }
 		public int User_Deaths { get; set; }
-		public int User_Score { get; set; }
-		public float User_HsPercentage { get; set; }
+		public int User_Hs { get; set; }
 		public int User_RatingStart { get; set; }
 		public int User_RatingEnd { get; set; }
     }

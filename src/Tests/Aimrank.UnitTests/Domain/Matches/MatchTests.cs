@@ -38,8 +38,8 @@ namespace Aimrank.UnitTests.Domain.Matches
         {
 
             _match.UpdateScore(MatchWinner.T, 16, 0);
-            _match.UpdatePlayerStats(P1Steam, new MatchPlayerStats(16, 0, 0, 32, 0));
-            _match.UpdatePlayerStats(P2Steam, new MatchPlayerStats(0, 0, 16, 0, 0));
+            _match.UpdatePlayerStats(P1Steam, new MatchPlayerStats(16, 0, 0, 0));
+            _match.UpdatePlayerStats(P2Steam, new MatchPlayerStats(0, 0, 16, 0));
             
             _match.Finish();
             
@@ -52,8 +52,8 @@ namespace Aimrank.UnitTests.Domain.Matches
         {
 
             _match.UpdateScore(MatchWinner.CT, 0, 16);
-            _match.UpdatePlayerStats(P1Steam, new MatchPlayerStats(0, 0, 16, 0, 0));
-            _match.UpdatePlayerStats(P2Steam, new MatchPlayerStats(16, 0, 0, 32, 0));
+            _match.UpdatePlayerStats(P1Steam, new MatchPlayerStats(0, 0, 16, 0));
+            _match.UpdatePlayerStats(P2Steam, new MatchPlayerStats(16, 0, 0, 0));
             
             _match.Finish();
             
@@ -66,8 +66,8 @@ namespace Aimrank.UnitTests.Domain.Matches
         {
 
             _match.UpdateScore(MatchWinner.Draw, 15, 15);
-            _match.UpdatePlayerStats(P1Steam, new MatchPlayerStats(15, 0, 15, 30, 0));
-            _match.UpdatePlayerStats(P2Steam, new MatchPlayerStats(15, 0, 15, 30, 0));
+            _match.UpdatePlayerStats(P1Steam, new MatchPlayerStats(15, 0, 15, 0));
+            _match.UpdatePlayerStats(P2Steam, new MatchPlayerStats(15, 0, 15, 0));
             
             _match.Finish();
             

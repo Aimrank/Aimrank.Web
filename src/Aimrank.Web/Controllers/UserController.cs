@@ -1,6 +1,7 @@
 using Aimrank.Application.Contracts;
 using Aimrank.Application.Queries.Matches.GetFinishedMatches;
 using Aimrank.Application.Queries.Users.GetUserDetails;
+using Aimrank.Application.Queries.Users.GetUserStats;
 using Aimrank.Application.Queries.Users.GetUsers;
 using Aimrank.Common.Application.Queries;
 using Aimrank.Web.Attributes;
@@ -59,5 +60,9 @@ namespace Aimrank.Web.Controllers
 
             return await _aimrankModule.ExecuteQueryAsync(query);
         }
+
+        [HttpGet("{id}/stats")]
+        public async Task<ActionResult<UserStatsDto>> GetUserStats(Guid id)
+            => await _aimrankModule.ExecuteQueryAsync(new GetUserStatsQuery(id));
     }
 }

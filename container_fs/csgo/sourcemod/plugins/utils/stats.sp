@@ -44,7 +44,6 @@ public JSON_Object GetScoreboard(int winner)
         data.SetInt("assists", stats[STATS_INDEX_ASSISTS]);
         data.SetInt("deaths", stats[STATS_INDEX_DEATHS]);
         data.SetInt("hs", stats[STATS_INDEX_HS]);
-        data.SetInt("score", 0);
 
         int team;
 

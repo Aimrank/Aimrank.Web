@@ -22,7 +22,7 @@ namespace Aimrank.Domain.Matches
             UserId = userId;
             SteamId = steamId;
             Team = team;
-            Stats = new MatchPlayerStats(0, 0, 0, 0, 0);
+            Stats = new MatchPlayerStats(0, 0, 0, 0);
             RatingStart = rating;
             IsLeaver = false;
         }

@@ -9,8 +9,7 @@ interface IMatchPlayerDto {
   kills: number;
   assists: number;
   deaths: number;
-  score: number;
-  hsPercentage: number;
+  hs: number;
   ratingStart: number;
   ratingEnd: number;
 }
