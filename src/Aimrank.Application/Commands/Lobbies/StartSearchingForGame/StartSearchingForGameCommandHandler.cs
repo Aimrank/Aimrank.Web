@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Commands.Lobbies.StartSearchingForGame
 {
-    public class StartSearchingForGameCommandHandler : ICommandHandler<StartSearchingForGameCommand>
+    internal class StartSearchingForGameCommandHandler : ICommandHandler<StartSearchingForGameCommand>
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly ILobbyRepository _lobbyRepository;

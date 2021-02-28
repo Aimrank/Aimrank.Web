@@ -10,7 +10,7 @@ using System;
 
 namespace Aimrank.Application.Queries.Matches.GetFinishedMatches
 {
-    public class GetFinishedMatchesQueryHandler : IQueryHandler<GetFinishedMatchesQuery, PaginationDto<MatchDto>>
+    internal class GetFinishedMatchesQueryHandler : IQueryHandler<GetFinishedMatchesQuery, PaginationDto<MatchDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 

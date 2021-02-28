@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Aimrank.Application.CSGO.Commands.ProcessServerEvent
 {
-    public class ProcessServerEventCommandHandler : ICommandHandler<ProcessServerEventCommand>
+    internal class ProcessServerEventCommandHandler : ICommandHandler<ProcessServerEventCommand>
     {
         private readonly IServerEventMapper _serverEventMapper;
         private readonly IMediator _mediator;

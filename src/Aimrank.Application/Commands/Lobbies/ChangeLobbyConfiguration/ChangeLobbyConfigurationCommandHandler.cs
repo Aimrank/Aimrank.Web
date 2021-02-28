@@ -9,7 +9,7 @@ using Aimrank.Domain.Matches;
 
 namespace Aimrank.Application.Commands.Lobbies.ChangeLobbyConfiguration
 {
-    public class ChangeLobbyConfigurationCommandHandler : ICommandHandler<ChangeLobbyConfigurationCommand>
+    internal class ChangeLobbyConfigurationCommandHandler : ICommandHandler<ChangeLobbyConfigurationCommand>
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly ILobbyRepository _lobbyRepository;

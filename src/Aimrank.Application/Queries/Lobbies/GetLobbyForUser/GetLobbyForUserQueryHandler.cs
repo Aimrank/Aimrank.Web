@@ -10,7 +10,7 @@ using System;
 
 namespace Aimrank.Application.Queries.Lobbies.GetLobbyForUser
 {
-    public class GetLobbyForUserQueryHandler : IQueryHandler<GetLobbyForUserQuery, LobbyDto>
+    internal class GetLobbyForUserQueryHandler : IQueryHandler<GetLobbyForUserQuery, LobbyDto>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
         private readonly IExecutionContextAccessor _executionContextAccessor;

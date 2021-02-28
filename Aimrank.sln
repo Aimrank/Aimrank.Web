@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.IntegrationTests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.UnitTests", "src\Tests\Aimrank.UnitTests\Aimrank.UnitTests.csproj", "{D404757D-1EFF-4375-B885-E03E70421DD0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.ArchTests", "src\Tests\Aimrank.ArchTests\Aimrank.ArchTests.csproj", "{E3B3B373-5405-4CD3-A097-D4DF434947BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,7 @@ Global
 		{C6E0FC8F-5007-497C-9A01-137786081A25} = {C78F478D-3405-4762-9E09-99316337F172}
 		{02C22F76-4932-47BF-A178-26ADE78CF652} = {CB3E8F47-FF5F-44D3-B79B-7B7930E78289}
 		{D404757D-1EFF-4375-B885-E03E70421DD0} = {CB3E8F47-FF5F-44D3-B79B-7B7930E78289}
+		{E3B3B373-5405-4CD3-A097-D4DF434947BC} = {CB3E8F47-FF5F-44D3-B79B-7B7930E78289}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{528383BC-4260-41C0-89CE-F00138B63F4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -86,5 +89,9 @@ Global
 		{D404757D-1EFF-4375-B885-E03E70421DD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D404757D-1EFF-4375-B885-E03E70421DD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D404757D-1EFF-4375-B885-E03E70421DD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3B3B373-5405-4CD3-A097-D4DF434947BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3B3B373-5405-4CD3-A097-D4DF434947BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3B3B373-5405-4CD3-A097-D4DF434947BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3B3B373-5405-4CD3-A097-D4DF434947BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

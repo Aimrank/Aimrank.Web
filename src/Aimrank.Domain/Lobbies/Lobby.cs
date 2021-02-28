@@ -10,7 +10,7 @@ using System;
 
 namespace Aimrank.Domain.Lobbies
 {
-    public class Lobby : Entity
+    public class Lobby : Entity, IAggregateRoot
     {
         private const int MaxMembers = 2;
         
@@ -110,7 +110,7 @@ namespace Aimrank.Domain.Lobbies
                 var first = _members.FirstOrDefault();
                 if (first is not null)
                 {
-                    var updated = first with {Role = LobbyMemberRole.Leader};
+                    var updated = first.PromoteToLeader();
                     
                     _members.Remove(first);
                     _members.Add(updated);

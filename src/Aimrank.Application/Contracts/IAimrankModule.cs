@@ -1,4 +1,7 @@
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+
+[assembly:InternalsVisibleTo("Aimrank.UnitTests")]
 
 namespace Aimrank.Application.Contracts
 {

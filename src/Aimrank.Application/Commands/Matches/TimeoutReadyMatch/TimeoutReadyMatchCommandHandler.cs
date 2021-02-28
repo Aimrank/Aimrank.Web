@@ -14,7 +14,7 @@ using System;
 
 namespace Aimrank.Application.Commands.Matches.TimeoutReadyMatch
 {
-    public class TimeoutReadyMatchCommandHandler : ICommandHandler<TimeoutReadyMatchCommand>
+    internal class TimeoutReadyMatchCommandHandler : ICommandHandler<TimeoutReadyMatchCommand>
     {
         private readonly IServerProcessManager _serverProcessManager;
         private readonly ILobbyRepository _lobbyRepository;

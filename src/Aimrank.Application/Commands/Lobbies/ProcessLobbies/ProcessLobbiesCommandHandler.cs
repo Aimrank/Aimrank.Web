@@ -12,7 +12,7 @@ using System;
 
 namespace Aimrank.Application.Commands.Lobbies.ProcessLobbies
 {
-    public class ProcessLobbiesCommandHandler : ICommandHandler<ProcessLobbiesCommand>
+    internal class ProcessLobbiesCommandHandler : ICommandHandler<ProcessLobbiesCommand>
     {
         private readonly ILobbyRepository _lobbyRepository;
         private readonly IMatchRepository _matchRepository;

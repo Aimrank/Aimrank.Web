@@ -1,10 +1,11 @@
 using Aimrank.Common.Domain;
 using Aimrank.Domain.Lobbies.Rules;
 using Aimrank.Domain.Matches;
+using System.Collections.Generic;
 
 namespace Aimrank.Domain.Lobbies
 {
-    public record LobbyConfiguration
+    public class LobbyConfiguration : ValueObject
     {
         public string Name { get; }
         public string Map { get; }
@@ -19,6 +20,13 @@ namespace Aimrank.Domain.Lobbies
             Name = name;
             Map = map;
             Mode = mode;
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Name;
+            yield return Map;
+            yield return Mode;
         }
     }
 }

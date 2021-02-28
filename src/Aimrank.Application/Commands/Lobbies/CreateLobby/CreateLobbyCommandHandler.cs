@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Commands.Lobbies.CreateLobby
 {
-    public class CreateLobbyCommandHandler : ICommandHandler<CreateLobbyCommand>
+    internal class CreateLobbyCommandHandler : ICommandHandler<CreateLobbyCommand>
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly ILobbyRepository _lobbyRepository;

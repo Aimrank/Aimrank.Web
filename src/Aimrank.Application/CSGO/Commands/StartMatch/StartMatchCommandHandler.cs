@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Aimrank.Application.CSGO.Commands.StartMatch
 {
-    public class StartMatchCommandHandler : IServerEventCommandHandler<StartMatchCommand>
+    internal class StartMatchCommandHandler : IServerEventCommandHandler<StartMatchCommand>
     {
         private readonly IMatchRepository _matchRepository;
 

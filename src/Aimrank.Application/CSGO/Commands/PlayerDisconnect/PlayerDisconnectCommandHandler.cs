@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Aimrank.Application.CSGO.Commands.PlayerDisconnect
 {
-    public class PlayerDisconnectCommandHandler : IServerEventCommandHandler<PlayerDisconnectCommand>
+    internal class PlayerDisconnectCommandHandler : IServerEventCommandHandler<PlayerDisconnectCommand>
     {
         private readonly IMatchRepository _matchRepository;
 

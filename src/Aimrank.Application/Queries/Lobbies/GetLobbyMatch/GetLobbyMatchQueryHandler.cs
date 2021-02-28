@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Queries.Lobbies.GetLobbyMatch
 {
-    public class GetLobbyMatchQueryHandler : IQueryHandler<GetLobbyMatchQuery, LobbyMatchDto>
+    internal class GetLobbyMatchQueryHandler : IQueryHandler<GetLobbyMatchQuery, LobbyMatchDto>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 

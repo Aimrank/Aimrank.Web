@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Queries.Users.GetUserStats
 {
-    public class GetUserStatsQueryHandler : IQueryHandler<GetUserStatsQuery, UserStatsDto>
+    internal class GetUserStatsQueryHandler : IQueryHandler<GetUserStatsQuery, UserStatsDto>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 

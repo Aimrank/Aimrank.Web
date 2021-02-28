@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Commands.Matches.AcceptMatch
 {
-    public class AcceptMatchCommandHandler : ICommandHandler<AcceptMatchCommand>
+    internal class AcceptMatchCommandHandler : ICommandHandler<AcceptMatchCommand>
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly IMatchRepository _matchRepository;
