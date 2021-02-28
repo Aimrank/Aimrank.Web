@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Aimrank.Domain.Users
 {
-    public class User : Entity
+    public class User : Entity, IAggregateRoot
     {
         public UserId Id { get; }
         public string Email { get; private set; }

@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Commands.Users.UpdateUserSteamDetails
 {
-    public class UpdateUserSteamDetailsCommandHandler : ICommandHandler<UpdateUserSteamDetailsCommand>
+    internal class UpdateUserSteamDetailsCommandHandler : ICommandHandler<UpdateUserSteamDetailsCommand>
     {
         private readonly IUserRepository _userRepository;
 

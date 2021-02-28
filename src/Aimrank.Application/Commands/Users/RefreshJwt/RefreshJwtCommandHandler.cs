@@ -6,7 +6,7 @@ using Aimrank.Application.Commands.Users.SignIn;
 
 namespace Aimrank.Application.Commands.Users.RefreshJwt
 {
-    public class RefreshJwtCommandHandler : ICommandHandler<RefreshJwtCommand, AuthenticationSuccessDto>
+    internal class RefreshJwtCommandHandler : ICommandHandler<RefreshJwtCommand, AuthenticationSuccessDto>
     {
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IJwtService _jwtService;

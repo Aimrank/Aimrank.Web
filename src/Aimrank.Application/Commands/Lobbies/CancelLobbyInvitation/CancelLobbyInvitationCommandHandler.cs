@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Commands.Lobbies.CancelLobbyInvitation
 {
-    public class CancelLobbyInvitationCommandHandler : ICommandHandler<CancelLobbyInvitationCommand>
+    internal class CancelLobbyInvitationCommandHandler : ICommandHandler<CancelLobbyInvitationCommand>
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly ILobbyRepository _lobbyRepository;

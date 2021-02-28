@@ -63,6 +63,7 @@ namespace Aimrank.IntegrationTests.Infrastructure
         {
             var data = @$"
                 {{
+                    ""winner"": 2,
                     ""teamTerrorists"": {{
                         ""score"": 8,
                         ""clients"": [{{

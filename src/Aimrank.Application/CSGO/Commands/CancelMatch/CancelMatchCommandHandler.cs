@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Aimrank.Application.CSGO.Commands.CancelMatch
 {
-    public class CancelMatchCommandHandler : IServerEventCommandHandler<CancelMatchCommand>
+    internal class CancelMatchCommandHandler : IServerEventCommandHandler<CancelMatchCommand>
     {
         private readonly IServerProcessManager _serverProcessManager;
         private readonly IMatchRepository _matchRepository;

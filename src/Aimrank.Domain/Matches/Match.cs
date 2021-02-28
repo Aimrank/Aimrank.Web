@@ -8,7 +8,7 @@ using System;
 
 namespace Aimrank.Domain.Matches
 {
-    public class Match : Entity
+    public class Match : Entity, IAggregateRoot
     {
         private readonly HashSet<MatchLobby> _lobbies = new();
         private readonly HashSet<MatchPlayer> _players = new();

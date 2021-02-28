@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Commands.Users.SignIn
 {
-    public class SignInCommandHandler : ICommandHandler<SignInCommand, AuthenticationSuccessDto>
+    internal class SignInCommandHandler : ICommandHandler<SignInCommand, AuthenticationSuccessDto>
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly IRefreshTokenRepository _refreshTokenRepository;

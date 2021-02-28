@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Commands.Lobbies.CancelSearchingForGame
 {
-    public class CancelSearchingForGameCommandHandler : ICommandHandler<CancelSearchingForGameCommand>
+    internal class CancelSearchingForGameCommandHandler : ICommandHandler<CancelSearchingForGameCommand>
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly ILobbyRepository _lobbyRepository;

@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Queries.Users.GetUserDetails
 {
-    public class GetUserDetailsQueryHandler : IQueryHandler<GetUserDetailsQuery, UserDto>
+    internal class GetUserDetailsQueryHandler : IQueryHandler<GetUserDetailsQuery, UserDto>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 

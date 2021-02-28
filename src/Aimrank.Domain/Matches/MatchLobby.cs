@@ -1,6 +1,23 @@
-﻿using Aimrank.Domain.Lobbies;
+﻿using Aimrank.Common.Domain;
+using Aimrank.Domain.Lobbies;
+using System.Collections.Generic;
 
 namespace Aimrank.Domain.Matches
 {
-    public record MatchLobby(LobbyId LobbyId);
+    public class MatchLobby : ValueObject
+    {
+        public LobbyId LobbyId { get; }
+        
+        private MatchLobby() {}
+
+        public MatchLobby(LobbyId lobbyId)
+        {
+            LobbyId = lobbyId;
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return LobbyId;
+        }
+    }
 }

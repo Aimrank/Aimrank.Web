@@ -14,12 +14,13 @@ COPY src/Aimrank.Domain/*.csproj ./src/Aimrank.Domain/
 COPY src/Aimrank.Application/*.csproj ./src/Aimrank.Application/
 COPY src/Aimrank.Infrastructure/*.csproj ./src/Aimrank.Infrastructure/
 COPY src/Aimrank.IntegrationEvents/*.csproj ./src/Aimrank.IntegrationEvents/
-COPY src/Tests/Aimrank.UnitTests/*.csproj ./src/Tests/Aimrank.UnitTests/
-COPY src/Tests/Aimrank.IntegrationTests/*.csproj ./src/Tests/Aimrank.IntegrationTests/
 COPY src/Common/Aimrank.Common.Domain/*.csproj ./src/Common/Aimrank.Common.Domain/
 COPY src/Common/Aimrank.Common.Application/*.csproj ./src/Common/Aimrank.Common.Application/
 COPY src/Common/Aimrank.Common.Infrastructure/*.csproj ./src/Common/Aimrank.Common.Infrastructure/
 COPY src/Database/Aimrank.Database.Migrator/*.csproj ./src/Database/Aimrank.Database.Migrator/
+COPY src/Tests/Aimrank.UnitTests/*.csproj ./src/Tests/Aimrank.UnitTests/
+COPY src/Tests/Aimrank.ArchTests/*.csproj ./src/Tests/Aimrank.ArchTests/
+COPY src/Tests/Aimrank.IntegrationTests/*.csproj ./src/Tests/Aimrank.IntegrationTests/
 
 RUN dotnet restore
 
@@ -28,7 +29,6 @@ COPY src/Aimrank.Domain/. ./src/Aimrank.Domain/
 COPY src/Aimrank.Application/. ./src/Aimrank.Application/
 COPY src/Aimrank.Infrastructure/. ./src/Aimrank.Infrastructure/
 COPY src/Aimrank.IntegrationEvents/. ./src/Aimrank.IntegrationEvents/
-COPY src/Tests/Aimrank.IntegrationTests/. ./src/Tests/Aimrank.IntegrationTests/
 COPY src/Common/Aimrank.Common.Domain/. ./src/Common/Aimrank.Common.Domain/
 COPY src/Common/Aimrank.Common.Application/. ./src/Common/Aimrank.Common.Application/
 COPY src/Common/Aimrank.Common.Infrastructure/. ./src/Common/Aimrank.Common.Infrastructure/

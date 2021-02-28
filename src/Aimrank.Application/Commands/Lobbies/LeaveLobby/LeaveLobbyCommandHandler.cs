@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Commands.Lobbies.LeaveLobby
 {
-    public class LeaveLobbyCommandHandler : ICommandHandler<LeaveLobbyCommand>
+    internal class LeaveLobbyCommandHandler : ICommandHandler<LeaveLobbyCommand>
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly ILobbyRepository _lobbyRepository;

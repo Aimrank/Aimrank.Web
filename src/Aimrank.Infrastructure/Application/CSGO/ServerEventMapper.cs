@@ -18,7 +18,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
             ["match_cancel"] = typeof(CancelMatchCommand),
             ["player_disconnect"] = typeof(PlayerDisconnectCommand)
         };
-        
+
         public IServerEventCommand Map(Guid matchId, string name, dynamic data)
         {
             var settings = new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
@@ -28,10 +28,14 @@ namespace Aimrank.Infrastructure.Application.CSGO
             {
                 return null;
             }
+
+            var content = JsonSerializer.Serialize<dynamic>(data, settings) as string;
             
-            var content = data is null ? "{}" : JsonSerializer.Serialize<dynamic>(data, settings);
-            var command = JsonSerializer.Deserialize(content, commandType, settings);
-            command.MatchId = matchId;
+            content = data is null
+                ? $"{{\"matchId\": \"{matchId}\"}}"
+                : $"{{\"matchId\": \"{matchId}\", {content.Substring(1)}";
+            
+            var command = (IServerEventCommand) JsonSerializer.Deserialize(content, commandType, settings);
 
             return command;
         }

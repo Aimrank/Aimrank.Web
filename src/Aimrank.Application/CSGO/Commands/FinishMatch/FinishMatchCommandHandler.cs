@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Aimrank.Application.CSGO.Commands.FinishMatch
 {
-    public class FinishMatchCommandHandler : IServerEventCommandHandler<FinishMatchCommand>
+    internal class FinishMatchCommandHandler : IServerEventCommandHandler<FinishMatchCommand>
     {
         private readonly IServerProcessManager _serverProcessManager;
         private readonly IMatchRepository _matchRepository;

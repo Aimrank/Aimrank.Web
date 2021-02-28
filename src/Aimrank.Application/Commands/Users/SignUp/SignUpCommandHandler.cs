@@ -11,7 +11,7 @@ using System;
 
 namespace Aimrank.Application.Commands.Users.SignUp
 {
-    public class SignUpCommandHandler : ICommandHandler<SignUpCommand, AuthenticationSuccessDto>
+    internal class SignUpCommandHandler : ICommandHandler<SignUpCommand, AuthenticationSuccessDto>
     {
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IUserRepository _userRepository;

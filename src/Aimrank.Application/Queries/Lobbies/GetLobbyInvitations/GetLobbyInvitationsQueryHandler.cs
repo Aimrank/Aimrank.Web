@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Queries.Lobbies.GetLobbyInvitations
 {
-    public class GetLobbyInvitationsQueryHandler : IQueryHandler<GetLobbyInvitationsQuery, IEnumerable<LobbyInvitationDto>>
+    internal class GetLobbyInvitationsQueryHandler : IQueryHandler<GetLobbyInvitationsQuery, IEnumerable<LobbyInvitationDto>>
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly ISqlConnectionFactory _sqlConnectionFactory;

@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Commands.Lobbies.InviteUserToLobby
 {
-    public class InviteUserToLobbyCommandHandler : ICommandHandler<InviteUserToLobbyCommand>
+    internal class InviteUserToLobbyCommandHandler : ICommandHandler<InviteUserToLobbyCommand>
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly ILobbyRepository _lobbyRepository;

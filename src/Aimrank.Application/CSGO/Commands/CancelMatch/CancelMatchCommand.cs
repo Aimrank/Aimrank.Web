@@ -4,7 +4,7 @@ namespace Aimrank.Application.CSGO.Commands.CancelMatch
 {
     public class CancelMatchCommand : IServerEventCommand
     {
-        public Guid MatchId { get; set; }
+        public Guid MatchId { get; }
 
         public CancelMatchCommand(Guid matchId)
         {

@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Aimrank.Application.Queries.Users.GetUsers
 {
-    public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, IEnumerable<UserDto>>
+    internal class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, IEnumerable<UserDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 

@@ -5,7 +5,7 @@ using System;
 
 namespace Aimrank.Domain.RefreshTokens
 {
-    public class RefreshToken : Entity
+    public class RefreshToken : Entity, IAggregateRoot
     {
         public RefreshTokenId Id { get; }
         public UserId UserId { get; }
