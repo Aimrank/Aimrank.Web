@@ -545,10 +545,6 @@ namespace Aimrank.Database.Migrator.Migrations
                                         .HasColumnType("int")
                                         .HasColumnName("Stats_Kills");
 
-                                    b2.Property<int>("Score")
-                                        .HasColumnType("int")
-                                        .HasColumnName("Stats_Score");
-
                                     b2.HasKey("MatchPlayerMatchId", "MatchPlayerUserId");
 
                                     b2.ToTable("MatchesPlayers");

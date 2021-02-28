@@ -41,7 +41,6 @@ namespace Aimrank.Application.CSGO.Commands.FinishMatch
                     client.Kills,
                     client.Assists,
                     client.Deaths,
-                    client.Score,
                     client.Hs));
             }
             
