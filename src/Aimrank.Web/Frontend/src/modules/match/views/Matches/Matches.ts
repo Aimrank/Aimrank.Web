@@ -1,17 +1,10 @@
-import { defineComponent, onMounted, computed, watch, reactive } from "vue";
-import { matchService } from "~/services";
+import { defineComponent, onMounted, computed, watch } from "vue";
 import { useUser } from "@/user/hooks/useUser";
 import { MatchMode } from "@/match/models/MatchMode";
-import { IMatchDto } from "@/match/models/IMatchDto";
-import { getMatchEntries } from "@/match/models/MatchEntry";
 import MatchesTable from "@/match/components/MatchesTable";
 import RatingChart from "@/match/components/RatingChart";
-
-interface IState {
-  isLoading: boolean;
-  matches: IMatchDto[];
-  mode: MatchMode;
-}
+import { useMatches } from "./hooks/useMatches";
+import { useStats } from "./hooks/useStats";
 
 const Matches = defineComponent({
   components: {
@@ -21,40 +14,25 @@ const Matches = defineComponent({
   setup() {
     const user = useUser();
 
-    const state = reactive<IState>({
-      isLoading: false,
-      matches: [],
-      mode: MatchMode.OneVsOne
-    });
-
-    const fetchMatches = async () => {
-      if (!user.state.user) {
-        return;
-      }
-
-      state.isLoading = true;
-
-      const result = await matchService.browse(user.state.user.id, { mode: state.mode, size: 20 });
-
-      state.isLoading = false;
-
-      if (result.isOk()) {
-        state.matches = result.value.items;
-      }
-    }
+    const { state: statsState, getStats } = useStats();
+    const { state: matchesState, getMatches } = useMatches();
 
     watch(
-      () => state.mode,
-      () => fetchMatches()
+      () => matchesState.mode,
+      () => getMatches(user.state.user?.id)
     );
 
-    onMounted(() => fetchMatches());
+    onMounted(() => {
+      getStats(user.state.user?.id);
+      getMatches(user.state.user?.id);
+    });
 
-    const matchesWithStatus = computed(() => getMatchEntries(state.matches, user.state.user?.id));
+    const isLoading = computed(() => matchesState.isLoading || statsState.isLoading);
 
     return {
-      state,
-      matchesWithStatus,
+      isLoading,
+      statsState,
+      matchesState,
       MatchMode: Object.freeze(MatchMode)
     };
   }
