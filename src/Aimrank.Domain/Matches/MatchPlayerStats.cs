@@ -10,8 +10,6 @@ namespace Aimrank.Domain.Matches
         public int Deaths { get; }
         public int Hs { get; }
 
-        private MatchPlayerStats() {}
-
         public MatchPlayerStats(int kills, int assists, int deaths, int hs)
         {
             Kills = kills;

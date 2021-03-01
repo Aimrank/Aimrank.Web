@@ -124,6 +124,7 @@ namespace Aimrank.Domain.Lobbies
         {
             BusinessRules.Check(new UserMustBeLobbyLeaderRule(this, userId));
             BusinessRules.Check(new LobbyStatusMustMatchRule(this, LobbyStatus.Open));
+            BusinessRules.Check(new MapMustBeSupportedRule(configuration.Map));
 
             Configuration = configuration;
         }

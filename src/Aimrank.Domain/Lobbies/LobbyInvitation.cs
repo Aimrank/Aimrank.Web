@@ -10,8 +10,6 @@ namespace Aimrank.Domain.Lobbies
         public UserId InvitingUserId { get; }
         public UserId InvitedUserId { get; }
         public DateTime CreatedAt { get; }
-        
-        private LobbyInvitation() {}
 
         public LobbyInvitation(UserId invitingUserId, UserId invitedUserId, DateTime createdAt)
         {
