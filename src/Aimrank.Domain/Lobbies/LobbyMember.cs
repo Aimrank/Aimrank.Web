@@ -8,8 +8,6 @@ namespace Aimrank.Domain.Lobbies
     {
         public UserId UserId { get; }
         public LobbyMemberRole Role { get; }
-        
-        private LobbyMember() {}
 
         public LobbyMember(UserId userId, LobbyMemberRole role)
         {

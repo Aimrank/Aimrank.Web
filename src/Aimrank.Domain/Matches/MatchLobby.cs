@@ -8,8 +8,6 @@ namespace Aimrank.Domain.Matches
     {
         public LobbyId LobbyId { get; }
         
-        private MatchLobby() {}
-
         public MatchLobby(LobbyId lobbyId)
         {
             LobbyId = lobbyId;

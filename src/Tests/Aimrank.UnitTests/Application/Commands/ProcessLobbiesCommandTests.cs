@@ -148,7 +148,7 @@ namespace Aimrank.UnitTests.Application.Commands
         #endregion
 
         [Fact]
-        public async Task ProcessesLobbies_WhenOneVsOneSingleLobby()
+        public async Task Processes_Lobbies_When_OneVsOne_SingleLobby()
         {
             await ArrangeOneVsOneSingleLobby();
 
@@ -162,7 +162,7 @@ namespace Aimrank.UnitTests.Application.Commands
         }
 
         [Fact]
-        public async Task ProcessesLobbies_WhenOneVsOneTwoLobbies()
+        public async Task Processes_Lobbies_When_OneVsOne_TwoLobbies()
         {
             await ArrangeOneVsOneTwoLobbies();
 
@@ -176,7 +176,7 @@ namespace Aimrank.UnitTests.Application.Commands
         }
 
         [Fact]
-        public async Task ProcessesLobbies_WhenOneVsOneFourLobbies()
+        public async Task Processes_Lobbies_When_OneVsOne_FourLobbies()
         {
             await ArrangeOneVsOneFourLobbies();
             
@@ -199,7 +199,7 @@ namespace Aimrank.UnitTests.Application.Commands
         }
 
         [Fact]
-        public async Task ProcessLobbies_WhenTwoVsTwoTwoLobbies()
+        public async Task Process_Lobbies_When_TwoVsTwo_TwoLobbies()
         {
             await ArrangeTwoVsTwoTwoLobbies();
 
