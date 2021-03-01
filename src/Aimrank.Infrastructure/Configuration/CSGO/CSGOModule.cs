@@ -17,7 +17,15 @@ namespace Aimrank.Infrastructure.Configuration.CSGO
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ServerProcessManager>().As<IServerProcessManager>().SingleInstance();
+            if (_csgoSettings.UseFakeServerProcessManager)
+            {
+                builder.RegisterType<FakeServerProcessManager>().As<IServerProcessManager>().SingleInstance();
+            }
+            else
+            {
+                builder.RegisterType<ServerProcessManager>().As<IServerProcessManager>().SingleInstance();
+            }
+            
             builder.RegisterType<ServerEventMapper>().As<IServerEventMapper>().SingleInstance();
             builder.RegisterInstance(_csgoSettings).SingleInstance();
             builder.RegisterType<MatchService>().As<IMatchService>().InstancePerLifetimeScope();
