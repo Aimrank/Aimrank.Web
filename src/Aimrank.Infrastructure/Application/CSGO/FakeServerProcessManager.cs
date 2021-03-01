@@ -1,28 +1,26 @@
-﻿using Aimrank.Application.CSGO;
+using Aimrank.Application.CSGO;
 using Aimrank.Infrastructure.Configuration.CSGO;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
-using System.Net;
 using System.Threading.Tasks;
 using System;
 
 namespace Aimrank.Infrastructure.Application.CSGO
 {
-    internal class ServerProcessManager : IServerProcessManager, IDisposable
+    internal class FakeServerProcessManager : IServerProcessManager
     {
         private readonly object _locker = new();
         
         private readonly ConcurrentQueue<int> _availablePorts = new();
         
-        private readonly ConcurrentDictionary<Guid, ServerProcess> _processes = new();
-
+        private readonly ConcurrentDictionary<Guid, ServerConfiguration> _processes = new();
+        
         private readonly ConcurrentDictionary<Guid, ServerReservation> _reservations = new();
-
+        
         private readonly CSGOSettings _csgoSettings;
-
-        public ServerProcessManager(CSGOSettings csgoSettings)
+        
+        public FakeServerProcessManager(CSGOSettings csgoSettings)
         {
             _csgoSettings = csgoSettings;
             _availablePorts.Enqueue(27016);
@@ -44,7 +42,7 @@ namespace Aimrank.Infrastructure.Application.CSGO
                 {
                     throw new ServerReservationException();
                 }
-                
+
                 var steamKey = GetUnusedSteamKey();
 
                 var reservation = new ServerReservation(matchId, steamKey, port);
@@ -70,14 +68,15 @@ namespace Aimrank.Infrastructure.Application.CSGO
             {
                 if (_reservations.TryRemove(matchId, out var reservation))
                 {
-                    var process = new ServerProcess(reservation.MatchId, new ServerConfiguration(
-                        reservation.SteamKey, reservation.Port, whitelist.ToList(), map));
+                    var configuration = new ServerConfiguration(
+                        reservation.SteamKey,
+                        reservation.Port,
+                        whitelist.ToList(),
+                        map);
 
-                    if (_processes.TryAdd(reservation.MatchId, process))
+                    if (_processes.TryAdd(reservation.MatchId, configuration))
                     {
-                        process.Start();
-
-                        return $"{GetLocalIpAddress()}:{reservation.Port}";
+                        return "localhost";
                     }
                 }
 
@@ -89,41 +88,20 @@ namespace Aimrank.Infrastructure.Application.CSGO
         {
             if (_processes.TryRemove(matchId, out var process))
             {
-                Task.Run(async () =>
+                lock (_locker)
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(20));
-                    await process.StopAsync();
-                    process.Dispose();
-                    
-                    lock (_locker)
-                    {
-                        _availablePorts.Enqueue(process.Configuration.Port);
-                    }
-                });
+                    _availablePorts.Enqueue(process.Port);
+                }
             }
         }
 
-        public async Task ExecuteCommandAsync(Guid matchId, string command)
-        {
-            if (_processes.TryGetValue(matchId, out var process))
-            {
-                await process.ExecuteAsync(command);
-            }
-        }
-
-        public void Dispose()
-        {
-            foreach (var process in _processes.Values)
-            {
-                process.Dispose();
-            }
-        }
+        public Task ExecuteCommandAsync(Guid matchId, string command) => Task.CompletedTask;
         
         private string GetUnusedSteamKey()
         {
             var steamKey =
                 _csgoSettings.SteamKeys.FirstOrDefault(k =>
-                    _processes.Values.All(p => p.Configuration.SteamKey != k) &&
+                    _processes.Values.All(p => p.SteamKey != k) &&
                     _reservations.Values.All(r => r.SteamKey != k));
 
             if (steamKey is null)
@@ -132,21 +110,6 @@ namespace Aimrank.Infrastructure.Application.CSGO
             }
 
             return steamKey;
-        }
-
-        private static string GetLocalIpAddress()
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-
-            return "localhost";
         }
     }
 }
