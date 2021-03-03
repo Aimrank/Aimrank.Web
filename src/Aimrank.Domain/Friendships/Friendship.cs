@@ -10,12 +10,23 @@ namespace Aimrank.Domain.Friendships
 {
     public class Friendship : Entity, IAggregateRoot
     {
-        public FriendshipMembers Members { get; }
-        private UserId _invitingUserId;
+        private readonly UserId _user1Id;
+        private readonly UserId _user2Id;
+        private readonly UserId _invitingUserId;
         private UserId _blockingUserId1;
         private UserId _blockingUserId2;
         private DateTime _createdAt;
         private bool _isAccepted;
+        
+        public FriendshipMembers Members
+        {
+            get => new(_user1Id, _user2Id);
+            private init
+            {
+                _user1Id = value.UserId1;
+                _user2Id = value.UserId2;
+            }
+        }
 
         private ImmutableHashSet<UserId> BlockingUsers
         {
