@@ -1,4 +1,3 @@
-using Aimrank.Domain.Friendships.Events;
 using Aimrank.Domain.Friendships.Rules;
 using Aimrank.Domain.Friendships;
 using System.Threading.Tasks;
@@ -8,14 +7,6 @@ namespace Aimrank.UnitTests.Domain.Friendships
 {
     public class FriendshipTests_Create : FriendshipTestsBase
     {
-        [Fact]
-        public async Task CreateAsync_Emits_DomainEvent_When_Successfully_Created()
-        {
-            var friendship = await CreateFriendshipAsync(UserId1);
-            
-            friendship.ShouldEmitDomainEvent<FriendshipCreatedDomainEvent>();
-        }
-        
         [Fact]
         public async Task CreateAsync_Creates_Friendship_In_Pending_State_When_InvitingUser_Provided()
         {

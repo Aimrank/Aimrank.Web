@@ -11,7 +11,7 @@ using Aimrank.Application.Queries.Lobbies.GetLobbyInvitations;
 using Aimrank.Application.Queries.Lobbies.GetLobbyMatch;
 using Aimrank.Common.Application;
 using Aimrank.Web.Attributes;
-using Aimrank.Web.Contracts.Requests;
+using Aimrank.Web.Contracts.Lobbies;
 using Aimrank.Web.Hubs.General;
 using Aimrank.Web.Hubs.Lobbies.Messages;
 using Aimrank.Web.Hubs.Lobbies;

@@ -1,5 +1,4 @@
 using Aimrank.Common.Domain;
-using Aimrank.Domain.Friendships.Events;
 using Aimrank.Domain.Friendships.Rules;
 using Aimrank.Domain.Users;
 using System.Collections.Immutable;
@@ -59,8 +58,6 @@ namespace Aimrank.Domain.Friendships
             BusinessRules.Check(new FriendshipMustHaveInvitingUserOrBlockingUserRule(invitingUserId, blockingUserId));
 
             var friendship = new Friendship(members, invitingUserId, blockingUserId);
-            
-            friendship.AddDomainEvent(new FriendshipCreatedDomainEvent(friendship));
 
             return friendship;
         }
@@ -99,6 +96,10 @@ namespace Aimrank.Domain.Friendships
             {
                 friendshipRepository.Delete(this);
             }
+            else
+            {
+                friendshipRepository.Update(this);
+            }
         }
 
         public void Delete(UserId deletingUserId, IFriendshipRepository friendshipRepository)
@@ -120,6 +121,8 @@ namespace Aimrank.Domain.Friendships
                     _isAccepted = false;
                     
                     BlockingUsers = BlockingUsers.Remove(deletingUserId);
+                    
+                    friendshipRepository.Update(this);
                 }
             }
         }
