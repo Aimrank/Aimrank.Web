@@ -28,16 +28,16 @@ namespace Aimrank.Application.Commands.Friendships.BlockUser
 
             var members = new FriendshipMembers(blockingUserId, blockedUserId);
 
-            var friendship = await _friendshipRepository.GetByMembersAsync(members);
-            if (friendship is null)
+            if (await _friendshipRepository.ExistsForMembersAsync(members))
             {
-                var blockedFriendship = await Friendship.CreateAsync(members, null, blockingUserId);
-                _friendshipRepository.Add(blockedFriendship);
+                var friendship = await _friendshipRepository.GetByMembersAsync(members);
+                friendship.Block(blockingUserId);
+                _friendshipRepository.Update(friendship);
             }
             else
             {
-                friendship.Block(blockingUserId);
-                _friendshipRepository.Update(friendship);
+                var blockedFriendship = await Friendship.CreateAsync(members, _friendshipRepository, null, blockingUserId);
+                _friendshipRepository.Add(blockedFriendship);
             }
             
             return Unit.Value;

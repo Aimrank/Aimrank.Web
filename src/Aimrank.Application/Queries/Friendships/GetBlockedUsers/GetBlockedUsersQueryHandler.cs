@@ -1,6 +1,7 @@
 using Aimrank.Application.Contracts;
 using Aimrank.Application.Queries.Users.GetUserDetails;
 using Aimrank.Common.Application.Data;
+using Aimrank.Common.Application;
 using Dapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,10 +11,14 @@ namespace Aimrank.Application.Queries.Friendships.GetBlockedUsers
 {
     internal class GetBlockedUsersQueryHandler : IQueryHandler<GetBlockedUsersQuery, IEnumerable<UserDto>>
     {
+        private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public GetBlockedUsersQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
+        public GetBlockedUsersQueryHandler(
+            IExecutionContextAccessor executionContextAccessor,
+            ISqlConnectionFactory sqlConnectionFactory)
         {
+            _executionContextAccessor = executionContextAccessor;
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
@@ -42,7 +47,7 @@ namespace Aimrank.Application.Queries.Friendships.GetBlockedUsers
                     [F].[BlockingUserId1] = @UserId OR
                     [F].[BlockingUserId2] = @UserId;";
 
-            return connection.QueryAsync<UserDto>(sql, new {request.UserId});
+            return connection.QueryAsync<UserDto>(sql, new {_executionContextAccessor.UserId});
         }
     }
 }

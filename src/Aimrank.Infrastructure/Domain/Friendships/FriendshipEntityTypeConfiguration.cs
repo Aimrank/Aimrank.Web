@@ -13,18 +13,18 @@ namespace Aimrank.Infrastructure.Domain.Friendships
         {
             builder.ToTable("Friendships", "aimrank");
 
-            builder.HasKey("_user1Id", "_user2Id");
+            builder.HasKey(f => new {f.User1Id, f.User2Id});
 
-            builder.Property<UserId>("_user1Id").HasColumnName("User1Id");
-            builder.Property<UserId>("_user2Id").HasColumnName("User2Id");
+            builder.Property(f => f.User1Id).HasColumnName("User1Id");
+            builder.Property(f => f.User2Id).HasColumnName("User2Id");
             builder.Property<UserId>("_invitingUserId").HasColumnName("InvitingUserId");
             builder.Property<UserId>("_blockingUserId1").HasColumnName("BlockingUserId1");
             builder.Property<UserId>("_blockingUserId2").HasColumnName("BlockingUserId2");
             builder.Property<DateTime>("_createdAt").HasColumnName("CreatedAt");
             builder.Property<bool>("_isAccepted").HasColumnName("IsAccepted");
 
-            builder.HasOne<UserModel>().WithMany().HasForeignKey("_user1Id").OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne<UserModel>().WithMany().HasForeignKey("_user2Id").OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne<UserModel>().WithMany().HasForeignKey(f => f.User1Id).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne<UserModel>().WithMany().HasForeignKey(f => f.User2Id).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne<UserModel>().WithMany().HasForeignKey("_invitingUserId").OnDelete(DeleteBehavior.Restrict);
             builder.HasOne<UserModel>().WithMany().HasForeignKey("_blockingUserId1").OnDelete(DeleteBehavior.Restrict);
             builder.HasOne<UserModel>().WithMany().HasForeignKey("_blockingUserId2").OnDelete(DeleteBehavior.Restrict);

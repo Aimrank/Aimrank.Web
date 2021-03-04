@@ -10,8 +10,8 @@ namespace Aimrank.Domain.Friendships
 {
     public class Friendship : Entity, IAggregateRoot
     {
-        private readonly UserId _user1Id;
-        private readonly UserId _user2Id;
+        public UserId User1Id { get; private init; }
+        public UserId User2Id { get; private init; }
         private readonly UserId _invitingUserId;
         private UserId _blockingUserId1;
         private UserId _blockingUserId2;
@@ -20,11 +20,11 @@ namespace Aimrank.Domain.Friendships
         
         public FriendshipMembers Members
         {
-            get => new(_user1Id, _user2Id);
+            get => new(User1Id, User2Id);
             private init
             {
-                _user1Id = value.UserId1;
-                _user2Id = value.UserId2;
+                User1Id = value.UserId1;
+                User2Id = value.UserId2;
             }
         }
 

@@ -17,8 +17,8 @@ namespace Aimrank.Infrastructure.Domain.Friendships
         public async Task<Friendship> GetByMembersAsync(FriendshipMembers members)
         {
             var friendship = await _context.Friendships.FirstOrDefaultAsync(f =>
-                (f.Members.UserId1 == members.UserId1 && f.Members.UserId2 == members.UserId2) ||
-                (f.Members.UserId1 == members.UserId2 && f.Members.UserId2 == members.UserId1));
+                (f.User1Id == members.UserId1 && f.User2Id == members.UserId2) ||
+                (f.User1Id == members.UserId2 && f.User2Id == members.UserId1));
 
             if (friendship is null)
             {
@@ -30,8 +30,8 @@ namespace Aimrank.Infrastructure.Domain.Friendships
 
         public Task<bool> ExistsForMembersAsync(FriendshipMembers members)
             => _context.Friendships.AnyAsync(f =>
-                (f.Members.UserId1 == members.UserId1 && f.Members.UserId2 == members.UserId2) ||
-                (f.Members.UserId1 == members.UserId2 && f.Members.UserId2 == members.UserId1));
+                (f.User1Id == members.UserId1 && f.User2Id == members.UserId2) ||
+                (f.User1Id == members.UserId2 && f.User2Id == members.UserId1));
 
         public void Add(Friendship friendship) => _context.Friendships.Add(friendship);
 

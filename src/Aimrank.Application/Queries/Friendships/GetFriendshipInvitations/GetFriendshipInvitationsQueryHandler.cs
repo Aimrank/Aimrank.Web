@@ -1,6 +1,7 @@
 using Aimrank.Application.Contracts;
 using Aimrank.Application.Queries.Users.GetUserDetails;
 using Aimrank.Common.Application.Data;
+using Aimrank.Common.Application;
 using Dapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,10 +11,14 @@ namespace Aimrank.Application.Queries.Friendships.GetFriendshipInvitations
 {
     internal class GetFriendshipInvitationsQueryHandler : IQueryHandler<GetFriendshipInvitationsQuery, IEnumerable<UserDto>>
     {
+        private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public GetFriendshipInvitationsQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
+        public GetFriendshipInvitationsQueryHandler(
+            IExecutionContextAccessor executionContextAccessor,
+            ISqlConnectionFactory sqlConnectionFactory)
         {
+            _executionContextAccessor = executionContextAccessor;
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
@@ -42,9 +47,10 @@ namespace Aimrank.Application.Queries.Friendships.GetFriendshipInvitations
                     [F].[IsAccepted] = 0 AND
                     [F].[BlockingUserId1] IS NULL AND
                     [F].[BlockingUserId2] IS NULL AND
+                    [F].[InvitingUserId] <> @UserId AND
                     ([U1].[Id] = @UserId OR [U2].[Id] = @UserId);";
 
-            return connection.QueryAsync<UserDto>(sql, new {request.UserId});
+            return connection.QueryAsync<UserDto>(sql, new {_executionContextAccessor.UserId});
         }
     }
 }

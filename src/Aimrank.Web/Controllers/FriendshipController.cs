@@ -34,13 +34,13 @@ namespace Aimrank.Web.Controllers
         public async Task<ActionResult<IEnumerable<UserDto>>> GetFriends(Guid userId)
             => Ok(await _aimrankModule.ExecuteQueryAsync(new GetFriendsListQuery(userId)));
 
-        [HttpGet("{userId}/invitations")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetInvitations(Guid userId)
-            => Ok(await _aimrankModule.ExecuteQueryAsync(new GetFriendshipInvitationsQuery(userId)));
+        [HttpGet("invitations")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetInvitations()
+            => Ok(await _aimrankModule.ExecuteQueryAsync(new GetFriendshipInvitationsQuery()));
 
-        [HttpGet("{userId}/blocked")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetBlockedUsers(Guid userId)
-            => Ok(await _aimrankModule.ExecuteQueryAsync(new GetBlockedUsersQuery(userId)));
+        [HttpGet("blocked")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetBlockedUsers()
+            => Ok(await _aimrankModule.ExecuteQueryAsync(new GetBlockedUsersQuery()));
         
         [HttpPost("invite")]
         public async Task<IActionResult> CreateInvitation(CreateFriendshipInvitationRequest request)
