@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aimrank.Database.Migrator.Migrations
 {
     [DbContext(typeof(AimrankContext))]
-    [Migration("20210303211301_Friendships")]
-    partial class Friendships
+    [Migration("20210304175233_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,11 +24,11 @@ namespace Aimrank.Database.Migrator.Migrations
 
             modelBuilder.Entity("Aimrank.Domain.Friendships.Friendship", b =>
                 {
-                    b.Property<Guid>("_user1Id")
+                    b.Property<Guid>("User1Id")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("User1Id");
 
-                    b.Property<Guid>("_user2Id")
+                    b.Property<Guid>("User2Id")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("User2Id");
 
@@ -52,15 +52,15 @@ namespace Aimrank.Database.Migrator.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("IsAccepted");
 
-                    b.HasKey("_user1Id", "_user2Id");
+                    b.HasKey("User1Id", "User2Id");
+
+                    b.HasIndex("User2Id");
 
                     b.HasIndex("_blockingUserId1");
 
                     b.HasIndex("_blockingUserId2");
 
                     b.HasIndex("_invitingUserId");
-
-                    b.HasIndex("_user2Id");
 
                     b.ToTable("Friendships", "aimrank");
                 });
@@ -389,6 +389,18 @@ namespace Aimrank.Database.Migrator.Migrations
                 {
                     b.HasOne("Aimrank.Infrastructure.Domain.Users.UserModel", null)
                         .WithMany()
+                        .HasForeignKey("User1Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Aimrank.Infrastructure.Domain.Users.UserModel", null)
+                        .WithMany()
+                        .HasForeignKey("User2Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Aimrank.Infrastructure.Domain.Users.UserModel", null)
+                        .WithMany()
                         .HasForeignKey("_blockingUserId1")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -401,18 +413,6 @@ namespace Aimrank.Database.Migrator.Migrations
                         .WithMany()
                         .HasForeignKey("_invitingUserId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Aimrank.Infrastructure.Domain.Users.UserModel", null)
-                        .WithMany()
-                        .HasForeignKey("_user1Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Aimrank.Infrastructure.Domain.Users.UserModel", null)
-                        .WithMany()
-                        .HasForeignKey("_user2Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Aimrank.Domain.Lobbies.Lobby", b =>
