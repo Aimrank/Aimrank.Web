@@ -18,8 +18,8 @@ using System;
 
 namespace Aimrank.Web.Controllers
 {
-    [ApiController]
     [JwtAuth]
+    [ApiController]
     [Route("api/[controller]")]
     public class FriendshipController : ControllerBase
     {
@@ -63,13 +63,6 @@ namespace Aimrank.Web.Controllers
             return Ok();
         }
 
-        [HttpPost("delete")]
-        public async Task<IActionResult> DeleteFriend(DeleteFriendshipRequest request)
-        {
-            await _aimrankModule.ExecuteCommandAsync(new DeleteFriendshipCommand(request.UserId));
-            return Ok();
-        }
-
         [HttpPost("block")]
         public async Task<IActionResult> BlockUser(BlockUserRequest request)
         {
@@ -81,6 +74,13 @@ namespace Aimrank.Web.Controllers
         public async Task<IActionResult> UnblockUser(UnblockUserRequest request)
         {
             await _aimrankModule.ExecuteCommandAsync(new UnblockUserCommand(request.BlockedUserId));
+            return Ok();
+        }
+        
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeleteFriend(Guid userId)
+        {
+            await _aimrankModule.ExecuteCommandAsync(new DeleteFriendshipCommand(userId));
             return Ok();
         }
     }
