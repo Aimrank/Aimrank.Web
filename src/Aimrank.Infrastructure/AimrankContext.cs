@@ -1,3 +1,4 @@
+using Aimrank.Domain.Friendships;
 using Aimrank.Domain.Lobbies;
 using Aimrank.Domain.Matches;
 using Aimrank.Domain.RefreshTokens;
@@ -20,6 +21,7 @@ namespace Aimrank.Infrastructure
     {
         public DbSet<Match> Matches { get; set; }
         public DbSet<Lobby> Lobbies { get; set; }
+        public DbSet<Friendship> Friendships { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<OutboxMessage> OutboxMessages { get; set; }
         

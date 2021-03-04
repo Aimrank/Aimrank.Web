@@ -3,7 +3,7 @@ using Aimrank.Application.Contracts;
 using Aimrank.Common.Application;
 using Aimrank.Common.Domain;
 using Aimrank.Web.Attributes;
-using Aimrank.Web.Contracts.Responses;
+using Aimrank.Web.Contracts.Users;
 using Aimrank.Web.Steam;
 using AspNet.Security.OpenId.Steam;
 using Microsoft.AspNetCore.Authentication;

@@ -5,7 +5,7 @@ using Aimrank.Application.Queries.Users.GetUserStats;
 using Aimrank.Application.Queries.Users.GetUsers;
 using Aimrank.Common.Application.Queries;
 using Aimrank.Web.Attributes;
-using Aimrank.Web.Contracts.Requests;
+using Aimrank.Web.Contracts.Matches;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;

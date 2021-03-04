@@ -2,7 +2,7 @@ using Aimrank.Application.Commands.Users.RefreshJwt;
 using Aimrank.Application.Commands.Users.SignIn;
 using Aimrank.Application.Commands.Users.SignUp;
 using Aimrank.Application.Contracts;
-using Aimrank.Web.Contracts.Requests;
+using Aimrank.Web.Contracts.Users;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
