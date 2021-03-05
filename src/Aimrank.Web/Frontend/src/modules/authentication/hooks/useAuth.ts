@@ -1,7 +1,7 @@
 import { reactive, readonly } from "vue";
 import { authService, httpClient } from "~/services";
 import { router } from "~/router";
-import { useUser } from "@/user/hooks/useUser";
+import { useUser } from "@/profile/hooks/useUser";
 import { ISignInRequest, ISignUpRequest } from "@/authentication/services/AuthService";
 
 interface IAuthState {

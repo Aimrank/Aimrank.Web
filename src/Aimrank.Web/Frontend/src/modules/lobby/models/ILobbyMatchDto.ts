@@ -1,5 +1,5 @@
-import { MatchMode } from "@/match/models/MatchMode";
-import { MatchStatus } from "@/match/models/MatchStatus";
+import { MatchMode } from "@/profile/models/MatchMode";
+import { MatchStatus } from "@/profile/models/MatchStatus";
 
 export interface ILobbyMatchDto {
   id: string;

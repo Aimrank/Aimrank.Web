@@ -3,7 +3,7 @@ import { router } from "~/router";
 import { parseJwt } from "@/authentication/utilities/tokenParser";
 import { paramsSerializer } from "@/common/utilities/paramsSerializer";
 import { useAuth } from "@/authentication/hooks/useAuth";
-import { useUser } from "@/user/hooks/useUser";
+import { useUser } from "@/profile/hooks/useUser";
 
 interface IHttpClientConfig {
   baseUrl?: string;

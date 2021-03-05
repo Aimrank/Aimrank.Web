@@ -33,15 +33,6 @@
       }
     }
   },
-  "user": {
-    "views": {
-      "Settings": {
-        "title": "Settings",
-        "steamNotConnected": "Not connected",
-        "loading": "Loading..."
-      }
-    }
-  },
   "lobby": {
     "components": {
       "InvitationForm": {
@@ -55,6 +46,11 @@
           "OneVsOne": "One vs One",
           "TwoVsTwo": "Two vs Two"
         }
+      },
+      "MatchDialog": {
+        "header": "Your match is ready",
+        "content": "You have <strong>{0}</strong> seconds to accept the game.",
+        "submit": "Accept"
       }
     },
     "views": {
@@ -85,12 +81,30 @@
       }
     }
   },
-  "match": {
-    "components": {
-      "MatchDialog": {
-        "header": "Your match is ready",
-        "content": "You have <strong>{0}</strong> seconds to accept the game.",
-        "submit": "Accept"
+  "profile": {
+    "views": {
+      "Profile": {
+        "title": "Profile: {0}"
+      },
+      "Settings": {
+        "title": "Settings",
+        "username": "Username",
+        "steamNotConnected": "Not connected",
+        "loading": "Loading..."
+      },
+      "Friends": {
+        "title": "Friends"
+      },
+      "Matches": {
+        "stats": {
+          "title": "Stats",
+          "matches": "Matches",
+          "winPercentage": "Win %",
+          "kdRatio": "K/D Ratio",
+          "hsPercentage": "HS %"
+        },
+        "ratingTitle": "Your rating in last {0} matches",
+        "matchesTitle" :"Last {0} matches"
       }
     }
   }

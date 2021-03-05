@@ -1,0 +1,17 @@
+.container {
+  padding: 20px;
+}
+
+.title {
+  margin-bottom: 20px;
+}
+
+.buttons {
+  display: flex;
+}
+
+.button {
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+}

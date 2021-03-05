@@ -1,6 +1,6 @@
 import { HttpClient } from "@/common/services/HttpClient";
 import { Service } from "@/common/services/Service";
-import { MatchMode } from "@/match/models/MatchMode";
+import { MatchMode } from "@/profile/models/MatchMode";
 import { ILobbyMatchDto } from "@/lobby/models/ILobbyMatchDto";
 import { ILobbyDto } from "@/lobby/models/ILobbyDto";
 import { ILobbyInvitationDto } from "@/lobby/models/ILobbyInvitationDto";
