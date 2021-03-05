@@ -1,4 +1,5 @@
 import { defineComponent, onMounted, computed, watch } from "vue";
+import { useRoute } from "vue-router";
 import { useUser } from "@/profile/hooks/useUser";
 import { MatchMode } from "@/profile/models/MatchMode";
 import MatchesTable from "@/profile/components/MatchesTable";
@@ -13,18 +14,23 @@ const Matches = defineComponent({
   },
   setup() {
     const user = useUser();
+    const route = useRoute();
 
     const { state: statsState, getStats } = useStats();
     const { state: matchesState, getMatches } = useMatches();
 
+    const userId = computed(() => route.params.userId || user.state.user?.id);
+
     watch(
       () => matchesState.mode,
-      () => getMatches(user.state.user?.id)
+      () => getMatches(userId.value as string)
     );
 
     onMounted(() => {
-      getStats(user.state.user?.id);
-      getMatches(user.state.user?.id);
+      if (userId) {
+        getStats(userId.value as string);
+        getMatches(userId.value as string);
+      }
     });
 
     const isLoading = computed(() => matchesState.isLoading || statsState.isLoading);

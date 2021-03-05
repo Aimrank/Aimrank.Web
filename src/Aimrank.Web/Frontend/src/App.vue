@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import MatchDialog from "@/match/components/MatchDialog";
+import MatchDialog from "@/lobby/components/MatchDialog";
 import MainHeader from "@/common/components/MainHeader";
 import NotificationsList from "@/common/components/NotificationsList";
 

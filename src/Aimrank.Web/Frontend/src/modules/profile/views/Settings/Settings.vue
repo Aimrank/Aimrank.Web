@@ -3,11 +3,11 @@
 
 <template>
   <div :class="$style.container">
-    <h3 :class="$style.title">{{ $t("user.views.Settings.title") }}</h3>
+    <h3 :class="$style.title">{{ $t("profile.views.Settings.title") }}</h3>
     <div v-if="userDetails">
       <table :class="$style.table">
         <tr>
-          <th>Name</th>
+          <th>{{ $t("profile.views.Settings.username") }}</th>
           <td>{{ userDetails.username }}</td>
           <td></td>
         </tr>
@@ -21,7 +21,7 @@
               }"
               :name="userDetails.steamId ? 'check' : 'times'"
             />
-            {{ userDetails.steamId || $t("user.views.Settings.steamNotConnected") }}
+            {{ userDetails.steamId || $t("profile.views.Settings.steamNotConnected") }}
           </td>
           <td>
             <base-button
@@ -36,7 +36,7 @@
       </table>
     </div>
     <div v-else>
-      {{ $t("user.views.Settings.loading") }}
+      {{ $t("profile.views.Settings.loading") }}
     </div>
   </div>
 </template>

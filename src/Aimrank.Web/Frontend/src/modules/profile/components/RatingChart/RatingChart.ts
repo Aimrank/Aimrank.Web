@@ -1,5 +1,5 @@
 import Chart from "chart.js";
-import { computed, defineComponent, ref, watch } from "vue";
+import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import { IMatchEntry } from "@/profile/models/MatchEntry";
 
 const colors = {
@@ -16,6 +16,10 @@ const RatingChart = defineComponent({
   },
   setup(props) {
     const root = ref(null);
+
+    onMounted(() => {
+      renderChart();
+    });
 
     watch (
       () => props.matches,

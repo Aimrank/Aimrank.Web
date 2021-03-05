@@ -4,9 +4,9 @@
 <template>
   <base-dialog :visible="isDialogVisible" hide-close-icon>
     <template #header>
-      {{ $t("match.components.MatchDialog.header") }}
+      {{ $t("lobby.components.MatchDialog.header") }}
     </template>
-    <div v-html="$t('match.components.MatchDialog.content', [time])" />
+    <div v-html="$t('lobby.components.MatchDialog.content', [time])" />
     <div :class="$style.icons">
       <div
         v-for="index in totalAcceptationsNeeded"
@@ -27,7 +27,7 @@
           :disabled="isAcceptedByUser && totalAcceptations < totalAcceptationsNeeded"
           @click="onAcceptClick"
         >
-          {{ $t("match.components.MatchDialog.submit") }}
+          {{ $t("lobby.components.MatchDialog.submit") }}
         </base-button>
       </div>
     </template>
