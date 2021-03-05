@@ -1,6 +1,6 @@
 import { HttpClient } from "@/common/services/HttpClient";
 import { Service } from "@/common/services/Service";
-import { IUserDto } from "@/user/models/IUserDto";
+import { IUserDto } from "@/profile/models/IUserDto";
 
 export class UserService extends Service {
   constructor(private readonly httpClient: HttpClient) {

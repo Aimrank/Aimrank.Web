@@ -3,7 +3,7 @@ import { useI18n } from "vue-i18n";
 import { lobbyService, userService } from "~/services";
 import { useNotifications } from "@/common/hooks/useNotifications";
 import { debounce } from "@/common/utilities/debounce";
-import { IUserDto } from "@/user/models/IUserDto";
+import { IUserDto } from "@/profile/models/IUserDto";
 import FormFieldInput from "@/common/components/FormFieldInput";
 import Icon from "@/common/components/Icon";
 

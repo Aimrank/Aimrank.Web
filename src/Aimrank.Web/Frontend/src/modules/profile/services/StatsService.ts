@@ -1,7 +1,7 @@
 
 import { HttpClient } from "@/common/services/HttpClient";
 import { Service } from "@/common/services/Service";
-import { IUserStatsDto } from "@/match/models/IUserStatsDto";
+import { IUserStatsDto } from "@/profile/models/IUserStatsDto";
 
 export class StatsService extends Service {
   constructor(private readonly httpClient: HttpClient) {

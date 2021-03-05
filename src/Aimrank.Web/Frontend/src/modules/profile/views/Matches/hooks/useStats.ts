@@ -1,6 +1,6 @@
 import { reactive } from "vue"
 import { statsService } from "~/services";
-import { IUserStatsDto } from "@/match/models/IUserStatsDto"
+import { IUserStatsDto } from "@/profile/models/IUserStatsDto"
 
 interface IStatsState {
   isLoading: boolean;

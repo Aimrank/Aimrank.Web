@@ -1,9 +1,9 @@
 import { defineComponent, onMounted, ref } from "vue";
 import { steamService, userService } from "~/services";
-import { useUser } from "@/user/hooks/useUser";
+import { useUser } from "@/profile/hooks/useUser";
 import { useNotifications } from "@/common/hooks/useNotifications";
 import { useInitialState } from "@/common/hooks/useInitialState";
-import { IUserDto } from "@/user/models/IUserDto";
+import { IUserDto } from "@/profile/models/IUserDto";
 import BaseButton from "@/common/components/BaseButton";
 import Icon from "@/common/components/Icon";
 

@@ -1,6 +1,6 @@
 import { computed, reactive, readonly } from "vue";
-import { MatchMode } from "@/match/models/MatchMode";
-import { MatchStatus } from "@/match/models/MatchStatus";
+import { MatchMode } from "@/profile/models/MatchMode";
+import { MatchStatus } from "@/profile/models/MatchStatus";
 
 interface IMatch {
   id: string;

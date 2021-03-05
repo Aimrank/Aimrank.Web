@@ -1,8 +1,8 @@
 import { IPaginationResponse } from "@/common/models/IPaginationResponse";
 import { HttpClient } from "@/common/services/HttpClient";
 import { Service } from "@/common/services/Service";
-import { MatchMode } from "@/match/models/MatchMode";
-import { IMatchDto } from "@/match/models/IMatchDto";
+import { MatchMode } from "@/profile/models/MatchMode";
+import { IMatchDto } from "@/profile/models/IMatchDto";
 
 export interface IBrowseMatchesQuery {
   page?: number;

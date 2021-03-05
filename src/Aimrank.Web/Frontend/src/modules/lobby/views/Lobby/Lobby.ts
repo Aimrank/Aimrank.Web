@@ -1,11 +1,11 @@
 import { computed, defineComponent, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { lobbyHub, lobbyService, matchService } from "~/services";
-import { useUser } from "@/user/hooks/useUser";
-import { useMatch } from "@/match/hooks/useMatch";
+import { useUser } from "@/profile/hooks/useUser";
+import { useMatch } from "@/lobby/hooks/useMatch";
 import { useLobby } from "@/lobby/hooks/useLobby";
 import { useNotifications } from "@/common/hooks/useNotifications";
-import { MatchStatus } from "@/match/models/MatchStatus";
+import { MatchStatus } from "@/profile/models/MatchStatus";
 import BaseButton from "@/common/components/BaseButton";
 import InvitationForm from "@/lobby/components/InvitationForm";
 import LobbyConfiguration from "@/lobby/components/LobbyConfiguration";

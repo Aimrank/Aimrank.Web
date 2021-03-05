@@ -1,4 +1,4 @@
-import { IMatchEntry } from "@/match/models/MatchEntry";
+import { IMatchEntry } from "@/profile/models/MatchEntry";
 import { defineComponent } from "vue";
 
 const MatchesTable = defineComponent({

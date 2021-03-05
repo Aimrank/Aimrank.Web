@@ -1,4 +1,4 @@
-import { MatchMode } from "@/match/models/MatchMode";
+import { MatchMode } from "@/profile/models/MatchMode";
 
 export interface ILobbyConfiguration {
   name: string;

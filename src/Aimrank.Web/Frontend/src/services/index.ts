@@ -1,12 +1,12 @@
 import { API_URL } from "~/constants";
 
 import { HttpClient } from "@/common/services/HttpClient";
-import { UserService } from "@/user/services/UserService";
 import { AuthService } from "@/authentication/services/AuthService";
-import { SteamService } from "@/user/services/SteamService";
+import { UserService } from "@/profile/services/UserService";
+import { SteamService } from "@/profile/services/SteamService";
+import { StatsService } from "@/profile/services/StatsService";
+import { MatchService } from "@/profile/services/MatchService";
 import { LobbyService } from "@/lobby/services/LobbyService";
-import { MatchService } from "@/match/services/MatchService";
-import { StatsService } from "@/match/services/StatsService";
 
 import { Hub } from "@/common/hubs/Hub";
 import { GeneralHub } from "@/common/hubs/GeneralHub";

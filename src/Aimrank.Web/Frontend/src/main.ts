@@ -3,7 +3,7 @@ import { createI18n } from "vue-i18n";
 import { router } from "~/router";
 import { generalHub, httpClient, lobbyHub } from "~/services";
 import { useAuth } from "@/authentication/hooks/useAuth";
-import { useUser } from "@/user/hooks/useUser";
+import { useUser } from "@/profile/hooks/useUser";
 
 import App from "./App.vue";
 

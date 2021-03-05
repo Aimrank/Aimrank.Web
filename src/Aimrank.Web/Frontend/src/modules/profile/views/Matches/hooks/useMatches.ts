@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import { matchService } from "~/services";
-import { MatchMode } from "@/match/models/MatchMode";
-import { getMatchEntries, IMatchEntry } from "@/match/models/MatchEntry";
+import { MatchMode } from "@/profile/models/MatchMode";
+import { getMatchEntries, IMatchEntry } from "@/profile/models/MatchEntry";
 
 interface IMatchesState {
   isLoading: boolean;

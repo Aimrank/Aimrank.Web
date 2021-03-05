@@ -1,8 +1,8 @@
 import { defineComponent, onMounted, computed, watch } from "vue";
-import { useUser } from "@/user/hooks/useUser";
-import { MatchMode } from "@/match/models/MatchMode";
-import MatchesTable from "@/match/components/MatchesTable";
-import RatingChart from "@/match/components/RatingChart";
+import { useUser } from "@/profile/hooks/useUser";
+import { MatchMode } from "@/profile/models/MatchMode";
+import MatchesTable from "@/profile/components/MatchesTable";
+import RatingChart from "@/profile/components/RatingChart";
 import { useMatches } from "./hooks/useMatches";
 import { useStats } from "./hooks/useStats";
 
