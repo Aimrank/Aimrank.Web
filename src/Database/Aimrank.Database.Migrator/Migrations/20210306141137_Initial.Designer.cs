@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aimrank.Database.Migrator.Migrations
 {
     [DbContext(typeof(AimrankContext))]
-    [Migration("20210304175233_Initial")]
+    [Migration("20210306141137_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,17 +83,7 @@ namespace Aimrank.Database.Migrator.Migrations
             modelBuilder.Entity("Aimrank.Domain.Matches.Match", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("Id");
-
-                    b.Property<string>("Address")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("Address");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("FinishedAt")
                         .HasColumnType("datetime2")
@@ -109,19 +99,28 @@ namespace Aimrank.Database.Migrator.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Mode");
 
-                    b.Property<int>("ScoreCT")
-                        .HasColumnType("int")
-                        .HasColumnName("ScoreCT");
-
-                    b.Property<int>("ScoreT")
-                        .HasColumnType("int")
-                        .HasColumnName("ScoreT");
-
                     b.Property<int>("Status")
                         .HasColumnType("int")
                         .HasColumnName("Status");
 
-                    b.Property<int>("Winner")
+                    b.Property<string>("_address")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Address");
+
+                    b.Property<DateTime>("_createdAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreatedAt");
+
+                    b.Property<int>("_scoreCT")
+                        .HasColumnType("int")
+                        .HasColumnName("ScoreCT");
+
+                    b.Property<int>("_scoreT")
+                        .HasColumnType("int")
+                        .HasColumnName("ScoreT");
+
+                    b.Property<int>("_winner")
                         .HasColumnType("int")
                         .HasColumnName("Winner");
 
@@ -417,7 +416,7 @@ namespace Aimrank.Database.Migrator.Migrations
 
             modelBuilder.Entity("Aimrank.Domain.Lobbies.Lobby", b =>
                 {
-                    b.OwnsOne("Aimrank.Domain.Lobbies.LobbyConfiguration", "Configuration", b1 =>
+                    b.OwnsOne("Aimrank.Domain.Lobbies.LobbyConfiguration", "_configuration", b1 =>
                         {
                             b1.Property<Guid>("LobbyId")
                                 .HasColumnType("uniqueidentifier");
@@ -516,7 +515,8 @@ namespace Aimrank.Database.Migrator.Migrations
                                 .IsRequired();
                         });
 
-                    b.Navigation("Configuration");
+                    b.Navigation("_configuration")
+                        .IsRequired();
 
                     b.Navigation("Invitations");
 
