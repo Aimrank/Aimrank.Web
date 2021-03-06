@@ -67,16 +67,5 @@ namespace Aimrank.Infrastructure.Domain.Users
             model.SteamId = user.SteamId;
             model.UserName = user.Username;
         }
-
-        public async Task DeleteAsync(User user)
-        {
-            var model = await _context.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
-            if (model is null)
-            {
-                return;
-            }
-            
-            _context.Users.Remove(model);
-        }
     }
 }

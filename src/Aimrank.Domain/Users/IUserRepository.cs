@@ -12,6 +12,5 @@ namespace Aimrank.Domain.Users
         Task<bool> ExistsSteamIdAsync(string steamId, UserId userId);
         Task<bool> AddAsync(User user, string password);
         Task UpdateAsync(User user);
-        Task DeleteAsync(User user);
     }
 }
