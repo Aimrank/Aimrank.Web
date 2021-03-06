@@ -52,11 +52,5 @@ namespace Aimrank.UnitTests.Mock
             _users[user.Id] = user;
             return Task.CompletedTask;
         }
-
-        public Task DeleteAsync(User user)
-        {
-            _users.Remove(user.Id);
-            return Task.CompletedTask;
-        }
     }
 }

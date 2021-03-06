@@ -11,7 +11,7 @@ namespace Aimrank.Domain.RefreshTokens
         public UserId UserId { get; }
         public string Jwt { get; private set; }
         public bool IsInvalidated { get; private set; }
-        public DateTime ExpiresAt { get; private set; }
+        public DateTime ExpiresAt { get; }
         
         private RefreshToken() {}
 

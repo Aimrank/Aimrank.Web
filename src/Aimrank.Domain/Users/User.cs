@@ -7,8 +7,8 @@ namespace Aimrank.Domain.Users
     public class User : Entity, IAggregateRoot
     {
         public UserId Id { get; }
-        public string Email { get; private set; }
-        public string Username { get; private set; }
+        public string Email { get; }
+        public string Username { get; }
         public string SteamId { get; private set; }
 
         private User() {}

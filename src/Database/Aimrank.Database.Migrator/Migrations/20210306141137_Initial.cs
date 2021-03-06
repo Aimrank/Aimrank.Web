@@ -59,9 +59,9 @@ namespace Aimrank.Database.Migrator.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    Configuration_Name = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
-                    Configuration_Map = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Configuration_Mode = table.Column<int>(type: "int", nullable: true)
+                    Configuration_Name = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    Configuration_Map = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Configuration_Mode = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -74,15 +74,15 @@ namespace Aimrank.Database.Migrator.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Winner = table.Column<int>(type: "int", nullable: false),
-                    ScoreT = table.Column<int>(type: "int", nullable: false),
-                    ScoreCT = table.Column<int>(type: "int", nullable: false),
                     Map = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Mode = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     FinishedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ScoreCT = table.Column<int>(type: "int", nullable: false),
+                    ScoreT = table.Column<int>(type: "int", nullable: false),
+                    Winner = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

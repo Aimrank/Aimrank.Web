@@ -1,23 +1,24 @@
 using Aimrank.Common.Domain;
 using Aimrank.Domain.Users;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Aimrank.Domain.Lobbies.Rules
 {
     public class UserMustNotBeLobbyMemberRule : IBusinessRule
     {
-        private readonly Lobby _lobby;
+        private readonly IEnumerable<LobbyMember> _members;
         private readonly User _user;
 
-        public UserMustNotBeLobbyMemberRule(Lobby lobby, User user)
+        public UserMustNotBeLobbyMemberRule(IEnumerable<LobbyMember> members, User user)
         {
-            _lobby = lobby;
+            _members = members;
             _user = user;
         }
 
         public string Message => "User is already member of this lobby";
         public string Code => "user_already_this_lobby_member";
         
-        public bool IsBroken() => _lobby.Members.Any(m => m.UserId == _user.Id);
+        public bool IsBroken() => _members.Any(m => m.UserId == _user.Id);
     }
 }

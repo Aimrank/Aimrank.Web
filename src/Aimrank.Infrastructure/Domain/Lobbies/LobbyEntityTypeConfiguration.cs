@@ -15,13 +15,14 @@ namespace Aimrank.Infrastructure.Domain.Lobbies
 
             builder.Property(l => l.Id).HasColumnName("Id");
             builder.Property(l => l.Status).HasColumnName("Status");
-            
-            builder.OwnsOne(l => l.Configuration, b =>
-            {
-                b.Property(c => c.Map).HasColumnName("Configuration_Map").IsRequired().HasMaxLength(50);
-                b.Property(c => c.Name).HasColumnName("Configuration_Name").IsRequired().HasMaxLength(450);
-                b.Property(c => c.Mode).HasColumnName("Configuration_Mode");
-            });
+
+            builder.OwnsOne<LobbyConfiguration>("_configuration", b =>
+                {
+                    b.Property(c => c.Map).HasColumnName("Configuration_Map").IsRequired().HasMaxLength(50);
+                    b.Property(c => c.Name).HasColumnName("Configuration_Name").IsRequired().HasMaxLength(450);
+                    b.Property(c => c.Mode).HasColumnName("Configuration_Mode");
+                })
+                .Navigation("_configuration").IsRequired();
 
             builder.OwnsMany(l => l.Members, b =>
             {

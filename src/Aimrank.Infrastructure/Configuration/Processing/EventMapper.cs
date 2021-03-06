@@ -2,7 +2,6 @@ using Aimrank.Common.Application.Events;
 using Aimrank.Common.Domain;
 using Aimrank.Domain.Lobbies.Events;
 using Aimrank.Domain.Matches.Events;
-using Aimrank.Domain.Matches;
 using Aimrank.IntegrationEvents.Lobbies;
 using Aimrank.IntegrationEvents.Matches;
 using System.Linq;
@@ -14,20 +13,12 @@ namespace Aimrank.Infrastructure.Configuration.Processing
         public IIntegrationEvent Map(IDomainEvent @event)
             => @event switch
             {
-                MatchStatusChangedDomainEvent e => e switch
-                {
-                    {Match: {Status: MatchStatus.Ready}} => new MatchReadyEvent(e.Match.Id, e.Match.Map,
-                        e.Match.Lobbies.Select(l => l.LobbyId.Value)),
-                    {Match: {Status: MatchStatus.Starting}} => new MatchStartingEvent(e.Match.Id,
-                        e.Match.Lobbies.Select(l => l.LobbyId.Value)),
-                    {Match: {Status: MatchStatus.Started}} => new MatchStartedEvent(e.Match.Id, e.Match.Map,
-                        e.Match.Address,
-                        (int) e.Match.Mode,
-                        e.Match.Players.Select(p => p.UserId.Value),
-                        e.Match.Lobbies.Select(l => l.LobbyId.Value)),
-                    _ => null
-                },
-                MatchFinishedDomainEvent e => new MatchFinishedEvent(e.Match.Id, e.Match.ScoreT, e.Match.ScoreCT,
+                MatchReadyDomainEvent e => new MatchReadyEvent(e.Match.Id, e.Map, e.Match.Lobbies.Select(l => l.LobbyId.Value)),
+                MatchStartingDomainEvent e => new MatchStartingEvent(e.Match.Id, e.Match.Lobbies.Select(l => l.LobbyId.Value)),
+                MatchStartedDomainEvent e => new MatchStartedEvent(e.Match.Id, e.Map, e.Address, (int) e.Match.Mode,
+                    e.Match.Players.Select(p => p.UserId.Value),
+                    e.Match.Lobbies.Select(l => l.LobbyId.Value)),
+                MatchFinishedDomainEvent e => new MatchFinishedEvent(e.Match.Id, e.ScoreT, e.ScoreCT,
                     e.Lobbies.Select(l => l.Value)),
                 MatchPlayerLeftDomainEvent e => new MatchPlayerLeftEvent(e.Player.UserId),
                 LobbyStatusChangedDomainEvent e => new LobbyStatusChangedEvent(e.Lobby.Id, (int) e.Lobby.Status),

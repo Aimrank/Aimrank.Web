@@ -3,6 +3,7 @@ using Aimrank.Domain.Matches;
 using Aimrank.Infrastructure.Domain.Users;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Aimrank.Infrastructure.Domain.Matches
 {
@@ -14,14 +15,13 @@ namespace Aimrank.Infrastructure.Domain.Matches
             
             builder.HasKey(m => m.Id);
 
-            builder.Property(m => m.Id).HasColumnName("Id");
-            builder.Property(m => m.Winner).HasColumnName("Winner");
-            builder.Property(m => m.ScoreT).HasColumnName("ScoreT");
-            builder.Property(m => m.ScoreCT).HasColumnName("ScoreCT");
+            builder.Property<MatchWinner>("_winner").HasColumnName("Winner");
+            builder.Property<int>("_scoreT").HasColumnName("ScoreT");
+            builder.Property<int>("_scoreCT").HasColumnName("ScoreCT");
+            builder.Property<string>("_address").HasColumnName("Address").HasMaxLength(50);
+            builder.Property<DateTime>("_createdAt").HasColumnName("CreatedAt");
             builder.Property(m => m.Map).HasColumnName("Map").IsRequired().HasMaxLength(50);
-            builder.Property(m => m.Address).HasColumnName("Address").HasMaxLength(50);
             builder.Property(m => m.Mode).HasColumnName("Mode");
-            builder.Property(m => m.CreatedAt).HasColumnName("CreatedAt");
             builder.Property(m => m.FinishedAt).HasColumnName("FinishedAt");
             builder.Property(m => m.Status).HasColumnName("Status");
             
