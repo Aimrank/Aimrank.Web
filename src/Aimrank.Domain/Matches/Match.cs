@@ -14,15 +14,15 @@ namespace Aimrank.Domain.Matches
         private readonly HashSet<MatchPlayer> _players = new();
         
         public MatchId Id { get; }
-        public MatchWinner Winner { get; private set; }
-        public int ScoreT { get; private set; }
-        public int ScoreCT { get; private set; }
-        public string Map { get; private set; }
-        public string Address { get; private set; }
-        public MatchMode Mode { get; private set; }
-        public DateTime CreatedAt { get; private set; }
-        public DateTime? FinishedAt { get; private set; }
+        private MatchWinner _winner;
+        private int _scoreT;
+        private int _scoreCT;
+        private string _address;
+        private DateTime _createdAt;
+        public string Map { get; }
+        public MatchMode Mode { get; }
         public MatchStatus Status { get; private set; }
+        public DateTime? FinishedAt { get; private set; }
 
         public IEnumerable<MatchPlayer> Players
         {
@@ -48,7 +48,7 @@ namespace Aimrank.Domain.Matches
             Map = map;
             Mode = mode;
             Status = MatchStatus.Created;
-            CreatedAt = DateTime.UtcNow;
+            _createdAt = DateTime.UtcNow;
             Lobbies = lobbies.Select(l => new MatchLobby(l));
         }
 
@@ -61,9 +61,9 @@ namespace Aimrank.Domain.Matches
 
         public void UpdateScore(MatchWinner winner, int scoreT, int scoreCT)
         {
-            Winner = winner;
-            ScoreT = scoreT;
-            ScoreCT = scoreCT;
+            _winner = winner;
+            _scoreT = scoreT;
+            _scoreCT = scoreCT;
         }
 
         public void UpdatePlayerStats(string steamId, MatchPlayerStats stats)
@@ -94,14 +94,14 @@ namespace Aimrank.Domain.Matches
             {
                 double score;
 
-                if (Winner == MatchWinner.Draw)
+                if (_winner == MatchWinner.Draw)
                 {
                     score = 0.5;
                 }
                 else
                 {
-                    score = player.Team == MatchTeam.T && Winner == MatchWinner.T ||
-                            player.Team == MatchTeam.CT && Winner == MatchWinner.CT
+                    score = player.Team == MatchTeam.T && _winner == MatchWinner.T ||
+                            player.Team == MatchTeam.CT && _winner == MatchWinner.CT
                         ? 1
                         : 0;
                 }
@@ -109,7 +109,7 @@ namespace Aimrank.Domain.Matches
                 player.CalculateNewRating(score, player.Team == MatchTeam.T ? avgCT : avgT);
             }
 
-            var @event = new MatchFinishedDomainEvent(this, Lobbies.Select(l => l.LobbyId).ToList());
+            var @event = new MatchFinishedDomainEvent(this, _scoreT, _scoreCT, Lobbies.Select(l => l.LobbyId).ToList());
             
             _lobbies.Clear();
             
@@ -122,7 +122,7 @@ namespace Aimrank.Domain.Matches
             
             Status = MatchStatus.Ready;
             
-            AddDomainEvent(new MatchStatusChangedDomainEvent(this));
+            AddDomainEvent(new MatchReadyDomainEvent(this, Map));
         }
 
         public void SetStarting(string address)
@@ -130,9 +130,9 @@ namespace Aimrank.Domain.Matches
             if (Status == MatchStatus.Starting) return;
             
             Status = MatchStatus.Starting;
-            Address = address;
+            _address = address;
             
-            AddDomainEvent(new MatchStatusChangedDomainEvent(this));
+            AddDomainEvent(new MatchStartingDomainEvent(this));
         }
 
         public void SetStarted()
@@ -141,7 +141,7 @@ namespace Aimrank.Domain.Matches
 
             Status = MatchStatus.Started;
             
-            AddDomainEvent(new MatchStatusChangedDomainEvent(this));
+            AddDomainEvent(new MatchStartedDomainEvent(this, Map, _address));
         }
     }
 }
