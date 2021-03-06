@@ -14,12 +14,11 @@ namespace Aimrank.Domain.Lobbies
     {
         private const int MaxMembers = 2;
         
-        private readonly HashSet<LobbyMember> _members = new();
-        private readonly HashSet<LobbyInvitation> _invitations = new();
-        
         public LobbyId Id { get; }
         public LobbyStatus Status { get; private set; }
-        public LobbyConfiguration Configuration { get; private set; }
+        private LobbyConfiguration _configuration;
+        private readonly HashSet<LobbyMember> _members = new();
+        private readonly HashSet<LobbyInvitation> _invitations = new();
 
         public IEnumerable<LobbyMember> Members
         {
@@ -40,7 +39,7 @@ namespace Aimrank.Domain.Lobbies
             BusinessRules.Check(new UserMustHaveConnectedSteamRule(user));
             
             Id = id;
-            Configuration = new LobbyConfiguration($"team_{user.Username}", Maps.AimMap, MatchMode.OneVsOne);
+            _configuration = new LobbyConfiguration($"team_{user.Username}", Maps.AimMap, MatchMode.OneVsOne);
             _members.Add(new LobbyMember(user.Id, LobbyMemberRole.Leader));
         }
 
@@ -54,9 +53,9 @@ namespace Aimrank.Domain.Lobbies
         public void Invite(User invitingUser, User invitedUser)
         {
             BusinessRules.Check(new UserMustHaveConnectedSteamRule(invitedUser));
-            BusinessRules.Check(new UserMustBeLobbyMemberRule(this, invitingUser));
-            BusinessRules.Check(new UserMustNotBeLobbyMemberRule(this, invitedUser));
-            BusinessRules.Check(new UserMustNotBeOnInvitationListRule(this, invitedUser));
+            BusinessRules.Check(new UserMustBeLobbyMemberRule(_members, invitingUser));
+            BusinessRules.Check(new UserMustNotBeLobbyMemberRule(_members, invitedUser));
+            BusinessRules.Check(new UserMustNotBeOnInvitationListRule(_invitations, invitedUser));
 
             var invitation = new LobbyInvitation(invitingUser.Id, invitedUser.Id, DateTime.UtcNow);
 
@@ -65,7 +64,7 @@ namespace Aimrank.Domain.Lobbies
 
         public async Task AcceptInvitationAsync(User invitedUser, ILobbyRepository lobbyRepository)
         {
-            BusinessRules.Check(new InvitationMustExistForUserRule(this, invitedUser.Id));
+            BusinessRules.Check(new InvitationMustExistForUserRule(_invitations, invitedUser.Id));
             BusinessRules.Check(new UserMustHaveConnectedSteamRule(invitedUser));
             BusinessRules.Check(new LobbyMustNotBeFullRule(this));
             await BusinessRules.CheckAsync(new UserMustNotBeMemberOfAnyLobbyRule(lobbyRepository, invitedUser.Id));
@@ -122,16 +121,16 @@ namespace Aimrank.Domain.Lobbies
 
         public void ChangeConfiguration(UserId userId, LobbyConfiguration configuration)
         {
-            BusinessRules.Check(new UserMustBeLobbyLeaderRule(this, userId));
-            BusinessRules.Check(new LobbyStatusMustMatchRule(this, LobbyStatus.Open));
+            BusinessRules.Check(new UserMustBeLobbyLeaderRule(_members, userId));
+            BusinessRules.Check(new LobbyStatusMustMatchRule(Status, LobbyStatus.Open));
             BusinessRules.Check(new MapMustBeSupportedRule(configuration.Map));
 
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         public void StartSearching(UserId userId)
         {
-            BusinessRules.Check(new UserMustBeLobbyLeaderRule(this, userId));
+            BusinessRules.Check(new UserMustBeLobbyLeaderRule(_members, userId));
 
             ChangeStatus(LobbyStatus.Searching);
         }
@@ -145,7 +144,7 @@ namespace Aimrank.Domain.Lobbies
 
         public void CancelSearching(UserId userId)
         {
-            BusinessRules.Check(new UserMustBeLobbyLeaderRule(this, userId));
+            BusinessRules.Check(new UserMustBeLobbyLeaderRule(_members, userId));
 
             ChangeStatus(LobbyStatus.Open);
         }
@@ -161,6 +160,10 @@ namespace Aimrank.Domain.Lobbies
         }
 
         public bool IsFull() => _members.Count == MaxMembers;
+        
+        public string GetMap() => _configuration.Map;
+        
+        public MatchMode GetMode() => _configuration.Mode;
 
         private void ChangeStatus(LobbyStatus status)
         {

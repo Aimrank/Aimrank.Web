@@ -56,7 +56,7 @@ namespace Aimrank.Application.Commands.Lobbies.ProcessLobbies
                     {
                         var lobbiesIds = buffer.Select(l => new LobbyId(l.Id));
 
-                        var match = new Match(new MatchId(Guid.NewGuid()), lobby.Configuration.Map, mode, lobbiesIds);
+                        var match = new Match(new MatchId(Guid.NewGuid()), lobby.GetMap(), mode, lobbiesIds);
 
                         var teams = new[]
                         {
@@ -134,10 +134,10 @@ namespace Aimrank.Application.Commands.Lobbies.ProcessLobbies
         
             foreach (var lobby in lobbies)
             {
-                if (!result.TryGetValue(lobby.Configuration.Mode, out var list))
+                if (!result.TryGetValue(lobby.GetMode(), out var list))
                 {
                     list = new List<Lobby>();
-                    result.Add(lobby.Configuration.Mode, list);
+                    result.Add(lobby.GetMode(), list);
                 }
                 
                 list.Add(lobby);
