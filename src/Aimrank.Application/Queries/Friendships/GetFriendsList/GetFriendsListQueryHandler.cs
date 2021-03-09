@@ -40,8 +40,8 @@ namespace Aimrank.Application.Queries.Friendships.GetFriendsList
                 INNER JOIN [aimrank].[AspNetUsers] AS [U2] ON [U2].[Id] = [F].[User2Id]
                 WHERE
                     [F].[IsAccepted] = 1 AND
-                    [F].[BlockingUserId1] IS NULL AND
-                    [F].[BlockingUserId2] IS NULL AND
+                    ([F].[BlockingUserId1] IS NULL OR [F].[BlockingUserId1] <> @UserId) AND
+                    ([F].[BlockingUserId2] IS NULL OR [F].[BlockingUserId2] <> @UserId) AND
                     ([U1].[Id] = @UserId OR [U2].[Id] = @UserId);";
 
             return connection.QueryAsync<UserDto>(sql, new {request.UserId});

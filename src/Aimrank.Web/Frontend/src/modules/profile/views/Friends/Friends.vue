@@ -18,7 +18,6 @@
           :key="user.id"
         >
           <td>
-            user - {{ user.id }}
             <router-link :to="{ name: 'profile', params: { userId: user.id }}">
               {{ user.username }}
             </router-link>

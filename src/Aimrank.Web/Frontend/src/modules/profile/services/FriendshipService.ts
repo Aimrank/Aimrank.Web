@@ -56,6 +56,6 @@ export class FriendshipService extends Service {
   }
 
   public deleteFriend(userId: string) {
-    return this.wrap<undefined>(this.httpClient.post(this.getRoute("delete", { userId })));
+    return this.wrap<undefined>(this.httpClient.delete(this.getRoute("delete", { userId })));
   }
 }

@@ -41,8 +41,8 @@ namespace Aimrank.Application.Queries.Friendships.GetFriendship
                     ([U1].[Id] = @UserId1 AND [U2].[Id] = @UserId2) OR
                     ([U1].[Id] = @UserId2 AND [U2].[Id] = @UserId1);";
 
-            var result = await connection.QueryFirstAsync<FriendshipQueryResult>(sql,
-                new {User1Id = request.UserId1, User2Id = request.UserId2});
+            var result = await connection.QueryFirstOrDefaultAsync<FriendshipQueryResult>(sql,
+                new {request.UserId1, request.UserId2});
 
             return result?.AsFriendshipDto();
         }

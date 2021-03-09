@@ -1,60 +1,23 @@
-import { computed, defineComponent, onMounted, reactive } from "vue";
+import { computed, defineComponent, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import { userService } from "~/services";
-import { useFriendship } from "./hooks/useFriendship";
 import { useUser } from "@/profile/hooks/useUser";
-import { IUserDto } from "@/profile/models/IUserDto";
-import { IFriendshipDto } from "@/profile/models/IFriendshipDto";
-import { FriendshipState } from "@/profile/models/FriendshipState";
+import { useProfile } from "@/profile/hooks/useProfile";
 import BaseButton from "@/common/components/BaseButton";
-
-interface IState {
-  user: IUserDto | null;
-  friendship: IFriendshipDto | null;
-}
+import FriendshipButtons from "@/profile/components/FriendshipButtons";
 
 const Profile = defineComponent({
   components: {
-    BaseButton
+    BaseButton,
+    FriendshipButtons
   },
   setup() {
-    const state = reactive<IState>({
-      user: null,
-      friendship: null
-    });
-
     const user = useUser();
     const route = useRoute();
 
-    const userId = computed(() => route.params.userId || user.state.user?.id);
+    const { state, fetchPage } = useProfile();
 
-    const isSelf = computed(() => userId.value === user.state.user?.id);
-
-    const {
-      friendship,
-      friendshipState,
-      fetchFriendship,
-      onInvite,
-      onAccept,
-      onDecline,
-      onDelete,
-      onUnblock
-    } = useFriendship();
-
-    const fetchUserDetails = async () => {
-      if (userId.value) {
-        const result = await userService.getUserDetails(userId.value as string);
-
-        if (result.isOk()) {
-          state.user = result.value;
-        }
-      }
-    }
-
-    onMounted(async () => {
-      await fetchUserDetails();
-      await fetchFriendship();
-    });
+    const userId = computed(() => route.params.userId as string || user.state.user!.id);
+    const currentUserId = computed(() => user.state.user!.id);
 
     const links = computed(() => {
       const result = [
@@ -63,22 +26,21 @@ const Profile = defineComponent({
         { name: "friends", label: "Friends" }
       ];
 
-      return result.map(l => isSelf.value ? l : ({ ...l, params: { userId: state.user?.id }}));
+      return result.map(l => userId.value === currentUserId.value ? l : ({ ...l, params: { userId: state.user?.id }}));
     });
 
+    watch(
+      () => userId.value,
+      () => fetchPage(userId.value, user.state.user!.id)
+    );
+
+    onMounted(() => fetchPage(userId.value, user.state.user!.id));
+
     return {
-      isSelf,
-      user,
+      userId,
+      currentUserId,
       state,
-      links,
-      friendship,
-      friendshipState,
-      onInvite,
-      onAccept,
-      onDecline,
-      onDelete,
-      onUnblock,
-      FriendshipState: Object.freeze(FriendshipState)
+      links
     };
   }
 });

@@ -43,7 +43,9 @@
                 v-for="member in lobby.members"
                 :key="member.userId"
               >
-                {{ member.username }}
+                <router-link :to="{ name: 'profile', params: { userId: member.userId }}">
+                  {{ member.username }}
+                </router-link>
                 <strong v-if="member.isLeader">
                   ({{ $t("lobby.views.Lobby.leader") }})
                 </strong>

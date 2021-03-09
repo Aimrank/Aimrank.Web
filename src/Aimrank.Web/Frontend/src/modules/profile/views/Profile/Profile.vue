@@ -7,40 +7,13 @@
     :class="$style.container"
   >
     <h3 :class="$style.title">{{ $t("profile.views.Profile.title", [state.user.username]) }}</h3>
+    <div
+      v-if="userId !== currentUserId"
+      :class="$style.buttons"
+    >
+      <friendship-buttons />
+    </div>
     <div :class="$style.buttons">
-      <base-button
-        v-if="friendship && friendshipState === FriendshipState.Blocked"
-        :disabled="!friendship.blockingUsersIds.includes(user.state.user.id)"
-        small
-        @click="onUnblock"
-      >
-        {{ friendship?.blockingUsersIds.includes(user.state.user.id) ? "Unblock" : "You are blocked" }}
-      </base-button>
-      <base-button
-        v-else-if="friendshipState === FriendshipState.Active"
-        small
-      >
-        Remove friend
-      </base-button>
-      <template v-else-if="friendshipState === FriendshipState.Pending">
-        <base-button
-          v-if="friendship && friendship.invitingUserId === user.state.user.id"
-          @click="onDelete"
-        >
-          Remove invitation
-        </base-button>
-        <template v-else>
-          <base-button small @click="onAccept">Accept</base-button>
-          <base-button small @click="onDecline">Decline</base-button>
-        </template>
-      </template>
-      <base-button
-        v-else-if="!isSelf"
-        small
-        @click="onInvite"
-      >
-        Send Invitation
-      </base-button>
       <base-button
         tag="router-link"
         v-for="link in links"
