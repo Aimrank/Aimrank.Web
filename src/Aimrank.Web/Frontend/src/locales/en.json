@@ -3,6 +3,10 @@
     "components": {
       "MainHeader": {
         "user": "Hello {0}"
+      },
+      "UsersDialog": {
+        "title": "Search users",
+        "label": "Username..."
       }
     }
   },
@@ -35,9 +39,9 @@
   },
   "lobby": {
     "components": {
-      "InvitationForm": {
-        "label": "Search for user",
-        "success": "Invitation sent"
+      "LobbyInvitationDialog": {
+        "title": "Invite friends to lobby",
+        "invite": "Invite"
       },
       "LobbyConfiguration": {
         "selectMapHeadline": "Select match map",
@@ -73,6 +77,7 @@
           "members": "Members"
         },
         "invitations": "Invitations",
+        "inviteButton": "Invite friends",
         "leader": "Leader",
         "match": "Match",
         "changeConfiguration": "Change configuration",

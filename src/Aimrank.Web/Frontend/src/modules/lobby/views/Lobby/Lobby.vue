@@ -56,7 +56,14 @@
       </table>
       <div :class="$style.section">
         <h3>{{ $t("lobby.views.Lobby.invitations") }}</h3>
-        <invitation-form :lobby-id="lobby.id" />
+        <base-button @click="invitationDialog.onInviteClick">
+          {{ $t("lobby.views.Lobby.inviteButton") }}
+        </base-button>
+        <lobby-invitation-dialog
+          :lobby-id="lobby.id"
+          :is-visible="invitationDialog.isVisible.value"
+          @close="invitationDialog.onInvitationDialogClose"
+        />
       </div>
       <div
         v-if="match"
