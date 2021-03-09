@@ -1,10 +1,11 @@
-using Aimrank.Web.Hubs.Lobbies.Messages;
+using Aimrank.Web.Hubs.General.Messages;
 using System.Threading.Tasks;
 
 namespace Aimrank.Web.Hubs.General
 {
     public interface IGeneralClient
     {
-        Task InvitationCreated(InvitationCreatedEventMessage eventMessage);
+        Task LobbyInvitationCreated(LobbyInvitationCreatedEventMessage eventMessage);
+        Task FriendshipInvitationCreated(FriendshipInvitationCreatedEventMessage eventMessage);
     }
 }

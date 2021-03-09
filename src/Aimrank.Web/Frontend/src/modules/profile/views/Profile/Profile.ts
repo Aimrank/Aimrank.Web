@@ -1,51 +1,47 @@
-import { computed, defineComponent, onMounted, reactive } from "vue";
+import { computed, defineComponent, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import { userService } from "~/services";
 import { useUser } from "@/profile/hooks/useUser";
-import { IUserDto } from "@/profile/models/IUserDto";
+import { useProfile } from "@/profile/hooks/useProfile";
 import BaseButton from "@/common/components/BaseButton";
-
-interface IState {
-  user: IUserDto | null;
-}
+import FriendshipButtons from "@/profile/components/FriendshipButtons";
 
 const Profile = defineComponent({
   components: {
-    BaseButton
+    BaseButton,
+    FriendshipButtons
   },
   setup() {
-    const state = reactive<IState>({
-      user: null
-    });
-
     const user = useUser();
     const route = useRoute();
 
-    const userId = computed(() => route.params.userId || user.state.user?.id);
+    const { state, fetchPage } = useProfile();
 
-    onMounted(async () => {
-      if (userId) {
-        const result = await userService.getUserDetails(userId.value as string);
-
-        if (result.isOk()) {
-          state.user = result.value;
-        }
-      }
-    });
+    const userId = computed(() => route.params.userId as string || user.state.user!.id);
+    const currentUserId = computed(() => user.state.user!.id);
 
     const links = computed(() => {
-      const isSelf = user.state.user?.id === userId.value;
-
       const result = [
         { name: "profile", label: "Overview" },
         { name: "matches", label: "Matches" },
         { name: "friends", label: "Friends" }
       ];
 
-      return result.map(l => isSelf ? l : ({ ...l, params: { userId: state.user?.id }}));
+      return result.map(l => userId.value === currentUserId.value ? l : ({ ...l, params: { userId: state.user?.id }}));
     });
 
-    return { state, links };
+    watch(
+      () => userId.value,
+      () => fetchPage(userId.value, user.state.user!.id)
+    );
+
+    onMounted(() => fetchPage(userId.value, user.state.user!.id));
+
+    return {
+      userId,
+      currentUserId,
+      state,
+      links
+    };
   }
 });
 

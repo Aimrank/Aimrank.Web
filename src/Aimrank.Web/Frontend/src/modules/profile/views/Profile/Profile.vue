@@ -7,12 +7,17 @@
     :class="$style.container"
   >
     <h3 :class="$style.title">{{ $t("profile.views.Profile.title", [state.user.username]) }}</h3>
+    <div
+      v-if="userId !== currentUserId"
+      :class="$style.buttons"
+    >
+      <friendship-buttons />
+    </div>
     <div :class="$style.buttons">
       <base-button
         tag="router-link"
         v-for="link in links"
         :key="link.name"
-        :class="$style.button"
         small
         :to="{
           name: link.name,

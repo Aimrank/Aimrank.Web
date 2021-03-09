@@ -1,5 +1,6 @@
 using Aimrank.IntegrationEvents.Lobbies;
 using Aimrank.IntegrationEvents.Matches;
+using Aimrank.Web.Hubs.General.Messages;
 using Aimrank.Web.Hubs.Lobbies.Messages;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace Aimrank.Web.Hubs.Lobbies
         Task MatchPlayerLeft(MatchPlayerLeftEvent @event);
         Task InvitationAccepted(InvitationAcceptedEventMessage eventMessage);
         Task InvitationCanceled(InvitationCanceledEventMessage eventMessage);
-        Task InvitationCreated(InvitationCreatedEventMessage eventMessage);
+        Task InvitationCreated(LobbyInvitationCreatedEventMessage eventMessage);
         Task LobbyConfigurationChanged(LobbyConfigurationChangedEventMessage @event);
         Task LobbyStatusChanged(LobbyStatusChangedEvent @event);
         Task MemberLeft(MemberLeftEvent @event);

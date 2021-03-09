@@ -7,6 +7,7 @@ import { SteamService } from "@/profile/services/SteamService";
 import { StatsService } from "@/profile/services/StatsService";
 import { MatchService } from "@/profile/services/MatchService";
 import { LobbyService } from "@/lobby/services/LobbyService";
+import { FriendshipService } from "@/profile/services/FriendshipService";
 
 import { Hub } from "@/common/hubs/Hub";
 import { GeneralHub } from "@/common/hubs/GeneralHub";
@@ -24,6 +25,7 @@ export const steamService = new SteamService(httpClient);
 export const lobbyService = new LobbyService(httpClient);
 export const matchService = new MatchService(httpClient);
 export const statsService = new StatsService(httpClient);
+export const friendshipService = new FriendshipService(httpClient);
 
 export const generalHub = new GeneralHub(new Hub("/hubs/general"));
 export const lobbyHub = new LobbyHub(new Hub("/hubs/lobby"));

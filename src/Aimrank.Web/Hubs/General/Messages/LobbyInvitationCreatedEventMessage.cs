@@ -1,14 +1,14 @@
 using System;
 
-namespace Aimrank.Web.Hubs.Lobbies.Messages
+namespace Aimrank.Web.Hubs.General.Messages
 {
-    public class InvitationCreatedEventMessage
+    public class LobbyInvitationCreatedEventMessage
     {
         public Guid LobbyId { get; }
         public Guid InvitingUserId { get; }
         public Guid InvitedUserId { get; }
 
-        public InvitationCreatedEventMessage(Guid lobbyId, Guid invitingUserId, Guid invitedUserId)
+        public LobbyInvitationCreatedEventMessage(Guid lobbyId, Guid invitingUserId, Guid invitedUserId)
         {
             LobbyId = lobbyId;
             InvitingUserId = invitingUserId;
