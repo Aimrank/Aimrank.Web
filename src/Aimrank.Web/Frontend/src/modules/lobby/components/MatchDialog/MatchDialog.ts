@@ -2,7 +2,7 @@ import { computed, defineComponent, watch } from "vue";
 import { matchService } from "~/services";
 import { useMatch } from "@/lobby/hooks/useMatch";
 import { useUser } from "@/profile/hooks/useUser";
-import { useExpirationTime } from "./helpers/useExpirationTime";
+import { useExpirationTime } from "./hooks/useExpirationTime";
 import { MatchMode } from "@/profile/models/MatchMode";
 import BaseButton from "@/common/components/BaseButton";
 import BaseDialog from "@/common/components/BaseDialog";

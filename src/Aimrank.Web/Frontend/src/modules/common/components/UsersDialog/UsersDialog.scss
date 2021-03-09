@@ -1,0 +1,22 @@
+@use "~/styles/variables/colors" as colors;
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.list {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  list-style-type: none;
+}
+
+.listItem {
+  cursor: pointer;
+  color: colors.$primary;
+
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}

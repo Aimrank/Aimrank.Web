@@ -1,59 +1,24 @@
-import { computed, defineComponent, onMounted } from "vue";
+import { computed, defineComponent } from "vue";
 import { useRouter } from "vue-router";
-import { lobbyHub, lobbyService, matchService } from "~/services";
-import { useUser } from "@/profile/hooks/useUser";
-import { useMatch } from "@/lobby/hooks/useMatch";
-import { useLobby } from "@/lobby/hooks/useLobby";
+import { lobbyHub, lobbyService } from "~/services";
 import { useNotifications } from "@/common/hooks/useNotifications";
+import { useLobbyView } from "./hooks/useLobbyView";
+import { useInvitationDialog } from "./hooks/useLobbyInvitationDialog";
 import { MatchStatus } from "@/profile/models/MatchStatus";
 import BaseButton from "@/common/components/BaseButton";
-import InvitationForm from "@/lobby/components/InvitationForm";
 import LobbyConfiguration from "@/lobby/components/LobbyConfiguration";
+import LobbyInvitationDialog from "@/lobby/components/LobbyInvitationDialog";
 
 const maps = {
   aim_map: require("~/assets/images/aim_map.jpg").default,
   am_redline_14: require("~/assets/images/am_redline_14.jpg").default
 };
 
-const useLobbyView = () => {
-  const user = useUser();
-  const lobby = useLobby();
-  const match = useMatch();
-
-  const currentUserMembership = computed(() => lobby.state.lobby?.members.find(m => m.userId === user.state.user?.id));
-
-  onMounted(async () => {
-    if (!user.state.user) {
-      return;
-    }
-
-    const result = await lobbyService.getForCurrentUser();
-
-    if (result.isOk() && result.value) {
-      lobby.setLobby(result.value);
-
-      await lobbyHub.connect();
-
-      const matchResult = await lobbyService.getMatch(result.value.id);
-
-      if (matchResult.isOk() && matchResult.value) {
-        match.setMatch(matchResult.value);
-      }
-    }
-  });
-
-  return {
-    lobby,
-    match,
-    currentUserMembership,
-  };
-}
-
 const Lobby = defineComponent({
   components: {
     BaseButton,
-    InvitationForm,
-    LobbyConfiguration
+    LobbyConfiguration,
+    LobbyInvitationDialog
   },
   setup() {
     const { lobby, match, currentUserMembership } = useLobbyView();
@@ -110,6 +75,7 @@ const Lobby = defineComponent({
       maps,
       lobby: computed(() => lobby.state.lobby),
       match: computed(() => match.state.match),
+      invitationDialog: useInvitationDialog(),
       currentUserMembership,
       onStartSearchingClick,
       onLeaveLobbyClick,

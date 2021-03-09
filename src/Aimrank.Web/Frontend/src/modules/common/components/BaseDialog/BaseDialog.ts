@@ -5,6 +5,10 @@ const BaseDialog = defineComponent({
   components: {
     Icon
   },
+  emits: [
+    "click:outside",
+    "close"
+  ],
   props: {
     visible: {
       type: Boolean,
