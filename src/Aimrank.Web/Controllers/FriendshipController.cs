@@ -7,6 +7,7 @@ using Aimrank.Application.Commands.Friendships.UnblockUser;
 using Aimrank.Application.Contracts;
 using Aimrank.Application.Queries.Friendships.GetBlockedUsers;
 using Aimrank.Application.Queries.Friendships.GetFriendsList;
+using Aimrank.Application.Queries.Friendships.GetFriendship;
 using Aimrank.Application.Queries.Friendships.GetFriendshipInvitations;
 using Aimrank.Application.Queries.Users.GetUserDetails;
 using Aimrank.Web.Attributes;
@@ -28,6 +29,18 @@ namespace Aimrank.Web.Controllers
         public FriendshipController(IAimrankModule aimrankModule)
         {
             _aimrankModule = aimrankModule;
+        }
+
+        [HttpGet("{userId1}/{userId2}")]
+        public async Task<ActionResult<FriendshipDto>> GetFriendship(Guid userId1, Guid userId2)
+        {
+            var friendship = await _aimrankModule.ExecuteQueryAsync(new GetFriendshipQuery(userId1, userId2));
+            if (friendship is null)
+            {
+                return NoContent();
+            }
+
+            return friendship;
         }
 
         [HttpGet("{userId}")]
