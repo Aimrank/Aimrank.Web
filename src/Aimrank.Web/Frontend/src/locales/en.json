@@ -93,7 +93,9 @@
         "loading": "Loading..."
       },
       "Friends": {
-        "title": "Friends"
+        "invitations": "Invitations",
+        "blocked": "Blocked",
+        "friends": "Friends"
       },
       "Matches": {
         "stats": {
