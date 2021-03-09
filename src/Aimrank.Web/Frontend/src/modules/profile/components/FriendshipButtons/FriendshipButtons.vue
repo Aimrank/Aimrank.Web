@@ -14,7 +14,7 @@
       primary
       @click="unblockFriend(userId, currentUserId)"
     >
-      {{ state.friendship.blockingUsersIds.includes(currentUserId) ? "Unblock" : "You are blocked" }}
+      {{ $t(`profile.components.FriendshipButtons.${state.friendship.blockingUsersIds.includes(currentUserId) ? "unblock" : "blocked"}`) }}
     </base-button>
     <base-button
       v-else-if="friendshipState === FriendshipState.Active"
@@ -23,7 +23,7 @@
       primary
       @click="deleteFriend(userId, currentUserId)"
     >
-      Remove friend
+      {{ $t("profile.components.FriendshipButtons.removeFriend") }}
     </base-button>
     <template v-else-if="friendshipState === FriendshipState.Pending">
       <base-button
@@ -33,11 +33,15 @@
         primary
         @click="deleteFriend(userId, currentUserId)"
       >
-        Remove invitation
+        {{ $t("profile.components.FriendshipButtons.removeInvitation") }}
       </base-button>
       <template v-else>
-        <base-button :class="$style.button" small primary @click="acceptFriend(userId, currentUserId)">Accept</base-button>
-        <base-button :class="$style.button" small primary @click="declineFriend(userId, currentUserId)">Decline</base-button>
+        <base-button :class="$style.button" small primary @click="acceptFriend(userId, currentUserId)">
+          {{ $t("profile.components.FriendshipButtons.accept") }}
+        </base-button>
+        <base-button :class="$style.button" small primary @click="declineFriend(userId, currentUserId)">
+          {{ $t("profile.components.FriendshipButtons.decline") }}
+        </base-button>
       </template>
     </template>
     <base-button
@@ -47,7 +51,7 @@
       primary
       @click="inviteFriend(userId, currentUserId)"
     >
-      Send Invitation
+      {{ $t("profile.components.FriendshipButtons.invite") }}
     </base-button>
   </div>
 </template>

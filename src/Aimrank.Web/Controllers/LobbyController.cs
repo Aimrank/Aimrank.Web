@@ -12,6 +12,7 @@ using Aimrank.Application.Queries.Lobbies.GetLobbyMatch;
 using Aimrank.Common.Application;
 using Aimrank.Web.Attributes;
 using Aimrank.Web.Contracts.Lobbies;
+using Aimrank.Web.Hubs.General.Messages;
 using Aimrank.Web.Hubs.General;
 using Aimrank.Web.Hubs.Lobbies.Messages;
 using Aimrank.Web.Hubs.Lobbies;
@@ -88,10 +89,10 @@ namespace Aimrank.Web.Controllers
         {
             await _aimrankModule.ExecuteCommandAsync(new InviteUserToLobbyCommand(id, request.InvitedUserId));
 
-            var @event = new InvitationCreatedEventMessage(id, _executionContextAccessor.UserId, request.InvitedUserId);
+            var @event = new LobbyInvitationCreatedEventMessage(id, _executionContextAccessor.UserId, request.InvitedUserId);
 
             await _lobbyHubContext.Clients.Group(id.ToString()).InvitationCreated(@event);
-            await _generalHubContext.Clients.User(request.InvitedUserId.ToString()).InvitationCreated(@event);
+            await _generalHubContext.Clients.User(request.InvitedUserId.ToString()).LobbyInvitationCreated(@event);
             
             return Ok();
         }

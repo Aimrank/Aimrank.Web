@@ -82,6 +82,17 @@
     }
   },
   "profile": {
+    "components": {
+      "FriendshipButtons": {
+        "unblock": "Unblock",
+        "blocked": "You are blocked",
+        "removeFriend": "Remove friend",
+        "removeInvitation": "Remove invitation",
+        "accept": "Accept",
+        "decline": "Decline",
+        "invite": "Send invitation"
+      }
+    },
     "views": {
       "Profile": {
         "title": "Profile: {0}"

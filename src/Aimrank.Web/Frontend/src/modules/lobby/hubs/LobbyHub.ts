@@ -8,8 +8,6 @@ import { useLobby } from "@/lobby/hooks/useLobby";
 import { useNotifications } from "@/common/hooks/useNotifications";
 import {
   IInvitationAcceptedEvent,
-  // IInvitationCanceledEvent,
-  // IInvitationCreatedEvent,
   ILobbyConfigurationChangedEvent,
   ILobbyStatusChangedEvent,
   IMatchFinishedEvent,
@@ -33,8 +31,6 @@ export class LobbyHub {
   constructor(private readonly hub: Hub) {
     hub.connection.on("Disconnect", this.onDisconnect.bind(this));
     hub.connection.on("InvitationAccepted", this.onInvitationAccepted.bind(this));
-    // hub.connection.on("InvitationCanceled", this.onInvitationCanceled.bind(this));
-    // hub.connection.on("InvitationCreated", this.onInvitationCreated.bind(this));
     hub.connection.on("LobbyConfigurationChanged", this.onLobbyConfigurationChanged.bind(this));
     hub.connection.on("LobbyStatusChanged", this.onLobbyStatusChanged.bind(this));
     hub.connection.on("MatchReady", this.onMatchReady.bind(this));
@@ -72,9 +68,6 @@ export class LobbyHub {
       });
     }
   }
-
-  // private onInvitationCanceled(event: IInvitationCanceledEvent) {}
-  // private onInvitationCreated(event: IInvitationCreatedEvent) {}
 
   private onLobbyConfigurationChanged(event: ILobbyConfigurationChangedEvent) {
     this.lobby.setLobbyConfiguration({
