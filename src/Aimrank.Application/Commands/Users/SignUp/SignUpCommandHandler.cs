@@ -62,11 +62,15 @@ namespace Aimrank.Application.Commands.Users.SignUp
                 switch (exception.BrokenRule)
                 {
                     case UsernameMustBeUniqueRule:
-                        throw new SignUpException
-                            {Errors = {["Username"] = new List<string> {exception.BrokenRule.Message}}};
+                        throw new SignUpException(new Dictionary<string, List<string>>
+                        {
+                            ["Username"] = new() {exception.BrokenRule.Message}
+                        });
                     case EmailMustBeUniqueRule:
-                        throw new SignUpException
-                            {Errors = {["Email"] = new List<string> {exception.BrokenRule.Message}}};
+                        throw new SignUpException(new Dictionary<string, List<string>>
+                        {
+                            ["Email"] = new() {exception.BrokenRule.Message}
+                        });
                     default:
                         throw;
                 }

@@ -1,8 +1,8 @@
 using Aimrank.Application.CSGO.Commands.ProcessServerEvent;
 using Aimrank.Application.Contracts;
-using Aimrank.Web.Contracts.CSGO;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Aimrank.Web.Contracts;
 
 namespace Aimrank.Web.Controllers
 {

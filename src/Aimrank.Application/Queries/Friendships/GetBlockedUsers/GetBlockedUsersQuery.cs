@@ -1,10 +1,16 @@
 using Aimrank.Application.Contracts;
-using Aimrank.Application.Queries.Users.GetUserDetails;
-using System.Collections.Generic;
+using Aimrank.Application.Queries.Users.GetUserBatch;
+using Aimrank.Common.Application.Queries;
 
 namespace Aimrank.Application.Queries.Friendships.GetBlockedUsers
 {
-    public class GetBlockedUsersQuery : IQuery<IEnumerable<UserDto>>
+    public class GetBlockedUsersQuery : IQuery<PaginationDto<UserDto>>
     {
+        public PaginationQuery Pagination { get; }
+
+        public GetBlockedUsersQuery(PaginationQuery pagination)
+        {
+            Pagination = pagination;
+        }
     }
 }

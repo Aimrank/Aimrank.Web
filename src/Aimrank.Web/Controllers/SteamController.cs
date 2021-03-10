@@ -2,16 +2,16 @@ using Aimrank.Application.Commands.Users.UpdateUserSteamDetails;
 using Aimrank.Application.Contracts;
 using Aimrank.Common.Application;
 using Aimrank.Common.Domain;
-using Aimrank.Web.Attributes;
-using Aimrank.Web.Contracts.Users;
 using Aimrank.Web.Steam;
 using AspNet.Security.OpenId.Steam;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using Aimrank.Web.Contracts;
 
 namespace Aimrank.Web.Controllers
 {
@@ -19,15 +19,15 @@ namespace Aimrank.Web.Controllers
     [Route("api/[controller]")]
     public class SteamController : Controller
     {
-        private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly IAimrankModule _aimrankModule;
+        private readonly IExecutionContextAccessor _executionContextAccessor;
 
         public SteamController(
-            IExecutionContextAccessor executionContextAccessor,
-            IAimrankModule aimrankModule)
+            IAimrankModule aimrankModule,
+            IExecutionContextAccessor executionContextAccessor)
         {
-            _executionContextAccessor = executionContextAccessor;
             _aimrankModule = aimrankModule;
+            _executionContextAccessor = executionContextAccessor;
         }
 
         [Authorize(AuthenticationSchemes = SteamAuthenticationDefaults.AuthenticationScheme)]
@@ -57,7 +57,7 @@ namespace Aimrank.Web.Controllers
             return Redirect("/app/settings");
         }
         
-        [JwtAuth]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("openid")]
         public async Task<ActionResult<SteamSignInResponse>> SignInWithSteam()
         {

@@ -1,6 +1,7 @@
 using Autofac.Core;
 using Autofac.Features.Variance;
 using Autofac;
+using FluentValidation;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,15 @@ namespace Aimrank.Infrastructure.Configuration.Mediator
             builder.RegisterSource(new ScopedContravariantRegistrationSource(
                 typeof(IRequestHandler<,>),
                 typeof(IRequestHandler<>),
-                typeof(INotificationHandler<>)));
+                typeof(INotificationHandler<>),
+                typeof(IValidator<>)));
 
             var mediatorOpenTypes = new[]
             {
                 typeof(IRequestHandler<,>),
                 typeof(IRequestHandler<>),
-                typeof(INotificationHandler<>)
+                typeof(INotificationHandler<>),
+                typeof(IValidator<>)
             };
 
             foreach (var mediatorOpenType in mediatorOpenTypes)
@@ -37,6 +40,7 @@ namespace Aimrank.Infrastructure.Configuration.Mediator
                     .AsImplementedInterfaces();
             }
 
+            builder.RegisterGeneric(typeof(ValidationPipelineBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(UnitOfWorkPipelineBehavior<,>)).As(typeof(IPipelineBehavior<,>));
 
             builder.Register<ServiceFactory>(ctx =>

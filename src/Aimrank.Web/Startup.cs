@@ -1,15 +1,9 @@
-using Aimrank.Application.Commands.Users.SignIn;
-using Aimrank.Application.Commands.Users.SignUp;
-using Aimrank.Common.Application.Exceptions;
 using Aimrank.Common.Application;
-using Aimrank.Common.Domain;
 using Aimrank.Common.Infrastructure.EventBus;
-using Aimrank.Common.Infrastructure;
 using Aimrank.Infrastructure.Configuration.CSGO;
 using Aimrank.Infrastructure.Configuration.Jwt;
 using Aimrank.Infrastructure.Configuration.Redis;
 using Aimrank.Infrastructure.Configuration;
-using Aimrank.Infrastructure;
 using Aimrank.IntegrationEvents.Lobbies;
 using Aimrank.IntegrationEvents.Matches;
 using Aimrank.Web.Configuration.ExecutionContext;
@@ -18,20 +12,15 @@ using Aimrank.Web.Configuration;
 using Aimrank.Web.Events.Handlers.Lobbies;
 using Aimrank.Web.Events.Handlers.Matches;
 using Aimrank.Web.Events.Handlers;
-using Aimrank.Web.Hubs.General;
-using Aimrank.Web.Hubs.Lobbies;
-using Aimrank.Web.Hubs;
-using Aimrank.Web.ProblemDetails;
+using Aimrank.Web.GraphQL.Mutations;
+using Aimrank.Web.GraphQL.Queries;
+using Aimrank.Web.GraphQL.Subscriptions;
+using Aimrank.Web.GraphQL;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
-using FluentValidation.AspNetCore;
-using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -49,29 +38,20 @@ namespace Aimrank.Web
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
-            services.AddScoped<IUserIdProvider, HubUserIdProvider>();
 
-            services.AddSignalR();
-            services.AddSwagger();
             services.AddAuthenticationWithBearer(_configuration);
-            services.AddProblemDetails(options =>
-            {
-                options.ExceptionDetailsPropertyName = "exceptionDetails";
-                options.Map<SignUpException>(ex => new SignUpProblemDetails(ex));
-                options.Map<SignInException>(ex => new SignInProblemDetails(ex));
-                options.Map<ApplicationException>(ex => new ApplicationProblemDetails(ex));
-                options.Map<BusinessRuleValidationException>(ex => new BusinessRuleValidationProblemDetails(ex));
-            });
 
+            services
+                .AddGraphQLServer()
+                .AddQueryType<QueryType>()
+                .AddMutationType<Mutation>()
+                .AddSubscriptionType<Subscription>()
+                .AddErrorFilter<GraphQLErrorFilter>()
+                .AddInMemorySubscriptions()
+                .AddAuthorization();
+
+            services.AddControllersWithViews();
             services.AddRouting(options => options.LowercaseUrls = true);
-            services.AddControllersWithViews()
-                .AddFluentValidation(options =>
-                {
-                    options.RegisterValidatorsFromAssemblyContaining<Startup>(lifetime: ServiceLifetime.Singleton);
-                    options.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
-                    options.ImplicitlyValidateChildProperties = true;
-                    options.LocalizationEnabled = false;
-                });
 
             /* services.AddDbContext<AimrankContext>(options =>
             {
@@ -108,22 +88,19 @@ namespace Aimrank.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Aimrank API v1"));
             }
 
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseWebSockets();
             
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseProblemDetails();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<GeneralHub>("/hubs/general");
-                endpoints.MapHub<LobbyHub>("/hubs/lobby");
+                endpoints.MapGraphQL();
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{*all}",

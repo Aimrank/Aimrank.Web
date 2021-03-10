@@ -1,8 +1,6 @@
 using Aimrank.Common.Application.Events;
 using Aimrank.IntegrationEvents.Matches;
-using Aimrank.Web.Hubs.Lobbies;
-using Microsoft.AspNetCore.SignalR;
-using System.Linq;
+using HotChocolate.Subscriptions;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -10,14 +8,19 @@ namespace Aimrank.Web.Events.Handlers.Matches
 {
     public class MatchStartedEventHandler : IIntegrationEventHandler<MatchStartedEvent>
     {
-        private readonly IHubContext<LobbyHub, ILobbyClient> _hubContext;
+        private readonly ITopicEventSender _topicEventSender;
 
-        public MatchStartedEventHandler(IHubContext<LobbyHub, ILobbyClient> hubContext)
+        public MatchStartedEventHandler(ITopicEventSender topicEventSender)
         {
-            _hubContext = hubContext;
+            _topicEventSender = topicEventSender;
         }
 
         public async Task HandleAsync(MatchStartedEvent @event, CancellationToken cancellationToken = default)
-            => await _hubContext.Clients.Groups(@event.Lobbies.Select(l => l.ToString())).MatchStarted(@event);
+        {
+            foreach (var lobbyId in @event.Lobbies)
+            {
+                await _topicEventSender.SendAsync($"MatchStarted:{lobbyId}", @event, cancellationToken);
+            }
+        }
     }
 }
