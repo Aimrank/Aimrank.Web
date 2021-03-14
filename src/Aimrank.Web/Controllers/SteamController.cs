@@ -1,17 +1,16 @@
-using Aimrank.Application.Commands.Users.UpdateUserSteamDetails;
-using Aimrank.Application.Contracts;
 using Aimrank.Common.Application;
 using Aimrank.Common.Domain;
+using Aimrank.Modules.UserAccess.Application.Contracts;
+using Aimrank.Modules.UserAccess.Application.Users.UpdateSteamDetails;
+using Aimrank.Web.Contracts;
 using Aimrank.Web.Steam;
 using AspNet.Security.OpenId.Steam;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-using Aimrank.Web.Contracts;
 
 namespace Aimrank.Web.Controllers
 {
@@ -19,14 +18,14 @@ namespace Aimrank.Web.Controllers
     [Route("api/[controller]")]
     public class SteamController : Controller
     {
-        private readonly IAimrankModule _aimrankModule;
+        private readonly IUserAccessModule _userAccessModule;
         private readonly IExecutionContextAccessor _executionContextAccessor;
 
         public SteamController(
-            IAimrankModule aimrankModule,
+            IUserAccessModule userAccessModule,
             IExecutionContextAccessor executionContextAccessor)
         {
-            _aimrankModule = aimrankModule;
+            _userAccessModule = userAccessModule;
             _executionContextAccessor = executionContextAccessor;
         }
 
@@ -46,8 +45,8 @@ namespace Aimrank.Web.Controllers
             {
                 var data = HttpContext.GetSteamData();
 
-                var command = new UpdateUserSteamDetailsCommand(Guid.Parse(userId), data.Id);
-                await _aimrankModule.ExecuteCommandAsync(command);
+                var command = new UpdateSteamDetailsCommand(Guid.Parse(userId), data.Id);
+                await _userAccessModule.ExecuteCommandAsync(command);
             }
             catch (BusinessRuleValidationException exception)
             {
@@ -57,7 +56,7 @@ namespace Aimrank.Web.Controllers
             return Redirect("/app/settings");
         }
         
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize]
         [HttpPost("openid")]
         public async Task<ActionResult<SteamSignInResponse>> SignInWithSteam()
         {

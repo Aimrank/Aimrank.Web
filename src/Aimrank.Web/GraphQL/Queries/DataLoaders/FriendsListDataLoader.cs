@@ -1,6 +1,6 @@
-using Aimrank.Application.Contracts;
-using Aimrank.Application.Queries.Friendships.GetFriendsList;
 using Aimrank.Common.Application.Queries;
+using Aimrank.Modules.UserAccess.Application.Contracts;
+using Aimrank.Modules.UserAccess.Application.Friendships.GetFriendsList;
 using GreenDonut;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,12 +23,12 @@ namespace Aimrank.Web.GraphQL.Queries.DataLoaders
     
     public class FriendsListDataLoader : DataLoaderBase<FriendsListDataLoaderInput, PaginationDto<Guid>>
     {
-        private readonly IAimrankModule _aimrankModule;
+        private readonly IUserAccessModule _userAccessModule;
         
-        public FriendsListDataLoader(IBatchScheduler batchScheduler, IAimrankModule aimrankModule)
+        public FriendsListDataLoader(IBatchScheduler batchScheduler, IUserAccessModule userAccessModule)
             : base(batchScheduler)
         {
-            _aimrankModule = aimrankModule;
+            _userAccessModule = userAccessModule;
         }
 
         protected override async ValueTask<IReadOnlyList<Result<PaginationDto<Guid>>>> FetchAsync(
@@ -38,7 +38,7 @@ namespace Aimrank.Web.GraphQL.Queries.DataLoaders
 
             foreach (var input in keys)
             {
-                var users = await _aimrankModule.ExecuteQueryAsync(new GetFriendsListQuery(input.Id, input.Pagination));
+                var users = await _userAccessModule.ExecuteQueryAsync(new GetFriendsListQuery(input.Id, input.Pagination));
                 
                 result.Add(Result<PaginationDto<Guid>>.Resolve(users));
             }

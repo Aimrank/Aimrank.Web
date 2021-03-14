@@ -1,6 +1,6 @@
-using Aimrank.Application.Queries.Users.GetUserBatch;
-using Aimrank.Application.Queries.Users.GetUserStatsBatch;
 using Aimrank.Common.Application.Queries;
+using Aimrank.Modules.UserAccess.Application.Users.GetUserBatch;
+using Aimrank.Modules.UserAccess.Application.Users.GetUserStatsBatch;
 using Aimrank.Web.GraphQL.Queries.DataLoaders;
 using HotChocolate.Types.Pagination;
 using HotChocolate.Types;

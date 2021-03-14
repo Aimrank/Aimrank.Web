@@ -1,0 +1,39 @@
+using Aimrank.Common.Application;
+using Aimrank.Modules.Matches.Application.Contracts;
+using Aimrank.Modules.Matches.Domain.Lobbies;
+using MediatR;
+using System.Threading.Tasks;
+using System.Threading;
+
+namespace Aimrank.Modules.Matches.Application.Lobbies.CreateLobby
+{
+    internal class CreateLobbyCommandHandler : ICommandHandler<CreateLobbyCommand>
+    {
+        private readonly IExecutionContextAccessor _executionContextAccessor;
+        private readonly ILobbyRepository _lobbyRepository;
+        private readonly IUserRepository _userRepository;
+
+        public CreateLobbyCommandHandler(
+            IExecutionContextAccessor executionContextAccessor,
+            ILobbyRepository lobbyRepository,
+            IUserRepository userRepository)
+        {
+            _executionContextAccessor = executionContextAccessor;
+            _lobbyRepository = lobbyRepository;
+            _userRepository = userRepository;
+        }
+
+        public async Task<Unit> Handle(CreateLobbyCommand request, CancellationToken cancellationToken)
+        {
+            var userId = new UserId(_executionContextAccessor.UserId);
+            var user = await _userRepository.GetByIdAsync(userId);
+            
+            var lobbyId = new LobbyId(request.LobbyId);
+            var lobby = await Lobby.CreateAsync(lobbyId, user, _lobbyRepository);
+            
+            _lobbyRepository.Add(lobby);
+            
+            return Unit.Value;
+        }
+    }
+}

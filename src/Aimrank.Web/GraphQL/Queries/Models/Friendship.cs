@@ -1,4 +1,4 @@
-using Aimrank.Application.Queries.Friendships.GetFriendshipBatch;
+using Aimrank.Modules.UserAccess.Application.Friendships.GetFriendshipBatch;
 using Aimrank.Web.GraphQL.Queries.DataLoaders;
 using HotChocolate;
 using System.Collections.Generic;

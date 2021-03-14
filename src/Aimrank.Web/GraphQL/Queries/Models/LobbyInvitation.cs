@@ -1,4 +1,4 @@
-using Aimrank.Application.Queries.Lobbies.GetLobbyInvitations;
+using Aimrank.Modules.Matches.Application.Lobbies.GetLobbyInvitations;
 using Aimrank.Web.GraphQL.Queries.DataLoaders;
 using HotChocolate;
 using System.Threading.Tasks;

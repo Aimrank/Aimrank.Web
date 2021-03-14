@@ -1,4 +1,4 @@
-using Aimrank.Application.Queries.Lobbies.GetLobbyForUser;
+using Aimrank.Modules.Matches.Application.Lobbies.GetLobbyForUser;
 using Aimrank.Web.GraphQL.Queries.DataLoaders;
 using HotChocolate;
 using System.Collections.Generic;

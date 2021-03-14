@@ -1,4 +1,4 @@
-using Aimrank.Application.Queries.Matches.GetFinishedMatches;
+using Aimrank.Modules.Matches.Application.Matches.GetFinishedMatches;
 using Aimrank.Web.GraphQL.Queries.DataLoaders;
 using HotChocolate;
 using System.Threading.Tasks;

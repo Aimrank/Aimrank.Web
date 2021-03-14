@@ -1,5 +1,5 @@
-using Aimrank.IntegrationEvents.Lobbies;
-using Aimrank.IntegrationEvents.Matches;
+using Aimrank.Modules.Matches.IntegrationEvents.Lobbies;
+using Aimrank.Modules.Matches.IntegrationEvents.Matches;
 using Aimrank.Web.GraphQL.Subscriptions.Messages.Lobbies;
 using Aimrank.Web.GraphQL.Subscriptions.Messages.Users;
 using HotChocolate.AspNetCore.Authorization;

@@ -1,5 +1,3 @@
-using Aimrank.Application.Contracts;
-using Aimrank.Application.Queries.Friendships.GetBlockedUsers;
 using Aimrank.Common.Application.Queries;
 using Aimrank.Web.GraphQL.Queries.Models;
 using GreenDonut;
@@ -7,17 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
+using Aimrank.Modules.UserAccess.Application.Contracts;
+using Aimrank.Modules.UserAccess.Application.Friendships.GetBlockedUsers;
 
 namespace Aimrank.Web.GraphQL.Queries.DataLoaders
 {
     public class BlockedUsersDataLoader : DataLoaderBase<PaginationQuery, PaginationDto<User>>
     {
-        private readonly IAimrankModule _aimrankModule;
+        private readonly IUserAccessModule _userAccessModule;
         
-        public BlockedUsersDataLoader(IBatchScheduler batchScheduler, IAimrankModule aimrankModule)
+        public BlockedUsersDataLoader(IBatchScheduler batchScheduler, IUserAccessModule userAccessModule)
             : base(batchScheduler)
         {
-            _aimrankModule = aimrankModule;
+            _userAccessModule = userAccessModule;
         }
 
         protected override async ValueTask<IReadOnlyList<Result<PaginationDto<User>>>> FetchAsync(IReadOnlyList<PaginationQuery> keys, CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ namespace Aimrank.Web.GraphQL.Queries.DataLoaders
 
             foreach (var pagination in keys)
             {
-                var dto = await _aimrankModule.ExecuteQueryAsync(new GetBlockedUsersQuery(pagination));
+                var dto = await _userAccessModule.ExecuteQueryAsync(new GetBlockedUsersQuery(pagination));
                 
                 result.Add(Result<PaginationDto<User>>.Resolve(
                     new PaginationDto<User>(dto.Items.Select(u => new User(u)), dto.Total)));

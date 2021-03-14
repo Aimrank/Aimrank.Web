@@ -1,5 +1,6 @@
 ﻿using Aimrank.Common.Infrastructure;
-using Aimrank.Infrastructure;
+using Aimrank.Modules.Matches.Infrastructure;
+using Aimrank.Modules.UserAccess.Infrastructure;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore;
@@ -36,23 +37,37 @@ static void MigrateDatabase(IConfiguration configuration)
     
     var connectionString = configuration.GetConnectionString("Database");
 
-    var optionsBuilder = new DbContextOptionsBuilder<AimrankContext>()
+    var optionsBuilderMatches = new DbContextOptionsBuilder<MatchesContext>()
+        .ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>()
+        .UseSqlServer(connectionString, ConfigureContext);
+        
+    var optionsBuilderUserAccess = new DbContextOptionsBuilder<UserAccessContext>()
         .ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>()
         .UseSqlServer(connectionString, ConfigureContext);
 
-    using var context = new AimrankContext(optionsBuilder.Options);
+    using var contextMatches = new MatchesContext(optionsBuilderMatches.Options);
+    using var contextUserAccess = new UserAccessContext(optionsBuilderUserAccess.Options);
     
-    if (context.Database.GetPendingMigrations().Any())
+    if (contextMatches.Database.GetPendingMigrations().Any())
     {
-        Console.WriteLine("Running database migration...");
-        
-        context.Database.Migrate();
-        
-        Console.WriteLine("Migration finished successfully.");
+        Console.WriteLine("[MatchesContext] Running database migration...");
+        contextMatches.Database.Migrate();
+        Console.WriteLine("[MatchesContext] Migration finished successfully.");
     }
     else
     {
-        Console.WriteLine("All migrations already applied.");
+        Console.WriteLine("[MatchesContext] All migrations already applied.");
+    }
+    
+    if (contextUserAccess.Database.GetPendingMigrations().Any())
+    {
+        Console.WriteLine("[UserAccessContext] Running database migration...");
+        contextUserAccess.Database.Migrate();
+        Console.WriteLine("[UserAccessContext] Migration finished successfully.");
+    }
+    else
+    {
+        Console.WriteLine("[UserAccessContext] All migrations already applied.");
     }
 }
 

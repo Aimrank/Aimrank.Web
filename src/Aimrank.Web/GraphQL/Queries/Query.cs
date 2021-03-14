@@ -1,5 +1,5 @@
-using Aimrank.Application.Queries.Matches.GetFinishedMatches;
 using Aimrank.Common.Application.Queries;
+using Aimrank.Modules.Matches.Application.Matches.GetFinishedMatches;
 using Aimrank.Web.GraphQL.Queries.DataLoaders;
 using Aimrank.Web.GraphQL.Queries.Models;
 using HotChocolate.AspNetCore.Authorization;

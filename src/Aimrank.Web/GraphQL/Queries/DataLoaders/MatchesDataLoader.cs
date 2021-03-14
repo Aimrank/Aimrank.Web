@@ -1,6 +1,6 @@
-using Aimrank.Application.Contracts;
-using Aimrank.Application.Queries.Matches.GetFinishedMatches;
 using Aimrank.Common.Application.Queries;
+using Aimrank.Modules.Matches.Application.Contracts;
+using Aimrank.Modules.Matches.Application.Matches.GetFinishedMatches;
 using Aimrank.Web.GraphQL.Queries.Models;
 using GreenDonut;
 using System.Collections.Generic;
@@ -24,12 +24,12 @@ namespace Aimrank.Web.GraphQL.Queries.DataLoaders
     
     public class MatchesDataLoader : DataLoaderBase<MatchesDataLoaderInput, PaginationDto<Match>>
     {
-        private readonly IAimrankModule _aimrankModule;
+        private readonly IMatchesModule _matchesModule;
         
-        public MatchesDataLoader(IBatchScheduler batchScheduler, IAimrankModule aimrankModule)
+        public MatchesDataLoader(IBatchScheduler batchScheduler, IMatchesModule matchesModule)
             : base(batchScheduler)
         {
-            _aimrankModule = aimrankModule;
+            _matchesModule = matchesModule;
         }
 
         protected override async ValueTask<IReadOnlyList<Result<PaginationDto<Match>>>> FetchAsync(
@@ -39,7 +39,7 @@ namespace Aimrank.Web.GraphQL.Queries.DataLoaders
 
             foreach (var input in keys)
             {
-                var dto = await _aimrankModule.ExecuteQueryAsync(
+                var dto = await _matchesModule.ExecuteQueryAsync(
                     new GetFinishedMatchesQuery(input.Filter, input.Pagination));
                 
                 result.Add(Result<PaginationDto<Match>>.Resolve(

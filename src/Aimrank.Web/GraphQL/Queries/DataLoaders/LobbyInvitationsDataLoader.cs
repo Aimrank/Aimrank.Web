@@ -1,5 +1,5 @@
-using Aimrank.Application.Contracts;
-using Aimrank.Application.Queries.Lobbies.GetLobbyInvitations;
+using Aimrank.Modules.Matches.Application.Contracts;
+using Aimrank.Modules.Matches.Application.Lobbies.GetLobbyInvitations;
 using Aimrank.Web.GraphQL.Queries.Models;
 using GreenDonut;
 using System.Collections.Generic;
@@ -11,18 +11,18 @@ namespace Aimrank.Web.GraphQL.Queries.DataLoaders
 {
     public class LobbyInvitationsDataLoader : DataLoaderBase<int, IEnumerable<LobbyInvitation>>
     {
-        private readonly IAimrankModule _aimrankModule;
+        private readonly IMatchesModule _matchesModule;
         
-        public LobbyInvitationsDataLoader(IBatchScheduler batchScheduler, IAimrankModule aimrankModule)
+        public LobbyInvitationsDataLoader(IBatchScheduler batchScheduler, IMatchesModule matchesModule)
             : base(batchScheduler)
         {
-            _aimrankModule = aimrankModule;
+            _matchesModule = matchesModule;
         }
 
         protected override async ValueTask<IReadOnlyList<Result<IEnumerable<LobbyInvitation>>>> FetchAsync(IReadOnlyList<int> keys,
             CancellationToken cancellationToken)
         {
-            var result = await _aimrankModule.ExecuteQueryAsync(new GetLobbyInvitationsQuery());
+            var result = await _matchesModule.ExecuteQueryAsync(new GetLobbyInvitationsQuery());
 
             var invitations = Result<IEnumerable<LobbyInvitation>>.Resolve(result.Select(i => new LobbyInvitation(i)));
 

@@ -1,4 +1,4 @@
-using Aimrank.Application.Queries.Matches.GetFinishedMatches;
+using Aimrank.Modules.Matches.Application.Matches.GetFinishedMatches;
 using HotChocolate.Types;
 using System.Collections.Generic;
 using System.Linq;

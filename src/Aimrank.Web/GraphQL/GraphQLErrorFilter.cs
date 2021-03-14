@@ -1,5 +1,3 @@
-using Aimrank.Application.Commands.Users.SignIn;
-using Aimrank.Application.Commands.Users.SignUp;
 using Aimrank.Common.Application.Exceptions;
 using Aimrank.Common.Domain;
 using HotChocolate;
@@ -15,13 +13,6 @@ namespace Aimrank.Web.GraphQL
                 BusinessRuleValidationException e => error
                     .WithCode(e.BrokenRule.Code)
                     .WithMessage(e.BrokenRule.Message),
-                SignUpException e => error
-                    .WithCode(e.Code)
-                    .WithMessage(e.Message)
-                    .SetExtension("errors", JsonSerializer.Serialize(e.Errors)),
-                SignInException e => error
-                    .WithCode(e.Code)
-                    .WithMessage(e.Message),
                 ApplicationException e => error
                     .WithCode(e.Code)
                     .WithMessage(e.Message),

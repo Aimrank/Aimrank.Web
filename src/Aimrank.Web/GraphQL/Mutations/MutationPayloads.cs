@@ -1,4 +1,3 @@
-using Aimrank.Application.Commands.Users.RefreshJwt;
 using Aimrank.Web.GraphQL.Queries;
 using HotChocolate.Resolvers;
 
@@ -11,9 +10,9 @@ namespace Aimrank.Web.GraphQL.Mutations
     
     // Users
 
-    public record RefreshJwtPayload(AuthenticationSuccessDto Record) : MutationPayloadBase;
-    public record SignInPayload(AuthenticationSuccessDto Record) : MutationPayloadBase;
-    public record SignUpPayload(AuthenticationSuccessDto Record) : MutationPayloadBase;
+    public record SignInPayload : MutationPayloadBase;
+    public record SignUpPayload : MutationPayloadBase;
+    public record SignOutPayload : MutationPayloadBase;
     
     // Friends
 

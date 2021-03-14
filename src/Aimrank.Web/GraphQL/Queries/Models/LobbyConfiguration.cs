@@ -1,4 +1,4 @@
-using Aimrank.Application.Queries.Lobbies.GetLobbyForUser;
+using Aimrank.Modules.Matches.Application.Lobbies.GetLobbyForUser;
 
 namespace Aimrank.Web.GraphQL.Queries.Models
 {

@@ -1,5 +1,5 @@
-using Aimrank.Application.Contracts;
-using Aimrank.Application.Queries.Friendships.GetFriendshipBatch;
+using Aimrank.Modules.UserAccess.Application.Contracts;
+using Aimrank.Modules.UserAccess.Application.Friendships.GetFriendshipBatch;
 using Aimrank.Web.GraphQL.Queries.Models;
 using GreenDonut;
 using System.Collections.Generic;
@@ -12,17 +12,17 @@ namespace Aimrank.Web.GraphQL.Queries.DataLoaders
 {
     public class FriendshipDataLoader : DataLoaderBase<Guid, Friendship>
     {
-        private readonly IAimrankModule _aimrankModule;
+        private readonly IUserAccessModule _userAccessModule;
         
-        public FriendshipDataLoader(IBatchScheduler batchScheduler, IAimrankModule aimrankModule)
+        public FriendshipDataLoader(IBatchScheduler batchScheduler, IUserAccessModule userAccessModule)
             : base(batchScheduler)
         {
-            _aimrankModule = aimrankModule;
+            _userAccessModule = userAccessModule;
         }
 
         protected override async ValueTask<IReadOnlyList<Result<Friendship>>> FetchAsync(IReadOnlyList<Guid> keys, CancellationToken cancellationToken)
         {
-            var result = await _aimrankModule.ExecuteQueryAsync(new GetFriendshipBatchQuery(keys));
+            var result = await _userAccessModule.ExecuteQueryAsync(new GetFriendshipBatchQuery(keys));
             
             return result.Select(f => f is null
                 ? Result<Friendship>.Reject(null)
