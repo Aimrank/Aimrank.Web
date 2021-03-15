@@ -2,6 +2,7 @@ using Aimrank.Modules.Matches.Application.CSGO;
 using Aimrank.Modules.Matches.Application.Contracts;
 using Aimrank.Modules.Matches.Domain.Lobbies;
 using Aimrank.Modules.Matches.Domain.Matches;
+using Aimrank.Modules.Matches.Domain.Players;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,18 +16,18 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.ProcessLobbies
     {
         private readonly ILobbyRepository _lobbyRepository;
         private readonly IMatchRepository _matchRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IPlayerRepository _playerRepository;
         private readonly IServerProcessManager _serverProcessManager;
 
         public ProcessLobbiesCommandHandler(
             ILobbyRepository lobbyRepository,
             IMatchRepository matchRepository,
-            IUserRepository userRepository,
+            IPlayerRepository playerRepository,
             IServerProcessManager serverProcessManager)
         {
             _lobbyRepository = lobbyRepository;
             _matchRepository = matchRepository;
-            _userRepository = userRepository;
+            _playerRepository = playerRepository;
             _serverProcessManager = serverProcessManager;
         }
 
@@ -34,11 +35,11 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.ProcessLobbies
         {
             var lobbiesSearching = await _lobbyRepository.BrowseByStatusAsync(LobbyStatus.Searching);
             var lobbiesGrouped = GetLobbiesWithMode(lobbiesSearching);
-            var lobbiesUsers = await GetUsersForLobbiesAsync(lobbiesSearching);
+            var lobbiesPlayers = await GetPlayersForLobbiesAsync(lobbiesSearching);
             
             foreach (var (mode, lobbies) in lobbiesGrouped)
             {
-                var ratings = await GetRatingForUsersAsync(lobbies, mode);
+                var ratings = await GetRatingForPlayersAsync(lobbies, mode);
                 
                 var sorted = lobbies.OrderByDescending(l => l.Members.Count());
 
@@ -59,15 +60,15 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.ProcessLobbies
 
                         var teams = new[]
                         {
-                            new List<User>(),
-                            new List<User>()
+                            new List<Player>(),
+                            new List<Player>()
                         };
 
                         for (var i = 0; i < buffer.Count; i++)
                         {
                             foreach (var member in buffer[i].Members)
                             {
-                                teams[i % 2].Add(lobbiesUsers[member.UserId]);
+                                teams[i % 2].Add(lobbiesPlayers[member.PlayerId]);
                             }
                         }
                         
@@ -84,11 +85,11 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.ProcessLobbies
 
                         for (var j = 0; j < teams.Length; j++)
                         {
-                            foreach (var user in teams[j])
+                            foreach (var player in teams[j])
                             {
-                                var rating = ratings.ContainsKey(user.Id) ? ratings[user.Id] : 1200;
+                                var rating = ratings.ContainsKey(player.Id) ? ratings[player.Id] : 1200;
                                 
-                                match.AddPlayer(user.Id, user.SteamId, j % 2 == 0 ? MatchTeam.T : MatchTeam.CT, rating);
+                                match.AddPlayer(player.Id, player.SteamId, j % 2 == 0 ? MatchTeam.T : MatchTeam.CT, rating);
                             }
                         }
                         
@@ -114,16 +115,16 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.ProcessLobbies
             return Unit.Value;
         }
         
-        private async Task<Dictionary<UserId, User>> GetUsersForLobbiesAsync(IEnumerable<Lobby> lobbies)
+        private async Task<Dictionary<PlayerId, Player>> GetPlayersForLobbiesAsync(IEnumerable<Lobby> lobbies)
         {
-            var usersIds = lobbies.SelectMany(l => l.Members.Select(m => m.UserId));
-            var users = await _userRepository.BrowseByIdAsync(usersIds);
-            return users.ToDictionary(u => u.Id);
+            var playerIds = lobbies.SelectMany(l => l.Members.Select(m => m.PlayerId));
+            var players = await _playerRepository.BrowseByIdAsync(playerIds);
+            return players.ToDictionary(u => u.Id);
         }
 
-        private async Task<Dictionary<UserId, int>> GetRatingForUsersAsync(IEnumerable<Lobby> lobbies, MatchMode mode)
+        private async Task<Dictionary<PlayerId, int>> GetRatingForPlayersAsync(IEnumerable<Lobby> lobbies, MatchMode mode)
         {
-            var members = lobbies.SelectMany(l => l.Members).Select(m => m.UserId).Distinct();
+            var members = lobbies.SelectMany(l => l.Members).Select(m => m.PlayerId).Distinct();
             return await _matchRepository.BrowsePlayersRatingAsync(members, mode);
         }
         

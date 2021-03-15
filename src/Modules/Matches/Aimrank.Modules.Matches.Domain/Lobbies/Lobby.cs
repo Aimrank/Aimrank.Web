@@ -2,6 +2,7 @@ using Aimrank.Common.Domain;
 using Aimrank.Modules.Matches.Domain.Lobbies.Events;
 using Aimrank.Modules.Matches.Domain.Lobbies.Rules;
 using Aimrank.Modules.Matches.Domain.Matches;
+using Aimrank.Modules.Matches.Domain.Players;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,42 +34,38 @@ namespace Aimrank.Modules.Matches.Domain.Lobbies
         
         private Lobby() {}
 
-        private Lobby(LobbyId id, User user)
+        private Lobby(LobbyId id, string name, Player player)
         {
-            BusinessRules.Check(new UserMustHaveConnectedSteamRule(user));
-            
             Id = id;
-            _configuration = new LobbyConfiguration($"team_{user.Username}", Maps.AimMap, MatchMode.OneVsOne);
-            _members.Add(new LobbyMember(user.Id, LobbyMemberRole.Leader));
+            _configuration = new LobbyConfiguration(name, Maps.AimMap, MatchMode.OneVsOne);
+            _members.Add(new LobbyMember(player.Id, LobbyMemberRole.Leader));
         }
 
-        public static async Task<Lobby> CreateAsync(LobbyId id, User user, ILobbyRepository lobbyRepository)
+        public static async Task<Lobby> CreateAsync(LobbyId id, string name, Player player, ILobbyRepository lobbyRepository)
         {
-            await BusinessRules.CheckAsync(new UserMustNotBeMemberOfAnyLobbyRule(lobbyRepository, user.Id));
+            await BusinessRules.CheckAsync(new PlayerMustNotBeMemberOfAnyLobbyRule(lobbyRepository, player.Id));
 
-            return new Lobby(id, user);
+            return new Lobby(id, name, player);
         }
         
-        public void Invite(User invitingUser, User invitedUser)
+        public void Invite(Player invitingPlayer, Player invitedPlayer)
         {
-            BusinessRules.Check(new UserMustHaveConnectedSteamRule(invitedUser));
-            BusinessRules.Check(new UserMustBeLobbyMemberRule(_members, invitingUser));
-            BusinessRules.Check(new UserMustNotBeLobbyMemberRule(_members, invitedUser));
-            BusinessRules.Check(new UserMustNotBeOnInvitationListRule(_invitations, invitedUser));
+            BusinessRules.Check(new PlayerMustBeLobbyMemberRule(_members, invitingPlayer.Id));
+            BusinessRules.Check(new PlayerMustNotBeLobbyMemberRule(_members, invitedPlayer.Id));
+            BusinessRules.Check(new PlayerMustNotBeOnInvitationListRule(_invitations, invitedPlayer.Id));
 
-            var invitation = new LobbyInvitation(invitingUser.Id, invitedUser.Id, DateTime.UtcNow);
+            var invitation = new LobbyInvitation(invitingPlayer.Id, invitedPlayer.Id, DateTime.UtcNow);
 
             _invitations.Add(invitation);
         }
 
-        public async Task AcceptInvitationAsync(User invitedUser, ILobbyRepository lobbyRepository)
+        public async Task AcceptInvitationAsync(Player invitedPlayer, ILobbyRepository lobbyRepository)
         {
-            BusinessRules.Check(new InvitationMustExistForUserRule(_invitations, invitedUser.Id));
-            BusinessRules.Check(new UserMustHaveConnectedSteamRule(invitedUser));
+            BusinessRules.Check(new InvitationMustExistForPlayerRule(_invitations, invitedPlayer.Id));
             BusinessRules.Check(new LobbyMustNotBeFullRule(this));
-            await BusinessRules.CheckAsync(new UserMustNotBeMemberOfAnyLobbyRule(lobbyRepository, invitedUser.Id));
+            await BusinessRules.CheckAsync(new PlayerMustNotBeMemberOfAnyLobbyRule(lobbyRepository, invitedPlayer.Id));
 
-            var invitation = _invitations.FirstOrDefault(i => i.InvitedUserId == invitedUser.Id);
+            var invitation = _invitations.FirstOrDefault(i => i.InvitedPlayerId == invitedPlayer.Id);
             if (invitation is not null)
             {
                 _invitations.Remove(invitation);
@@ -78,22 +75,22 @@ namespace Aimrank.Modules.Matches.Domain.Lobbies
                     _invitations.Clear();
                 }
 
-                _members.Add(new LobbyMember(invitation.InvitedUserId, LobbyMemberRole.Normal));
+                _members.Add(new LobbyMember(invitation.InvitedPlayerId, LobbyMemberRole.Normal));
             }
         }
 
-        public void CancelInvitation(User invitedUser)
+        public void CancelInvitation(Player invitedPlayer)
         {
-            var invitation = _invitations.FirstOrDefault(i => i.InvitedUserId == invitedUser.Id);
+            var invitation = _invitations.FirstOrDefault(i => i.InvitedPlayerId == invitedPlayer.Id);
             if (invitation is not null)
             {
                 _invitations.Remove(invitation);
             }
         }
 
-        public void Leave(Guid userId)
+        public void Leave(PlayerId playerId)
         {
-            var member = _members.FirstOrDefault(m => m.UserId == userId);
+            var member = _members.FirstOrDefault(m => m.PlayerId == playerId);
             if (member is null)
             {
                 return;
@@ -118,18 +115,18 @@ namespace Aimrank.Modules.Matches.Domain.Lobbies
             }
         }
 
-        public void ChangeConfiguration(Guid userId, LobbyConfiguration configuration)
+        public void ChangeConfiguration(PlayerId playerId, LobbyConfiguration configuration)
         {
-            BusinessRules.Check(new UserMustBeLobbyLeaderRule(_members, userId));
+            BusinessRules.Check(new PlayerMustBeLobbyLeaderRule(_members, playerId));
             BusinessRules.Check(new LobbyStatusMustMatchRule(Status, LobbyStatus.Open));
             BusinessRules.Check(new MapMustBeSupportedRule(configuration.Map));
 
             _configuration = configuration;
         }
 
-        public void StartSearching(Guid userId)
+        public void StartSearching(PlayerId playerId)
         {
-            BusinessRules.Check(new UserMustBeLobbyLeaderRule(_members, userId));
+            BusinessRules.Check(new PlayerMustBeLobbyLeaderRule(_members, playerId));
 
             ChangeStatus(LobbyStatus.Searching);
         }
@@ -141,9 +138,9 @@ namespace Aimrank.Modules.Matches.Domain.Lobbies
             ChangeStatus(LobbyStatus.Searching);
         }
 
-        public void CancelSearching(Guid userId)
+        public void CancelSearching(PlayerId playerId)
         {
-            BusinessRules.Check(new UserMustBeLobbyLeaderRule(_members, userId));
+            BusinessRules.Check(new PlayerMustBeLobbyLeaderRule(_members, playerId));
 
             ChangeStatus(LobbyStatus.Open);
         }

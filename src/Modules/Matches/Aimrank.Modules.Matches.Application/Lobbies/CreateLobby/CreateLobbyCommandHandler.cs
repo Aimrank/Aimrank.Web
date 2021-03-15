@@ -1,6 +1,7 @@
 using Aimrank.Common.Application;
 using Aimrank.Modules.Matches.Application.Contracts;
 using Aimrank.Modules.Matches.Domain.Lobbies;
+using Aimrank.Modules.Matches.Domain.Players;
 using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
@@ -11,25 +12,25 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.CreateLobby
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly ILobbyRepository _lobbyRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IPlayerRepository _playerRepository;
 
         public CreateLobbyCommandHandler(
             IExecutionContextAccessor executionContextAccessor,
             ILobbyRepository lobbyRepository,
-            IUserRepository userRepository)
+            IPlayerRepository playerRepository)
         {
             _executionContextAccessor = executionContextAccessor;
             _lobbyRepository = lobbyRepository;
-            _userRepository = userRepository;
+            _playerRepository = playerRepository;
         }
 
         public async Task<Unit> Handle(CreateLobbyCommand request, CancellationToken cancellationToken)
         {
-            var userId = new UserId(_executionContextAccessor.UserId);
-            var user = await _userRepository.GetByIdAsync(userId);
+            var player = await _playerRepository.GetByIdAsync(new PlayerId(_executionContextAccessor.UserId));
             
             var lobbyId = new LobbyId(request.LobbyId);
-            var lobby = await Lobby.CreateAsync(lobbyId, user, _lobbyRepository);
+
+            var lobby = await Lobby.CreateAsync(lobbyId, $"team_{_executionContextAccessor.UserId}", player, _lobbyRepository);
             
             _lobbyRepository.Add(lobby);
             

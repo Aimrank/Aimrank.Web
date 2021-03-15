@@ -1,9 +1,9 @@
 using Aimrank.Common.Application.Exceptions;
 using Aimrank.Modules.Matches.Domain.Matches;
+using Aimrank.Modules.Matches.Domain.Players;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
 
 namespace Aimrank.Modules.Matches.UnitTests.Mock
 {
@@ -13,16 +13,16 @@ namespace Aimrank.Modules.Matches.UnitTests.Mock
 
         public IEnumerable<Match> Matches => _matches.Values;
 
-        public Task<Dictionary<Guid, int>> BrowsePlayersRatingAsync(IEnumerable<Guid> ids, MatchMode mode)
+        public Task<Dictionary<PlayerId, int>> BrowsePlayersRatingAsync(IEnumerable<PlayerId> ids, MatchMode mode)
         {
             var result = _matches.Values
                 .Where(m => m.Mode == mode && m.Status == MatchStatus.Finished &&
-                            m.Players.Any(p => ids.Contains(p.UserId)))
+                            m.Players.Any(p => ids.Contains(p.PlayerId)))
                 .OrderByDescending(m => m.FinishedAt)
                 .SelectMany(m => m.Players)
-                .GroupBy(p => p.UserId)
+                .GroupBy(p => p.PlayerId)
                 .Select(g => g.First())
-                .ToDictionary(p => p.UserId, p => p.RatingEnd);
+                .ToDictionary(p => p.PlayerId, p => p.RatingEnd);
 
             return Task.FromResult(result);
         }

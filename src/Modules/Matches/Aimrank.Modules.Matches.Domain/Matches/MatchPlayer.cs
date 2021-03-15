@@ -1,12 +1,13 @@
 ﻿using Aimrank.Common.Domain;
 using Aimrank.Modules.Matches.Domain.Matches.Events;
+using Aimrank.Modules.Matches.Domain.Players;
 using System;
 
 namespace Aimrank.Modules.Matches.Domain.Matches
 {
     public class MatchPlayer : Entity
     {
-        public Guid UserId { get; }
+        public PlayerId PlayerId { get; }
         public string SteamId { get; }
         public MatchTeam Team { get; }
         public MatchPlayerStats Stats { get; private set; }
@@ -16,9 +17,9 @@ namespace Aimrank.Modules.Matches.Domain.Matches
 
         private MatchPlayer() {}
 
-        internal MatchPlayer(Guid userId, string steamId, MatchTeam team, int rating)
+        internal MatchPlayer(PlayerId playerId, string steamId, MatchTeam team, int rating)
         {
-            UserId = userId;
+            PlayerId = playerId;
             SteamId = steamId;
             Team = team;
             Stats = new MatchPlayerStats(0, 0, 0, 0);

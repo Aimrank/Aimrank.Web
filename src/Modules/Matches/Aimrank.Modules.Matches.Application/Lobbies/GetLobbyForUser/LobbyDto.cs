@@ -20,7 +20,7 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.GetLobbyForUser
 
     public class LobbyMemberDto
     {
-        public Guid UserId { get; set; }
+        public Guid PlayerId { get; set; }
         public bool IsLeader { get; set; }
     }
 }

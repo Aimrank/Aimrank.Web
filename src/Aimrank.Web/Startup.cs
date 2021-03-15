@@ -23,6 +23,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using Aimrank.Common.Infrastructure;
+using Aimrank.Modules.Matches.Infrastructure;
+using Aimrank.Modules.UserAccess.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aimrank.Web
 {
@@ -46,14 +51,6 @@ namespace Aimrank.Web
                     options.SignInScheme = "Cookies";
                 })
                 .AddCookie();
-            
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.HttpOnly = true;
-                options.SlidingExpiration = true;
-                options.ExpireTimeSpan = TimeSpan.FromDays(1);
-                options.LoginPath = "/sign-in";
-            });
 
             services
                 .AddGraphQLServer()
@@ -66,13 +63,24 @@ namespace Aimrank.Web
 
             services.AddControllersWithViews();
             services.AddRouting(options => options.LowercaseUrls = true);
-            
-            /* services.AddDbContext<AimrankContext>(options =>
+
+#if true
+            //Add db contexts so "dotnet ef" can find them when generating migrations
+
+            services.AddDbContext<MatchesContext>(options =>
             {
                 options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
                 options.UseSqlServer(_configuration.GetConnectionString("Database"),
                     x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
-            }); */
+            });
+            
+            services.AddDbContext<UserAccessContext>(options =>
+            {
+                options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
+                options.UseSqlServer(_configuration.GetConnectionString("Database"),
+                    x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
+            });
+#endif
         }
 
         public void ConfigureContainer(ContainerBuilder containerBuilder)

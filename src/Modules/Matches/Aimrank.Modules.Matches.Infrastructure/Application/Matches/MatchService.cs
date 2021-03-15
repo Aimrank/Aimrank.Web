@@ -2,13 +2,13 @@ using Aimrank.Common.Infrastructure.EventBus;
 using Aimrank.Modules.Matches.Application.CSGO;
 using Aimrank.Modules.Matches.Application.Matches;
 using Aimrank.Modules.Matches.Domain.Matches;
+using Aimrank.Modules.Matches.Infrastructure.Configuration.Redis;
 using Aimrank.Modules.Matches.IntegrationEvents.Matches;
 using StackExchange.Redis;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-using Aimrank.Modules.Matches.Infrastructure.Configuration.Redis;
 
 namespace Aimrank.Modules.Matches.Infrastructure.Application.Matches
 {
@@ -28,15 +28,15 @@ namespace Aimrank.Modules.Matches.Infrastructure.Application.Matches
             _eventBus = eventBus;
         }
         
-        public async Task AcceptMatchAsync(Match match, Guid userId)
+        public async Task AcceptMatchAsync(Match match, Guid playerId)
         {
             var key = GetKey(match.Id);
 
             var acceptations = await _database.GetJsonAsync<MatchAcceptations>(key) ??
-                               new MatchAcceptations(match.Players.Select(m => m.UserId),
+                               new MatchAcceptations(match.Players.Select(m => m.PlayerId.Value),
                                    Enumerable.Empty<Guid>());
 
-            acceptations.Accept(userId);
+            acceptations.Accept(playerId);
 
             if (acceptations.IsAccepted())
             {
@@ -52,15 +52,15 @@ namespace Aimrank.Modules.Matches.Infrastructure.Application.Matches
                 await _database.SetJsonAsync(key, acceptations, TimeSpan.FromMinutes(1));
             }
 
-            await _eventBus.Publish(new MatchAcceptedEvent(match.Id, userId, match.Lobbies.Select(l => l.LobbyId.Value)));
+            await _eventBus.Publish(new MatchAcceptedEvent(match.Id, playerId, match.Lobbies.Select(l => l.LobbyId.Value)));
         }
 
-        public async Task<IEnumerable<Guid>> GetNotAcceptedUsersAsync(MatchId matchId)
+        public async Task<IEnumerable<Guid>> GetNotAcceptedPlayersAsync(MatchId matchId)
         {
             var key = GetKey(matchId);
 
             var acceptations = await _database.GetJsonAsync<MatchAcceptations>(key);
-            return acceptations is null ? Enumerable.Empty<Guid>() : acceptations.GetPendingUsers();
+            return acceptations is null ? Enumerable.Empty<Guid>() : acceptations.GetPendingPlayers();
         }
 
         private static string GetKey(MatchId matchId) => $"acceptations:{matchId.Value}";

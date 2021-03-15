@@ -1,5 +1,6 @@
 using Aimrank.Modules.Matches.Domain.Lobbies;
 using Aimrank.Modules.Matches.Domain.Matches;
+using Aimrank.Modules.Matches.Domain.Players;
 using System.Linq;
 using System;
 using Xunit;
@@ -23,8 +24,8 @@ namespace Aimrank.Modules.Matches.UnitTests.Domain.Matches
                 new LobbyId(Guid.NewGuid())
             });
             
-            _match.AddPlayer(Guid.NewGuid(), P1Steam, MatchTeam.T);
-            _match.AddPlayer(Guid.NewGuid(), P2Steam, MatchTeam.CT);
+            _match.AddPlayer(new PlayerId(Guid.NewGuid()), P1Steam, MatchTeam.T);
+            _match.AddPlayer(new PlayerId(Guid.NewGuid()), P2Steam, MatchTeam.CT);
         }
 
         private MatchPlayer P1 => _match?.Players.FirstOrDefault(p => p.SteamId == P1Steam);

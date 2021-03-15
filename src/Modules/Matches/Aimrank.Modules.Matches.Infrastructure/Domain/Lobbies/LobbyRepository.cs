@@ -35,7 +35,7 @@ namespace Aimrank.Modules.Matches.Infrastructure.Domain.Lobbies
         }
 
         public Task<bool> ExistsForMemberAsync(Guid userId)
-            => _context.Lobbies.AnyAsync(l => l.Members.Any(m => m.UserId == userId));
+            => _context.Lobbies.AnyAsync(l => l.Members.Any(m => m.PlayerId == userId));
 
         public void Add(Lobby lobby) => _context.Lobbies.Add(lobby);
 

@@ -5,7 +5,6 @@ using Aimrank.Modules.Matches.Application.Lobbies.CancelLobbyInvitation;
 using Aimrank.Modules.Matches.Application.Lobbies.CancelSearchingForGame;
 using Aimrank.Modules.Matches.Application.Lobbies.ChangeLobbyConfiguration;
 using Aimrank.Modules.Matches.Application.Lobbies.CreateLobby;
-using Aimrank.Modules.Matches.Application.Lobbies.InviteUserToLobby;
 using Aimrank.Modules.Matches.Application.Lobbies.LeaveLobby;
 using Aimrank.Modules.Matches.Application.Lobbies.StartSearchingForGame;
 using Aimrank.Modules.Matches.Application.Matches.AcceptMatch;
@@ -23,6 +22,7 @@ using Aimrank.Web.GraphQL.Subscriptions.Messages.Users;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Subscriptions;
 using System.Threading.Tasks;
+using Aimrank.Modules.Matches.Application.Lobbies.InvitePlayerToLobby;
 
 namespace Aimrank.Web.GraphQL.Mutations
 {
@@ -130,13 +130,13 @@ namespace Aimrank.Web.GraphQL.Mutations
         }
 
         [Authorize]
-        public async Task<InviteUserToLobbyPayload> InviteUserToLobby(InviteUserToLobbyCommand command)
+        public async Task<InviteUserToLobbyPayload> InviteUserToLobby(InvitePlayerToLobbyCommand command)
         {
             await _matchesModule.ExecuteCommandAsync(command);
 
-            await _topicEventSender.SendAsync($"LobbyInvitationCreated:{command.InvitedUserId}",
+            await _topicEventSender.SendAsync($"LobbyInvitationCreated:{command.InvitedPlayerId}",
                 new LobbyInvitationCreatedMessage(command.LobbyId, _executionContextAccessor.UserId,
-                    command.InvitedUserId));
+                    command.InvitedPlayerId));
 
             return new InviteUserToLobbyPayload();
         }

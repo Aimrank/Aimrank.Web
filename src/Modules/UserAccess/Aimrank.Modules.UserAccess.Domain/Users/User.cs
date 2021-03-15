@@ -7,18 +7,17 @@ namespace Aimrank.Modules.UserAccess.Domain.Users
     public class User : Entity, IAggregateRoot
     {
         public UserId Id { get; }
+        public string Email { get; }
+        public string Username { get; }
         private string _password;
-        private string _username;
-        private string _email;
-        private string _steamId;
 
         private User() {}
 
         private User(UserId id, string email, string username, string password)
         {
             Id = id;
-            _email = email;
-            _username = username;
+            Email = email;
+            Username = username;
             _password = password;
         }
 
@@ -33,14 +32,6 @@ namespace Aimrank.Modules.UserAccess.Domain.Users
             await BusinessRules.CheckAsync(new UsernameMustBeUniqueRule(userRepository, username));
 
             return new User(id, email, username, password);
-        }
-        
-        public async Task SetSteamIdAsync(string steamId, IUserRepository userRepository)
-        {
-            BusinessRules.Check(new SteamIdMustBeValidRule(steamId));
-            await BusinessRules.CheckAsync(new SteamIdMustBeUniqueRule(userRepository, steamId, Id));
-
-            _steamId = steamId;
         }
     }
 }

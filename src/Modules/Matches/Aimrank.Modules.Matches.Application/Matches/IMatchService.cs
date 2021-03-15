@@ -7,7 +7,7 @@ namespace Aimrank.Modules.Matches.Application.Matches
 {
     public interface IMatchService
     {
-        Task AcceptMatchAsync(Match match, Guid userId);
-        Task<IEnumerable<Guid>> GetNotAcceptedUsersAsync(MatchId matchId);
+        Task AcceptMatchAsync(Match match, Guid playerId);
+        Task<IEnumerable<Guid>> GetNotAcceptedPlayersAsync(MatchId matchId);
     }
 }

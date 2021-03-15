@@ -1,24 +1,24 @@
 using Aimrank.Common.Domain;
+using Aimrank.Modules.Matches.Domain.Players;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace Aimrank.Modules.Matches.Domain.Lobbies.Rules
 {
-    public class InvitationMustExistForUserRule : IBusinessRule
+    public class InvitationMustExistForPlayerRule : IBusinessRule
     {
         private readonly IEnumerable<LobbyInvitation> _invitations;
-        private readonly Guid _userId;
+        private readonly PlayerId _playerId;
 
-        public InvitationMustExistForUserRule(IEnumerable<LobbyInvitation> invitations, Guid userId)
+        public InvitationMustExistForPlayerRule(IEnumerable<LobbyInvitation> invitations, PlayerId playerId)
         {
             _invitations = invitations;
-            _userId = userId;
+            _playerId = playerId;
         }
 
         public string Message => "Invitation does not exist";
         public string Code => "invitation_not_found";
 
-        public bool IsBroken() => _invitations.All(i => i.InvitedUserId != _userId);
+        public bool IsBroken() => _invitations.All(i => i.InvitedPlayerId != _playerId);
     }
 }

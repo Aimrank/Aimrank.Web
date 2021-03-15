@@ -1,6 +1,6 @@
 using Aimrank.Common.Domain;
 
-namespace Aimrank.Modules.UserAccess.Domain.Users.Rules
+namespace Aimrank.Modules.Matches.Domain.Players.Rules
 {
     public class SteamIdMustBeValidRule : IBusinessRule
     {

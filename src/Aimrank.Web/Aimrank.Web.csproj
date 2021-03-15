@@ -16,7 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Aimrank.Infrastructure\Aimrank.Infrastructure.csproj" />
       <ProjectReference Include="..\Database\Aimrank.Database.Migrator\Aimrank.Database.Migrator.csproj" />
     </ItemGroup>
 

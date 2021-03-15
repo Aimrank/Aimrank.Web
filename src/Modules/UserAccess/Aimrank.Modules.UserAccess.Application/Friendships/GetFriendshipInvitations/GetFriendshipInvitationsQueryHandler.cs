@@ -46,11 +46,7 @@ namespace Aimrank.Modules.UserAccess.Application.Friendships.GetFriendshipInvita
                     CASE
                         WHEN [U1].[Id] = @UserId THEN [U2].[Username]
                         WHEN [U2].[Id] = @UserId THEN [U1].[Username]
-                    END AS [Username],
-                    CASE
-                        WHEN [U1].[Id] = @UserId THEN [U2].[SteamId]
-                        WHEN [U2].[Id] = @UserId THEN [U1].[SteamId]
-                    END AS [SteamId]
+                    END AS [Username]
                 FROM [users].[Friendships] AS [F]
                 INNER JOIN [users].[Users] AS [U1] ON [U1].[Id] = [F].[User1Id]
                 INNER JOIN [users].[Users] AS [U2] ON [U2].[Id] = [F].[User2Id]

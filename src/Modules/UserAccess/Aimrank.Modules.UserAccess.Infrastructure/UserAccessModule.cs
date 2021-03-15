@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aimrank.Modules.UserAccess.Infrastructure
 {
-    public class UserAccessModule
+    public class UserAccessModule : IUserAccessModule
     {
         public async Task ExecuteCommandAsync(ICommand command)
         {

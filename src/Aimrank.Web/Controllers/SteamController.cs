@@ -1,7 +1,7 @@
 using Aimrank.Common.Application;
 using Aimrank.Common.Domain;
-using Aimrank.Modules.UserAccess.Application.Contracts;
-using Aimrank.Modules.UserAccess.Application.Users.UpdateSteamDetails;
+using Aimrank.Modules.Matches.Application.Contracts;
+using Aimrank.Modules.Matches.Application.Players.CreateOrUpdatePlayer;
 using Aimrank.Web.Contracts;
 using Aimrank.Web.Steam;
 using AspNet.Security.OpenId.Steam;
@@ -18,15 +18,15 @@ namespace Aimrank.Web.Controllers
     [Route("api/[controller]")]
     public class SteamController : Controller
     {
-        private readonly IUserAccessModule _userAccessModule;
         private readonly IExecutionContextAccessor _executionContextAccessor;
+        private readonly IMatchesModule _matchesModule;
 
         public SteamController(
-            IUserAccessModule userAccessModule,
-            IExecutionContextAccessor executionContextAccessor)
+            IExecutionContextAccessor executionContextAccessor,
+            IMatchesModule matchesModule)
         {
-            _userAccessModule = userAccessModule;
             _executionContextAccessor = executionContextAccessor;
+            _matchesModule = matchesModule;
         }
 
         [Authorize(AuthenticationSchemes = SteamAuthenticationDefaults.AuthenticationScheme)]
@@ -45,8 +45,8 @@ namespace Aimrank.Web.Controllers
             {
                 var data = HttpContext.GetSteamData();
 
-                var command = new UpdateSteamDetailsCommand(Guid.Parse(userId), data.Id);
-                await _userAccessModule.ExecuteCommandAsync(command);
+                var command = new CreateOrUpdatePlayerCommand(Guid.Parse(userId), data.Id);
+                await _matchesModule.ExecuteCommandAsync(command);
             }
             catch (BusinessRuleValidationException exception)
             {

@@ -2,6 +2,7 @@ using Aimrank.Common.Application;
 using Aimrank.Modules.Matches.Application.Contracts;
 using Aimrank.Modules.Matches.Domain.Lobbies;
 using Aimrank.Modules.Matches.Domain.Matches;
+using Aimrank.Modules.Matches.Domain.Players;
 using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
@@ -25,7 +26,7 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.ChangeLobbyConfiguration
         {
             var lobby = await _lobbyRepository.GetByIdAsync(new LobbyId(request.LobbyId));
             
-            lobby.ChangeConfiguration(_executionContextAccessor.UserId, new LobbyConfiguration(
+            lobby.ChangeConfiguration(new PlayerId(_executionContextAccessor.UserId), new LobbyConfiguration(
                 request.Name,
                 request.Map,
                 (MatchMode) request.Mode));

@@ -5,14 +5,14 @@ namespace Aimrank.Web.GraphQL.Subscriptions.Messages.Users
     public class LobbyInvitationCreatedMessage
     {
         public Guid LobbyId { get; }
-        public Guid InvitingUserId { get; }
-        public Guid InvitedUserId { get; }
+        public Guid InvitingPlayerId { get; }
+        public Guid InvitedPlayerId { get; }
 
-        public LobbyInvitationCreatedMessage(Guid lobbyId, Guid invitingUserId, Guid invitedUserId)
+        public LobbyInvitationCreatedMessage(Guid lobbyId, Guid invitingPlayerId, Guid invitedPlayerId)
         {
             LobbyId = lobbyId;
-            InvitingUserId = invitingUserId;
-            InvitedUserId = invitedUserId;
+            InvitingPlayerId = invitingPlayerId;
+            InvitedPlayerId = invitedPlayerId;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Aimrank.Common.Domain;
 using Aimrank.Modules.Matches.Domain.Lobbies;
 using Aimrank.Modules.Matches.Domain.Matches.Events;
+using Aimrank.Modules.Matches.Domain.Players;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -51,9 +52,9 @@ namespace Aimrank.Modules.Matches.Domain.Matches
             Lobbies = lobbies.Select(l => new MatchLobby(l));
         }
 
-        public void AddPlayer(Guid userId, string steamId, MatchTeam team, int rating = 1200)
+        public void AddPlayer(PlayerId playerId, string steamId, MatchTeam team, int rating = 1200)
         {
-            var player = new MatchPlayer(userId, steamId, team, rating);
+            var player = new MatchPlayer(playerId, steamId, team, rating);
             
             _players.Add(player);
         }

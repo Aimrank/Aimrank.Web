@@ -6,38 +6,38 @@ namespace Aimrank.Modules.Matches.Infrastructure.Application.Matches
 {
     internal class MatchAcceptations
     {
-        private readonly HashSet<Guid> _users;
-        private readonly HashSet<Guid> _usersAccepted;
+        private readonly HashSet<Guid> _players;
+        private readonly HashSet<Guid> _playersAccepted;
 
-        public IEnumerable<Guid> Users => _users;
+        public IEnumerable<Guid> Players => _players;
 
-        public IEnumerable<Guid> UsersAccepted => _usersAccepted;
+        public IEnumerable<Guid> PlayersAccepted => _playersAccepted;
 
         public MatchAcceptations(
-            IEnumerable<Guid> users,
-            IEnumerable<Guid> usersAccepted)
+            IEnumerable<Guid> players,
+            IEnumerable<Guid> playersAccepted)
         {
-            _users = new HashSet<Guid>(users);
-            _usersAccepted = new HashSet<Guid>(usersAccepted);
+            _players = new HashSet<Guid>(players);
+            _playersAccepted = new HashSet<Guid>(playersAccepted);
         }
 
-        public void Accept(Guid userId)
+        public void Accept(Guid playerId)
         {
-            if (_usersAccepted.Contains(userId))
+            if (_playersAccepted.Contains(playerId))
             {
                 return;
             }
             
-            if (!_users.Contains(userId))
+            if (!_players.Contains(playerId))
             {
                 throw new MatchAcceptationException();
             }
 
-            _usersAccepted.Add(userId);
+            _playersAccepted.Add(playerId);
         }
 
-        public bool IsAccepted() => _users.Count == _usersAccepted.Count;
+        public bool IsAccepted() => _players.Count == _playersAccepted.Count;
 
-        public IEnumerable<Guid> GetPendingUsers() => _users.Except(_usersAccepted);
+        public IEnumerable<Guid> GetPendingPlayers() => _players.Except(_playersAccepted);
     }
 }

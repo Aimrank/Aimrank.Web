@@ -49,11 +49,11 @@ namespace Aimrank.Modules.Matches.Application.Matches.TimeoutReadyMatch
             
             var lobbies = await _lobbyRepository.BrowseByIdAsync(match.Lobbies.Select(l => l.LobbyId));
 
-            var notAcceptedUsers = new HashSet<Guid>(await _matchService.GetNotAcceptedUsersAsync(match.Id));
+            var notAcceptedPlayers = new HashSet<Guid>(await _matchService.GetNotAcceptedPlayersAsync(match.Id));
 
             foreach (var lobby in lobbies)
             {
-                if (lobby.Members.Any(m => notAcceptedUsers.Contains(m.UserId)))
+                if (lobby.Members.Any(m => notAcceptedPlayers.Contains(m.PlayerId)))
                 {
                     lobby.Open();
                 }

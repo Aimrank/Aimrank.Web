@@ -1,6 +1,6 @@
 using Aimrank.Modules.UserAccess.Domain.Users;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aimrank.Modules.UserAccess.Infrastructure.Domain.Users
 {
@@ -12,10 +12,9 @@ namespace Aimrank.Modules.UserAccess.Infrastructure.Domain.Users
 
             builder.HasKey(u => u.Id);
 
-            builder.Property<string>("_password").HasColumnName("Password");
-            builder.Property<string>("_username").HasColumnName("Username");
-            builder.Property<string>("_email").HasColumnName("Email");
-            builder.Property<string>("_steamId").HasColumnName("SteamId").HasMaxLength(17);
+            builder.Property(u => u.Email).HasColumnName("Email").IsRequired().HasMaxLength(255);
+            builder.Property(u => u.Username).HasColumnName("Username").IsRequired();
+            builder.Property<string>("_password").HasColumnName("Password").IsRequired();
 
             builder.Ignore(u => u.DomainEvents);
         }

@@ -15,13 +15,11 @@ namespace Aimrank.Web.GraphQL.Queries.Models
     public class User
     {
         public Guid Id { get; }
-        public string SteamId { get; }
         public string Username { get; }
 
         public User(UserDto dto)
         {
             Id = dto.Id;
-            SteamId = dto.SteamId;
             Username = dto.Username;
         }
 

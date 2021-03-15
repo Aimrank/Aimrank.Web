@@ -1,6 +1,7 @@
 using Aimrank.Common.Application;
 using Aimrank.Modules.Matches.Application.Contracts;
 using Aimrank.Modules.Matches.Domain.Lobbies;
+using Aimrank.Modules.Matches.Domain.Players;
 using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
@@ -24,7 +25,7 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.StartSearchingForGame
         {
             var lobby = await _lobbyRepository.GetByIdAsync(new LobbyId(request.LobbyId));
             
-            lobby.StartSearching(_executionContextAccessor.UserId);
+            lobby.StartSearching(new PlayerId(_executionContextAccessor.UserId));
             
             _lobbyRepository.Update(lobby);
             

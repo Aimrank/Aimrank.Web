@@ -25,7 +25,7 @@ namespace Aimrank.Modules.Matches.Application.Matches.GetFinishedMatches
 
             var sqlParams = new
             {
-	            request.Filter.UserId,
+	            request.Filter.PlayerId,
 	            request.Filter.Map,
 	            request.Filter.Mode,
 	            Offset = request.Pagination.Skip,
@@ -37,7 +37,7 @@ namespace Aimrank.Modules.Matches.Application.Matches.GetFinishedMatches
 				FROM [matches].[Matches] AS [MI]
 				INNER JOIN [matches].[MatchesPlayers] AS [PI] on [MI].[Id] = [PI].[MatchId]
 				WHERE
-					[PI].[UserId] = @UserId AND
+					[PI].[PlayerId] = @PlayerId AND
 					[MI].[Status] = @Status
 					{(request.Filter.Mode.HasValue ? "AND [MI].[Mode] = @Mode " : "")}
 					{(!string.IsNullOrEmpty(request.Filter.Map) ? "AND [MI].[Map] LIKE @Map" : "")}";
@@ -54,14 +54,14 @@ namespace Aimrank.Modules.Matches.Application.Matches.GetFinishedMatches
 					[M].[CreatedAt] AS [CreatedAt],
 					[M].[FinishedAt] AS [FinishedAt],
 					[M].[Map] AS [Map],
-					[P].[UserId] AS [User_Id],
-					[P].[Team] AS [User_Team],
-					[P].[Stats_Kills] AS [User_Kills],
-					[P].[Stats_Assists] AS [User_Assists],
-					[P].[Stats_Deaths] AS [User_Deaths],
-					[P].[Stats_Hs] AS [User_Hs],
-					[P].[RatingStart] AS [User_RatingStart],
-					[P].[RatingEnd] AS [User_RatingEnd]
+					[P].[PlayerId] AS [Player_Id],
+					[P].[Team] AS [Player_Team],
+					[P].[Stats_Kills] AS [Player_Kills],
+					[P].[Stats_Assists] AS [Player_Assists],
+					[P].[Stats_Deaths] AS [Player_Deaths],
+					[P].[Stats_Hs] AS [Player_Hs],
+					[P].[RatingStart] AS [Player_RatingStart],
+					[P].[RatingEnd] AS [Player_RatingEnd]
 				FROM [matches].[Matches] AS [M]
 				INNER JOIN [matches].[MatchesPlayers] AS [P] ON [M].[Id] = [P].[MatchId]
 				WHERE [M].[Id] IN (
@@ -91,14 +91,14 @@ namespace Aimrank.Modules.Matches.Application.Matches.GetFinishedMatches
 
 						var playerDto = new MatchPlayerDto
 						{
-							Id = player.User_Id,
-							Team = player.User_Team,
-							Kills = player.User_Kills,
-							Assists = player.User_Assists,
-							Deaths = player.User_Deaths,
-							Hs = player.User_Hs,
-							RatingStart = player.User_RatingStart,
-							RatingEnd = player.User_RatingEnd
+							Id = player.Player_Id,
+							Team = player.Player_Team,
+							Kills = player.Player_Kills,
+							Assists = player.Player_Assists,
+							Deaths = player.Player_Deaths,
+							Hs = player.Player_Hs,
+							RatingStart = player.Player_RatingStart,
+							RatingEnd = player.Player_RatingEnd
 						};
 
 						if (playerDto.Team == 2)
@@ -113,7 +113,7 @@ namespace Aimrank.Modules.Matches.Application.Matches.GetFinishedMatches
 						return result;
 					},
 					sqlParams,
-					splitOn: "User_Id");
+					splitOn: "Player_Id");
 	        }
 
             return new PaginationDto<MatchDto>(lookup.Values, count);

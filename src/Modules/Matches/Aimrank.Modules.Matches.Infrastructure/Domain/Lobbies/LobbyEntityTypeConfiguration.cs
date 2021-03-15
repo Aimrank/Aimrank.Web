@@ -1,4 +1,5 @@
 using Aimrank.Modules.Matches.Domain.Lobbies;
+using Aimrank.Modules.Matches.Domain.Players;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,9 +27,10 @@ namespace Aimrank.Modules.Matches.Infrastructure.Domain.Lobbies
             builder.OwnsMany(l => l.Members, b =>
             {
                 b.ToTable("LobbiesMembers", "matches");
-                b.HasKey(m => m.UserId);
-                b.Property(m => m.UserId).HasColumnName("UserId").IsRequired();
+                b.HasKey(m => m.PlayerId);
+                b.Property(m => m.PlayerId).HasColumnName("PlayerId").IsRequired();
                 b.Property(m => m.Role).HasColumnName("Role");
+                b.HasOne<Player>().WithOne().HasForeignKey<LobbyMember>(m => m.PlayerId);
                 b.WithOwner();
             });
 
@@ -36,10 +38,12 @@ namespace Aimrank.Modules.Matches.Infrastructure.Domain.Lobbies
             {
                 b.ToTable("LobbiesInvitations", "matches");
                 b.Property<LobbyId>("LobbyId");
-                b.Property(i => i.InvitingUserId).HasColumnName("InvitingUserId");
-                b.Property(i => i.InvitedUserId).HasColumnName("InvitedUserId").IsRequired();
+                b.Property(i => i.InvitingPlayerId).HasColumnName("InvitingPlayerId");
+                b.Property(i => i.InvitedPlayerId).HasColumnName("InvitedPlayerId").IsRequired();
                 b.Property(i => i.CreatedAt).HasColumnName("CreatedAt");
-                b.HasKey("LobbyId", "InvitingUserId", "InvitedUserId");
+                b.HasKey("LobbyId", "InvitingPlayerId", "InvitedPlayerId");
+                b.HasOne<Player>().WithMany().HasForeignKey(i => i.InvitedPlayerId).OnDelete(DeleteBehavior.Restrict);
+                b.HasOne<Player>().WithMany().HasForeignKey(i => i.InvitingPlayerId).OnDelete(DeleteBehavior.Restrict);
                 b.WithOwner();
             });
             

@@ -9,22 +9,22 @@ namespace Aimrank.Web.GraphQL.Queries.Models
 {
     public class LobbyInvitation
     {
-        private readonly Guid _invitingUserId;
-        private readonly Guid _invitedUserId;
+        private readonly Guid _invitingPlayerId;
+        private readonly Guid _invitedPlayerId;
         
         public DateTime CreatedAt { get; }
 
         public LobbyInvitation(LobbyInvitationDto dto)
         {
-            _invitingUserId = dto.InvitingUserId;
-            _invitedUserId = dto.InvitedUserId;
+            _invitingPlayerId = dto.InvitingPlayerId;
+            _invitedPlayerId = dto.InvitedPlayerId;
             CreatedAt = dto.CreatedAt;
         }
 
         public Task<User> GetInvitingUser([DataLoader] UserDataLoader loader)
-            => loader.LoadAsync(_invitingUserId, CancellationToken.None);
+            => loader.LoadAsync(_invitingPlayerId, CancellationToken.None);
 
         public Task<User> GetInvitedUser([DataLoader] UserDataLoader loader)
-            => loader.LoadAsync(_invitedUserId, CancellationToken.None);
+            => loader.LoadAsync(_invitedPlayerId, CancellationToken.None);
     }
 }

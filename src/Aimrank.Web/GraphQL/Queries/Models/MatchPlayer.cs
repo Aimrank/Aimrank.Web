@@ -9,7 +9,7 @@ namespace Aimrank.Web.GraphQL.Queries.Models
 {
     public class MatchPlayer
     {
-        private readonly Guid _userId;
+        private readonly Guid _playerId;
         
         public int Team { get; }
         public int Kills { get; }
@@ -21,7 +21,7 @@ namespace Aimrank.Web.GraphQL.Queries.Models
 
         public MatchPlayer(MatchPlayerDto dto)
         {
-            _userId = dto.Id;
+            _playerId = dto.Id;
             Team = dto.Team;
             Kills = dto.Kills;
             Assists = dto.Assists;
@@ -32,6 +32,6 @@ namespace Aimrank.Web.GraphQL.Queries.Models
         }
 
         public Task<User> GetUser([DataLoader] UserDataLoader loader)
-            => loader.LoadAsync(_userId, CancellationToken.None);
+            => loader.LoadAsync(_playerId, CancellationToken.None);
     }
 }

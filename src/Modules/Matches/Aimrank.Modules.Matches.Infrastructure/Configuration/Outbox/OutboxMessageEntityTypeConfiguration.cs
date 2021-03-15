@@ -8,7 +8,7 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration.Outbox
     {
         public void Configure(EntityTypeBuilder<OutboxMessage> builder)
         {
-            builder.ToTable("OutboxMessages", "aimrank");
+            builder.ToTable("OutboxMessages", "matches");
             builder.HasKey(x => x.Id);
             builder.Property<DateTime>("OccurredAt");
             builder.Property<string>("Type").IsRequired().HasMaxLength(255);

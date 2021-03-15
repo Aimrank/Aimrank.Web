@@ -1,35 +1,36 @@
 using Aimrank.Common.Application;
 using Aimrank.Modules.Matches.Application.Contracts;
 using Aimrank.Modules.Matches.Domain.Lobbies;
+using Aimrank.Modules.Matches.Domain.Players;
 using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Modules.Matches.Application.Lobbies.InviteUserToLobby
+namespace Aimrank.Modules.Matches.Application.Lobbies.InvitePlayerToLobby
 {
-    internal class InviteUserToLobbyCommandHandler : ICommandHandler<InviteUserToLobbyCommand>
+    internal class InvitePlayerToLobbyCommandHandler : ICommandHandler<InvitePlayerToLobbyCommand>
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly ILobbyRepository _lobbyRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IPlayerRepository _playerRepository;
 
-        public InviteUserToLobbyCommandHandler(
+        public InvitePlayerToLobbyCommandHandler(
             IExecutionContextAccessor executionContextAccessor,
             ILobbyRepository lobbyRepository,
-            IUserRepository userRepository)
+            IPlayerRepository playerRepository)
         {
             _executionContextAccessor = executionContextAccessor;
             _lobbyRepository = lobbyRepository;
-            _userRepository = userRepository;
+            _playerRepository = playerRepository;
         }
 
-        public async Task<Unit> Handle(InviteUserToLobbyCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(InvitePlayerToLobbyCommand request, CancellationToken cancellationToken)
         {
             var lobby = await _lobbyRepository.GetByIdAsync(new LobbyId(request.LobbyId));
-            var invitingUser = await _userRepository.GetByIdAsync(new UserId(_executionContextAccessor.UserId));
-            var invitedUser = await _userRepository.GetByIdAsync(new UserId(request.InvitedUserId));
+            var invitingPlayer = await _playerRepository.GetByIdAsync(new PlayerId(_executionContextAccessor.UserId));
+            var invitedPlayer = await _playerRepository.GetByIdAsync(new PlayerId(request.InvitedPlayerId));
             
-            lobby.Invite(invitingUser, invitedUser);
+            lobby.Invite(invitingPlayer, invitedPlayer);
             
             _lobbyRepository.Update(lobby);
             

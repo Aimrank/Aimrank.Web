@@ -3,8 +3,6 @@ using Aimrank.Common.Application.Exceptions;
 using Aimrank.Modules.UserAccess.Domain.Users;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Aimrank.Modules.UserAccess.Infrastructure.Domain.Users
@@ -19,11 +17,6 @@ namespace Aimrank.Modules.UserAccess.Infrastructure.Domain.Users
             _context = context;
             _sqlConnectionFactory = sqlConnectionFactory;
         }
-
-        public async Task<IEnumerable<User>> BrowseByIdAsync(IEnumerable<UserId> ids)
-            => await _context.Users.AsNoTracking()
-                .Where(u => ids.Contains(u.Id))
-                .ToListAsync();
 
         public async Task<User> GetByIdAsync(UserId id)
         {
@@ -52,16 +45,6 @@ namespace Aimrank.Modules.UserAccess.Infrastructure.Domain.Users
             return count > 0;
         }
 
-        public async Task<bool> ExistsSteamIdAsync(string steamId, UserId userId)
-        {
-            var connection = _sqlConnectionFactory.GetOpenConnection();
-            const string sql = "SELECT COUNT (*) FROM [users].[Users] AS [U] WHERE [U].[Id] <> @UserId AND [U].[SteamId] = @SteamId;";
-            var count = await connection.ExecuteScalarAsync<int>(sql, new {UserId = userId, SteamId = steamId});
-            return count > 0;
-        }
-
         public void Add(User user) => _context.Users.Add(user);
-        
-        public void Update(User user) => _context.Users.Update(user);
     }
 }

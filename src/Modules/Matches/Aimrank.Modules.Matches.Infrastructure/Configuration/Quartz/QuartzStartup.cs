@@ -14,7 +14,7 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration.Quartz
         {
             var schedulerConfiguration = new NameValueCollection
             {
-                {"quartz.scheduler.instanceName", "Aimrank"}
+                {"quartz.scheduler.instanceName", "Aimrank.Matches"}
             };
 
             var schedulerFactory = new StdSchedulerFactory(schedulerConfiguration);

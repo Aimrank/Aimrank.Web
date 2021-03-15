@@ -1,25 +1,25 @@
 using Aimrank.Common.Domain;
+using Aimrank.Modules.Matches.Domain.Players;
 using System.Collections.Generic;
-using System;
 
 namespace Aimrank.Modules.Matches.Domain.Lobbies
 {
     public class LobbyMember : ValueObject
     {
-        public Guid UserId { get; }
+        public PlayerId PlayerId { get; }
         public LobbyMemberRole Role { get; }
 
-        public LobbyMember(Guid userId, LobbyMemberRole role)
+        public LobbyMember(PlayerId playerId, LobbyMemberRole role)
         {
-            UserId = userId;
+            PlayerId = playerId;
             Role = role;
         }
 
-        public LobbyMember PromoteToLeader() => new(UserId, LobbyMemberRole.Leader);
+        public LobbyMember PromoteToLeader() => new(PlayerId, LobbyMemberRole.Leader);
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return UserId;
+            yield return PlayerId;
             yield return Role;
         }
     }

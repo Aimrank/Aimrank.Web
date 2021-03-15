@@ -1,5 +1,6 @@
 using Aimrank.Modules.Matches.Domain.Lobbies;
 using Aimrank.Modules.Matches.Domain.Matches;
+using Aimrank.Modules.Matches.Domain.Players;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,14 +29,15 @@ namespace Aimrank.Modules.Matches.Infrastructure.Domain.Matches
             {
                 b.ToTable("MatchesPlayers", "matches");
                 b.Property<MatchId>("MatchId");
-                b.Property(p => p.UserId).HasColumnName("UserId").IsRequired();
+                b.Property(p => p.PlayerId).HasColumnName("PlayerId").IsRequired();
                 b.Property(p => p.SteamId).HasColumnName("SteamId").IsRequired().HasMaxLength(17);
                 b.Property(p => p.Team).HasColumnName("Team");
                 b.Property(p => p.RatingStart).HasColumnName("RatingStart");
                 b.Property(p => p.RatingEnd).HasColumnName("RatingEnd");
                 b.Property(p => p.IsLeaver).HasColumnName("IsLeaver");
-                b.HasKey("MatchId", "UserId");
+                b.HasKey("MatchId", "PlayerId");
                 b.WithOwner().HasForeignKey("MatchId");
+                b.HasOne<Player>().WithMany().HasForeignKey(p => p.PlayerId);
 
                 b.OwnsOne(p => p.Stats, x =>
                     {

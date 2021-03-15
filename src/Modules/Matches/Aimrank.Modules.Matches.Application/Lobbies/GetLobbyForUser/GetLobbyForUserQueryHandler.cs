@@ -32,7 +32,7 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.GetLobbyForUser
 
                 SELECT @id = [LobbyId]
                 FROM [matches].[LobbiesMembers]
-                WHERE [UserId] = @UserId;
+                WHERE [PlayerId] = @PlayerId;
 
                 SELECT
                     [L].[Id] AS [Id],
@@ -40,7 +40,7 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.GetLobbyForUser
                     [L].[Configuration_Map] AS [Map],
                     [L].[Configuration_Name] AS [Name],
                     [L].[Configuration_Mode] AS [Mode],
-                    [M].[UserId] AS [UserId],
+                    [M].[PlayerId] AS [PlayerId],
                     CASE [M].[Role]
                         WHEN 0 THEN 0
                         WHEN 1 THEN 1
@@ -75,8 +75,8 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.GetLobbyForUser
 
                     return lobby;
                 },
-                new {_executionContextAccessor.UserId},
-                splitOn: "Map,UserId");
+                new {PlayerId = _executionContextAccessor.UserId},
+                splitOn: "Map,PlayerId");
 
             return lookup.Values.FirstOrDefault();
         }

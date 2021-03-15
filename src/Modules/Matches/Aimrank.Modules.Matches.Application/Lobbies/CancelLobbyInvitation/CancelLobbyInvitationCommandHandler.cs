@@ -1,6 +1,7 @@
 using Aimrank.Common.Application;
 using Aimrank.Modules.Matches.Application.Contracts;
 using Aimrank.Modules.Matches.Domain.Lobbies;
+using Aimrank.Modules.Matches.Domain.Players;
 using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
@@ -11,24 +12,24 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.CancelLobbyInvitation
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly ILobbyRepository _lobbyRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IPlayerRepository _playerRepository;
 
         public CancelLobbyInvitationCommandHandler(
             IExecutionContextAccessor executionContextAccessor,
             ILobbyRepository lobbyRepository,
-            IUserRepository userRepository)
+            IPlayerRepository playerRepository)
         {
             _executionContextAccessor = executionContextAccessor;
             _lobbyRepository = lobbyRepository;
-            _userRepository = userRepository;
+            _playerRepository = playerRepository;
         }
 
         public async Task<Unit> Handle(CancelLobbyInvitationCommand request, CancellationToken cancellationToken)
         {
             var lobby = await _lobbyRepository.GetByIdAsync(new LobbyId(request.LobbyId));
-            var invitedUser = await _userRepository.GetByIdAsync(new UserId(_executionContextAccessor.UserId));
+            var invitedPlayer = await _playerRepository.GetByIdAsync(new PlayerId(_executionContextAccessor.UserId));
             
-            lobby.CancelInvitation(invitedUser);
+            lobby.CancelInvitation(invitedPlayer);
             
             _lobbyRepository.Update(lobby);
             

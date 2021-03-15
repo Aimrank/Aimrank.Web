@@ -24,9 +24,9 @@ namespace Aimrank.Web.GraphQL.Subscriptions
         // User
         
         [SubscribeAndResolve]
-        public ValueTask<ISourceStream<LobbyInvitationCreatedMessage>> LobbyInvitationCreated(Guid userId)
+        public ValueTask<ISourceStream<LobbyInvitationCreatedMessage>> LobbyInvitationCreated(Guid playerId)
             => _topicEventReceiver.SubscribeAsync<string, LobbyInvitationCreatedMessage>(
-                $"LobbyInvitationCreated:{userId}");
+                $"LobbyInvitationCreated:{playerId}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<FriendshipInvitationCreatedMessage>> FriendshipInvitationCreated(Guid userId)
@@ -64,8 +64,8 @@ namespace Aimrank.Web.GraphQL.Subscriptions
             => _topicEventReceiver.SubscribeAsync<string, MatchFinishedEvent>($"MatchFinished:{lobbyId}");
         
         [SubscribeAndResolve]
-        public ValueTask<ISourceStream<MatchPlayerLeftEvent>> MatchPlayerLeft(Guid userId)
-            => _topicEventReceiver.SubscribeAsync<string, MatchPlayerLeftEvent>($"MatchPlayerLeft:{userId}");
+        public ValueTask<ISourceStream<MatchPlayerLeftEvent>> MatchPlayerLeft(Guid playerId)
+            => _topicEventReceiver.SubscribeAsync<string, MatchPlayerLeftEvent>($"MatchPlayerLeft:{playerId}");
         
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<InvitationAcceptedMessage>> LobbyInvitationAccepted(Guid lobbyId)

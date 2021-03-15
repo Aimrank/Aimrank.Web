@@ -1,10 +1,11 @@
 using Aimrank.Common.Application.Data;
 using Aimrank.Modules.Matches.Domain.Matches;
+using Aimrank.Modules.Matches.Domain.Players;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using System;
 
 namespace Aimrank.Modules.Matches.Infrastructure.Domain.Matches
 {
@@ -19,7 +20,7 @@ namespace Aimrank.Modules.Matches.Infrastructure.Domain.Matches
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<Dictionary<Guid, int>> BrowsePlayersRatingAsync(IEnumerable<Guid> ids, MatchMode mode)
+        public async Task<Dictionary<PlayerId, int>> BrowsePlayersRatingAsync(IEnumerable<PlayerId> ids, MatchMode mode)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
@@ -37,9 +38,9 @@ namespace Aimrank.Modules.Matches.Infrastructure.Domain.Matches
                     [M].[Status] = @Status AND
                     [P].[UserId] IN @Users;";
 
-            var result = new Dictionary<Guid, int>();
+            var result = new Dictionary<PlayerId, int>();
             
-            await connection.QueryAsync<Guid, int, int>(sql,
+            await connection.QueryAsync<PlayerId, int, int>(sql,
                 (userId, rating) =>
                 {
                     result[userId] = rating;
@@ -49,7 +50,7 @@ namespace Aimrank.Modules.Matches.Infrastructure.Domain.Matches
                 {
                     Mode = mode,
                     Status = MatchStatus.Finished,
-                    Users = ids
+                    Users = ids.Select(id => id.Value)
                 },
                 splitOn: "Rating");
 

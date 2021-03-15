@@ -16,14 +16,14 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration.Processing
                 MatchReadyDomainEvent e => new MatchReadyEvent(e.Match.Id, e.Map, e.Match.Lobbies.Select(l => l.LobbyId.Value)),
                 MatchStartingDomainEvent e => new MatchStartingEvent(e.Match.Id, e.Match.Lobbies.Select(l => l.LobbyId.Value)),
                 MatchStartedDomainEvent e => new MatchStartedEvent(e.Match.Id, e.Map, e.Address, (int) e.Match.Mode,
-                    e.Match.Players.Select(p => p.UserId),
+                    e.Match.Players.Select(p => p.PlayerId.Value),
                     e.Match.Lobbies.Select(l => l.LobbyId.Value)),
                 MatchFinishedDomainEvent e => new MatchFinishedEvent(e.Match.Id, e.ScoreT, e.ScoreCT,
                     e.Lobbies.Select(l => l.Value)),
-                MatchPlayerLeftDomainEvent e => new MatchPlayerLeftEvent(e.Player.UserId),
+                MatchPlayerLeftDomainEvent e => new MatchPlayerLeftEvent(e.Player.PlayerId),
                 LobbyStatusChangedDomainEvent e => new LobbyStatusChangedEvent(e.Lobby.Id, (int) e.Lobby.Status),
-                MemberLeftDomainEvent e => new MemberLeftEvent(e.Lobby.Id, e.Member.UserId),
-                MemberRoleChangedDomainEvent e => new MemberRoleChangedEvent(e.Lobby.Id, e.Member.UserId,
+                MemberLeftDomainEvent e => new MemberLeftEvent(e.Lobby.Id, e.Member.PlayerId),
+                MemberRoleChangedDomainEvent e => new MemberRoleChangedEvent(e.Lobby.Id, e.Member.PlayerId,
                     (int) e.Member.Role),
                 _ => null
             };

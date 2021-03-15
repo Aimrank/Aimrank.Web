@@ -9,17 +9,17 @@ namespace Aimrank.Web.GraphQL.Queries.Models
 {
     public class LobbyMember
     {
-        private readonly Guid _userId;
+        private readonly Guid _playerId;
         
         public bool IsLeader { get; }
 
         public LobbyMember(LobbyMemberDto dto)
         {
-            _userId = dto.UserId;
+            _playerId = dto.PlayerId;
             IsLeader = dto.IsLeader;
         }
 
         public Task<User> GetUser([DataLoader] UserDataLoader loader)
-            => loader.LoadAsync(_userId, CancellationToken.None);
+            => loader.LoadAsync(_playerId, CancellationToken.None);
     }
 }

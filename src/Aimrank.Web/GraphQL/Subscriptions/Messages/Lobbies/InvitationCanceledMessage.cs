@@ -5,12 +5,12 @@ namespace Aimrank.Web.GraphQL.Subscriptions.Messages.Lobbies
     public class InvitationCanceledMessage
     {
         public Guid LobbyId { get; }
-        public Guid InvitedUserId { get; }
+        public Guid InvitedPlayerId { get; }
 
-        public InvitationCanceledMessage(Guid lobbyId, Guid invitedUserId)
+        public InvitationCanceledMessage(Guid lobbyId, Guid invitedPlayerId)
         {
             LobbyId = lobbyId;
-            InvitedUserId = invitedUserId;
+            InvitedPlayerId = invitedPlayerId;
         }
     }
 }

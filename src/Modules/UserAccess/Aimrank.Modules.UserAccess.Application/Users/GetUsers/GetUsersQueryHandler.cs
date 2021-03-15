@@ -32,7 +32,6 @@ namespace Aimrank.Modules.UserAccess.Application.Users.GetUsers
             const string sql = @"
                 SELECT
                     [U].[Id] AS [Id],
-                    [U].[SteamId] AS [SteamId],
                     [U].[Username] AS [Username]
                 FROM [users].[Users] AS [U]
                 WHERE [U].[Username] LIKE @Username

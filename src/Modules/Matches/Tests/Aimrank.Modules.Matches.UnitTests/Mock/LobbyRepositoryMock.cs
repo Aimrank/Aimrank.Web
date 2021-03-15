@@ -31,7 +31,7 @@ namespace Aimrank.Modules.Matches.UnitTests.Mock
         }
 
         public Task<bool> ExistsForMemberAsync(Guid userId)
-            => Task.FromResult(_lobbies.Values.Any(l => l.Members.Any(m => m.UserId == userId)));
+            => Task.FromResult(_lobbies.Values.Any(l => l.Members.Any(m => m.PlayerId == userId)));
 
         public void Add(Lobby lobby) => _lobbies.Add(lobby.Id, lobby);
 

@@ -1,6 +1,7 @@
 using Aimrank.Common.Application;
 using Aimrank.Modules.Matches.Application.Contracts;
 using Aimrank.Modules.Matches.Domain.Lobbies;
+using Aimrank.Modules.Matches.Domain.Players;
 using MediatR;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.LeaveLobby
         {
             var lobby = await _lobbyRepository.GetByIdAsync(new LobbyId(request.LobbyId));
             
-            lobby.Leave(_executionContextAccessor.UserId);
+            lobby.Leave(new PlayerId(_executionContextAccessor.UserId));
 
             if (lobby.Members.Any())
             {
