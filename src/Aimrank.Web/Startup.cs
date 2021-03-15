@@ -22,12 +22,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using Aimrank.Common.Infrastructure;
-using Aimrank.Modules.Matches.Infrastructure;
-using Aimrank.Modules.UserAccess.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aimrank.Web
 {
@@ -64,7 +58,7 @@ namespace Aimrank.Web
             services.AddControllersWithViews();
             services.AddRouting(options => options.LowercaseUrls = true);
 
-#if true
+#if false
             //Add db contexts so "dotnet ef" can find them when generating migrations
 
             services.AddDbContext<MatchesContext>(options =>
@@ -151,7 +145,9 @@ namespace Aimrank.Web
                 csgoSettings,
                 redisSettings);
             
-            UserAccessStartup.Initialize(connectionString);
+            UserAccessStartup.Initialize(
+                connectionString,
+                executionContextAccessor);
         }
     }
 }

@@ -5,6 +5,7 @@ using Aimrank.Modules.Matches.Application.Lobbies.CancelLobbyInvitation;
 using Aimrank.Modules.Matches.Application.Lobbies.CancelSearchingForGame;
 using Aimrank.Modules.Matches.Application.Lobbies.ChangeLobbyConfiguration;
 using Aimrank.Modules.Matches.Application.Lobbies.CreateLobby;
+using Aimrank.Modules.Matches.Application.Lobbies.InvitePlayerToLobby;
 using Aimrank.Modules.Matches.Application.Lobbies.LeaveLobby;
 using Aimrank.Modules.Matches.Application.Lobbies.StartSearchingForGame;
 using Aimrank.Modules.Matches.Application.Matches.AcceptMatch;
@@ -21,8 +22,11 @@ using Aimrank.Web.GraphQL.Subscriptions.Messages.Lobbies;
 using Aimrank.Web.GraphQL.Subscriptions.Messages.Users;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Subscriptions;
+using HotChocolate;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Aimrank.Modules.Matches.Application.Lobbies.InvitePlayerToLobby;
 
 namespace Aimrank.Web.GraphQL.Mutations
 {
@@ -47,9 +51,17 @@ namespace Aimrank.Web.GraphQL.Mutations
         
         // Users
 
-        public async Task<SignInPayload> SignIn(AuthenticateCommand command)
+        public async Task<SignInPayload> SignIn(AuthenticateCommand command, [Service] IHttpContextAccessor httpContextAccessor)
         {
-            await _userAccessModule.ExecuteCommandAsync(command);
+            var result = await _userAccessModule.ExecuteCommandAsync(command);
+
+            if (httpContextAccessor.HttpContext is not null)
+            {
+                var user = new ClaimsPrincipal(new ClaimsIdentity(result.User.Claims));
+
+                await httpContextAccessor.HttpContext.SignInAsync(user);
+            }
+            
             return new SignInPayload();
         }
 

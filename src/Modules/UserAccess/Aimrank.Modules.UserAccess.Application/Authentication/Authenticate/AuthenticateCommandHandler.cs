@@ -46,6 +46,7 @@ namespace Aimrank.Modules.UserAccess.Application.Authentication.Authenticate
 
             user.Claims = new List<Claim>()
             {
+                new(CustomClaimTypes.Id, user.Id.ToString()),
                 new(CustomClaimTypes.Name, user.Username),
                 new(CustomClaimTypes.Email, user.Email)
             };

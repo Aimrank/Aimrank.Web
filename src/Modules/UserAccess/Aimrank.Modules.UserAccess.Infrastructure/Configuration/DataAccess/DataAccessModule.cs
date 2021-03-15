@@ -18,6 +18,8 @@ namespace Aimrank.Modules.UserAccess.Infrastructure.Configuration.DataAccess
 
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
+            
             builder.RegisterType<SqlConnectionFactory>()
                 .As<ISqlConnectionFactory>()
                 .WithParameter("connectionString", _databaseConnectionString)
