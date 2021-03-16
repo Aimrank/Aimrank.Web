@@ -45,7 +45,7 @@ namespace Aimrank.Web.Configuration.SessionAuthentication
             return AuthenticateResult.Success(ticket);
         }
 
-        public async Task SignOutAsync(AuthenticationProperties? properties)
+        public async Task SignOutAsync(AuthenticationProperties properties)
         {
             await Session.LoadAsync();
             
@@ -54,7 +54,7 @@ namespace Aimrank.Web.Configuration.SessionAuthentication
             await Session.CommitAsync();
         }
 
-        public async Task SignInAsync(ClaimsPrincipal user, AuthenticationProperties? properties)
+        public async Task SignInAsync(ClaimsPrincipal user, AuthenticationProperties properties)
         {
             await Session.LoadAsync();
             

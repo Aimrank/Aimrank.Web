@@ -81,7 +81,7 @@ namespace Aimrank.Web.GraphQL.Mutations
 
             if (!result.IsAuthenticated || httpContextAccessor.HttpContext is null)
             {
-                throw new AuthenticationException();
+                throw new AuthenticationException(result.AuthenticationError);
             }
 
             var identity = new ClaimsIdentity(result.User.Claims, SessionAuthenticationDefaults.AuthenticationScheme);

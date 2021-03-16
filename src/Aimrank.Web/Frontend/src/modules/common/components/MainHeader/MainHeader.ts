@@ -1,6 +1,5 @@
 import { defineComponent } from "vue";
 import { useAuth } from "@/authentication/hooks/useAuth";
-import { useUser } from "@/profile/hooks/useUser";
 import { useUsersDialog } from "@/common/components/UsersDialog";
 import BaseButton from "@/common/components/BaseButton";
 
@@ -9,14 +8,12 @@ const MainHeader = defineComponent({
     BaseButton
   },
   setup() {
-    const { state: userState } = useUser();
-    const { state: authState, signOut } = useAuth();
+    const { state, signOut } = useAuth();
 
     const { open } = useUsersDialog();
 
     return {
-      userState,
-      authState,
+      state,
       open,
       signOut
     };

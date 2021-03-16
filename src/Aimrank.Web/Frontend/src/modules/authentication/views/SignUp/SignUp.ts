@@ -1,7 +1,8 @@
 import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "@/authentication/hooks/useAuth";
-import { useResponseErrors } from "@/common/hooks/useResponseErrors";
+import { useResponseErrors } from "@/common/hooks/useGQLResponseErrors";
+import { ErrorResponse } from "@/common/models/GErrorResponse";
 import BaseButton from "@/common/components/BaseButton";
 import FormFieldInput from "@/common/components/FormFieldInput";
 import ValidationSummary from "@/common/components/ValidationSummary";
@@ -17,7 +18,7 @@ const SignUp = defineComponent({
       email: "",
       username: "",
       password: "",
-      repeatPassword: ""
+      passwordRepeat: ""
     });
 
     const router = useRouter();
@@ -30,13 +31,13 @@ const SignUp = defineComponent({
         email: state.email,
         username: state.username,
         password: state.password,
-        repeatPassword: state.repeatPassword
+        passwordRepeat: state.passwordRepeat
       });
 
-      if (result.isOk()) {
+      if (result.result) {
         router.push({ name: "home" });
       } else {
-        errors.setErrors(result.error);
+        errors.setErrors(ErrorResponse.fromGraphQLError(result.errors[0]));
       }
     }
 

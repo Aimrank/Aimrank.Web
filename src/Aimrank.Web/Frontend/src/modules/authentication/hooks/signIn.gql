@@ -1,0 +1,9 @@
+mutation signIn($command: AuthenticateCommandInput!) {
+  signIn(command: $command) {
+    record {
+      id
+      email
+      username
+    }
+  }
+}

@@ -1,15 +1,12 @@
 
 import { HubConnection, HubConnectionBuilder, HubConnectionState } from "@microsoft/signalr";
-import { httpClient } from "~/services";
 
 export class Hub {
   public readonly connection: HubConnection;
 
   constructor(endpoint: string) {
     this.connection = new HubConnectionBuilder()
-      .withUrl(endpoint, {
-        accessTokenFactory: httpClient.accessTokenFactory.bind(httpClient)
-      })
+      .withUrl(endpoint)
       .build();
   }
 

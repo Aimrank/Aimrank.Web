@@ -17,12 +17,11 @@ export const useQuery = <T = any, TVariables = Record<string, any>>(
   const onDone = (callback: () => void) => onDoneCallback = callback;
   const onError = (callback: () => void) => onErrorCallback = callback;
 
-  const fetch = async (variables?: TVariables) => {
+  const fetch = async () => {
     loading.value = true;
 
     const res = await apolloClient.query({
       query,
-      variables,
       ...(options ?? {})
     });
 
@@ -40,6 +39,8 @@ export const useQuery = <T = any, TVariables = Record<string, any>>(
 
     onDoneCallback();
   }
+
+  fetch();
 
   return {
     fetch,

@@ -6,7 +6,8 @@ namespace Aimrank.Web.GraphQL.Mutations
     {
         public override string Code => "invalid_credentials";
         
-        public AuthenticationException() : base("Invalid credentials")
+        public AuthenticationException(string message)
+            : base(string.IsNullOrEmpty(message) ? "Invalid credentials" : message)
         {
         }
     }

@@ -20,25 +20,35 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
   const mutate = async (variables?: TVariables) => {
     loading.value = true;
 
-    const res = await apolloClient.mutate({
-      mutation,
-      variables,
-      ...(options ?? {})
-    });
+    try {
+      const res = await apolloClient.mutate({
+        mutation,
+        variables,
+        ...(options ?? {})
+      });
 
-    loading.value = false;
+      loading.value = false;
 
-    if (res.errors) {
-      errors.value = res.errors;
+      if (res.errors) {
+        errors.value = res.errors;
+        onErrorCallback();
+        return;
+      }
+
+      if (res.data) {
+        result.value = res.data;
+      }
+
+      onDoneCallback();
+    } catch (error) {
+      loading.value = false;
+
+      if (error.graphQLErrors) {
+        errors.value = error.graphQLErrors;
+      }
+
       onErrorCallback();
-      return;
     }
-
-    if (res.data) {
-      result.value = res.data;
-    }
-
-    onDoneCallback();
   }
 
   return {

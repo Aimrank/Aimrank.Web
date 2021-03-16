@@ -1,6 +1,8 @@
 import { createApp } from "vue";
 import { createI18n } from "vue-i18n";
 import { router } from "~/router";
+import { useAuth } from "@/authentication/hooks/useAuth";
+import { useInitialState } from "@/common/hooks/useInitialState";
 
 import App from "./App.vue";
 
@@ -11,7 +13,15 @@ const i18n = createI18n({
   messages: { en }
 });
 
-createApp(App)
-  .use(i18n)
-  .use(router)
-  .mount("#root");
+const init = () => {
+  const { setCurrentUser } = useAuth();
+  const { getUser } = useInitialState();
+  setCurrentUser(getUser());
+
+  createApp(App)
+    .use(i18n)
+    .use(router)
+    .mount("#root");
+}
+
+init();

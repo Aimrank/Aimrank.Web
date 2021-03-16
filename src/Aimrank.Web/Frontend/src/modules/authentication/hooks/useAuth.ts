@@ -1,67 +1,86 @@
 import { reactive, readonly } from "vue";
-import { authService, httpClient } from "~/services";
 import { router } from "~/router";
-import { useUser } from "@/profile/hooks/useUser";
-import { ISignInRequest, ISignUpRequest } from "@/authentication/services/AuthService";
+import { useMutation } from "~/graphql/useMutation";
+import {
+  AuthenticateCommandInput,
+  SignInMutationVariables,
+  SignInMutation,
+  RegisterNewUserCommandInput,
+  SignUpMutationVariables,
+  SignUpMutation
+} from "~/graphql/types/types";
+
+import SIGN_IN from "./signIn.gql";
+import SIGN_UP from "./signUp.gql";
+import SIGN_OUT from "./signOut.gql";
+
+interface IAuthUser {
+  id: string;
+  email: string;
+  username: string;
+}
 
 interface IAuthState {
   isAuthenticated: boolean;
+  user: IAuthUser | null;
 }
 
 const state = reactive<IAuthState>({
-  isAuthenticated: false
+  isAuthenticated: false,
+  user: null
 });
 
-const setAuthenticated = (isAuthenticated: boolean) => {
-  state.isAuthenticated = isAuthenticated;
+const setCurrentUser = (user: IAuthUser | null) => {
+  state.isAuthenticated = user !== null;
+  state.user = user;
 }
 
-const signIn = async (request: ISignInRequest) => {
-  const result = await authService.signIn(request);
+const signIn = async (command: AuthenticateCommandInput) => {
+  const { mutate, result, errors } = useMutation<SignInMutation, SignInMutationVariables>(SIGN_IN);
 
-  if (result.isOk()) {
-    httpClient.setAuthorizationToken(
-      result.value.jwt,
-      result.value.refreshToken
-    );
-    
-    await updateUser();
-    setAuthenticated(true);
+  await mutate({ command });
+
+  if (result.value?.signIn?.record) {
+    setCurrentUser({
+      id: result.value.signIn.record.id,
+      email: result.value.signIn.record.email,
+      username: result.value.signIn.record.username
+    });
   }
 
-  return result;
+  return {
+    result: result.value?.signIn?.record,
+    errors: errors.value
+  };
 }
 
-const signUp = async (request: ISignUpRequest) => {
-  const result = await authService.signUp(request);
+const signUp = async (command: RegisterNewUserCommandInput) => {
+  const { mutate, result, errors } = useMutation<SignUpMutation, SignUpMutationVariables>(SIGN_UP);
 
-  if (result.isOk()) {
-    httpClient.setAuthorizationToken(
-      result.value.jwt,
-      result.value.refreshToken
-    );
+  await mutate({ command });
 
-    await updateUser();
-    setAuthenticated(true);
+  if (result.value?.signUp?.record) {
+    setCurrentUser({
+      id: result.value.signUp.record.id,
+      email: result.value.signUp.record.email,
+      username: result.value.signUp.record.username
+    });
   }
 
-  return result;
+  return {
+    result: result.value?.signUp?.record,
+    errors: errors.value
+  };
 }
 
 const signOut = async () => {
-  const { setUser } = useUser();
+  const { mutate } = useMutation(SIGN_OUT);
 
-  setUser(null);
-  setAuthenticated(false);
+  await mutate();
 
-  httpClient.setAuthorizationToken(undefined, undefined);
+  setCurrentUser(null);
 
   await router.push({ name: "home" });
-}
-
-const updateUser = async () => {
-  const user = useUser();
-  await user.updateUser(httpClient.getUserId()!);
 }
 
 export const useAuth = () => ({
@@ -69,5 +88,5 @@ export const useAuth = () => ({
   signIn,
   signUp,
   signOut,
-  setAuthenticated
+  setCurrentUser
 });
