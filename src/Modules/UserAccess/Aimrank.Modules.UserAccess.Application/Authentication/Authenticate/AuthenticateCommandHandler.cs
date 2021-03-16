@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Threading;
+using System;
 
 namespace Aimrank.Modules.UserAccess.Application.Authentication.Authenticate
 {
@@ -32,7 +33,7 @@ namespace Aimrank.Modules.UserAccess.Application.Authentication.Authenticate
                     [U].[Email] = @UsernameOrEmail OR
                     [U].[Username] = @UsernameOrEmail;";
 
-            var user = await connection.QueryFirstOrDefaultAsync<UserDto>(sql, new {request.UsernameOrEmail});
+            var user = await connection.QueryFirstOrDefaultAsync<UserResult>(sql, new {request.UsernameOrEmail});
 
             if (user is null)
             {
@@ -43,15 +44,27 @@ namespace Aimrank.Modules.UserAccess.Application.Authentication.Authenticate
             {
                 return AuthenticationResult.Error("Invalid credentials");
             }
-
-            user.Claims = new List<Claim>()
+            
+            return AuthenticationResult.Success(new AuthenticatedUserDto
             {
-                new(CustomClaimTypes.Id, user.Id.ToString()),
-                new(CustomClaimTypes.Name, user.Username),
-                new(CustomClaimTypes.Email, user.Email)
-            };
+                Id = user.Id,
+                Email = user.Email,
+                Username = user.Username,
+                Claims = new List<Claim>
+                {
+                    new(CustomClaimTypes.Id, user.Id.ToString()),
+                    new(CustomClaimTypes.Name, user.Username),
+                    new(CustomClaimTypes.Email, user.Email)
+                }
+            });
+        }
 
-            return AuthenticationResult.Success(user);
+        private class UserResult
+        {
+            public Guid Id { get; set; }
+            public string Email { get; set; }
+            public string Username { get; set; }
+            public string Password { get; set; }
         }
     }
 }

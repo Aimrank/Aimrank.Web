@@ -1,4 +1,4 @@
-namespace Aimrank.Modules.Matches.Infrastructure.Configuration.Redis
+namespace Aimrank.Web.Configuration.SessionAuthentication
 {
     public class RedisSettings
     {

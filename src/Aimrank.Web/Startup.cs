@@ -1,13 +1,12 @@
 using Aimrank.Common.Application;
 using Aimrank.Common.Infrastructure.EventBus;
-using Aimrank.Modules.Matches.Infrastructure.Configuration.CSGO;
-using Aimrank.Modules.Matches.Infrastructure.Configuration.Redis;
 using Aimrank.Modules.Matches.Infrastructure.Configuration;
 using Aimrank.Modules.Matches.IntegrationEvents.Lobbies;
 using Aimrank.Modules.Matches.IntegrationEvents.Matches;
 using Aimrank.Modules.UserAccess.Infrastructure.Configuration;
 using Aimrank.Web.Configuration.EventBus;
 using Aimrank.Web.Configuration.ExecutionContext;
+using Aimrank.Web.Configuration.SessionAuthentication;
 using Aimrank.Web.GraphQL.Mutations;
 using Aimrank.Web.GraphQL.Queries;
 using Aimrank.Web.GraphQL.Subscriptions;
@@ -22,6 +21,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StackExchange.Redis;
 
 namespace Aimrank.Web
 {
@@ -29,16 +29,39 @@ namespace Aimrank.Web
     {
         private readonly IEventBus _eventBus = new InMemoryEventBusClient();
         private readonly IConfiguration _configuration;
+        private readonly RedisSettings _redisSettings = new();
+        private readonly MatchesModuleSettings _matchesModuleSettings = new();
         
-        public Startup(IConfiguration configuration) => _configuration = configuration;
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            _configuration.GetSection(nameof(RedisSettings)).Bind(_redisSettings);
+            _configuration.GetSection(nameof(MatchesModuleSettings)).Bind(_matchesModuleSettings);
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
 
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.ConfigurationOptions = new ConfigurationOptions
+                {
+                    EndPoints = {_redisSettings.Endpoint},
+                    DefaultDatabase = _redisSettings.Database
+                };
+            });
+
+            services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             services.AddAuthorization();
-            services.AddAuthentication()
+            services.AddAuthentication(SessionAuthenticationDefaults.AuthenticationScheme)
+                .AddSession()
                 .AddSteam(options =>
                 {
                     options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
@@ -100,6 +123,8 @@ namespace Aimrank.Web
             app.UseRouting();
             app.UseWebSockets();
             
+            app.UseSession();
+            
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -131,19 +156,13 @@ namespace Aimrank.Web
         {
             var executionContextAccessor = container.Resolve<IExecutionContextAccessor>();
             
-            var csgoSettings = new CSGOSettings();
-            var redisSettings = new RedisSettings();
-            _configuration.GetSection(nameof(CSGOSettings)).Bind(csgoSettings);
-            _configuration.GetSection(nameof(RedisSettings)).Bind(redisSettings);
-
             var connectionString = _configuration.GetConnectionString("Database");
-            
+
             MatchesStartup.Initialize(
                 connectionString,
                 executionContextAccessor,
                 _eventBus,
-                csgoSettings,
-                redisSettings);
+                _matchesModuleSettings);
             
             UserAccessStartup.Initialize(
                 connectionString,

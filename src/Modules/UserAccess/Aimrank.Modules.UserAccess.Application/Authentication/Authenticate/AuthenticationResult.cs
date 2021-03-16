@@ -2,11 +2,11 @@ namespace Aimrank.Modules.UserAccess.Application.Authentication.Authenticate
 {
     public class AuthenticationResult
     {
-        public UserDto User { get; private init; }
+        public AuthenticatedUserDto User { get; private init; }
         public bool IsAuthenticated { get; private init; }
         public string AuthenticationError { get; private init; }
 
-        public static AuthenticationResult Success(UserDto user)
+        public static AuthenticationResult Success(AuthenticatedUserDto user)
             => new AuthenticationResult
             {
                 IsAuthenticated = true,

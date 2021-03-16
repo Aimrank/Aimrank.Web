@@ -18,15 +18,13 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration
             string connectionString,
             IExecutionContextAccessor executionContextAccessor,
             IEventBus eventBus,
-            CSGOSettings csgoSettings,
-            RedisSettings redisSettings)
+            MatchesModuleSettings matchesModuleSettings)
         {
             ConfigureCompositionRoot(
                 connectionString,
                 executionContextAccessor,
                 eventBus,
-                csgoSettings,
-                redisSettings);
+                matchesModuleSettings);
             
             QuartzStartup.Initialize();
         }
@@ -35,17 +33,16 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration
             string connectionString,
             IExecutionContextAccessor executionContextAccessor,
             IEventBus eventBus,
-            CSGOSettings csgoSettings,
-            RedisSettings redisSettings)
+            MatchesModuleSettings matchesModuleSettings)
         {
             var containerBuilder = new ContainerBuilder();
 
             containerBuilder.RegisterModule(new DataAccessModule(connectionString));
             containerBuilder.RegisterModule(new MediatorModule());
             containerBuilder.RegisterModule(new ProcessingModule());
-            containerBuilder.RegisterModule(new CSGOModule(csgoSettings));
+            containerBuilder.RegisterModule(new CSGOModule(matchesModuleSettings.CSGOSettings));
             containerBuilder.RegisterModule(new QuartzModule());
-            containerBuilder.RegisterModule(new RedisModule(redisSettings));
+            containerBuilder.RegisterModule(new RedisModule(matchesModuleSettings.RedisSettings));
             containerBuilder.RegisterInstance(executionContextAccessor);
             containerBuilder.RegisterInstance(eventBus);
 

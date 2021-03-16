@@ -1,5 +1,6 @@
 using Aimrank.Web.GraphQL.Queries;
 using HotChocolate.Resolvers;
+using System;
 
 namespace Aimrank.Web.GraphQL.Mutations
 {
@@ -10,8 +11,11 @@ namespace Aimrank.Web.GraphQL.Mutations
     
     // Users
 
-    public record SignInPayload : MutationPayloadBase;
-    public record SignUpPayload : MutationPayloadBase;
+    public record AuthenticationSuccessRecord(Guid Id, string Username, string Email);
+    
+    public record SignInPayload(AuthenticationSuccessRecord Record) : MutationPayloadBase;
+    public record SignUpPayload(AuthenticationSuccessRecord Record) : MutationPayloadBase;
+    
     public record SignOutPayload : MutationPayloadBase;
     
     // Friends

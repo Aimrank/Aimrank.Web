@@ -18,6 +18,7 @@ using Aimrank.Modules.UserAccess.Application.Friendships.DeleteFriendship;
 using Aimrank.Modules.UserAccess.Application.Friendships.InviteUserToFriendsList;
 using Aimrank.Modules.UserAccess.Application.Friendships.UnblockUser;
 using Aimrank.Modules.UserAccess.Application.Users.RegisterNewUser;
+using Aimrank.Web.Configuration.SessionAuthentication;
 using Aimrank.Web.GraphQL.Subscriptions.Messages.Lobbies;
 using Aimrank.Web.GraphQL.Subscriptions.Messages.Users;
 using HotChocolate.AspNetCore.Authorization;
@@ -51,27 +52,58 @@ namespace Aimrank.Web.GraphQL.Mutations
         
         // Users
 
-        public async Task<SignInPayload> SignIn(AuthenticateCommand command, [Service] IHttpContextAccessor httpContextAccessor)
+        public async Task<SignInPayload> SignIn(
+            AuthenticateCommand command,
+            [Service] IHttpContextAccessor httpContextAccessor)
+        {
+            var result = await SignInAsync(command, httpContextAccessor);
+            return new SignInPayload(result);
+        }
+
+        public async Task<SignUpPayload> SignUp(
+            RegisterNewUserCommand command,
+            [Service] IHttpContextAccessor httpContextAccessor)
+        {
+            await _userAccessModule.ExecuteCommandAsync(command);
+
+            var result = await SignInAsync(
+                new AuthenticateCommand(command.Username, command.Password),
+                httpContextAccessor);
+            
+            return new SignUpPayload(result);
+        }
+        
+        private async Task<AuthenticationSuccessRecord> SignInAsync(
+            AuthenticateCommand command,
+            IHttpContextAccessor httpContextAccessor)
         {
             var result = await _userAccessModule.ExecuteCommandAsync(command);
 
+            if (!result.IsAuthenticated || httpContextAccessor.HttpContext is null)
+            {
+                throw new AuthenticationException();
+            }
+
+            var identity = new ClaimsIdentity(result.User.Claims, SessionAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await httpContextAccessor.HttpContext.SignInAsync(principal);
+
+            return new AuthenticationSuccessRecord(
+                result.User.Id,
+                result.User.Username,
+                result.User.Email);
+        }
+
+        public async Task<SignOutPayload> SignOut([Service] IHttpContextAccessor httpContextAccessor)
+        {
             if (httpContextAccessor.HttpContext is not null)
             {
-                var user = new ClaimsPrincipal(new ClaimsIdentity(result.User.Claims));
-
-                await httpContextAccessor.HttpContext.SignInAsync(user);
+                await httpContextAccessor.HttpContext.SignOutAsync();
             }
             
-            return new SignInPayload();
+            return new SignOutPayload();
         }
-
-        public async Task<SignUpPayload> SignUp(RegisterNewUserCommand command)
-        {
-            await _userAccessModule.ExecuteCommandAsync(command);
-            return new SignUpPayload();
-        }
-
-        public SignOutPayload SignOut() => new SignOutPayload();
         
         // Friends
 
