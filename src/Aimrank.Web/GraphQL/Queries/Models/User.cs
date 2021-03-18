@@ -40,6 +40,9 @@ namespace Aimrank.Web.GraphQL.Queries.Models
                 result.Total)
                 .AsConnection(skip, take);
         }
+
+        public Task<string> GetSteamId([DataLoader] SteamIdDataLoader steamIdDataLoader)
+            => steamIdDataLoader.LoadAsync(Id, CancellationToken.None);
     }
 
     public class UserType : ObjectType<User>
@@ -49,6 +52,10 @@ namespace Aimrank.Web.GraphQL.Queries.Models
             descriptor
                 .Field(f => f.GetFriends(default, default, default, default))
                 .Type<ConnectionCountType<UserType>>();
+
+            descriptor
+                .Field(f => f.Username)
+                .Type<NonNullType<StringType>>();
         }
     }
 }

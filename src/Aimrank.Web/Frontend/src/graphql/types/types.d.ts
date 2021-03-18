@@ -96,9 +96,10 @@ export enum ApplyPolicy {
 export type User = {
   __typename?: 'User';
   friends?: Maybe<UserConnection>;
+  username: Scalars['String'];
   stats?: Maybe<UserStatsDto>;
+  steamId?: Maybe<Scalars['String']>;
   id: Scalars['Uuid'];
-  username?: Maybe<Scalars['String']>;
 };
 
 
@@ -157,13 +158,6 @@ export type Mutation = {
   signIn?: Maybe<SignInPayload>;
   signUp?: Maybe<SignUpPayload>;
   signOut?: Maybe<SignOutPayload>;
-  inviteUserToFriendsList?: Maybe<InviteUserToFriendsListPayload>;
-  acceptFriendshipInvitation?: Maybe<AcceptFriendshipInvitationPayload>;
-  declineFriendshipInvitation?: Maybe<DeclineFriendshipInvitationPayload>;
-  blockUser?: Maybe<BlockUserPayload>;
-  unblockUser?: Maybe<UnblockUserPayload>;
-  deleteFriendship?: Maybe<DeleteFriendshipPayload>;
-  acceptMatch?: Maybe<AcceptMatchPayload>;
   createLobby?: Maybe<CreateLobbyPayload>;
   inviteUserToLobby?: Maybe<InviteUserToLobbyPayload>;
   acceptLobbyInvitation?: Maybe<AcceptLobbyInvitationPayload>;
@@ -172,6 +166,13 @@ export type Mutation = {
   leaveLobby?: Maybe<LeaveLobbyPayload>;
   startSearchingForGame?: Maybe<StartSearchingForGamePayload>;
   cancelSearchingForGame?: Maybe<CancelSearchingForGamePayload>;
+  acceptMatch?: Maybe<AcceptMatchPayload>;
+  inviteUserToFriendsList?: Maybe<InviteUserToFriendsListPayload>;
+  acceptFriendshipInvitation?: Maybe<AcceptFriendshipInvitationPayload>;
+  declineFriendshipInvitation?: Maybe<DeclineFriendshipInvitationPayload>;
+  blockUser?: Maybe<BlockUserPayload>;
+  unblockUser?: Maybe<UnblockUserPayload>;
+  deleteFriendship?: Maybe<DeleteFriendshipPayload>;
 };
 
 
@@ -182,41 +183,6 @@ export type MutationSignInArgs = {
 
 export type MutationSignUpArgs = {
   command?: Maybe<RegisterNewUserCommandInput>;
-};
-
-
-export type MutationInviteUserToFriendsListArgs = {
-  command?: Maybe<InviteUserToFriendsListCommandInput>;
-};
-
-
-export type MutationAcceptFriendshipInvitationArgs = {
-  command?: Maybe<AcceptFriendshipInvitationCommandInput>;
-};
-
-
-export type MutationDeclineFriendshipInvitationArgs = {
-  command?: Maybe<DeclineFriendshipInvitationCommandInput>;
-};
-
-
-export type MutationBlockUserArgs = {
-  command?: Maybe<BlockUserCommandInput>;
-};
-
-
-export type MutationUnblockUserArgs = {
-  command?: Maybe<UnblockUserCommandInput>;
-};
-
-
-export type MutationDeleteFriendshipArgs = {
-  command?: Maybe<DeleteFriendshipCommandInput>;
-};
-
-
-export type MutationAcceptMatchArgs = {
-  command?: Maybe<AcceptMatchCommandInput>;
 };
 
 
@@ -259,21 +225,56 @@ export type MutationCancelSearchingForGameArgs = {
   command?: Maybe<CancelSearchingForGameCommandInput>;
 };
 
+
+export type MutationAcceptMatchArgs = {
+  command?: Maybe<AcceptMatchCommandInput>;
+};
+
+
+export type MutationInviteUserToFriendsListArgs = {
+  command?: Maybe<InviteUserToFriendsListCommandInput>;
+};
+
+
+export type MutationAcceptFriendshipInvitationArgs = {
+  command?: Maybe<AcceptFriendshipInvitationCommandInput>;
+};
+
+
+export type MutationDeclineFriendshipInvitationArgs = {
+  command?: Maybe<DeclineFriendshipInvitationCommandInput>;
+};
+
+
+export type MutationBlockUserArgs = {
+  command?: Maybe<BlockUserCommandInput>;
+};
+
+
+export type MutationUnblockUserArgs = {
+  command?: Maybe<UnblockUserCommandInput>;
+};
+
+
+export type MutationDeleteFriendshipArgs = {
+  command?: Maybe<DeleteFriendshipCommandInput>;
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
-  lobbyInvitationCreated?: Maybe<LobbyInvitationCreatedMessage>;
-  friendshipInvitationCreated?: Maybe<FriendshipInvitationCreatedMessage>;
+  lobbyInvitationCreated?: Maybe<LobbyInvitationCreatedPayload>;
+  friendshipInvitationCreated?: Maybe<FriendshipInvitationCreatedPayload>;
   matchAccepted?: Maybe<MatchAcceptedEvent>;
-  matchReady?: Maybe<MatchReadyMessage>;
+  matchReady?: Maybe<MatchReadyPayload>;
   matchStarting?: Maybe<MatchStartingEvent>;
   matchStarted?: Maybe<MatchStartedEvent>;
   matchTimedOut?: Maybe<MatchTimedOutEvent>;
   matchCanceled?: Maybe<MatchCanceledEvent>;
   matchFinished?: Maybe<MatchFinishedEvent>;
   matchPlayerLeft?: Maybe<MatchPlayerLeftEvent>;
-  lobbyInvitationAccepted?: Maybe<InvitationAcceptedMessage>;
-  lobbyInvitationCanceled?: Maybe<InvitationCanceledMessage>;
-  lobbyConfigurationChanged?: Maybe<LobbyConfigurationChangedMessage>;
+  lobbyInvitationAccepted?: Maybe<InvitationAcceptedPayload>;
+  lobbyInvitationCanceled?: Maybe<InvitationCanceledPayload>;
+  lobbyConfigurationChanged?: Maybe<LobbyConfigurationChangedPayload>;
   lobbyStatusChanged?: Maybe<LobbyStatusChangedEvent>;
   lobbyMemberLeft?: Maybe<MemberLeftEvent>;
   lobbyMemberRoleChanged?: Maybe<MemberRoleChangedEvent>;
@@ -408,39 +409,65 @@ export type MatchPlayer = {
   ratingEnd: Scalars['Int'];
 };
 
+export type CreateLobbyCommandInput = {
+  lobbyId: Scalars['Uuid'];
+};
+
 export type AcceptMatchPayload = {
   __typename?: 'AcceptMatchPayload';
   query?: Maybe<Query>;
 };
 
-export type DeleteFriendshipPayload = {
-  __typename?: 'DeleteFriendshipPayload';
+export type CancelSearchingForGamePayload = {
+  __typename?: 'CancelSearchingForGamePayload';
   query?: Maybe<Query>;
 };
 
-export type UnblockUserPayload = {
-  __typename?: 'UnblockUserPayload';
+export type StartSearchingForGamePayload = {
+  __typename?: 'StartSearchingForGamePayload';
   query?: Maybe<Query>;
 };
 
-export type BlockUserPayload = {
-  __typename?: 'BlockUserPayload';
+export type LeaveLobbyPayload = {
+  __typename?: 'LeaveLobbyPayload';
   query?: Maybe<Query>;
 };
 
-export type DeclineFriendshipInvitationPayload = {
-  __typename?: 'DeclineFriendshipInvitationPayload';
+export type ChangeLobbyConfigurationPayload = {
+  __typename?: 'ChangeLobbyConfigurationPayload';
   query?: Maybe<Query>;
 };
 
-export type AcceptFriendshipInvitationPayload = {
-  __typename?: 'AcceptFriendshipInvitationPayload';
+export type CancelLobbyInvitationPayload = {
+  __typename?: 'CancelLobbyInvitationPayload';
   query?: Maybe<Query>;
 };
 
-export type InviteUserToFriendsListPayload = {
-  __typename?: 'InviteUserToFriendsListPayload';
+export type AcceptLobbyInvitationPayload = {
+  __typename?: 'AcceptLobbyInvitationPayload';
   query?: Maybe<Query>;
+};
+
+export type InviteUserToLobbyPayload = {
+  __typename?: 'InviteUserToLobbyPayload';
+  query?: Maybe<Query>;
+};
+
+export type CreateLobbyPayload = {
+  __typename?: 'CreateLobbyPayload';
+  query?: Maybe<Query>;
+};
+
+export type RegisterNewUserCommandInput = {
+  email?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+  passwordRepeat?: Maybe<Scalars['String']>;
+};
+
+export type AuthenticateCommandInput = {
+  usernameOrEmail?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
 };
 
 export type SignOutPayload = {
@@ -459,90 +486,6 @@ export type SignInPayload = {
   __typename?: 'SignInPayload';
   query?: Maybe<Query>;
   record?: Maybe<AuthenticationSuccessRecord>;
-};
-
-export type CreateLobbyPayload = {
-  __typename?: 'CreateLobbyPayload';
-  query?: Maybe<Query>;
-};
-
-export type InviteUserToLobbyPayload = {
-  __typename?: 'InviteUserToLobbyPayload';
-  query?: Maybe<Query>;
-};
-
-export type AcceptLobbyInvitationPayload = {
-  __typename?: 'AcceptLobbyInvitationPayload';
-  query?: Maybe<Query>;
-};
-
-export type CancelLobbyInvitationPayload = {
-  __typename?: 'CancelLobbyInvitationPayload';
-  query?: Maybe<Query>;
-};
-
-export type ChangeLobbyConfigurationPayload = {
-  __typename?: 'ChangeLobbyConfigurationPayload';
-  query?: Maybe<Query>;
-};
-
-export type LeaveLobbyPayload = {
-  __typename?: 'LeaveLobbyPayload';
-  query?: Maybe<Query>;
-};
-
-export type StartSearchingForGamePayload = {
-  __typename?: 'StartSearchingForGamePayload';
-  query?: Maybe<Query>;
-};
-
-export type CancelSearchingForGamePayload = {
-  __typename?: 'CancelSearchingForGamePayload';
-  query?: Maybe<Query>;
-};
-
-export type AuthenticateCommandInput = {
-  usernameOrEmail?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
-};
-
-export type RegisterNewUserCommandInput = {
-  email?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
-  passwordRepeat?: Maybe<Scalars['String']>;
-};
-
-export type InviteUserToFriendsListCommandInput = {
-  invitedUserId: Scalars['Uuid'];
-};
-
-export type AcceptFriendshipInvitationCommandInput = {
-  invitingUserId: Scalars['Uuid'];
-};
-
-export type DeclineFriendshipInvitationCommandInput = {
-  invitingUserId: Scalars['Uuid'];
-};
-
-export type BlockUserCommandInput = {
-  blockedUserId: Scalars['Uuid'];
-};
-
-export type UnblockUserCommandInput = {
-  blockedUserId: Scalars['Uuid'];
-};
-
-export type DeleteFriendshipCommandInput = {
-  userId: Scalars['Uuid'];
-};
-
-export type AcceptMatchCommandInput = {
-  matchId: Scalars['Uuid'];
-};
-
-export type CreateLobbyCommandInput = {
-  lobbyId: Scalars['Uuid'];
 };
 
 export type InvitePlayerToLobbyCommandInput = {
@@ -577,15 +520,73 @@ export type CancelSearchingForGameCommandInput = {
   lobbyId: Scalars['Uuid'];
 };
 
-export type LobbyInvitationCreatedMessage = {
-  __typename?: 'LobbyInvitationCreatedMessage';
+export type AcceptMatchCommandInput = {
+  matchId: Scalars['Uuid'];
+};
+
+export type InviteUserToFriendsListPayload = {
+  __typename?: 'InviteUserToFriendsListPayload';
+  query?: Maybe<Query>;
+};
+
+export type AcceptFriendshipInvitationPayload = {
+  __typename?: 'AcceptFriendshipInvitationPayload';
+  query?: Maybe<Query>;
+};
+
+export type DeclineFriendshipInvitationPayload = {
+  __typename?: 'DeclineFriendshipInvitationPayload';
+  query?: Maybe<Query>;
+};
+
+export type BlockUserPayload = {
+  __typename?: 'BlockUserPayload';
+  query?: Maybe<Query>;
+};
+
+export type UnblockUserPayload = {
+  __typename?: 'UnblockUserPayload';
+  query?: Maybe<Query>;
+};
+
+export type DeleteFriendshipPayload = {
+  __typename?: 'DeleteFriendshipPayload';
+  query?: Maybe<Query>;
+};
+
+export type InviteUserToFriendsListCommandInput = {
+  invitedUserId: Scalars['Uuid'];
+};
+
+export type AcceptFriendshipInvitationCommandInput = {
+  invitingUserId: Scalars['Uuid'];
+};
+
+export type DeclineFriendshipInvitationCommandInput = {
+  invitingUserId: Scalars['Uuid'];
+};
+
+export type BlockUserCommandInput = {
+  blockedUserId: Scalars['Uuid'];
+};
+
+export type UnblockUserCommandInput = {
+  blockedUserId: Scalars['Uuid'];
+};
+
+export type DeleteFriendshipCommandInput = {
+  userId: Scalars['Uuid'];
+};
+
+export type LobbyInvitationCreatedPayload = {
+  __typename?: 'LobbyInvitationCreatedPayload';
   lobbyId: Scalars['Uuid'];
   invitingPlayerId: Scalars['Uuid'];
   invitedPlayerId: Scalars['Uuid'];
 };
 
-export type FriendshipInvitationCreatedMessage = {
-  __typename?: 'FriendshipInvitationCreatedMessage';
+export type FriendshipInvitationCreatedPayload = {
+  __typename?: 'FriendshipInvitationCreatedPayload';
   invitingUserId: Scalars['Uuid'];
   invitedUserId: Scalars['Uuid'];
 };
@@ -599,8 +600,8 @@ export type MatchAcceptedEvent = {
   occurredAt: Scalars['DateTime'];
 };
 
-export type MatchReadyMessage = {
-  __typename?: 'MatchReadyMessage';
+export type MatchReadyPayload = {
+  __typename?: 'MatchReadyPayload';
   matchId: Scalars['Uuid'];
   map?: Maybe<Scalars['String']>;
   expiresAt: Scalars['DateTime'];
@@ -660,20 +661,20 @@ export type MatchPlayerLeftEvent = {
   occurredAt: Scalars['DateTime'];
 };
 
-export type InvitationAcceptedMessage = {
-  __typename?: 'InvitationAcceptedMessage';
+export type InvitationAcceptedPayload = {
+  __typename?: 'InvitationAcceptedPayload';
   lobbyId: Scalars['Uuid'];
   invitedPlayerId: Scalars['Uuid'];
 };
 
-export type InvitationCanceledMessage = {
-  __typename?: 'InvitationCanceledMessage';
+export type InvitationCanceledPayload = {
+  __typename?: 'InvitationCanceledPayload';
   lobbyId: Scalars['Uuid'];
   invitedPlayerId: Scalars['Uuid'];
 };
 
-export type LobbyConfigurationChangedMessage = {
-  __typename?: 'LobbyConfigurationChangedMessage';
+export type LobbyConfigurationChangedPayload = {
+  __typename?: 'LobbyConfigurationChangedPayload';
   lobbyId: Scalars['Uuid'];
   map?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
@@ -805,6 +806,19 @@ export type SignUpMutation = (
   )> }
 );
 
+export type GetUserQueryVariables = Exact<{
+  userId: Scalars['Uuid'];
+}>;
+
+
+export type GetUserQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'steamId' | 'username'>
+  )> }
+);
+
 
 declare module '*/signIn.gql' {
   import { DocumentNode } from 'graphql';
@@ -828,6 +842,15 @@ declare module '*/signUp.gql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const signUp: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/Settings.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const getUser: DocumentNode;
 
   export default defaultDocument;
 }

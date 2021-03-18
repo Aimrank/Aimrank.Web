@@ -1,11 +1,10 @@
 import { ref } from "vue";
 import { GraphQLError } from "graphql";
-import { DocumentNode, QueryOptions } from "@apollo/client/core";
+import { QueryOptions } from "@apollo/client/core";
 import { apolloClient } from "~/graphql/apolloClient";
 
 export const useQuery = <T = any, TVariables = Record<string, any>>(
-  query: DocumentNode,
-  options?: QueryOptions<TVariables>
+  options: QueryOptions<TVariables>
 ) => {
   const errors = ref<readonly GraphQLError[]>([]);
   const result = ref<T>();
@@ -20,10 +19,7 @@ export const useQuery = <T = any, TVariables = Record<string, any>>(
   const fetch = async () => {
     loading.value = true;
 
-    const res = await apolloClient.query({
-      query,
-      ...(options ?? {})
-    });
+    const res = await apolloClient.query(options);
 
     loading.value = false;
 

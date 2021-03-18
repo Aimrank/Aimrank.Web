@@ -1,0 +1,7 @@
+query getUser($userId: Uuid!) {
+  user(userId: $userId) {
+    id
+    steamId
+    username
+  }
+}

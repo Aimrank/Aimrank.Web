@@ -1,11 +1,14 @@
-import { defineComponent, onMounted, ref } from "vue";
-import { steamService, userService } from "~/services";
-import { useUser } from "@/profile/hooks/useUser";
-import { useNotifications } from "@/common/hooks/useNotifications";
+import { defineComponent, onMounted } from "vue";
+import { steamService } from "~/services";
+import { GetUserQuery, GetUserQueryVariables } from "~/graphql/types/types";
+import { useQuery } from "~/graphql/useQuery";
+import { useAuth } from "@/authentication/hooks/useAuth";
 import { useInitialState } from "@/common/hooks/useInitialState";
-import { IUserDto } from "@/profile/models/IUserDto";
+import { useNotifications } from "@/common/hooks/useNotifications";
 import BaseButton from "@/common/components/BaseButton";
 import Icon from "@/common/components/Icon";
+
+import GET_USER from "./Settings.gql";
 
 const Settings = defineComponent({
   components: {
@@ -13,27 +16,22 @@ const Settings = defineComponent({
     Icon
   },
   setup() {
-    const userDetails = ref<IUserDto | null>(null);
-
-    const user = useUser();
+    const auth = useAuth();
+    const initialState = useInitialState();
     const notifications = useNotifications();
-    const { getError } = useInitialState();
 
-    onMounted(async () => {
-      if (!user.state.user) {
-        return;
+    const { result: state } = useQuery<GetUserQuery, GetUserQueryVariables>({
+      query: GET_USER,
+      variables: {
+        userId: auth.state.user!.id
       }
+    });
 
-      const result = await userService.getUserDetails(user.state.user.id);
+    onMounted(() => {
+      const error = initialState.getError();
 
-      if (result.isOk()) {
-        userDetails.value = result.value;
-
-        const error = getError();
-
-        if (error) {
-          notifications.danger(error);
-        }
+      if (error) {
+        notifications.danger(error);
       }
     });
 
@@ -46,7 +44,7 @@ const Settings = defineComponent({
     }
 
     return {
-      userDetails,
+      state,
       onConnectSteamAccount
     };
   }

@@ -44,7 +44,15 @@ const link = split(
 
 export const apolloClient = new ApolloClient({
   link,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  defaultOptions: {
+    query: {
+      fetchPolicy: "no-cache"
+    },
+    mutate: {
+      fetchPolicy: "no-cache"
+    }
+  }
 });
 
 export const reconnect = () => {

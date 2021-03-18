@@ -7,7 +7,7 @@ import { Service } from "@/common/services/Service";
 export class SteamService extends Service {
   constructor(private readonly httpClient: HttpClient) {
     super({
-      signInWithSteam: "/steam/openid"
+      signInWithSteam: "/api/steam/openid"
     });
   }
 
