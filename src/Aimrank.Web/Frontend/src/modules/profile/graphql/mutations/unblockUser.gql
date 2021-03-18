@@ -1,0 +1,11 @@
+mutation unblockUser($userId: Uuid!) {
+  unblockUser(command: {blockedUserId: $userId}) {
+    query {
+      friendship(userId: $userId) {
+        isAccepted
+        invitingUserId
+        blockingUsersIds
+      }
+    }
+  }
+}

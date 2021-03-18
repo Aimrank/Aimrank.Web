@@ -1,6 +1,7 @@
+import { isRef } from "vue";
 import { OperationDefinitionNode } from "graphql";
 import { SubscriptionClient } from "subscriptions-transport-ws";
-import { ApolloClient, concat, HttpLink, InMemoryCache, split } from "@apollo/client/core";
+import { ApolloClient, ApolloLink, concat, HttpLink, InMemoryCache, NextLink, Operation, split } from "@apollo/client/core";
 import { getMainDefinition, storeKeyNameFromField } from "@apollo/client/utilities";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { onError } from "@apollo/client/link/error";
@@ -8,6 +9,20 @@ import { onError } from "@apollo/client/link/error";
 const httpLink = new HttpLink({
   uri: `${window.location.origin}/graphql`
 });
+
+class VueReactiveMiddlewareLink extends ApolloLink {
+  request(operation: Operation, forward: NextLink) {
+    for (const variable in operation.variables) {
+      const value = operation.variables[variable];
+
+      if (isRef(value)) {
+        operation.variables[variable] = value.value;
+      }
+    }
+
+    return forward(operation);
+  }
+}
 
 const subscriptionClient = new SubscriptionClient(
   `ws://${window.location.host}/graphql`,
@@ -43,7 +58,10 @@ const link = split(
 );
 
 export const apolloClient = new ApolloClient({
-  link,
+  link: ApolloLink.from([
+    new VueReactiveMiddlewareLink(),
+    link
+  ]),
   cache: new InMemoryCache(),
   defaultOptions: {
     query: {

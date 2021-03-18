@@ -4,7 +4,7 @@
 <template>
   <div :class="$style.container">
     <div
-      v-if="isSelf && state.invites.length"
+      v-if="isCurrentUserProfile && state.invites.length"
       :class="$style.section"
     >
       <h3 :class="$style.title">{{ $t("profile.views.Friends.invitations") }}</h3>
@@ -30,7 +30,7 @@
       </table>
     </div>
     <div
-      v-if="isSelf && state.blocked.length"
+      v-if="isCurrentUserProfile && state.blocked.length"
       :class="$style.section"
     >
       <h3 :class="$style.title">{{ $t("profile.views.Friends.blocked") }}</h3>
@@ -71,8 +71,20 @@
             </router-link>
           </td>
           <td>
-            <base-button v-if="isSelf" small @click="onBlock(user.id)">Block</base-button>
-            <base-button v-if="isSelf" small @click="onDelete(user.id)">Delete</base-button>
+            <base-button
+              v-if="isCurrentUserProfile"
+              small
+              @click="onBlock(user.id)"
+            >
+              Block
+            </base-button>
+            <base-button
+              v-if="isCurrentUserProfile"
+              small
+              @click="onDelete(user.id)"
+            >
+              Delete
+            </base-button>
           </td>
         </tr>
       </table>

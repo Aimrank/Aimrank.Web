@@ -1,0 +1,11 @@
+query getProfileView($userId: Uuid!) {
+  user(userId: $userId) {
+    id
+    username
+  }
+  friendship(userId: $userId) {
+    isAccepted
+    invitingUserId
+    blockingUsersIds
+  }
+}

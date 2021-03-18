@@ -11,11 +11,11 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
   const result = ref<T>();
   const loading = ref(false);
 
-  let onDoneCallback: () => void = () => {}
-  let onErrorCallback: () => void = () => {}
+  let onDoneCallback: (result: T) => void = () => {}
+  let onErrorCallback: (errors?: readonly GraphQLError[]) => void = () => {}
 
-  const onDone = (callback: () => void) => onDoneCallback = callback;
-  const onError = (callback: () => void) => onErrorCallback = callback;
+  const onDone = (callback: (result: T) => void) => onDoneCallback = callback;
+  const onError = (callback: (errors?: readonly GraphQLError[]) => void) => onErrorCallback = callback;
 
   const mutate = async (variables?: TVariables) => {
     loading.value = true;
@@ -31,7 +31,7 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
 
       if (res.errors) {
         errors.value = res.errors;
-        onErrorCallback();
+        onErrorCallback(res.errors);
         return;
       }
 
@@ -39,7 +39,9 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
         result.value = res.data;
       }
 
-      onDoneCallback();
+      onDoneCallback(res.data);
+
+      return result.value;
     } catch (error) {
       loading.value = false;
 

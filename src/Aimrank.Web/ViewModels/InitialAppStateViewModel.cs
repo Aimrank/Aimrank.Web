@@ -1,5 +1,3 @@
-using System;
-
 namespace Aimrank.Web.ViewModels
 {
     public class InitialAppStateViewModel
@@ -10,7 +8,7 @@ namespace Aimrank.Web.ViewModels
 
     public class InitialAppStateUser
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
     }

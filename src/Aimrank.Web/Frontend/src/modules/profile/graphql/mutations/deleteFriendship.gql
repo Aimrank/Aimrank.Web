@@ -1,0 +1,5 @@
+mutation deleteFriendship($userId: Uuid!) {
+  deleteFriendship(command: {userId: $userId}) {
+    status
+  }
+}

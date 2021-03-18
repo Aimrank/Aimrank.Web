@@ -6,5 +6,6 @@ namespace Aimrank.Web.GraphQL.Mutations
     public record MutationPayloadBase
     {
         public Query GetQuery(IResolverContext context) => context.GetQueryRoot<Query>();
+        public string Status => "OK";
     }
 }

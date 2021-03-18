@@ -1,0 +1,24 @@
+fragment Friend on User {
+  id
+  username
+}
+
+query getFriendsView($userId: Uuid!) {
+  user(userId: $userId) {
+    friends(take: 20) {
+      nodes {
+        ...Friend
+      }
+    }
+  }
+  blockedUsers(take: 20) {
+    nodes {
+      ...Friend
+    }
+  }
+  friendshipInvitations(take: 20) {
+    nodes {
+      ...Friend
+    }
+  }
+}

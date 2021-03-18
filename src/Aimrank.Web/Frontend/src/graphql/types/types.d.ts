@@ -416,46 +416,55 @@ export type CreateLobbyCommandInput = {
 export type AcceptMatchPayload = {
   __typename?: 'AcceptMatchPayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type CancelSearchingForGamePayload = {
   __typename?: 'CancelSearchingForGamePayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type StartSearchingForGamePayload = {
   __typename?: 'StartSearchingForGamePayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type LeaveLobbyPayload = {
   __typename?: 'LeaveLobbyPayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type ChangeLobbyConfigurationPayload = {
   __typename?: 'ChangeLobbyConfigurationPayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type CancelLobbyInvitationPayload = {
   __typename?: 'CancelLobbyInvitationPayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type AcceptLobbyInvitationPayload = {
   __typename?: 'AcceptLobbyInvitationPayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type InviteUserToLobbyPayload = {
   __typename?: 'InviteUserToLobbyPayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type CreateLobbyPayload = {
   __typename?: 'CreateLobbyPayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type RegisterNewUserCommandInput = {
@@ -474,18 +483,21 @@ export type SignOutPayload = {
   __typename?: 'SignOutPayload';
   query?: Maybe<Query>;
   record: Scalars['Boolean'];
+  status?: Maybe<Scalars['String']>;
 };
 
 export type SignUpPayload = {
   __typename?: 'SignUpPayload';
   query?: Maybe<Query>;
   record?: Maybe<AuthenticationSuccessRecord>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type SignInPayload = {
   __typename?: 'SignInPayload';
   query?: Maybe<Query>;
   record?: Maybe<AuthenticationSuccessRecord>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type InvitePlayerToLobbyCommandInput = {
@@ -527,31 +539,37 @@ export type AcceptMatchCommandInput = {
 export type InviteUserToFriendsListPayload = {
   __typename?: 'InviteUserToFriendsListPayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type AcceptFriendshipInvitationPayload = {
   __typename?: 'AcceptFriendshipInvitationPayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type DeclineFriendshipInvitationPayload = {
   __typename?: 'DeclineFriendshipInvitationPayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type BlockUserPayload = {
   __typename?: 'BlockUserPayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type UnblockUserPayload = {
   __typename?: 'UnblockUserPayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type DeleteFriendshipPayload = {
   __typename?: 'DeleteFriendshipPayload';
   query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type InviteUserToFriendsListCommandInput = {
@@ -806,6 +824,166 @@ export type SignUpMutation = (
   )> }
 );
 
+export type AcceptFriendshipInvitationMutationVariables = Exact<{
+  userId: Scalars['Uuid'];
+}>;
+
+
+export type AcceptFriendshipInvitationMutation = (
+  { __typename?: 'Mutation' }
+  & { acceptFriendshipInvitation?: Maybe<(
+    { __typename?: 'AcceptFriendshipInvitationPayload' }
+    & { query?: Maybe<(
+      { __typename?: 'Query' }
+      & { friendship?: Maybe<(
+        { __typename?: 'Friendship' }
+        & Pick<Friendship, 'isAccepted' | 'invitingUserId' | 'blockingUsersIds'>
+      )> }
+    )> }
+  )> }
+);
+
+export type BlockUserMutationVariables = Exact<{
+  userId: Scalars['Uuid'];
+}>;
+
+
+export type BlockUserMutation = (
+  { __typename?: 'Mutation' }
+  & { blockUser?: Maybe<(
+    { __typename?: 'BlockUserPayload' }
+    & { query?: Maybe<(
+      { __typename?: 'Query' }
+      & { friendship?: Maybe<(
+        { __typename?: 'Friendship' }
+        & Pick<Friendship, 'isAccepted' | 'invitingUserId' | 'blockingUsersIds'>
+      )> }
+    )> }
+  )> }
+);
+
+export type DeclineFriendshipInvitationMutationVariables = Exact<{
+  userId: Scalars['Uuid'];
+}>;
+
+
+export type DeclineFriendshipInvitationMutation = (
+  { __typename?: 'Mutation' }
+  & { declineFriendshipInvitation?: Maybe<(
+    { __typename?: 'DeclineFriendshipInvitationPayload' }
+    & { query?: Maybe<(
+      { __typename?: 'Query' }
+      & { friendship?: Maybe<(
+        { __typename?: 'Friendship' }
+        & Pick<Friendship, 'isAccepted' | 'invitingUserId' | 'blockingUsersIds'>
+      )> }
+    )> }
+  )> }
+);
+
+export type DeleteFriendshipMutationVariables = Exact<{
+  userId: Scalars['Uuid'];
+}>;
+
+
+export type DeleteFriendshipMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteFriendship?: Maybe<(
+    { __typename?: 'DeleteFriendshipPayload' }
+    & Pick<DeleteFriendshipPayload, 'status'>
+  )> }
+);
+
+export type InviteUserToFriendsListMutationVariables = Exact<{
+  userId: Scalars['Uuid'];
+}>;
+
+
+export type InviteUserToFriendsListMutation = (
+  { __typename?: 'Mutation' }
+  & { inviteUserToFriendsList?: Maybe<(
+    { __typename?: 'InviteUserToFriendsListPayload' }
+    & { query?: Maybe<(
+      { __typename?: 'Query' }
+      & { friendship?: Maybe<(
+        { __typename?: 'Friendship' }
+        & Pick<Friendship, 'isAccepted' | 'invitingUserId' | 'blockingUsersIds'>
+      )> }
+    )> }
+  )> }
+);
+
+export type UnblockUserMutationVariables = Exact<{
+  userId: Scalars['Uuid'];
+}>;
+
+
+export type UnblockUserMutation = (
+  { __typename?: 'Mutation' }
+  & { unblockUser?: Maybe<(
+    { __typename?: 'UnblockUserPayload' }
+    & { query?: Maybe<(
+      { __typename?: 'Query' }
+      & { friendship?: Maybe<(
+        { __typename?: 'Friendship' }
+        & Pick<Friendship, 'isAccepted' | 'invitingUserId' | 'blockingUsersIds'>
+      )> }
+    )> }
+  )> }
+);
+
+export type FriendFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'username'>
+);
+
+export type GetFriendsViewQueryVariables = Exact<{
+  userId: Scalars['Uuid'];
+}>;
+
+
+export type GetFriendsViewQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & { friends?: Maybe<(
+      { __typename?: 'UserConnection' }
+      & { nodes?: Maybe<Array<Maybe<(
+        { __typename?: 'User' }
+        & FriendFragment
+      )>>> }
+    )> }
+  )>, blockedUsers?: Maybe<(
+    { __typename?: 'UserConnection' }
+    & { nodes?: Maybe<Array<Maybe<(
+      { __typename?: 'User' }
+      & FriendFragment
+    )>>> }
+  )>, friendshipInvitations?: Maybe<(
+    { __typename?: 'UserConnection' }
+    & { nodes?: Maybe<Array<Maybe<(
+      { __typename?: 'User' }
+      & FriendFragment
+    )>>> }
+  )> }
+);
+
+export type GetProfileViewQueryVariables = Exact<{
+  userId: Scalars['Uuid'];
+}>;
+
+
+export type GetProfileViewQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username'>
+  )>, friendship?: Maybe<(
+    { __typename?: 'Friendship' }
+    & Pick<Friendship, 'isAccepted' | 'invitingUserId' | 'blockingUsersIds'>
+  )> }
+);
+
 export type GetUserQueryVariables = Exact<{
   userId: Scalars['Uuid'];
 }>;
@@ -842,6 +1020,79 @@ declare module '*/signUp.gql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const signUp: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/acceptFriendshipInvitation.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const acceptFriendshipInvitation: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/blockUser.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const blockUser: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/declineFriendshipInvitation.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const declineFriendshipInvitation: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/deleteFriendship.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const deleteFriendship: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/inviteUserToFriendsList.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const inviteUserToFriendsList: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/unblockUser.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const unblockUser: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/getFriendsView.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const Friend: DocumentNode;
+export const getFriendsView: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/getProfileView.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const getProfileView: DocumentNode;
 
   export default defaultDocument;
 }

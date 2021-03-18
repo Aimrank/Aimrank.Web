@@ -32,7 +32,7 @@ namespace Aimrank.Web.ViewComponents
                 {
                     model.User = new InitialAppStateUser
                     {
-                        Id = Guid.Parse(id.Value),
+                        Id = Guid.Parse(id.Value).ToString("N"),
                         Email = email.Value,
                         Username = username.Value
                     };

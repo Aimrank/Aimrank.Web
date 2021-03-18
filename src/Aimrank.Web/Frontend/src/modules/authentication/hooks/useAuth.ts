@@ -83,11 +83,11 @@ const signOut = async () => {
 
   await mutate();
 
+  await router.push({ name: "home" });
+
   setCurrentUser(null);
 
   reconnect();
-
-  await router.push({ name: "home" });
 }
 
 export const useAuth = () => ({
