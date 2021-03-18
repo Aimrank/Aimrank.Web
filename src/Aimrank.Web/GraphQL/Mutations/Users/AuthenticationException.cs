@@ -1,6 +1,6 @@
 using Aimrank.Common.Application.Exceptions;
 
-namespace Aimrank.Web.GraphQL.Mutations
+namespace Aimrank.Web.GraphQL.Mutations.Users
 {
     public class AuthenticationException : ApplicationException
     {

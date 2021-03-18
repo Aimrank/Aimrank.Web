@@ -2,7 +2,7 @@ using Aimrank.Common.Application.Events;
 using Aimrank.Modules.Matches.Application.Contracts;
 using Aimrank.Modules.Matches.Application.Matches.TimeoutReadyMatch;
 using Aimrank.Modules.Matches.IntegrationEvents.Matches;
-using Aimrank.Web.GraphQL.Subscriptions.Messages.Lobbies;
+using Aimrank.Web.GraphQL.Subscriptions.Lobbies;
 using HotChocolate.Subscriptions;
 using System.Threading.Tasks;
 using System.Threading;
@@ -34,7 +34,7 @@ namespace Aimrank.Web.Modules.Matches.Matches
             
             #pragma warning restore 4014
 
-            var message = new MatchReadyMessage(
+            var message = new MatchReadyPayload(
                 @event.MatchId,
                 @event.Map, 
                 DateTime.UtcNow.AddSeconds(30),

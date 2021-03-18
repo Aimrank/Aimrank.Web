@@ -7,8 +7,13 @@ using Aimrank.Modules.UserAccess.Infrastructure.Configuration;
 using Aimrank.Web.Configuration.EventBus;
 using Aimrank.Web.Configuration.ExecutionContext;
 using Aimrank.Web.Configuration.SessionAuthentication;
+using Aimrank.Web.GraphQL.Mutations.Friendships;
+using Aimrank.Web.GraphQL.Mutations.Lobbies;
+using Aimrank.Web.GraphQL.Mutations.Users;
 using Aimrank.Web.GraphQL.Mutations;
 using Aimrank.Web.GraphQL.Queries;
+using Aimrank.Web.GraphQL.Subscriptions.Lobbies;
+using Aimrank.Web.GraphQL.Subscriptions.Users;
 using Aimrank.Web.GraphQL.Subscriptions;
 using Aimrank.Web.GraphQL;
 using Aimrank.Web.Modules.Matches;
@@ -73,7 +78,12 @@ namespace Aimrank.Web
                 .AddGraphQLServer()
                 .AddQueryType<QueryType>()
                 .AddMutationType<Mutation>()
+                .AddType<UserMutations>()
+                .AddType<LobbyMutations>()
+                .AddType<FriendshipMutations>()
                 .AddSubscriptionType<Subscription>()
+                .AddType<UserSubscriptions>()
+                .AddType<LobbySubscriptions>()
                 .AddErrorFilter<GraphQLErrorFilter>()
                 .AddInMemorySubscriptions()
                 .AddAuthorization();

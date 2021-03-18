@@ -1,5 +1,6 @@
 import { reactive, readonly } from "vue";
 import { router } from "~/router";
+import { reconnect } from "~/graphql/apolloClient";
 import { useMutation } from "~/graphql/useMutation";
 import {
   AuthenticateCommandInput,
@@ -46,6 +47,8 @@ const signIn = async (command: AuthenticateCommandInput) => {
       email: result.value.signIn.record.email,
       username: result.value.signIn.record.username
     });
+
+    reconnect();
   }
 
   return {
@@ -65,6 +68,8 @@ const signUp = async (command: RegisterNewUserCommandInput) => {
       email: result.value.signUp.record.email,
       username: result.value.signUp.record.username
     });
+
+    reconnect();
   }
 
   return {
@@ -79,6 +84,8 @@ const signOut = async () => {
   await mutate();
 
   setCurrentUser(null);
+
+  reconnect();
 
   await router.push({ name: "home" });
 }
