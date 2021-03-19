@@ -1,6 +1,6 @@
 using Aimrank.Common.Application.Queries;
+using Aimrank.Modules.Matches.Application.Players.GetPlayerStatsBatch;
 using Aimrank.Modules.UserAccess.Application.Users.GetUserBatch;
-using Aimrank.Modules.UserAccess.Application.Users.GetUserStatsBatch;
 using Aimrank.Web.GraphQL.Queries.DataLoaders;
 using HotChocolate.Types.Pagination;
 using HotChocolate.Types;
@@ -23,7 +23,7 @@ namespace Aimrank.Web.GraphQL.Queries.Models
             Username = dto.Username;
         }
 
-        public Task<UserStatsDto> GetStats([DataLoader] UserStatsDataLoader loader)
+        public Task<PlayerStatsDto> GetStats([DataLoader] PlayerStatsDataLoader loader)
             => loader.LoadAsync(Id, CancellationToken.None);
         
         public async Task<Connection<User>> GetFriends(
@@ -41,8 +41,8 @@ namespace Aimrank.Web.GraphQL.Queries.Models
                 .AsConnection(skip, take);
         }
 
-        public Task<string> GetSteamId([DataLoader] SteamIdDataLoader steamIdDataLoader)
-            => steamIdDataLoader.LoadAsync(Id, CancellationToken.None);
+        public Task<string> GetSteamId([DataLoader] SteamIdDataLoader loader)
+            => loader.LoadAsync(Id, CancellationToken.None);
     }
 
     public class UserType : ObjectType<User>

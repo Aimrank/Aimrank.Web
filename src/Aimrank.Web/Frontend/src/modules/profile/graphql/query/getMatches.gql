@@ -1,0 +1,22 @@
+#import "./TeamPlayer.gql"
+
+query getMatches($userId: Uuid! $mode: Int!) {
+  matches(filter: {playerId: $userId mode: $mode} take: 20) {
+    nodes {
+      id
+      map
+      mode
+      scoreT
+      scoreCT
+      winner
+      teamTerrorists {
+        ...TeamPlayer
+      }
+      teamCounterTerrorists {
+        ...TeamPlayer
+      }
+      createdAt
+      finishedAt
+    }
+  }
+}

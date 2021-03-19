@@ -1,4 +1,4 @@
-import { ComputedRef } from "vue";
+import { Ref } from "vue";
 
 import { useQuery } from "~/graphql/useQuery";
 import { useMutation } from "~/graphql/useMutation";
@@ -12,6 +12,8 @@ import INVITE_USER_TO_FRIENDS_LIST from "./mutations/inviteUserToFriendsList.gql
 
 import GET_FRIENDS_VIEW from "./query/getFriendsView.gql";
 import GET_PROFILE_VIEW from "./query/getProfileView.gql";
+import GET_MATCHES_VIEW from "./query/getMatchesView.gql";
+import GET_MATCHES from "./query/getMatches.gql";
 
 import {
   AcceptFriendshipInvitationMutation,
@@ -24,6 +26,10 @@ import {
   DeleteFriendshipMutationVariables,
   GetFriendsViewQuery,
   GetFriendsViewQueryVariables,
+  GetMatchesQuery,
+  GetMatchesQueryVariables,
+  GetMatchesViewQuery,
+  GetMatchesViewQueryVariables,
   GetProfileViewQuery,
   GetProfileViewQueryVariables,
   InviteUserToFriendsListMutation,
@@ -56,7 +62,7 @@ export const useDeleteFriendship = () => useMutation<
   DeleteFriendshipMutation,
   DeleteFriendshipMutationVariables>(DELETE_FRIENDSHIP);
 
-export const useFriendsView = (userId: string | ComputedRef<string>) => useQuery<
+export const useFriendsView = (userId: string | Ref<string>) => useQuery<
   GetFriendsViewQuery,
   GetFriendsViewQueryVariables>({
     query: GET_FRIENDS_VIEW,
@@ -65,7 +71,7 @@ export const useFriendsView = (userId: string | ComputedRef<string>) => useQuery
     }
   });
 
-export const useProfileView = (userId: string | ComputedRef<string>) => useQuery<
+export const useProfileView = (userId: string | Ref<string>) => useQuery<
   GetProfileViewQuery,
   GetProfileViewQueryVariables>({
     query: GET_PROFILE_VIEW,
@@ -73,3 +79,31 @@ export const useProfileView = (userId: string | ComputedRef<string>) => useQuery
       userId
     }
   });
+
+export const useMatchesView = (
+  userId: string | Ref<string>,
+  mode: number | Ref<number>
+) => useQuery<
+  GetMatchesViewQuery,
+  GetMatchesViewQueryVariables>({
+    query: GET_MATCHES_VIEW,
+    variables: {
+      // @ts-ignore
+      mode,
+      userId
+    }
+  });
+
+export const useMatches = (
+  userId: string | Ref<string>,
+  mode: number | Ref<number>
+) => useQuery<
+  GetMatchesQuery,
+  GetMatchesQueryVariables>({
+    query: GET_MATCHES,
+    variables: {
+      // @ts-ignore
+      mode,
+      userId
+    }
+  }, true);

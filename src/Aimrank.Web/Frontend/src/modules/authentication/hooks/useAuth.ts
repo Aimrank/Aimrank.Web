@@ -1,19 +1,15 @@
 import { reactive, readonly } from "vue";
 import { router } from "~/router";
 import { reconnect } from "~/graphql/apolloClient";
-import { useMutation } from "~/graphql/useMutation";
 import {
   AuthenticateCommandInput,
-  SignInMutationVariables,
-  SignInMutation,
   RegisterNewUserCommandInput,
-  SignUpMutationVariables,
-  SignUpMutation
 } from "~/graphql/types/types";
-
-import SIGN_IN from "./signIn.gql";
-import SIGN_UP from "./signUp.gql";
-import SIGN_OUT from "./signOut.gql";
+import {
+  useSignIn,
+  useSignOut,
+  useSignUp
+} from "@/authentication/graphql";
 
 interface IAuthUser {
   id: string;
@@ -37,7 +33,7 @@ const setCurrentUser = (user: IAuthUser | null) => {
 }
 
 const signIn = async (command: AuthenticateCommandInput) => {
-  const { mutate, result, errors } = useMutation<SignInMutation, SignInMutationVariables>(SIGN_IN);
+  const { mutate, result, errors } = useSignIn();
 
   await mutate({ command });
 
@@ -58,7 +54,7 @@ const signIn = async (command: AuthenticateCommandInput) => {
 }
 
 const signUp = async (command: RegisterNewUserCommandInput) => {
-  const { mutate, result, errors } = useMutation<SignUpMutation, SignUpMutationVariables>(SIGN_UP);
+  const { mutate, result, errors } = useSignUp();
 
   await mutate({ command });
 
@@ -79,7 +75,7 @@ const signUp = async (command: RegisterNewUserCommandInput) => {
 }
 
 const signOut = async () => {
-  const { mutate } = useMutation(SIGN_OUT);
+  const { mutate } = useSignOut();
 
   await mutate();
 

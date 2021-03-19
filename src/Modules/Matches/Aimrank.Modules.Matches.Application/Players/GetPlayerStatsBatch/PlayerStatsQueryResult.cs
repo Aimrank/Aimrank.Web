@@ -1,10 +1,10 @@
 using System;
 
-namespace Aimrank.Modules.UserAccess.Application.Users.GetUserStatsBatch
+namespace Aimrank.Modules.Matches.Application.Players.GetPlayerStatsBatch
 {
-    public class UserStatsQueryResult
+    public class PlayerStatsQueryResult
     {
-        public Guid UserId { get; set; }
+        public Guid PlayerId { get; set; }
         public int Mode { get; set; }
         public string Map { get; set; }
         public int MatchesTotal { get; set; }

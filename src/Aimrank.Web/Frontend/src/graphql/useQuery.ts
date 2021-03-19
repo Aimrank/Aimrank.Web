@@ -4,7 +4,8 @@ import { QueryOptions } from "@apollo/client/core";
 import { apolloClient } from "~/graphql/apolloClient";
 
 export const useQuery = <T = any, TVariables = Record<string, any>>(
-  options: QueryOptions<TVariables>
+  options: QueryOptions<TVariables>,
+  lazy = false
 ) => {
   const errors = ref<readonly GraphQLError[]>([]);
   const result = ref<T>();
@@ -36,7 +37,9 @@ export const useQuery = <T = any, TVariables = Record<string, any>>(
     onDoneCallback();
   }
 
-  fetch();
+  if (!lazy) {
+    fetch();
+  }
 
   return {
     fetch,

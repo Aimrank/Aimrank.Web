@@ -1,29 +1,29 @@
 using Aimrank.Common.Application.Data;
-using Aimrank.Modules.UserAccess.Application.Contracts;
+using Aimrank.Modules.Matches.Application.Contracts;
 using Dapper;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Modules.UserAccess.Application.Users.GetUserStatsBatch
+namespace Aimrank.Modules.Matches.Application.Players.GetPlayerStatsBatch
 {
-    public class GetUserStatsBatchQueryHandler : IQueryHandler<GetUserStatsBatchQuery, IEnumerable<UserStatsDto>>
+    public class GetPlayerStatsBatchQueryHandler : IQueryHandler<GetPlayerStatsBatchQuery, IEnumerable<PlayerStatsDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public GetUserStatsBatchQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
+        public GetPlayerStatsBatchQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<IEnumerable<UserStatsDto>> Handle(GetUserStatsBatchQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PlayerStatsDto>> Handle(GetPlayerStatsBatchQuery request, CancellationToken cancellationToken)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = @"
                 SELECT
-                    [P].[UserId] AS [UserId],
+                    [P].[PlayerId] AS [PlayerId],
                     [M].[Mode] AS [Mode],
                     [M].[Map] AS [Map],
                     COUNT(*) AS [MatchesTotal],
@@ -33,27 +33,27 @@ namespace Aimrank.Modules.UserAccess.Application.Users.GetUserStatsBatch
                     SUM([P].[Stats_Hs]) AS [TotalHs]
                 FROM [matches].[Matches] AS [M]
                 INNER JOIN [matches].[MatchesPlayers] AS [P] ON [P].[MatchId] = [M].[Id]
-                WHERE [P].[UserId] IN @UserIds
-                GROUP BY [P].[UserId], [M].[Mode], [M].[Map];";
+                WHERE [P].[PlayerId] IN @PlayerIds
+                GROUP BY [P].[PlayerId], [M].[Mode], [M].[Map];";
 
-            var result = await connection.QueryAsync<UserStatsQueryResult>(sql, new {request.UserIds});
+            var result = await connection.QueryAsync<PlayerStatsQueryResult>(sql, new {request.PlayerIds});
 
-            var lookup = result.GroupBy(u => u.UserId).ToDictionary(g => g.Key);
+            var lookup = result.GroupBy(u => u.PlayerId).ToDictionary(g => g.Key);
 
-            return request.UserIds.Select(id =>
+            return request.PlayerIds.Select(id =>
             {
-                var user = lookup.GetValueOrDefault(id);
+                var player = lookup.GetValueOrDefault(id);
 
-                return user is null
+                return player is null
                     ? null
-                    : new UserStatsDto
+                    : new PlayerStatsDto
                     {
-                        MatchesTotal = user.Sum(r => r.MatchesTotal),
-                        MatchesWon = user.Sum(r => r.MatchesWon),
-                        TotalKills = user.Sum(r => r.TotalKills),
-                        TotalDeaths = user.Sum(r => r.TotalDeaths),
-                        TotalHs = user.Sum(r => r.TotalHs),
-                        Modes = user.GroupBy(r => r.Mode).Select(m => new UserStatsModeDto
+                        MatchesTotal = player.Sum(r => r.MatchesTotal),
+                        MatchesWon = player.Sum(r => r.MatchesWon),
+                        TotalKills = player.Sum(r => r.TotalKills),
+                        TotalDeaths = player.Sum(r => r.TotalDeaths),
+                        TotalHs = player.Sum(r => r.TotalHs),
+                        Modes = player.GroupBy(r => r.Mode).Select(m => new PlayerStatsModeDto
                         {
                             Mode = m.Key,
                             MatchesTotal = m.Sum(r => r.MatchesTotal),
@@ -61,7 +61,7 @@ namespace Aimrank.Modules.UserAccess.Application.Users.GetUserStatsBatch
                             TotalKills = m.Sum(r => r.TotalKills),
                             TotalDeaths = m.Sum(r => r.TotalDeaths),
                             TotalHs = m.Sum(r => r.TotalHs),
-                            Maps = m.GroupBy(r => r.Map).Select(m => new UserStatsMapDto
+                            Maps = m.GroupBy(r => r.Map).Select(m => new PlayerStatsMapDto
                             {
                                 Map = m.Key,
                                 MatchesTotal = m.Sum(r => r.MatchesTotal),

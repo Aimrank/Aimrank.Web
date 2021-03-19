@@ -97,7 +97,7 @@ export type User = {
   __typename?: 'User';
   friends?: Maybe<UserConnection>;
   username: Scalars['String'];
-  stats?: Maybe<UserStatsDto>;
+  stats?: Maybe<PlayerStatsDto>;
   steamId?: Maybe<Scalars['String']>;
   id: Scalars['Uuid'];
 };
@@ -360,14 +360,14 @@ export type SubscriptionLobbyMemberRoleChangedArgs = {
   lobbyId: Scalars['Uuid'];
 };
 
-export type UserStatsDto = {
-  __typename?: 'UserStatsDto';
+export type PlayerStatsDto = {
+  __typename?: 'PlayerStatsDto';
   matchesTotal: Scalars['Int'];
   matchesWon: Scalars['Int'];
   totalKills: Scalars['Int'];
   totalDeaths: Scalars['Int'];
   totalHs: Scalars['Int'];
-  modes?: Maybe<Array<Maybe<UserStatsModeDto>>>;
+  modes?: Maybe<Array<Maybe<PlayerStatsModeDto>>>;
 };
 
 export type Friendship = {
@@ -724,15 +724,15 @@ export type MemberRoleChangedEvent = {
   occurredAt: Scalars['DateTime'];
 };
 
-export type UserStatsModeDto = {
-  __typename?: 'UserStatsModeDto';
+export type PlayerStatsModeDto = {
+  __typename?: 'PlayerStatsModeDto';
   mode: Scalars['Int'];
   matchesTotal: Scalars['Int'];
   matchesWon: Scalars['Int'];
   totalKills: Scalars['Int'];
   totalDeaths: Scalars['Int'];
   totalHs: Scalars['Int'];
-  maps?: Maybe<Array<Maybe<UserStatsMapDto>>>;
+  maps?: Maybe<Array<Maybe<PlayerStatsMapDto>>>;
 };
 
 export type LobbyMatch = {
@@ -764,8 +764,8 @@ export type LobbyConfiguration = {
   mode: Scalars['Int'];
 };
 
-export type UserStatsMapDto = {
-  __typename?: 'UserStatsMapDto';
+export type PlayerStatsMapDto = {
+  __typename?: 'PlayerStatsMapDto';
   map?: Maybe<Scalars['String']>;
   matchesTotal: Scalars['Int'];
   matchesWon: Scalars['Int'];
@@ -932,6 +932,15 @@ export type UnblockUserMutation = (
   )> }
 );
 
+export type TeamPlayerFragment = (
+  { __typename?: 'MatchPlayer' }
+  & Pick<MatchPlayer, 'team' | 'kills' | 'assists' | 'deaths' | 'hs' | 'ratingStart' | 'ratingEnd'>
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username'>
+  )> }
+);
+
 export type FriendFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'username'>
@@ -965,6 +974,60 @@ export type GetFriendsViewQuery = (
       { __typename?: 'User' }
       & FriendFragment
     )>>> }
+  )> }
+);
+
+export type GetMatchesQueryVariables = Exact<{
+  userId: Scalars['Uuid'];
+  mode: Scalars['Int'];
+}>;
+
+
+export type GetMatchesQuery = (
+  { __typename?: 'Query' }
+  & { matches?: Maybe<(
+    { __typename?: 'MatchConnection' }
+    & { nodes?: Maybe<Array<Maybe<(
+      { __typename?: 'Match' }
+      & Pick<Match, 'id' | 'map' | 'mode' | 'scoreT' | 'scoreCT' | 'winner' | 'createdAt' | 'finishedAt'>
+      & { teamTerrorists?: Maybe<Array<Maybe<(
+        { __typename?: 'MatchPlayer' }
+        & TeamPlayerFragment
+      )>>>, teamCounterTerrorists?: Maybe<Array<Maybe<(
+        { __typename?: 'MatchPlayer' }
+        & TeamPlayerFragment
+      )>>> }
+    )>>> }
+  )> }
+);
+
+export type GetMatchesViewQueryVariables = Exact<{
+  userId: Scalars['Uuid'];
+  mode: Scalars['Int'];
+}>;
+
+
+export type GetMatchesViewQuery = (
+  { __typename?: 'Query' }
+  & { matches?: Maybe<(
+    { __typename?: 'MatchConnection' }
+    & { nodes?: Maybe<Array<Maybe<(
+      { __typename?: 'Match' }
+      & Pick<Match, 'id' | 'map' | 'mode' | 'scoreT' | 'scoreCT' | 'winner' | 'createdAt' | 'finishedAt'>
+      & { teamTerrorists?: Maybe<Array<Maybe<(
+        { __typename?: 'MatchPlayer' }
+        & TeamPlayerFragment
+      )>>>, teamCounterTerrorists?: Maybe<Array<Maybe<(
+        { __typename?: 'MatchPlayer' }
+        & TeamPlayerFragment
+      )>>> }
+    )>>> }
+  )>, user?: Maybe<(
+    { __typename?: 'User' }
+    & { stats?: Maybe<(
+      { __typename?: 'PlayerStatsDto' }
+      & Pick<PlayerStatsDto, 'matchesTotal' | 'matchesWon' | 'totalHs' | 'totalKills' | 'totalDeaths'>
+    )> }
   )> }
 );
 
@@ -1079,11 +1142,38 @@ declare module '*/unblockUser.gql' {
 }
     
 
+declare module '*/TeamPlayer.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const TeamPlayer: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/getFriendsView.gql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const Friend: DocumentNode;
 export const getFriendsView: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/getMatches.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const getMatches: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/getMatchesView.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const getMatchesView: DocumentNode;
 
   export default defaultDocument;
 }

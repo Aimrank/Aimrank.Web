@@ -15,16 +15,16 @@
       <th>Rating</th>
     </tr>
     <tr
-      v-for="match in matches"
+      v-for="match in matchesFiltered"
       :key="match.id"
     >
       <td>{{ new Date(match.finishedAt).toLocaleDateString() }}</td>
       <td>{{ match.map }}</td>
-      <td>{{ match.teamTerrorists[0].username }}</td>
+      <td>{{ match.teamTerrorists[0].user.username }}</td>
       <td>
         <strong>{{ match.scoreT }} : {{ match.scoreCT }}</strong>
       </td>
-      <td>{{ match.teamCounterTerrorists[0].username }}</td>
+      <td>{{ match.teamCounterTerrorists[0].user.username }}</td>
       <td>{{ (match.matchPlayerResult.kills === 0 ? 0 : match.matchPlayerResult.kills / match.matchPlayerResult.deaths).toFixed(2) }}</td>
       <td>{{ Math.round(match.matchPlayerResult.hsPercentage) }}</td>
       <td

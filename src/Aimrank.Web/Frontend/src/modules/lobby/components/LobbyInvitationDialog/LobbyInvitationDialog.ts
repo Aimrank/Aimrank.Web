@@ -1,5 +1,5 @@
 import { defineComponent, ref, watch } from "vue";
-import { friendshipService, lobbyService } from "~/services";
+import { lobbyService } from "~/services";
 import { useUser } from "@/profile/hooks/useUser";
 import { IUserDto } from "@/profile/models/IUserDto";
 import { useNotifications } from "@/common/hooks/useNotifications";
@@ -28,11 +28,7 @@ const LobbyInvitationDialog = defineComponent({
     const close = () => emit("close");
 
     const onDialogOpen = async () => {
-      const result = await friendshipService.getFriendsList(user.state.user!.id);
-
-      if (result.isOk()) {
-        users.value = result.value;
-      }
+      users.value = []; //await friendshipService.getFriendsList(user.state.user!.id);
     }
 
     const onInviteClick = async (userId: string) => {

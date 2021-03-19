@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 
-namespace Aimrank.Modules.UserAccess.Application.Users.GetUserStatsBatch
+namespace Aimrank.Modules.Matches.Application.Players.GetPlayerStatsBatch
 {
-    public class UserStatsModeDto
+    public class PlayerStatsDto
     {
-        public int Mode { get; set; }
         public int MatchesTotal { get; set; }
         public int MatchesWon { get; set; }
         public int TotalKills { get; set; }
         public int TotalDeaths { get; set; }
         public int TotalHs { get; set; }
-        public IEnumerable<UserStatsMapDto> Maps { get; set; }
+        public IEnumerable<PlayerStatsModeDto> Modes { get; set; }
     }
 }
