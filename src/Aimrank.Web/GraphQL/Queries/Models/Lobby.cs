@@ -29,9 +29,5 @@ namespace Aimrank.Web.GraphQL.Queries.Models
             => loader.LoadAsync(Id, CancellationToken.None);
 
         public IEnumerable<LobbyMember> GetMembers() => _members;
-
-        public Task<IEnumerable<LobbyInvitation>> GetInvitations(
-            [DataLoader] LobbyInvitationsDataLoader loader)
-            => loader.LoadAsync(0, CancellationToken.None);
     }
 }

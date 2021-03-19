@@ -36,18 +36,24 @@ const FriendshipButtons = defineComponent({
     const { mutate: unblockUser } = useUnblockUser();
 
     const onInvite = async (userId: string) => {
-      const result = await inviteUser({ userId });
-      setFriendship(result?.inviteUserToFriendsList?.query?.friendship);
+      const { success, result } = await inviteUser({ userId });
+      if (success) {
+        setFriendship(result?.inviteUserToFriendsList?.query?.friendship);
+      }
     }
 
     const onAccept = async (userId: string) => {
-      const result = await acceptInvitation({ userId });
-      setFriendship(result?.acceptFriendshipInvitation?.query?.friendship);
+      const { success, result } = await acceptInvitation({ userId });
+      if (success) {
+        setFriendship(result?.acceptFriendshipInvitation?.query?.friendship);
+      }
     }
 
     const onDecline = async (userId: string) => {
-      const result = await declineInvitation({ userId });
-      setFriendship(result?.declineFriendshipInvitation?.query?.friendship);
+      const { success, result } = await declineInvitation({ userId });
+      if (success) {
+        setFriendship(result?.declineFriendshipInvitation?.query?.friendship);
+      }
     }
     
     const onDelete = async (userId: string) => {
@@ -56,8 +62,10 @@ const FriendshipButtons = defineComponent({
     }
 
     const onUnblock = async (userId: string) => {
-      const result = await unblockUser({ userId });
-      setFriendship(result?.unblockUser?.query?.friendship);
+      const { success, result } = await unblockUser({ userId });
+      if (success) {
+        setFriendship(result?.unblockUser?.query?.friendship);
+      }
     }
 
     return {

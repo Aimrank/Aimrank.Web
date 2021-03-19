@@ -16,7 +16,7 @@
         v-for="invitation in invitations"
         :key="invitation.lobbyId"
       >
-        <td>{{ invitation.invitingUserName }}</td>
+        <td>{{ invitation.invitingUser.username }}</td>
         <td>
           {{ new Date(invitation.createdAt).toLocaleDateString() }}
         </td>

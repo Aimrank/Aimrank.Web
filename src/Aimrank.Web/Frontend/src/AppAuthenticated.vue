@@ -11,6 +11,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useFriendshipInvitationCreated } from "@/profile/graphql";
+import { useLobbyInvitationCreated } from "@/lobby/graphql";
 import { useNotifications } from "@/common/hooks/useNotifications";
 import MatchDialog from "@/lobby/components/MatchDialog";
 import UsersDialog from "@/common/components/UsersDialog";
@@ -26,9 +27,11 @@ const AppAuthenticated = defineComponent({
   },
   setup() {
     const { success } = useNotifications();
-    const { onResult } = useFriendshipInvitationCreated();
+    const { onResult: onFriendshipInvitationCreated } = useFriendshipInvitationCreated();
+    const { onResult: onLobbyInvitationCreated } = useLobbyInvitationCreated();
 
-    onResult(result => success("Friendship invitation received"));
+    onFriendshipInvitationCreated(result => success("Friendship invitation received"));
+    onLobbyInvitationCreated(result => success("Lobby invitation received"));
   }
 });
 

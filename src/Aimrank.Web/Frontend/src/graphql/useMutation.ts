@@ -20,6 +20,12 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
   const onDone = (callback: MutationDoneCallback<T>) => onDoneCallback = callback;
   const onError = (callback: MutationErrorCallback) => onErrorCallback = callback;
 
+  const createResult = () => ({
+    success: errors.value.length === 0,
+    errors: errors.value,
+    result: result.value
+  });
+
   const mutate = async (variables?: TVariables) => {
     loading.value = true;
 
@@ -39,7 +45,7 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
           onErrorCallback(res.errors);
         }
 
-        return;
+        return createResult();
       }
 
       if (res.data) {
@@ -50,7 +56,7 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
         onDoneCallback(res.data);
       }
 
-      return result.value;
+      return createResult();
     } catch (error) {
       loading.value = false;
 
@@ -61,6 +67,8 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
       if (onErrorCallback) {
         onErrorCallback();
       }
+
+      return createResult();
     }
   }
 

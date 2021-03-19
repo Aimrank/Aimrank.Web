@@ -16,7 +16,7 @@ import GET_PROFILE_VIEW from "./query/getProfileView.gql";
 import GET_MATCHES_VIEW from "./query/getMatchesView.gql";
 import GET_MATCHES from "./query/getMatches.gql";
 
-import FRIENDSHIP_INVITATION_RECEIVED from "./subscriptions/friendshipInvitationReceived.gql";
+import FRIENDSHIP_INVITATION_CREATED from "./subscriptions/friendshipInvitationCreated.gql";
 
 import {
   AcceptFriendshipInvitationMutation,
@@ -113,10 +113,8 @@ export const useMatches = (
     }
   }, true);
 
-export const useFriendshipInvitationCreated = (
-  lazy = false
-) => useSubscription<
+export const useFriendshipInvitationCreated = () => useSubscription<
     FriendshipInvitationCreatedSubscription,
     FriendshipInvitationCreatedSubscriptionVariables>({
-      query: FRIENDSHIP_INVITATION_RECEIVED
-    }, lazy);
+      query: FRIENDSHIP_INVITATION_CREATED
+    });

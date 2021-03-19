@@ -26,6 +26,7 @@ export type Query = {
   user?: Maybe<User>;
   friendship?: Maybe<Friendship>;
   lobby?: Maybe<Lobby>;
+  lobbyInvitations?: Maybe<Array<Maybe<LobbyInvitation>>>;
 };
 
 
@@ -373,10 +374,17 @@ export type Lobby = {
   __typename?: 'Lobby';
   match?: Maybe<LobbyMatch>;
   members?: Maybe<Array<Maybe<LobbyMember>>>;
-  invitations?: Maybe<Array<Maybe<LobbyInvitation>>>;
   id: Scalars['Uuid'];
   status: Scalars['Int'];
   configuration?: Maybe<LobbyConfiguration>;
+};
+
+export type LobbyInvitation = {
+  __typename?: 'LobbyInvitation';
+  invitingUser?: Maybe<User>;
+  invitedUser?: Maybe<User>;
+  lobbyId: Scalars['Uuid'];
+  createdAt: Scalars['DateTime'];
 };
 
 export type FinishedMatchesFilterInput = {
@@ -397,6 +405,11 @@ export type MatchPlayer = {
   hs: Scalars['Int'];
   ratingStart: Scalars['Int'];
   ratingEnd: Scalars['Int'];
+};
+
+export type InvitePlayerToLobbyCommandInput = {
+  lobbyId: Scalars['Uuid'];
+  invitedPlayerId: Scalars['Uuid'];
 };
 
 export type CreateLobbyCommandInput = {
@@ -488,11 +501,6 @@ export type SignInPayload = {
   query?: Maybe<Query>;
   record?: Maybe<AuthenticationSuccessRecord>;
   status?: Maybe<Scalars['String']>;
-};
-
-export type InvitePlayerToLobbyCommandInput = {
-  lobbyId: Scalars['Uuid'];
-  invitedPlayerId: Scalars['Uuid'];
 };
 
 export type AcceptLobbyInvitationCommandInput = {
@@ -739,13 +747,6 @@ export type LobbyMember = {
   isLeader: Scalars['Boolean'];
 };
 
-export type LobbyInvitation = {
-  __typename?: 'LobbyInvitation';
-  invitingUser?: Maybe<User>;
-  invitedUser?: Maybe<User>;
-  createdAt: Scalars['DateTime'];
-};
-
 export type LobbyConfiguration = {
   __typename?: 'LobbyConfiguration';
   map?: Maybe<Scalars['String']>;
@@ -839,6 +840,61 @@ export type GetUsersQuery = (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
     )>>> }
+  )> }
+);
+
+export type AcceptLobbyInvitationMutationVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type AcceptLobbyInvitationMutation = (
+  { __typename?: 'Mutation' }
+  & { acceptLobbyInvitation?: Maybe<(
+    { __typename?: 'AcceptLobbyInvitationPayload' }
+    & Pick<AcceptLobbyInvitationPayload, 'status'>
+  )> }
+);
+
+export type CancelLobbyInvitationMutationVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type CancelLobbyInvitationMutation = (
+  { __typename?: 'Mutation' }
+  & { cancelLobbyInvitation?: Maybe<(
+    { __typename?: 'CancelLobbyInvitationPayload' }
+    & Pick<CancelLobbyInvitationPayload, 'status'>
+  )> }
+);
+
+export type GetLobbyInvitationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetLobbyInvitationsQuery = (
+  { __typename?: 'Query' }
+  & { lobbyInvitations?: Maybe<Array<Maybe<(
+    { __typename?: 'LobbyInvitation' }
+    & Pick<LobbyInvitation, 'lobbyId' | 'createdAt'>
+    & { invitingUser?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username'>
+    )> }
+  )>>> }
+);
+
+export type LobbyInvitationCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LobbyInvitationCreatedSubscription = (
+  { __typename?: 'Subscription' }
+  & { lobbyInvitationCreated?: Maybe<(
+    { __typename?: 'LobbyInvitationCreatedPayload' }
+    & { record?: Maybe<(
+      { __typename?: 'LobbyInvitationCreatedRecord' }
+      & Pick<LobbyInvitationCreatedRecord, 'lobbyId' | 'invitingPlayerId'>
+    )> }
   )> }
 );
 
@@ -1129,6 +1185,42 @@ declare module '*/getUsers.gql' {
 }
     
 
+declare module '*/acceptLobbyInvitation.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const acceptLobbyInvitation: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/cancelLobbyInvitation.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const cancelLobbyInvitation: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/getLobbyInvitations.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const getLobbyInvitations: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/lobbyInvitationCreated.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const lobbyInvitationCreated: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/acceptFriendshipInvitation.gql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -1229,7 +1321,7 @@ declare module '*/getProfileView.gql' {
 }
     
 
-declare module '*/friendshipInvitationReceived.gql' {
+declare module '*/friendshipInvitationCreated.gql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const friendshipInvitationCreated: DocumentNode;

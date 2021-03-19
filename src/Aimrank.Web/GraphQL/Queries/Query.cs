@@ -5,6 +5,7 @@ using Aimrank.Web.GraphQL.Queries.Models;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types.Pagination;
 using HotChocolate;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
@@ -81,6 +82,11 @@ namespace Aimrank.Web.GraphQL.Queries
 
         [Authorize]
         public Task<Lobby> GetLobby([DataLoader] LobbyDataLoader loader)
+            => loader.LoadAsync(0, CancellationToken.None);
+        
+        [Authorize]
+        public Task<IEnumerable<LobbyInvitation>> GetLobbyInvitations(
+            [DataLoader] LobbyInvitationsDataLoader loader)
             => loader.LoadAsync(0, CancellationToken.None);
     }
 }

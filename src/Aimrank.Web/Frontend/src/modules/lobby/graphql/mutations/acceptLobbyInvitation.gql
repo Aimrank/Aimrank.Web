@@ -1,0 +1,5 @@
+mutation acceptLobbyInvitation($lobbyId: Uuid!) {
+  acceptLobbyInvitation(command: {lobbyId: $lobbyId}) {
+    status
+  }
+}

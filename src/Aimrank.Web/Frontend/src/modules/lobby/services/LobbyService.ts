@@ -3,7 +3,6 @@ import { Service } from "@/common/services/Service";
 import { MatchMode } from "@/profile/models/MatchMode";
 import { ILobbyMatchDto } from "@/lobby/models/ILobbyMatchDto";
 import { ILobbyDto } from "@/lobby/models/ILobbyDto";
-import { ILobbyInvitationDto } from "@/lobby/models/ILobbyInvitationDto";
 
 export interface IInviteUserToLobbyRequest {
   invitedUserId: string;
@@ -23,7 +22,6 @@ export class LobbyService extends Service {
   constructor(private readonly httpClient: HttpClient) {
     super({
       getForCurrentUser: "/lobby/current",
-      getInvitations: "/lobby/invitations",
       getMatch: "/lobby/{id}/match",
       create: "/lobby",
       invite: "/lobby/{id}/invite",
@@ -37,10 +35,6 @@ export class LobbyService extends Service {
 
   public getForCurrentUser() {
     return this.wrap<ILobbyDto | undefined>(this.httpClient.get(this.getRoute("getForCurrentUser")));
-  }
-
-  public getInvitations() {
-    return this.wrap<ILobbyInvitationDto[]>(this.httpClient.get(this.getRoute("getInvitations")));
   }
 
   public getMatch(id: string) {

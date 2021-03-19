@@ -11,14 +11,16 @@ namespace Aimrank.Web.GraphQL.Queries.Models
     {
         private readonly Guid _invitingPlayerId;
         private readonly Guid _invitedPlayerId;
-        
+
+        public Guid LobbyId { get; }
         public DateTime CreatedAt { get; }
 
         public LobbyInvitation(LobbyInvitationDto dto)
         {
+            LobbyId = dto.LobbyId;
+            CreatedAt = dto.CreatedAt;
             _invitingPlayerId = dto.InvitingPlayerId;
             _invitedPlayerId = dto.InvitedPlayerId;
-            CreatedAt = dto.CreatedAt;
         }
 
         public Task<User> GetInvitingUser([DataLoader] UserDataLoader loader)

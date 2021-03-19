@@ -1,0 +1,8 @@
+subscription lobbyInvitationCreated {
+  lobbyInvitationCreated {
+    record {
+      lobbyId
+      invitingPlayerId
+    }
+  }
+}
