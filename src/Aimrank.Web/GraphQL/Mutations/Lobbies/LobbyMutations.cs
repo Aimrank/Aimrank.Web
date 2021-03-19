@@ -48,8 +48,10 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
             await _matchesModule.ExecuteCommandAsync(command);
 
             await _sender.SendAsync($"LobbyInvitationCreated:{command.InvitedPlayerId}",
-                new LobbyInvitationCreatedPayload(command.LobbyId, _executionContextAccessor.UserId,
-                    command.InvitedPlayerId));
+                new LobbyInvitationCreatedPayload(
+                    new LobbyInvitationCreatedRecord(
+                        command.LobbyId, _executionContextAccessor.UserId,
+                        command.InvitedPlayerId)));
 
             return new InviteUserToLobbyPayload();
         }

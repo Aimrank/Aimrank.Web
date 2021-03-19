@@ -37,7 +37,8 @@ namespace Aimrank.Web.GraphQL.Mutations.Friendships
             await _userAccessModule.ExecuteCommandAsync(command);
 
             await _sender.SendAsync($"FriendshipInvitationCreated:{command.InvitedUserId}",
-                new FriendshipInvitationCreatedPayload(_executionContextAccessor.UserId, command.InvitedUserId));
+                new FriendshipInvitationCreatedPayload(
+                    new FriendshipInvitationCreatedRecord(_executionContextAccessor.UserId, command.InvitedUserId)));
 
             return new InviteUserToFriendsListPayload();
         }

@@ -1,0 +1,8 @@
+subscription friendshipInvitationCreated {
+  friendshipInvitationCreated {
+    record {
+      invitingUserId
+      invitedUserId
+    }
+  }
+}

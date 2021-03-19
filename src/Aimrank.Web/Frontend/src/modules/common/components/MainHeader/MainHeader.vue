@@ -11,7 +11,7 @@
         Aimrank
       </router-link>
     </div>
-    <div v-if="state.isAuthenticated && state.user">
+    <div>
       {{ $t("common.components.MainHeader.user", [state.user.username]) }}
       <base-button :class="$style.button" small @click="open">Search</base-button>
       <base-button :class="$style.button" small tag="router-link" :to="{ name: 'lobbyInvitations' }">Invitations</base-button>
@@ -19,10 +19,6 @@
       <base-button :class="$style.button" small tag="router-link" :to="{ name: 'profile' }">Profile</base-button>
       <base-button :class="$style.button" small tag="router-link" :to="{ name: 'settings' }">Settings</base-button>
       <base-button :class="$style.button" small primary @click="signOut">Sign out</base-button>
-    </div>
-    <div v-else>
-      <base-button :class="$style.button" small tag="router-link" :to="{ name: 'sign-in' }">Sign in</base-button>
-      <base-button :class="$style.button" small tag="router-link" :to="{ name: 'sign-up' }">Sign up</base-button>
     </div>
   </header>
 </template>

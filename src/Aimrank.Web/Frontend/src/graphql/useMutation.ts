@@ -3,6 +3,9 @@ import { GraphQLError } from "graphql";
 import { DocumentNode, MutationOptions } from "@apollo/client/core";
 import { apolloClient } from "~/graphql/apolloClient";
 
+type MutationErrorCallback = (errors?: readonly GraphQLError[]) => void;
+type MutationDoneCallback<T> = (result: T) => void;
+
 export const useMutation = <T = any, TVariables = Record<string, any>>(
   mutation: DocumentNode,
   options?: MutationOptions<any, TVariables>
@@ -11,11 +14,11 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
   const result = ref<T>();
   const loading = ref(false);
 
-  let onDoneCallback: (result: T) => void = () => {}
-  let onErrorCallback: (errors?: readonly GraphQLError[]) => void = () => {}
+  let onDoneCallback: MutationDoneCallback<T> | undefined;
+  let onErrorCallback: MutationErrorCallback | undefined;
 
-  const onDone = (callback: (result: T) => void) => onDoneCallback = callback;
-  const onError = (callback: (errors?: readonly GraphQLError[]) => void) => onErrorCallback = callback;
+  const onDone = (callback: MutationDoneCallback<T>) => onDoneCallback = callback;
+  const onError = (callback: MutationErrorCallback) => onErrorCallback = callback;
 
   const mutate = async (variables?: TVariables) => {
     loading.value = true;
@@ -31,7 +34,11 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
 
       if (res.errors) {
         errors.value = res.errors;
-        onErrorCallback(res.errors);
+
+        if (onErrorCallback) {
+          onErrorCallback(res.errors);
+        }
+
         return;
       }
 
@@ -39,7 +46,9 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
         result.value = res.data;
       }
 
-      onDoneCallback(res.data);
+      if (onDoneCallback) {
+        onDoneCallback(res.data);
+      }
 
       return result.value;
     } catch (error) {
@@ -49,7 +58,9 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
         errors.value = error.graphQLErrors;
       }
 
-      onErrorCallback();
+      if (onErrorCallback) {
+        onErrorCallback();
+      }
     }
   }
 

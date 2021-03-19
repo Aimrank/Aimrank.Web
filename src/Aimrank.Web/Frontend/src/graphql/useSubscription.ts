@@ -1,54 +1,87 @@
 import { onBeforeUnmount, ref } from "vue";
 import { GraphQLError } from "graphql";
-import { SubscriptionOptions } from "@apollo/client/core";
+import { FetchResult, SubscriptionOptions } from "@apollo/client/core";
 import { apolloClient } from "~/graphql/apolloClient";
 
+type SubscriptionErrorCallback = (errors?: readonly GraphQLError[]) => void;
+type SubscriptionResultCallback<T> = (result: T) => void;
+
 export const useSubscription = <T = any, TVariables = Record<string, any>>(
-  options: SubscriptionOptions<TVariables>
+  options: SubscriptionOptions<TVariables>,
+  lazy = false
 ) => {
   const errors = ref<readonly GraphQLError[]>([]);
   const result = ref<T>();
 
-  const subscription = apolloClient.subscribe(options)
-    .subscribe(res => {
-      errors.value = [];
+  let onResultCallback: SubscriptionResultCallback<T> | undefined;
+  let onErrorCallback: SubscriptionErrorCallback | undefined;
 
-      if (res.extensions?.unauthorized) {
-        errors.value = [
-          {
-            name: "unauthorized",
-            path: [],
-            nodes: [],
-            locations: [],
-            positions: [],
-            originalError: null,
+  const onResult = (callback: SubscriptionResultCallback<T>) => onResultCallback = callback;
+  const onError = (callback: SubscriptionErrorCallback) => onErrorCallback = callback;
+
+  let subscription: ZenObservable.Subscription;
+
+  const subscriptionHandler = (res: FetchResult<any, Record<string, any>, Record<string, any>>) => {
+    errors.value = [];
+
+    if (res.extensions?.unauthorized) {
+      errors.value = [
+        {
+          name: "unauthorized",
+          path: [],
+          nodes: [],
+          locations: [],
+          positions: [],
+          originalError: null,
+          message: "Unauthorized",
+          extensions: {
             message: "Unauthorized",
-            extensions: {
-              message: "Unauthorized",
-              code: "unauthorized"
-            },
-            source: {
-              name: "",
-              body: "",
-              locationOffset: {
-                line: 0,
-                column: 0
-              }
+            code: "unauthorized"
+          },
+          source: {
+            name: "",
+            body: "",
+            locationOffset: {
+              line: 0,
+              column: 0
             }
           }
-        ];
+        }
+      ];
 
-        return;
+      if (onErrorCallback) {
+        onErrorCallback(errors.value);
       }
 
-      if (res.errors) {
-        errors.value = res.errors;
+      return;
+    }
+
+    if (res.errors) {
+      errors.value = res.errors;
+
+      if (onErrorCallback) {
+        onErrorCallback(errors.value);
       }
 
-      if (res.data) {
-        result.value = res.data;
+      return;
+    }
+
+    if (res.data) {
+      result.value = res.data;
+
+      if (onResultCallback) {
+        onResultCallback(res.data);
       }
-    });
+
+      return;
+    }
+  }
+
+  const subscribe = apolloClient.subscribe(options);
+
+  if (!lazy) {
+    subscription = subscribe.subscribe(subscriptionHandler);
+  }
 
   const unsubscribe = () => {
     if (subscription && !subscription.closed) {
@@ -60,6 +93,8 @@ export const useSubscription = <T = any, TVariables = Record<string, any>>(
 
   return {
     errors,
-    result
+    result,
+    onResult,
+    onError
   };
 }

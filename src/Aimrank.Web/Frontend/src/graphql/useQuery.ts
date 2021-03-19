@@ -3,6 +3,9 @@ import { GraphQLError } from "graphql";
 import { QueryOptions } from "@apollo/client/core";
 import { apolloClient } from "~/graphql/apolloClient";
 
+type QueryDoneCallback = () => void;
+type QueryErrorCallback = () => void;
+
 export const useQuery = <T = any, TVariables = Record<string, any>>(
   options: QueryOptions<TVariables>,
   lazy = false
@@ -11,11 +14,11 @@ export const useQuery = <T = any, TVariables = Record<string, any>>(
   const result = ref<T>();
   const loading = ref(false);
 
-  let onDoneCallback: () => void = () => {}
-  let onErrorCallback: () => void = () => {}
+  let onDoneCallback: QueryDoneCallback | undefined;
+  let onErrorCallback: QueryErrorCallback | undefined;
 
-  const onDone = (callback: () => void) => onDoneCallback = callback;
-  const onError = (callback: () => void) => onErrorCallback = callback;
+  const onDone = (callback: QueryDoneCallback) => onDoneCallback = callback;
+  const onError = (callback: QueryErrorCallback) => onErrorCallback = callback;
 
   const fetch = async () => {
     loading.value = true;
@@ -26,7 +29,11 @@ export const useQuery = <T = any, TVariables = Record<string, any>>(
 
     if (res.errors) {
       errors.value = res.errors;
-      onErrorCallback();
+
+      if (onErrorCallback) {
+        onErrorCallback();
+      }
+
       return;
     }
 
@@ -34,7 +41,9 @@ export const useQuery = <T = any, TVariables = Record<string, any>>(
       result.value = res.data;
     }
 
-    onDoneCallback();
+    if (onDoneCallback) {
+      onDoneCallback();
+    }
   }
 
   if (!lazy) {

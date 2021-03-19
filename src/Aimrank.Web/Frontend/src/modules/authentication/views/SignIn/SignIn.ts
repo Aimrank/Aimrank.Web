@@ -35,7 +35,7 @@ const SignIn = defineComponent({
         if (route.query.returnUrl) {
           await router.push(decodeURIComponent(route.query.returnUrl as string));
         } else {
-          await router.push({ name: "home" });
+          await router.push({ name: "app" });
         }
       } else {
         errors.setErrors(ErrorResponse.fromGraphQLError(result.errors[0]));

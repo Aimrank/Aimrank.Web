@@ -2,6 +2,7 @@ import { Ref } from "vue";
 
 import { useQuery } from "~/graphql/useQuery";
 import { useMutation } from "~/graphql/useMutation";
+import { useSubscription } from "~/graphql/useSubscription";
 
 import BLOCK_USER from "./mutations/blockUser.gql";
 import UNBLOCK_USER from "./mutations/unblockUser.gql";
@@ -15,6 +16,8 @@ import GET_PROFILE_VIEW from "./query/getProfileView.gql";
 import GET_MATCHES_VIEW from "./query/getMatchesView.gql";
 import GET_MATCHES from "./query/getMatches.gql";
 
+import FRIENDSHIP_INVITATION_RECEIVED from "./subscriptions/friendshipInvitationReceived.gql";
+
 import {
   AcceptFriendshipInvitationMutation,
   AcceptFriendshipInvitationMutationVariables,
@@ -24,6 +27,8 @@ import {
   DeclineFriendshipInvitationMutationVariables,
   DeleteFriendshipMutation,
   DeleteFriendshipMutationVariables,
+  FriendshipInvitationCreatedSubscription,
+  FriendshipInvitationCreatedSubscriptionVariables,
   GetFriendsViewQuery,
   GetFriendsViewQueryVariables,
   GetMatchesQuery,
@@ -107,3 +112,11 @@ export const useMatches = (
       userId
     }
   }, true);
+
+export const useFriendshipInvitationCreated = (
+  lazy = false
+) => useSubscription<
+    FriendshipInvitationCreatedSubscription,
+    FriendshipInvitationCreatedSubscriptionVariables>({
+      query: FRIENDSHIP_INVITATION_RECEIVED
+    }, lazy);

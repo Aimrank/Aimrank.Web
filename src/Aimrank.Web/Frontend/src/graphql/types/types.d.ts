@@ -281,16 +281,6 @@ export type Subscription = {
 };
 
 
-export type SubscriptionLobbyInvitationCreatedArgs = {
-  playerId: Scalars['Uuid'];
-};
-
-
-export type SubscriptionFriendshipInvitationCreatedArgs = {
-  userId: Scalars['Uuid'];
-};
-
-
 export type SubscriptionMatchAcceptedArgs = {
   lobbyId: Scalars['Uuid'];
 };
@@ -598,15 +588,14 @@ export type DeleteFriendshipCommandInput = {
 
 export type LobbyInvitationCreatedPayload = {
   __typename?: 'LobbyInvitationCreatedPayload';
-  lobbyId: Scalars['Uuid'];
-  invitingPlayerId: Scalars['Uuid'];
-  invitedPlayerId: Scalars['Uuid'];
+  query?: Maybe<Query>;
+  record?: Maybe<LobbyInvitationCreatedRecord>;
 };
 
 export type FriendshipInvitationCreatedPayload = {
   __typename?: 'FriendshipInvitationCreatedPayload';
-  invitingUserId: Scalars['Uuid'];
-  invitedUserId: Scalars['Uuid'];
+  query?: Maybe<Query>;
+  record?: Maybe<FriendshipInvitationCreatedRecord>;
 };
 
 export type MatchAcceptedEvent = {
@@ -772,6 +761,19 @@ export type PlayerStatsMapDto = {
   totalKills: Scalars['Int'];
   totalDeaths: Scalars['Int'];
   totalHs: Scalars['Int'];
+};
+
+export type FriendshipInvitationCreatedRecord = {
+  __typename?: 'FriendshipInvitationCreatedRecord';
+  invitingUserId: Scalars['Uuid'];
+  invitedUserId: Scalars['Uuid'];
+};
+
+export type LobbyInvitationCreatedRecord = {
+  __typename?: 'LobbyInvitationCreatedRecord';
+  lobbyId: Scalars['Uuid'];
+  invitingPlayerId: Scalars['Uuid'];
+  invitedPlayerId: Scalars['Uuid'];
 };
 
 export type AuthenticationSuccessRecord = {
@@ -1047,6 +1049,20 @@ export type GetProfileViewQuery = (
   )> }
 );
 
+export type FriendshipInvitationCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FriendshipInvitationCreatedSubscription = (
+  { __typename?: 'Subscription' }
+  & { friendshipInvitationCreated?: Maybe<(
+    { __typename?: 'FriendshipInvitationCreatedPayload' }
+    & { record?: Maybe<(
+      { __typename?: 'FriendshipInvitationCreatedRecord' }
+      & Pick<FriendshipInvitationCreatedRecord, 'invitingUserId' | 'invitedUserId'>
+    )> }
+  )> }
+);
+
 export type GetUserQueryVariables = Exact<{
   userId: Scalars['Uuid'];
 }>;
@@ -1183,6 +1199,15 @@ declare module '*/getProfileView.gql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const getProfileView: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/friendshipInvitationReceived.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const friendshipInvitationCreated: DocumentNode;
 
   export default defaultDocument;
 }

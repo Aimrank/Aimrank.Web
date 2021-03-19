@@ -50,7 +50,7 @@ const Lobby = defineComponent({
         lobby.clearLobby();
         match.clearMatch();
 
-        router.push({ name: "home" });
+        router.push({ name: "app" });
       } else {
         notifications.danger(result.error.title);
       }

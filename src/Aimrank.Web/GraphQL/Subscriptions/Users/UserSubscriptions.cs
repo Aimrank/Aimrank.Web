@@ -3,7 +3,6 @@ using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System;
 
 namespace Aimrank.Web.GraphQL.Subscriptions.Users
 {
@@ -19,21 +18,23 @@ namespace Aimrank.Web.GraphQL.Subscriptions.Users
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<LobbyInvitationCreatedPayload>> LobbyInvitationCreated(
-            Guid playerId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
         {
-            AssertAuthenticated(principal, playerId);
+            AssertAuthenticated(principal);
+
+            var userId = GetUserId(principal);
 
             return _receiver.SubscribeAsync<string, LobbyInvitationCreatedPayload>(
-                $"LobbyInvitationCreated:{playerId}");
+                $"LobbyInvitationCreated:{userId}");
         }
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<FriendshipInvitationCreatedPayload>> FriendshipInvitationCreated(
-            Guid userId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
         {
-            AssertAuthenticated(principal, userId);
+            AssertAuthenticated(principal);
+            
+            var userId = GetUserId(principal);
             
             return _receiver.SubscribeAsync<string, FriendshipInvitationCreatedPayload>(
                 $"FriendshipInvitationCreated:{userId}");

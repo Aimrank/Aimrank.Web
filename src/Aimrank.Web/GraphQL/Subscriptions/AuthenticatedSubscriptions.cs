@@ -29,5 +29,11 @@ namespace Aimrank.Web.GraphQL.Subscriptions
                 }
             }
         }
+        
+        protected virtual Guid GetUserId(ClaimsPrincipal principal)
+        {
+            var claim = principal.Claims.FirstOrDefault(c => c.Type == "id");
+            return claim is null ? Guid.Empty : Guid.Parse(claim.Value);
+        }
     }
 }

@@ -35,7 +35,7 @@ const SignUp = defineComponent({
       });
 
       if (result.result) {
-        router.push({ name: "home" });
+        router.push({ name: "app" });
       } else {
         errors.setErrors(ErrorResponse.fromGraphQLError(result.errors[0]));
       }
