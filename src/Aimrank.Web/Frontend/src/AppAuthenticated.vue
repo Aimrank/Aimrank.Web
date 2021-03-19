@@ -30,8 +30,8 @@ const AppAuthenticated = defineComponent({
     const { onResult: onFriendshipInvitationCreated } = useFriendshipInvitationCreated();
     const { onResult: onLobbyInvitationCreated } = useLobbyInvitationCreated();
 
-    onFriendshipInvitationCreated(result => success("Friendship invitation received"));
-    onLobbyInvitationCreated(result => success("Lobby invitation received"));
+    onFriendshipInvitationCreated(result => success(`${result.friendshipInvitationCreated?.record.invitingUser?.username} sent you friendship invitation`));
+    onLobbyInvitationCreated(result => success(`${result.lobbyInvitationCreated?.record.invitingUser?.username} invited you to lobby`));
   }
 });
 

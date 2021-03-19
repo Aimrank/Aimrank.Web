@@ -8,13 +8,13 @@
       <map-button
         name="aim_map"
         :image="maps['aim_map']"
-        :selected="state.lobby.configuration.map === 'aim_map'"
+        :selected="map === 'aim_map'"
         @click="onMapSelected('aim_map')"
       />
       <map-button
         name="am_redline_14"
         :image="maps['am_redline_14']"
-        :selected="state.lobby.configuration.map === 'am_redline_14'"
+        :selected="map === 'am_redline_14'"
         @click="onMapSelected('am_redline_14')"
       />
     </div>
@@ -23,7 +23,7 @@
       <button
         :class="{
           [$style.button]: true,
-          [$style.buttonSelected]: state.lobby.configuration.mode === MatchMode.OneVsOne
+          [$style.buttonSelected]: mode === MatchMode.OneVsOne
         }"
         @click="onModeSelected(MatchMode.OneVsOne)"
       >
@@ -32,7 +32,7 @@
       <button
         :class="{
           [$style.button]: true,
-          [$style.buttonSelected]: state.lobby.configuration.mode === MatchMode.TwoVsTwo
+          [$style.buttonSelected]: mode === MatchMode.TwoVsTwo
         }"
         @click="onModeSelected(MatchMode.TwoVsTwo)"
       >

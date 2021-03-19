@@ -2,7 +2,7 @@ using Aimrank.Common.Application.Events;
 using Aimrank.Modules.Matches.Application.Contracts;
 using Aimrank.Modules.Matches.Application.Matches.TimeoutReadyMatch;
 using Aimrank.Modules.Matches.IntegrationEvents.Matches;
-using Aimrank.Web.GraphQL.Subscriptions.Lobbies;
+using Aimrank.Web.GraphQL.Subscriptions.Lobbies.Payloads;
 using HotChocolate.Subscriptions;
 using System.Threading.Tasks;
 using System.Threading;
@@ -34,15 +34,15 @@ namespace Aimrank.Web.Modules.Matches.Matches
             
             #pragma warning restore 4014
 
-            var message = new MatchReadyPayload(
-                @event.MatchId,
-                @event.Map, 
-                DateTime.UtcNow.AddSeconds(30),
-                @event.Lobbies);
+            var payload = new MatchReadyPayload(
+                new MatchReadyRecord(
+                    @event.MatchId,
+                    @event.Map,
+                    DateTime.UtcNow.AddSeconds(30)));
 
             foreach (var lobbyId in @event.Lobbies)
             {
-                await _topicEventSender.SendAsync($"MatchReady:{lobbyId}", message, cancellationToken);
+                await _topicEventSender.SendAsync($"MatchReady:{lobbyId}", payload, cancellationToken);
             }
         }
     }

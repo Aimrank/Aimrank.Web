@@ -1,5 +1,6 @@
 using Aimrank.Modules.Matches.Application.Lobbies.GetLobbyForUser;
 using Aimrank.Web.GraphQL.Queries.DataLoaders;
+using HotChocolate.Types;
 using HotChocolate;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,5 +30,16 @@ namespace Aimrank.Web.GraphQL.Queries.Models
             => loader.LoadAsync(Id, CancellationToken.None);
 
         public IEnumerable<LobbyMember> GetMembers() => _members;
+    }
+
+    public class LobbyType : ObjectType<Lobby>
+    {
+        protected override void Configure(IObjectTypeDescriptor<Lobby> descriptor)
+        {
+            descriptor.Field(f => f.Configuration)
+                .Type<NonNullType<LobbyConfigurationType>>();
+            descriptor.Field(f => f.GetMembers())
+                .Type<ListType<NonNullType<LobbyMemberType>>>();
+        }
     }
 }

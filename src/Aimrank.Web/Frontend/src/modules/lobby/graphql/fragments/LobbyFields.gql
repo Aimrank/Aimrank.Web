@@ -1,0 +1,23 @@
+fragment LobbyFields on Lobby {
+  id
+  status
+  match {
+    id
+    map
+    mode
+    status
+    address
+  }
+  configuration {
+    map
+    mode
+    name
+  }
+  members {
+    isLeader
+    user {
+      id
+      username
+    }
+  }
+}

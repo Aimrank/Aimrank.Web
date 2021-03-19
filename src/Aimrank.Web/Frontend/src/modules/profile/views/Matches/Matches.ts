@@ -13,12 +13,12 @@ const Matches = defineComponent({
     RatingChart
   },
   setup() {
-    const auth = useAuth();
+    const { currentUser } = useAuth();
     const route = useRoute();
 
     const mode = ref<MatchMode>(MatchMode.OneVsOne);
 
-    const userId = computed(() => route.params.userId as string || auth.state.user!.id);
+    const userId = computed(() => route.params.userId as string || currentUser.value!.id);
 
     const { result: state, loading: isStateLoading } = useMatchesView(userId.value, mode.value);
     const { result, fetch, loading: isMatchLoading } = useMatches(userId, mode);

@@ -19,7 +19,7 @@ export const useSubscription = <T = any, TVariables = Record<string, any>>(
   const onResult = (callback: SubscriptionResultCallback<T>) => onResultCallback = callback;
   const onError = (callback: SubscriptionErrorCallback) => onErrorCallback = callback;
 
-  let subscription: ZenObservable.Subscription;
+  let subscription: ZenObservable.Subscription | undefined;
 
   const subscriptionHandler = (res: FetchResult<any, Record<string, any>, Record<string, any>>) => {
     errors.value = [];
@@ -77,21 +77,35 @@ export const useSubscription = <T = any, TVariables = Record<string, any>>(
     }
   }
 
-  const subscribe = apolloClient.subscribe(options);
+  const subscribe = (variables?: TVariables) => {
+    if (subscription) {
+      return;
+    }
 
-  if (!lazy) {
-    subscription = subscribe.subscribe(subscriptionHandler);
+    subscription = apolloClient
+      .subscribe({
+        variables,
+        ...options
+      })
+      .subscribe(subscriptionHandler);
   }
 
   const unsubscribe = () => {
     if (subscription && !subscription.closed) {
       subscription.unsubscribe();
+      subscription = undefined;
     }
+  }
+
+  if (!lazy) {
+    subscribe();
   }
 
   onBeforeUnmount(() => unsubscribe());
 
   return {
+    subscribe,
+    unsubscribe,
     errors,
     result,
     onResult,

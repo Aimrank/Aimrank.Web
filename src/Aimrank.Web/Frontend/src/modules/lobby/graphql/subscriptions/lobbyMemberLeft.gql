@@ -1,0 +1,8 @@
+subscription lobbyMemberLeft($lobbyId: Uuid!) {
+  lobbyMemberLeft(lobbyId: $lobbyId) {
+    record {
+      lobbyId
+      playerId
+    }
+  }
+}

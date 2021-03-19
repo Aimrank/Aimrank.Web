@@ -1,8 +1,8 @@
 import { computed, defineComponent, watch } from "vue";
-import { matchService } from "~/services";
-import { useMatch } from "@/lobby/hooks/useMatch";
-import { useUser } from "@/profile/hooks/useUser";
 import { useExpirationTime } from "./hooks/useExpirationTime";
+import { useMatchDialog } from "./hooks/useMatchDialog";
+import { useAcceptMatch } from "@/lobby/graphql";
+import { useAuth } from "@/authentication/hooks/useAuth";
 import { MatchMode } from "@/profile/models/MatchMode";
 import BaseButton from "@/common/components/BaseButton";
 import BaseDialog from "@/common/components/BaseDialog";
@@ -15,49 +15,41 @@ const MatchDialog = defineComponent({
     Icon
   },
   setup() {
-    const { state: userState } = useUser();
+    const { currentUser } = useAuth();
+    const { state } = useMatchDialog();
 
-    const { state: matchState, isDialogVisible } = useMatch();
+    const { mutate: acceptMatch } = useAcceptMatch();
 
-    const { time, start } = useExpirationTime();
-
-    const onAcceptClick = async () => {
-      if (matchState.match) {
-        await matchService.accept(matchState.match?.id);
-      }
-    }
+    const onAcceptClick = async () => await acceptMatch({ matchId: state.matchId });
 
     const totalAcceptationsNeeded = computed(() => {
-      if (!matchState.match) {
-        return 0;
-      }
-
       const map = {
         [MatchMode.OneVsOne]: 2,
         [MatchMode.TwoVsTwo]: 4
       };
 
-      return map[matchState.match.mode];
+      return map[state.matchMode];
     });
 
-    const totalAcceptations = computed(() => matchState.acceptations.length);
+    const totalAcceptations = computed(() => state.matchAcceptations.length);
+    const isAcceptedByUser = computed(() => state.matchAcceptations.includes(currentUser.value!.id));
 
-    const isAcceptedByUser = computed(() => matchState.acceptations.includes(userState.user!.id));
+    const { time, start } = useExpirationTime();
 
     watch(
-      () => isDialogVisible.value,
+      () => state.isVisible,
       () => {
-        if (isDialogVisible.value) {
-          start(matchState.match!.expiresAt!);
+        if (state.isVisible) {
+          start(state.matcheExpirationTime);
         }
       }
     );
 
     return {
       time,
+      state,
       totalAcceptationsNeeded,
       totalAcceptations,
-      isDialogVisible,
       isAcceptedByUser,
       onAcceptClick
     };

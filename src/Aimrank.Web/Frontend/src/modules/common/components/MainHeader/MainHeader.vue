@@ -11,8 +11,8 @@
         Aimrank
       </router-link>
     </div>
-    <div>
-      {{ $t("common.components.MainHeader.user", [state.user.username]) }}
+    <div v-if="currentUser">
+      {{ $t("common.components.MainHeader.user", [currentUser.username]) }}
       <base-button :class="$style.button" small @click="open">Search</base-button>
       <base-button :class="$style.button" small tag="router-link" :to="{ name: 'lobbyInvitations' }">Invitations</base-button>
       <base-button :class="$style.button" small tag="router-link" :to="{ name: 'lobby' }">Lobby</base-button>

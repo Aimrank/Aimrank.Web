@@ -1,0 +1,7 @@
+#import "../fragments/LobbyFields.gql"
+
+query getLobby {
+  lobby {
+    ...LobbyFields
+  }
+}

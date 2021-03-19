@@ -1,0 +1,5 @@
+mutation acceptMatch($matchId: Uuid!) {
+  acceptMatch(command: {matchId: $matchId}) {
+    status
+  }
+}

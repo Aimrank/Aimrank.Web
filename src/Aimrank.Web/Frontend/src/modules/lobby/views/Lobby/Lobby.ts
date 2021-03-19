@@ -1,9 +1,10 @@
 import { computed, defineComponent } from "vue";
 import { useRouter } from "vue-router";
-import { lobbyHub, lobbyService } from "~/services";
+import { useAuth } from "@/authentication/hooks/useAuth";
 import { useNotifications } from "@/common/hooks/useNotifications";
-import { useLobbyView } from "./hooks/useLobbyView";
-import { useInvitationDialog } from "./hooks/useLobbyInvitationDialog";
+import { useInvitationDialog } from "@/lobby/components/LobbyInvitationDialog/hooks/useLobbyInvitationDialog";
+import { useLobbySubscriptions } from "./hooks/useLobbySubscriptions";
+import { useCreateLobby, useGetLobby, useLeaveLobby, useStartSearchingForGame } from "@/lobby/graphql";
 import { MatchStatus } from "@/profile/models/MatchStatus";
 import BaseButton from "@/common/components/BaseButton";
 import LobbyConfiguration from "@/lobby/components/LobbyConfiguration";
@@ -21,65 +22,61 @@ const Lobby = defineComponent({
     LobbyInvitationDialog
   },
   setup() {
-    const { lobby, match, currentUserMembership } = useLobbyView();
-
+    const { currentUser } = useAuth();
     const router = useRouter();
     const notifications = useNotifications();
 
-    const onStartSearchingClick = async () => {
-      if (!lobby.isAvailable) {
-        return;
+    const { result: state } = useGetLobby();
+
+    const { mutate: createLobby } = useCreateLobby();
+    const { mutate: leaveLobby } = useLeaveLobby();
+    const { mutate: startSearching } = useStartSearchingForGame();
+
+    const lobby = computed(() => state.value?.lobby);
+    const members = computed(() => lobby.value?.members ?? []);
+
+    const isCurrentUserLeader = computed(() =>
+      state.value?.lobby?.members?.find(m => m?.user?.id === currentUser.value?.id && m?.isLeader));
+
+    useLobbySubscriptions(state);
+
+    const onCreateLobbyClick = async () => {
+      const { success, errors, result } = await createLobby();
+
+      if (success) {
+        state.value = { ...state.value, lobby: result?.createLobby?.record };
+      } else {
+        notifications.danger(errors[0].message);
       }
+    }
 
-      const result = await lobbyService.startSearching(lobby.state.lobby!.id);
+    const onStartSearchingClick = async () => {
+      const { success, errors } = await startSearching();
 
-      if (!result.isOk()) {
-        notifications.danger(result.error.title);
+      if (!success) {
+        notifications.danger(errors[0].message);
       }
     }
 
     const onLeaveLobbyClick = async () => {
-      if (!lobby.isAvailable) {
-        return;
-      }
+      const { success, errors } = await leaveLobby({ lobbyId: state.value?.lobby?.id });
 
-      const result = await lobbyService.leave(lobby.state.lobby!.id);
-
-      if (result.isOk()) {
-        lobbyHub.disconnect();
-        lobby.clearLobby();
-        match.clearMatch();
-
+      if (success) {
         router.push({ name: "app" });
       } else {
-        notifications.danger(result.error.title);
-      }
-    }
-
-    const onCreateLobbyClick = async () => {
-      const result = await lobbyService.create();
-
-      if (result.isOk()) {
-        const lobbyResult = await lobbyService.getForCurrentUser();
-
-        if (lobbyResult.isOk() && lobbyResult.value) {
-          lobby.setLobby(lobbyResult.value);
-          lobbyHub.connect();
-        }
-      } else {
-        notifications.danger(result.error.title);
+        notifications.danger(errors[0].message);
       }
     }
 
     return {
       maps,
-      lobby: computed(() => lobby.state.lobby),
-      match: computed(() => match.state.match),
+      lobby,
+      members,
+      isCurrentUserLeader,
       invitationDialog: useInvitationDialog(),
-      currentUserMembership,
-      onStartSearchingClick,
-      onLeaveLobbyClick,
       onCreateLobbyClick,
+      onLeaveLobbyClick,
+      onStartSearchingClick,
       MatchStatus: Object.freeze(MatchStatus)
     };
   }

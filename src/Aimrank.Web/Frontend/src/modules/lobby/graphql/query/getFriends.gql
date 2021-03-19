@@ -1,0 +1,10 @@
+query getFriends($userId: Uuid!) {
+  user(userId: $userId) {
+    friends(take: 20) {
+      nodes {
+        id
+        username
+      }
+    }
+  }
+}

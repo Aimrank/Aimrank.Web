@@ -36,5 +36,13 @@ namespace Aimrank.Web.GraphQL.Queries.Models
 
     public class MatchType : ObjectType<Match>
     {
+        protected override void Configure(IObjectTypeDescriptor<Match> descriptor)
+        {
+            descriptor.Field(f => f.Map).Type<NonNullType<StringType>>();
+            descriptor.Field(f => f.TeamTerrorists)
+                .Type<ListType<NonNullType<MatchPlayerType>>>();
+            descriptor.Field(f => f.TeamCounterTerrorists)
+                .Type<ListType<NonNullType<MatchPlayerType>>>();
+        }
     }
 }

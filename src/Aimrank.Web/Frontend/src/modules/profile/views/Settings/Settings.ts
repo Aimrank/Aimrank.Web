@@ -16,14 +16,14 @@ const Settings = defineComponent({
     Icon
   },
   setup() {
-    const auth = useAuth();
+    const { currentUser } = useAuth();
     const initialState = useInitialState();
     const notifications = useNotifications();
 
     const { result: state } = useQuery<GetUserQuery, GetUserQueryVariables>({
       query: GET_USER,
       variables: {
-        userId: auth.state.user!.id
+        userId: currentUser.value!.id
       }
     });
 

@@ -19,7 +19,7 @@ const Invitations = defineComponent({
     const invitations = computed(() => state.value?.lobbyInvitations ?? []);
 
     const onInvitationAccept = async (lobbyId: string) => {
-      const { success, errors } = await acceptInvitation();
+      const { success, errors } = await acceptInvitation({ lobbyId });
 
       if (success) {
         state.value = {
@@ -34,7 +34,7 @@ const Invitations = defineComponent({
     }
 
     const onInvitationCancel = async (lobbyId: string) => {
-      const { success, errors } = await cancelInvitation();
+      const { success, errors } = await cancelInvitation({ lobbyId });
 
       if (success) {
         state.value = {

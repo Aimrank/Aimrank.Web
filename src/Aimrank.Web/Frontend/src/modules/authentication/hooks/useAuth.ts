@@ -1,4 +1,4 @@
-import { reactive, readonly } from "vue";
+import { computed, reactive } from "vue";
 import { router } from "~/router";
 import { reconnect } from "~/graphql/apolloClient";
 import {
@@ -87,7 +87,8 @@ const signOut = async () => {
 }
 
 export const useAuth = () => ({
-  state: readonly(state),
+  currentUser: computed(() => state.user),
+  isAuthenticated: computed(() => state.isAuthenticated),
   signIn,
   signUp,
   signOut,

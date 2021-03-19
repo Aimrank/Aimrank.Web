@@ -6,7 +6,7 @@ using Aimrank.Modules.UserAccess.Application.Friendships.DeclineFriendshipInvita
 using Aimrank.Modules.UserAccess.Application.Friendships.DeleteFriendship;
 using Aimrank.Modules.UserAccess.Application.Friendships.InviteUserToFriendsList;
 using Aimrank.Modules.UserAccess.Application.Friendships.UnblockUser;
-using Aimrank.Web.GraphQL.Subscriptions.Users;
+using Aimrank.Web.GraphQL.Subscriptions.Users.Payloads;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Subscriptions;
 using HotChocolate.Types;
@@ -38,7 +38,7 @@ namespace Aimrank.Web.GraphQL.Mutations.Friendships
 
             await _sender.SendAsync($"FriendshipInvitationCreated:{command.InvitedUserId}",
                 new FriendshipInvitationCreatedPayload(
-                    new FriendshipInvitationCreatedRecord(_executionContextAccessor.UserId, command.InvitedUserId)));
+                    new FriendshipInvitationCreatedRecord(_executionContextAccessor.UserId)));
 
             return new InviteUserToFriendsListPayload();
         }

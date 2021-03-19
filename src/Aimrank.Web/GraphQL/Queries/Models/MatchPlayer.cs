@@ -1,5 +1,6 @@
 using Aimrank.Modules.Matches.Application.Matches.GetFinishedMatches;
 using Aimrank.Web.GraphQL.Queries.DataLoaders;
+using HotChocolate.Types;
 using HotChocolate;
 using System.Threading.Tasks;
 using System.Threading;
@@ -33,5 +34,9 @@ namespace Aimrank.Web.GraphQL.Queries.Models
 
         public Task<User> GetUser([DataLoader] UserDataLoader loader)
             => loader.LoadAsync(_playerId, CancellationToken.None);
+    }
+
+    public class MatchPlayerType : ObjectType<MatchPlayer>
+    {
     }
 }

@@ -1,0 +1,5 @@
+mutation changeLobbyConfiguration($input: ChangeLobbyConfigurationCommandInput!) {
+  changeLobbyConfiguration(command: $input) {
+    status
+  }
+}

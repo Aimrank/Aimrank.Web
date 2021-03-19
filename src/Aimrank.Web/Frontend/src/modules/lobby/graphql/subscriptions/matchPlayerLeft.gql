@@ -1,0 +1,7 @@
+subscription matchPlayerLeft($lobbyId: Uuid!) {
+  matchPlayerLeft(lobbyId: $lobbyId) {
+    record {
+      playerId
+    }
+  }
+}

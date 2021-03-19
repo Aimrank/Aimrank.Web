@@ -1,0 +1,8 @@
+subscription matchAccepted($lobbyId: Uuid!) {
+  matchAccepted(lobbyId: $lobbyId) {
+    record {
+      matchId
+      playerId
+    }
+  }
+}

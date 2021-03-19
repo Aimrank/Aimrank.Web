@@ -5,12 +5,12 @@ namespace Aimrank.Modules.Matches.IntegrationEvents.Lobbies
     public class MemberLeftEvent : IntegrationEventBase
     {
         public Guid LobbyId { get; }
-        public Guid UserId { get; }
+        public Guid PlayerId { get; }
 
-        public MemberLeftEvent(Guid lobbyId, Guid userId)
+        public MemberLeftEvent(Guid lobbyId, Guid playerId)
         {
             LobbyId = lobbyId;
-            UserId = userId;
+            PlayerId = playerId;
         }
     }
 }

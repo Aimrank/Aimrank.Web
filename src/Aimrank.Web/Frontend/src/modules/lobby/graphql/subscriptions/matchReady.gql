@@ -1,0 +1,9 @@
+subscription matchReady($lobbyId: Uuid!) {
+  matchReady(lobbyId: $lobbyId) {
+    record {
+      map
+      matchId
+      expiresAt
+    }
+  }
+}

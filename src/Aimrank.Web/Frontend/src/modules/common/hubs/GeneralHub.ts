@@ -1,4 +1,3 @@
-import { lobbyService } from "~/services";
 import { useNotifications } from "@/common/hooks/useNotifications";
 import { Hub } from "./Hub";
 import {

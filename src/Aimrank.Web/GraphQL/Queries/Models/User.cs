@@ -51,7 +51,7 @@ namespace Aimrank.Web.GraphQL.Queries.Models
         {
             descriptor
                 .Field(f => f.GetFriends(default, default, default, default))
-                .Type<ConnectionCountType<UserType>>();
+                .Type<ConnectionCountType<NonNullType<UserType>>>();
 
             descriptor
                 .Field(f => f.Username)

@@ -16,6 +16,7 @@ using Aimrank.Web.GraphQL.Subscriptions.Lobbies;
 using Aimrank.Web.GraphQL.Subscriptions.Users;
 using Aimrank.Web.GraphQL.Subscriptions;
 using Aimrank.Web.GraphQL;
+using Aimrank.Web.GraphQL.Queries.Models;
 using Aimrank.Web.Modules.Matches;
 using Aimrank.Web.Modules.UserAccess;
 using Autofac.Extensions.DependencyInjection;
@@ -74,19 +75,7 @@ namespace Aimrank.Web
                 })
                 .AddCookie();
 
-            services
-                .AddGraphQLServer()
-                .AddQueryType<QueryType>()
-                .AddMutationType<Mutation>()
-                .AddType<UserMutations>()
-                .AddType<LobbyMutations>()
-                .AddType<FriendshipMutations>()
-                .AddSubscriptionType<Subscription>()
-                .AddType<UserSubscriptions>()
-                .AddType<LobbySubscriptions>()
-                .AddErrorFilter<GraphQLErrorFilter>()
-                .AddInMemorySubscriptions()
-                .AddAuthorization();
+            services.AddApplicationGraphQL();
 
             services.AddControllersWithViews();
             services.AddRouting(options => options.LowercaseUrls = true);

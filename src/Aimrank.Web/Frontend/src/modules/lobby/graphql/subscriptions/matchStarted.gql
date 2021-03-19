@@ -1,0 +1,10 @@
+subscription matchStarted($lobbyId: Uuid!) {
+  matchStarted(lobbyId: $lobbyId) {
+    record {
+      matchId
+      address
+      map
+      mode
+    }
+  }
+}

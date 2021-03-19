@@ -1,5 +1,4 @@
 ﻿using Aimrank.Common.Domain;
-using Aimrank.Modules.Matches.Domain.Matches.Events;
 using Aimrank.Modules.Matches.Domain.Players;
 using System;
 
@@ -37,8 +36,6 @@ namespace Aimrank.Modules.Matches.Domain.Matches
             }
             
             IsLeaver = true;
-            
-            AddDomainEvent(new MatchPlayerLeftDomainEvent(this));
         }
 
         internal void CalculateNewRating(double score, int enemyRating)

@@ -1,5 +1,6 @@
 using Aimrank.Modules.Matches.Application.Lobbies.GetLobbyInvitations;
 using Aimrank.Web.GraphQL.Queries.DataLoaders;
+using HotChocolate.Types;
 using HotChocolate;
 using System.Threading.Tasks;
 using System.Threading;
@@ -28,5 +29,9 @@ namespace Aimrank.Web.GraphQL.Queries.Models
 
         public Task<User> GetInvitedUser([DataLoader] UserDataLoader loader)
             => loader.LoadAsync(_invitedPlayerId, CancellationToken.None);
+    }
+
+    public class LobbyInvitationType : ObjectType<LobbyInvitation>
+    {
     }
 }

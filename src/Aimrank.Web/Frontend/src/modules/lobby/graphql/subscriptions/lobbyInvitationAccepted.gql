@@ -1,0 +1,11 @@
+subscription lobbyInvitationAccepted($lobbyId: Uuid!) {
+  lobbyInvitationAccepted(lobbyId: $lobbyId) {
+    record {
+      lobbyId
+      invitingUser {
+        id
+        username
+      }
+    }
+  }
+}

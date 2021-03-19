@@ -76,8 +76,12 @@ namespace Aimrank.Modules.Matches.Domain.Matches
         public void MarkPlayerAsLeaver(string steamId)
         {
             var player = _players.FirstOrDefault(p => p.SteamId == steamId);
-
-            player?.MarkAsLeaver();
+            if (player is not null)
+            {
+                player.MarkAsLeaver();
+                
+                AddDomainEvent(new MatchPlayerLeftDomainEvent(player, _lobbies));
+            }
         }
 
         public void Finish()

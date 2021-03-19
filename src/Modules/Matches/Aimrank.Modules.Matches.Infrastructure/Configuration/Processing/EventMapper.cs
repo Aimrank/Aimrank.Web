@@ -20,7 +20,7 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration.Processing
                     e.Match.Lobbies.Select(l => l.LobbyId.Value)),
                 MatchFinishedDomainEvent e => new MatchFinishedEvent(e.Match.Id, e.ScoreT, e.ScoreCT,
                     e.Lobbies.Select(l => l.Value)),
-                MatchPlayerLeftDomainEvent e => new MatchPlayerLeftEvent(e.Player.PlayerId),
+                MatchPlayerLeftDomainEvent e => new MatchPlayerLeftEvent(e.Player.PlayerId, e.Lobbies.Select(l => l.LobbyId.Value)),
                 LobbyStatusChangedDomainEvent e => new LobbyStatusChangedEvent(e.Lobby.Id, (int) e.Lobby.Status),
                 MemberLeftDomainEvent e => new MemberLeftEvent(e.Lobby.Id, e.Member.PlayerId),
                 MemberRoleChangedDomainEvent e => new MemberRoleChangedEvent(e.Lobby.Id, e.Member.PlayerId,

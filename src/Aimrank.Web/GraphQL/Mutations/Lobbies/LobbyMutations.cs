@@ -9,12 +9,13 @@ using Aimrank.Modules.Matches.Application.Lobbies.InvitePlayerToLobby;
 using Aimrank.Modules.Matches.Application.Lobbies.LeaveLobby;
 using Aimrank.Modules.Matches.Application.Lobbies.StartSearchingForGame;
 using Aimrank.Modules.Matches.Application.Matches.AcceptMatch;
-using Aimrank.Web.GraphQL.Subscriptions.Lobbies;
-using Aimrank.Web.GraphQL.Subscriptions.Users;
+using Aimrank.Web.GraphQL.Subscriptions.Lobbies.Payloads;
+using Aimrank.Web.GraphQL.Subscriptions.Users.Payloads;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 using System.Threading.Tasks;
+using System;
 
 namespace Aimrank.Web.GraphQL.Mutations.Lobbies
 {
@@ -36,10 +37,11 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
         }
 
         [Authorize]
-        public async Task<CreateLobbyPayload> CreateLobby(CreateLobbyCommand command)
+        public async Task<CreateLobbyPayload> CreateLobby()
         {
-            await _matchesModule.ExecuteCommandAsync(command);
-            return new CreateLobbyPayload();
+            var lobbyId = Guid.NewGuid();
+            await _matchesModule.ExecuteCommandAsync(new CreateLobbyCommand(lobbyId));
+            return new CreateLobbyPayload(lobbyId);
         }
 
         [Authorize]
@@ -50,8 +52,7 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
             await _sender.SendAsync($"LobbyInvitationCreated:{command.InvitedPlayerId}",
                 new LobbyInvitationCreatedPayload(
                     new LobbyInvitationCreatedRecord(
-                        command.LobbyId, _executionContextAccessor.UserId,
-                        command.InvitedPlayerId)));
+                        command.LobbyId, _executionContextAccessor.UserId)));
 
             return new InviteUserToLobbyPayload();
         }
@@ -62,7 +63,8 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
             await _matchesModule.ExecuteCommandAsync(command);
 
             await _sender.SendAsync($"LobbyInvitationAccepted:{command.LobbyId}",
-                new InvitationAcceptedPayload(command.LobbyId, _executionContextAccessor.UserId));
+                new LobbyInvitationAcceptedPayload(
+                    new LobbyInvitationAcceptedRecord(command.LobbyId, _executionContextAccessor.UserId)));
 
             return new AcceptLobbyInvitationPayload();
         }
@@ -73,7 +75,8 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
             await _matchesModule.ExecuteCommandAsync(command);
 
             await _sender.SendAsync($"LobbyInvitationCanceled:{command.LobbyId}",
-                new InvitationCanceledPayload(command.LobbyId, _executionContextAccessor.UserId));
+                new LobbyInvitationCanceledPayload(
+                    new LobbyInvitationCanceledRecord(command.LobbyId, _executionContextAccessor.UserId)));
 
             return new CancelLobbyInvitationPayload();
         }
@@ -84,7 +87,8 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
             await _matchesModule.ExecuteCommandAsync(command);
 
             await _sender.SendAsync($"LobbyConfigurationChanged:{command.LobbyId}",
-                new LobbyConfigurationChangedPayload(command.LobbyId, command.Map, command.Name, command.Mode));
+                new LobbyConfigurationChangedPayload(
+                    new LobbyConfigurationChangedRecord(command.LobbyId, command.Map, command.Name, command.Mode)));
 
             return new ChangeLobbyConfigurationPayload();
         }

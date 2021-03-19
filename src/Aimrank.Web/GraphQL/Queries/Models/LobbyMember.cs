@@ -1,5 +1,6 @@
 using Aimrank.Modules.Matches.Application.Lobbies.GetLobbyForUser;
 using Aimrank.Web.GraphQL.Queries.DataLoaders;
+using HotChocolate.Types;
 using HotChocolate;
 using System.Threading.Tasks;
 using System.Threading;
@@ -21,5 +22,14 @@ namespace Aimrank.Web.GraphQL.Queries.Models
 
         public Task<User> GetUser([DataLoader] UserDataLoader loader)
             => loader.LoadAsync(_playerId, CancellationToken.None);
+    }
+    
+    public class LobbyMemberType : ObjectType<LobbyMember>
+    {
+        protected override void Configure(IObjectTypeDescriptor<LobbyMember> descriptor)
+        {
+            descriptor.Field(f => f.GetUser(default))
+                .Type<NonNullType<UserType>>();
+        }
     }
 }

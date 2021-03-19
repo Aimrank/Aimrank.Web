@@ -6,13 +6,13 @@ namespace Aimrank.Modules.Matches.IntegrationEvents.Matches
     public class MatchAcceptedEvent : IntegrationEventBase
     {
         public Guid MatchId { get; }
-        public Guid UserId { get; }
+        public Guid PlayerId { get; }
         public IEnumerable<Guid> Lobbies { get; }
 
-        public MatchAcceptedEvent(Guid matchId, Guid userId, IEnumerable<Guid> lobbies)
+        public MatchAcceptedEvent(Guid matchId, Guid playerId, IEnumerable<Guid> lobbies)
         {
             MatchId = matchId;
-            UserId = userId;
+            PlayerId = playerId;
             Lobbies = lobbies;
         }
     }

@@ -1,0 +1,5 @@
+mutation startSearchingForGame($lobbyId: Uuid!) {
+  startSearchingForGame(command: {lobbyId: $lobbyId}) {
+    status
+  }
+}

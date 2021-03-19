@@ -23,10 +23,10 @@ export type Query = {
   matches?: Maybe<MatchConnection>;
   blockedUsers?: Maybe<UserConnection>;
   friendshipInvitations?: Maybe<UserConnection>;
+  lobbyInvitations?: Maybe<Array<LobbyInvitation>>;
   user?: Maybe<User>;
   friendship?: Maybe<Friendship>;
   lobby?: Maybe<Lobby>;
-  lobbyInvitations?: Maybe<Array<Maybe<LobbyInvitation>>>;
 };
 
 
@@ -65,34 +65,70 @@ export type QueryFriendshipArgs = {
   userId: Scalars['Uuid'];
 };
 
-/** A connection to a list of items. */
-export type UserConnection = {
-  __typename?: 'UserConnection';
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** A list of edges. */
-  edges?: Maybe<Array<UserEdge>>;
-  /** A flattened list of the nodes. */
-  nodes?: Maybe<Array<Maybe<User>>>;
-  totalCount: Scalars['Int'];
+export type Lobby = {
+  __typename?: 'Lobby';
+  configuration: LobbyConfiguration;
+  members?: Maybe<Array<LobbyMember>>;
+  match?: Maybe<LobbyMatch>;
+  id: Scalars['Uuid'];
+  status: Scalars['Int'];
 };
 
-/** A connection to a list of items. */
-export type MatchConnection = {
-  __typename?: 'MatchConnection';
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** A list of edges. */
-  edges?: Maybe<Array<MatchEdge>>;
-  /** A flattened list of the nodes. */
-  nodes?: Maybe<Array<Maybe<Match>>>;
-  totalCount: Scalars['Int'];
+export type LobbyConfiguration = {
+  __typename?: 'LobbyConfiguration';
+  map: Scalars['String'];
+  name: Scalars['String'];
+  mode: Scalars['Int'];
 };
 
-export enum ApplyPolicy {
-  BeforeResolver = 'BEFORE_RESOLVER',
-  AfterResolver = 'AFTER_RESOLVER'
-}
+export type LobbyInvitation = {
+  __typename?: 'LobbyInvitation';
+  invitingUser?: Maybe<User>;
+  invitedUser?: Maybe<User>;
+  lobbyId: Scalars['Uuid'];
+  createdAt: Scalars['DateTime'];
+};
+
+export type LobbyMatch = {
+  __typename?: 'LobbyMatch';
+  address: Scalars['String'];
+  map: Scalars['String'];
+  id: Scalars['Uuid'];
+  mode: Scalars['Int'];
+  status: Scalars['Int'];
+};
+
+export type LobbyMember = {
+  __typename?: 'LobbyMember';
+  user: User;
+  isLeader: Scalars['Boolean'];
+};
+
+export type Match = {
+  __typename?: 'Match';
+  map: Scalars['String'];
+  teamTerrorists?: Maybe<Array<MatchPlayer>>;
+  teamCounterTerrorists?: Maybe<Array<MatchPlayer>>;
+  id: Scalars['Uuid'];
+  winner: Scalars['Int'];
+  scoreT: Scalars['Int'];
+  scoreCT: Scalars['Int'];
+  mode: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  finishedAt: Scalars['DateTime'];
+};
+
+export type MatchPlayer = {
+  __typename?: 'MatchPlayer';
+  user?: Maybe<User>;
+  team: Scalars['Int'];
+  kills: Scalars['Int'];
+  assists: Scalars['Int'];
+  deaths: Scalars['Int'];
+  hs: Scalars['Int'];
+  ratingStart: Scalars['Int'];
+  ratingEnd: Scalars['Int'];
+};
 
 export type User = {
   __typename?: 'User';
@@ -108,6 +144,35 @@ export type UserFriendsArgs = {
   skip?: Maybe<Scalars['Int']>;
   take?: Maybe<Scalars['Int']>;
 };
+
+/** A connection to a list of items. */
+export type UserConnection = {
+  __typename?: 'UserConnection';
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** A list of edges. */
+  edges?: Maybe<Array<UserEdge>>;
+  /** A flattened list of the nodes. */
+  nodes?: Maybe<Array<User>>;
+  totalCount: Scalars['Int'];
+};
+
+/** A connection to a list of items. */
+export type MatchConnection = {
+  __typename?: 'MatchConnection';
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** A list of edges. */
+  edges?: Maybe<Array<MatchEdge>>;
+  /** A flattened list of the nodes. */
+  nodes?: Maybe<Array<Match>>;
+  totalCount: Scalars['Int'];
+};
+
+export enum ApplyPolicy {
+  BeforeResolver = 'BEFORE_RESOLVER',
+  AfterResolver = 'AFTER_RESOLVER'
+}
 
 /** Information about pagination in a connection. */
 export type PageInfo = {
@@ -128,21 +193,7 @@ export type UserEdge = {
   /** A cursor for use in pagination. */
   cursor: Scalars['String'];
   /** The item at the end of the edge. */
-  node?: Maybe<User>;
-};
-
-export type Match = {
-  __typename?: 'Match';
-  id: Scalars['Uuid'];
-  map?: Maybe<Scalars['String']>;
-  winner: Scalars['Int'];
-  scoreT: Scalars['Int'];
-  scoreCT: Scalars['Int'];
-  mode: Scalars['Int'];
-  createdAt: Scalars['DateTime'];
-  finishedAt: Scalars['DateTime'];
-  teamTerrorists?: Maybe<Array<Maybe<MatchPlayer>>>;
-  teamCounterTerrorists?: Maybe<Array<Maybe<MatchPlayer>>>;
+  node: User;
 };
 
 /** An edge in a connection. */
@@ -151,7 +202,7 @@ export type MatchEdge = {
   /** A cursor for use in pagination. */
   cursor: Scalars['String'];
   /** The item at the end of the edge. */
-  node?: Maybe<Match>;
+  node: Match;
 };
 
 export type Mutation = {
@@ -184,11 +235,6 @@ export type MutationSignInArgs = {
 
 export type MutationSignUpArgs = {
   command?: Maybe<RegisterNewUserCommandInput>;
-};
-
-
-export type MutationCreateLobbyArgs = {
-  command?: Maybe<CreateLobbyCommandInput>;
 };
 
 
@@ -265,20 +311,20 @@ export type Subscription = {
   __typename?: 'Subscription';
   lobbyInvitationCreated?: Maybe<LobbyInvitationCreatedPayload>;
   friendshipInvitationCreated?: Maybe<FriendshipInvitationCreatedPayload>;
-  matchAccepted?: Maybe<MatchAcceptedEvent>;
+  matchAccepted?: Maybe<MatchAcceptedPayload>;
   matchReady?: Maybe<MatchReadyPayload>;
-  matchStarting?: Maybe<MatchStartingEvent>;
-  matchStarted?: Maybe<MatchStartedEvent>;
-  matchTimedOut?: Maybe<MatchTimedOutEvent>;
-  matchCanceled?: Maybe<MatchCanceledEvent>;
-  matchFinished?: Maybe<MatchFinishedEvent>;
-  matchPlayerLeft?: Maybe<MatchPlayerLeftEvent>;
-  lobbyInvitationAccepted?: Maybe<InvitationAcceptedPayload>;
-  lobbyInvitationCanceled?: Maybe<InvitationCanceledPayload>;
+  matchStarting?: Maybe<MatchStartingPayload>;
+  matchStarted?: Maybe<MatchStartedPayload>;
+  matchTimedOut?: Maybe<MatchTimedOutRecord>;
+  matchCanceled?: Maybe<MatchCanceledPayload>;
+  matchFinished?: Maybe<MatchFinishedPayload>;
+  matchPlayerLeft?: Maybe<MatchPlayerLeftPayload>;
+  lobbyInvitationAccepted?: Maybe<LobbyInvitationAcceptedPayload>;
+  lobbyInvitationCanceled?: Maybe<LobbyInvitationCanceledPayload>;
   lobbyConfigurationChanged?: Maybe<LobbyConfigurationChangedPayload>;
-  lobbyStatusChanged?: Maybe<LobbyStatusChangedEvent>;
-  lobbyMemberLeft?: Maybe<MemberLeftEvent>;
-  lobbyMemberRoleChanged?: Maybe<MemberRoleChangedEvent>;
+  lobbyStatusChanged?: Maybe<LobbyStatusChangedPayload>;
+  lobbyMemberLeft?: Maybe<LobbyMemberLeftPayload>;
+  lobbyMemberRoleChanged?: Maybe<LobbyMemberRoleChangedPayload>;
 };
 
 
@@ -318,7 +364,7 @@ export type SubscriptionMatchFinishedArgs = {
 
 
 export type SubscriptionMatchPlayerLeftArgs = {
-  playerId: Scalars['Uuid'];
+  lobbyId: Scalars['Uuid'];
 };
 
 
@@ -351,16 +397,6 @@ export type SubscriptionLobbyMemberRoleChangedArgs = {
   lobbyId: Scalars['Uuid'];
 };
 
-export type PlayerStatsDto = {
-  __typename?: 'PlayerStatsDto';
-  matchesTotal: Scalars['Int'];
-  matchesWon: Scalars['Int'];
-  totalKills: Scalars['Int'];
-  totalDeaths: Scalars['Int'];
-  totalHs: Scalars['Int'];
-  modes?: Maybe<Array<Maybe<PlayerStatsModeDto>>>;
-};
-
 export type Friendship = {
   __typename?: 'Friendship';
   user1?: Maybe<User>;
@@ -368,23 +404,6 @@ export type Friendship = {
   invitingUserId?: Maybe<Scalars['Uuid']>;
   isAccepted: Scalars['Boolean'];
   blockingUsersIds?: Maybe<Array<Scalars['Uuid']>>;
-};
-
-export type Lobby = {
-  __typename?: 'Lobby';
-  match?: Maybe<LobbyMatch>;
-  members?: Maybe<Array<Maybe<LobbyMember>>>;
-  id: Scalars['Uuid'];
-  status: Scalars['Int'];
-  configuration?: Maybe<LobbyConfiguration>;
-};
-
-export type LobbyInvitation = {
-  __typename?: 'LobbyInvitation';
-  invitingUser?: Maybe<User>;
-  invitedUser?: Maybe<User>;
-  lobbyId: Scalars['Uuid'];
-  createdAt: Scalars['DateTime'];
 };
 
 export type FinishedMatchesFilterInput = {
@@ -395,31 +414,14 @@ export type FinishedMatchesFilterInput = {
 
 
 
-export type MatchPlayer = {
-  __typename?: 'MatchPlayer';
-  user?: Maybe<User>;
-  team: Scalars['Int'];
-  kills: Scalars['Int'];
-  assists: Scalars['Int'];
-  deaths: Scalars['Int'];
-  hs: Scalars['Int'];
-  ratingStart: Scalars['Int'];
-  ratingEnd: Scalars['Int'];
-};
-
-export type InvitePlayerToLobbyCommandInput = {
-  lobbyId: Scalars['Uuid'];
-  invitedPlayerId: Scalars['Uuid'];
-};
-
-export type CreateLobbyCommandInput = {
-  lobbyId: Scalars['Uuid'];
-};
-
-export type AcceptMatchPayload = {
-  __typename?: 'AcceptMatchPayload';
-  query?: Maybe<Query>;
-  status?: Maybe<Scalars['String']>;
+export type PlayerStatsDto = {
+  __typename?: 'PlayerStatsDto';
+  matchesTotal: Scalars['Int'];
+  matchesWon: Scalars['Int'];
+  totalKills: Scalars['Int'];
+  totalDeaths: Scalars['Int'];
+  totalHs: Scalars['Int'];
+  modes?: Maybe<Array<Maybe<PlayerStatsModeDto>>>;
 };
 
 export type CancelSearchingForGamePayload = {
@@ -466,7 +468,9 @@ export type InviteUserToLobbyPayload = {
 
 export type CreateLobbyPayload = {
   __typename?: 'CreateLobbyPayload';
+  record: Lobby;
   query?: Maybe<Query>;
+  recordId: Scalars['Uuid'];
   status?: Maybe<Scalars['String']>;
 };
 
@@ -501,6 +505,17 @@ export type SignInPayload = {
   query?: Maybe<Query>;
   record?: Maybe<AuthenticationSuccessRecord>;
   status?: Maybe<Scalars['String']>;
+};
+
+export type AcceptMatchPayload = {
+  __typename?: 'AcceptMatchPayload';
+  query?: Maybe<Query>;
+  status?: Maybe<Scalars['String']>;
+};
+
+export type InvitePlayerToLobbyCommandInput = {
+  lobbyId: Scalars['Uuid'];
+  invitedPlayerId: Scalars['Uuid'];
 };
 
 export type AcceptLobbyInvitationCommandInput = {
@@ -597,128 +612,96 @@ export type DeleteFriendshipCommandInput = {
 export type LobbyInvitationCreatedPayload = {
   __typename?: 'LobbyInvitationCreatedPayload';
   query?: Maybe<Query>;
-  record?: Maybe<LobbyInvitationCreatedRecord>;
+  record: LobbyInvitationCreatedRecord;
 };
 
 export type FriendshipInvitationCreatedPayload = {
   __typename?: 'FriendshipInvitationCreatedPayload';
   query?: Maybe<Query>;
-  record?: Maybe<FriendshipInvitationCreatedRecord>;
+  record: FriendshipInvitationCreatedRecord;
 };
 
-export type MatchAcceptedEvent = {
-  __typename?: 'MatchAcceptedEvent';
-  matchId: Scalars['Uuid'];
-  userId: Scalars['Uuid'];
-  lobbies?: Maybe<Array<Scalars['Uuid']>>;
-  id: Scalars['Uuid'];
-  occurredAt: Scalars['DateTime'];
+export type MatchAcceptedPayload = {
+  __typename?: 'MatchAcceptedPayload';
+  query?: Maybe<Query>;
+  record: MatchAcceptedRecord;
 };
 
 export type MatchReadyPayload = {
   __typename?: 'MatchReadyPayload';
+  query?: Maybe<Query>;
+  record: MatchReadyRecord;
+};
+
+export type MatchStartingPayload = {
+  __typename?: 'MatchStartingPayload';
+  query?: Maybe<Query>;
+  record: MatchStartingRecord;
+};
+
+export type MatchStartedPayload = {
+  __typename?: 'MatchStartedPayload';
+  query?: Maybe<Query>;
+  record: MatchStartedRecord;
+};
+
+export type MatchTimedOutRecord = {
+  __typename?: 'MatchTimedOutRecord';
   matchId: Scalars['Uuid'];
-  map?: Maybe<Scalars['String']>;
-  expiresAt: Scalars['DateTime'];
-  lobbies?: Maybe<Array<Scalars['Uuid']>>;
 };
 
-export type MatchStartingEvent = {
-  __typename?: 'MatchStartingEvent';
-  matchId: Scalars['Uuid'];
-  lobbies?: Maybe<Array<Scalars['Uuid']>>;
-  id: Scalars['Uuid'];
-  occurredAt: Scalars['DateTime'];
+export type MatchCanceledPayload = {
+  __typename?: 'MatchCanceledPayload';
+  query?: Maybe<Query>;
+  record: MatchCanceledRecord;
 };
 
-export type MatchStartedEvent = {
-  __typename?: 'MatchStartedEvent';
-  matchId: Scalars['Uuid'];
-  map?: Maybe<Scalars['String']>;
-  address?: Maybe<Scalars['String']>;
-  mode: Scalars['Int'];
-  players?: Maybe<Array<Scalars['Uuid']>>;
-  lobbies?: Maybe<Array<Scalars['Uuid']>>;
-  id: Scalars['Uuid'];
-  occurredAt: Scalars['DateTime'];
+export type MatchFinishedPayload = {
+  __typename?: 'MatchFinishedPayload';
+  query?: Maybe<Query>;
+  record: MatchFinishedRecord;
 };
 
-export type MatchTimedOutEvent = {
-  __typename?: 'MatchTimedOutEvent';
-  matchId: Scalars['Uuid'];
-  lobbies?: Maybe<Array<Scalars['Uuid']>>;
-  id: Scalars['Uuid'];
-  occurredAt: Scalars['DateTime'];
+export type MatchPlayerLeftPayload = {
+  __typename?: 'MatchPlayerLeftPayload';
+  query?: Maybe<Query>;
+  record: MatchPlayerLeftRecord;
 };
 
-export type MatchCanceledEvent = {
-  __typename?: 'MatchCanceledEvent';
-  matchId: Scalars['Uuid'];
-  lobbies?: Maybe<Array<Scalars['Uuid']>>;
-  id: Scalars['Uuid'];
-  occurredAt: Scalars['DateTime'];
+export type LobbyInvitationAcceptedPayload = {
+  __typename?: 'LobbyInvitationAcceptedPayload';
+  query?: Maybe<Query>;
+  record: LobbyInvitationAcceptedRecord;
 };
 
-export type MatchFinishedEvent = {
-  __typename?: 'MatchFinishedEvent';
-  matchId: Scalars['Uuid'];
-  scoreT: Scalars['Int'];
-  scoreCT: Scalars['Int'];
-  lobbies?: Maybe<Array<Scalars['Uuid']>>;
-  id: Scalars['Uuid'];
-  occurredAt: Scalars['DateTime'];
-};
-
-export type MatchPlayerLeftEvent = {
-  __typename?: 'MatchPlayerLeftEvent';
-  userId: Scalars['Uuid'];
-  id: Scalars['Uuid'];
-  occurredAt: Scalars['DateTime'];
-};
-
-export type InvitationAcceptedPayload = {
-  __typename?: 'InvitationAcceptedPayload';
-  lobbyId: Scalars['Uuid'];
-  invitedPlayerId: Scalars['Uuid'];
-};
-
-export type InvitationCanceledPayload = {
-  __typename?: 'InvitationCanceledPayload';
-  lobbyId: Scalars['Uuid'];
-  invitedPlayerId: Scalars['Uuid'];
+export type LobbyInvitationCanceledPayload = {
+  __typename?: 'LobbyInvitationCanceledPayload';
+  query?: Maybe<Query>;
+  record: LobbyInvitationCanceledRecord;
 };
 
 export type LobbyConfigurationChangedPayload = {
   __typename?: 'LobbyConfigurationChangedPayload';
-  lobbyId: Scalars['Uuid'];
-  map?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  mode: Scalars['Int'];
+  query?: Maybe<Query>;
+  record: LobbyConfigurationChangedRecord;
 };
 
-export type LobbyStatusChangedEvent = {
-  __typename?: 'LobbyStatusChangedEvent';
-  lobbyId: Scalars['Uuid'];
-  status: Scalars['Int'];
-  id: Scalars['Uuid'];
-  occurredAt: Scalars['DateTime'];
+export type LobbyStatusChangedPayload = {
+  __typename?: 'LobbyStatusChangedPayload';
+  query?: Maybe<Query>;
+  record: LobbyStatusChangedRecord;
 };
 
-export type MemberLeftEvent = {
-  __typename?: 'MemberLeftEvent';
-  lobbyId: Scalars['Uuid'];
-  userId: Scalars['Uuid'];
-  id: Scalars['Uuid'];
-  occurredAt: Scalars['DateTime'];
+export type LobbyMemberLeftPayload = {
+  __typename?: 'LobbyMemberLeftPayload';
+  query?: Maybe<Query>;
+  record: LobbyMemberLeftRecord;
 };
 
-export type MemberRoleChangedEvent = {
-  __typename?: 'MemberRoleChangedEvent';
-  lobbyId: Scalars['Uuid'];
-  userId: Scalars['Uuid'];
-  role: Scalars['Int'];
-  id: Scalars['Uuid'];
-  occurredAt: Scalars['DateTime'];
+export type LobbyMemberRoleChangedPayload = {
+  __typename?: 'LobbyMemberRoleChangedPayload';
+  query?: Maybe<Query>;
+  record: LobbyMemberRoleChangedRecord;
 };
 
 export type PlayerStatsModeDto = {
@@ -732,28 +715,6 @@ export type PlayerStatsModeDto = {
   maps?: Maybe<Array<Maybe<PlayerStatsMapDto>>>;
 };
 
-export type LobbyMatch = {
-  __typename?: 'LobbyMatch';
-  id: Scalars['Uuid'];
-  address?: Maybe<Scalars['String']>;
-  map?: Maybe<Scalars['String']>;
-  mode: Scalars['Int'];
-  status: Scalars['Int'];
-};
-
-export type LobbyMember = {
-  __typename?: 'LobbyMember';
-  user?: Maybe<User>;
-  isLeader: Scalars['Boolean'];
-};
-
-export type LobbyConfiguration = {
-  __typename?: 'LobbyConfiguration';
-  map?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  mode: Scalars['Int'];
-};
-
 export type PlayerStatsMapDto = {
   __typename?: 'PlayerStatsMapDto';
   map?: Maybe<Scalars['String']>;
@@ -764,17 +725,97 @@ export type PlayerStatsMapDto = {
   totalHs: Scalars['Int'];
 };
 
+export type LobbyMemberRoleChangedRecord = {
+  __typename?: 'LobbyMemberRoleChangedRecord';
+  playerId: Scalars['Uuid'];
+  role: Scalars['Int'];
+};
+
+export type LobbyMemberLeftRecord = {
+  __typename?: 'LobbyMemberLeftRecord';
+  lobbyId: Scalars['Uuid'];
+  playerId: Scalars['Uuid'];
+};
+
+export type LobbyStatusChangedRecord = {
+  __typename?: 'LobbyStatusChangedRecord';
+  lobbyId: Scalars['Uuid'];
+  status: Scalars['Int'];
+};
+
+export type LobbyConfigurationChangedRecord = {
+  __typename?: 'LobbyConfigurationChangedRecord';
+  lobbyId: Scalars['Uuid'];
+  map: Scalars['String'];
+  name: Scalars['String'];
+  mode: Scalars['Int'];
+};
+
+export type LobbyInvitationCanceledRecord = {
+  __typename?: 'LobbyInvitationCanceledRecord';
+  lobbyId: Scalars['Uuid'];
+  invitedPlayerId: Scalars['Uuid'];
+};
+
+export type LobbyInvitationAcceptedRecord = {
+  __typename?: 'LobbyInvitationAcceptedRecord';
+  invitingUser?: Maybe<User>;
+  lobbyId: Scalars['Uuid'];
+};
+
+export type MatchPlayerLeftRecord = {
+  __typename?: 'MatchPlayerLeftRecord';
+  playerId: Scalars['Uuid'];
+};
+
+export type MatchFinishedRecord = {
+  __typename?: 'MatchFinishedRecord';
+  matchId: Scalars['Uuid'];
+  scoreT: Scalars['Int'];
+  scoreCT: Scalars['Int'];
+};
+
+export type MatchCanceledRecord = {
+  __typename?: 'MatchCanceledRecord';
+  matchId: Scalars['Uuid'];
+};
+
+export type MatchStartedRecord = {
+  __typename?: 'MatchStartedRecord';
+  matchId: Scalars['Uuid'];
+  map: Scalars['String'];
+  address: Scalars['String'];
+  mode: Scalars['Int'];
+  players?: Maybe<Array<Scalars['Uuid']>>;
+};
+
+export type MatchStartingRecord = {
+  __typename?: 'MatchStartingRecord';
+  matchId: Scalars['Uuid'];
+};
+
+export type MatchReadyRecord = {
+  __typename?: 'MatchReadyRecord';
+  matchId: Scalars['Uuid'];
+  map: Scalars['String'];
+  expiresAt: Scalars['DateTime'];
+};
+
+export type MatchAcceptedRecord = {
+  __typename?: 'MatchAcceptedRecord';
+  matchId: Scalars['Uuid'];
+  playerId: Scalars['Uuid'];
+};
+
 export type FriendshipInvitationCreatedRecord = {
   __typename?: 'FriendshipInvitationCreatedRecord';
-  invitingUserId: Scalars['Uuid'];
-  invitedUserId: Scalars['Uuid'];
+  invitingUser?: Maybe<User>;
 };
 
 export type LobbyInvitationCreatedRecord = {
   __typename?: 'LobbyInvitationCreatedRecord';
+  invitingUser?: Maybe<User>;
   lobbyId: Scalars['Uuid'];
-  invitingPlayerId: Scalars['Uuid'];
-  invitedPlayerId: Scalars['Uuid'];
 };
 
 export type AuthenticationSuccessRecord = {
@@ -836,11 +877,30 @@ export type GetUsersQuery = (
   { __typename?: 'Query' }
   & { users?: Maybe<(
     { __typename?: 'UserConnection' }
-    & { nodes?: Maybe<Array<Maybe<(
+    & { nodes?: Maybe<Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
-    )>>> }
+    )>> }
   )> }
+);
+
+export type LobbyFieldsFragment = (
+  { __typename?: 'Lobby' }
+  & Pick<Lobby, 'id' | 'status'>
+  & { match?: Maybe<(
+    { __typename?: 'LobbyMatch' }
+    & Pick<LobbyMatch, 'id' | 'map' | 'mode' | 'status' | 'address'>
+  )>, configuration: (
+    { __typename?: 'LobbyConfiguration' }
+    & Pick<LobbyConfiguration, 'map' | 'mode' | 'name'>
+  ), members?: Maybe<Array<(
+    { __typename?: 'LobbyMember' }
+    & Pick<LobbyMember, 'isLeader'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username'>
+    ) }
+  )>> }
 );
 
 export type AcceptLobbyInvitationMutationVariables = Exact<{
@@ -853,6 +913,19 @@ export type AcceptLobbyInvitationMutation = (
   & { acceptLobbyInvitation?: Maybe<(
     { __typename?: 'AcceptLobbyInvitationPayload' }
     & Pick<AcceptLobbyInvitationPayload, 'status'>
+  )> }
+);
+
+export type AcceptMatchMutationVariables = Exact<{
+  matchId: Scalars['Uuid'];
+}>;
+
+
+export type AcceptMatchMutation = (
+  { __typename?: 'Mutation' }
+  & { acceptMatch?: Maybe<(
+    { __typename?: 'AcceptMatchPayload' }
+    & Pick<AcceptMatchPayload, 'status'>
   )> }
 );
 
@@ -869,19 +942,152 @@ export type CancelLobbyInvitationMutation = (
   )> }
 );
 
+export type ChangeLobbyConfigurationMutationVariables = Exact<{
+  input: ChangeLobbyConfigurationCommandInput;
+}>;
+
+
+export type ChangeLobbyConfigurationMutation = (
+  { __typename?: 'Mutation' }
+  & { changeLobbyConfiguration?: Maybe<(
+    { __typename?: 'ChangeLobbyConfigurationPayload' }
+    & Pick<ChangeLobbyConfigurationPayload, 'status'>
+  )> }
+);
+
+export type CreateLobbyMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateLobbyMutation = (
+  { __typename?: 'Mutation' }
+  & { createLobby?: Maybe<(
+    { __typename?: 'CreateLobbyPayload' }
+    & { record: (
+      { __typename?: 'Lobby' }
+      & LobbyFieldsFragment
+    ) }
+  )> }
+);
+
+export type InviteUserToLobbyMutationVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+  userId: Scalars['Uuid'];
+}>;
+
+
+export type InviteUserToLobbyMutation = (
+  { __typename?: 'Mutation' }
+  & { inviteUserToLobby?: Maybe<(
+    { __typename?: 'InviteUserToLobbyPayload' }
+    & Pick<InviteUserToLobbyPayload, 'status'>
+  )> }
+);
+
+export type LeaveLobbyMutationVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type LeaveLobbyMutation = (
+  { __typename?: 'Mutation' }
+  & { leaveLobby?: Maybe<(
+    { __typename?: 'LeaveLobbyPayload' }
+    & Pick<LeaveLobbyPayload, 'status'>
+  )> }
+);
+
+export type StartSearchingForGameMutationVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type StartSearchingForGameMutation = (
+  { __typename?: 'Mutation' }
+  & { startSearchingForGame?: Maybe<(
+    { __typename?: 'StartSearchingForGamePayload' }
+    & Pick<StartSearchingForGamePayload, 'status'>
+  )> }
+);
+
+export type GetFriendsQueryVariables = Exact<{
+  userId: Scalars['Uuid'];
+}>;
+
+
+export type GetFriendsQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & { friends?: Maybe<(
+      { __typename?: 'UserConnection' }
+      & { nodes?: Maybe<Array<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      )>> }
+    )> }
+  )> }
+);
+
+export type GetLobbyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetLobbyQuery = (
+  { __typename?: 'Query' }
+  & { lobby?: Maybe<(
+    { __typename?: 'Lobby' }
+    & LobbyFieldsFragment
+  )> }
+);
+
 export type GetLobbyInvitationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetLobbyInvitationsQuery = (
   { __typename?: 'Query' }
-  & { lobbyInvitations?: Maybe<Array<Maybe<(
+  & { lobbyInvitations?: Maybe<Array<(
     { __typename?: 'LobbyInvitation' }
     & Pick<LobbyInvitation, 'lobbyId' | 'createdAt'>
     & { invitingUser?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
     )> }
-  )>>> }
+  )>> }
+);
+
+export type LobbyConfigurationChangedSubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type LobbyConfigurationChangedSubscription = (
+  { __typename?: 'Subscription' }
+  & { lobbyConfigurationChanged?: Maybe<(
+    { __typename?: 'LobbyConfigurationChangedPayload' }
+    & { record: (
+      { __typename?: 'LobbyConfigurationChangedRecord' }
+      & Pick<LobbyConfigurationChangedRecord, 'lobbyId' | 'map' | 'mode' | 'name'>
+    ) }
+  )> }
+);
+
+export type LobbyInvitationAcceptedSubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type LobbyInvitationAcceptedSubscription = (
+  { __typename?: 'Subscription' }
+  & { lobbyInvitationAccepted?: Maybe<(
+    { __typename?: 'LobbyInvitationAcceptedPayload' }
+    & { record: (
+      { __typename?: 'LobbyInvitationAcceptedRecord' }
+      & Pick<LobbyInvitationAcceptedRecord, 'lobbyId'>
+      & { invitingUser?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      )> }
+    ) }
+  )> }
 );
 
 export type LobbyInvitationCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
@@ -891,10 +1097,187 @@ export type LobbyInvitationCreatedSubscription = (
   { __typename?: 'Subscription' }
   & { lobbyInvitationCreated?: Maybe<(
     { __typename?: 'LobbyInvitationCreatedPayload' }
-    & { record?: Maybe<(
+    & { record: (
       { __typename?: 'LobbyInvitationCreatedRecord' }
-      & Pick<LobbyInvitationCreatedRecord, 'lobbyId' | 'invitingPlayerId'>
-    )> }
+      & Pick<LobbyInvitationCreatedRecord, 'lobbyId'>
+      & { invitingUser?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      )> }
+    ) }
+  )> }
+);
+
+export type LobbyMemberLeftSubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type LobbyMemberLeftSubscription = (
+  { __typename?: 'Subscription' }
+  & { lobbyMemberLeft?: Maybe<(
+    { __typename?: 'LobbyMemberLeftPayload' }
+    & { record: (
+      { __typename?: 'LobbyMemberLeftRecord' }
+      & Pick<LobbyMemberLeftRecord, 'lobbyId' | 'playerId'>
+    ) }
+  )> }
+);
+
+export type LobbyMemberRoleChangedSubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type LobbyMemberRoleChangedSubscription = (
+  { __typename?: 'Subscription' }
+  & { lobbyMemberRoleChanged?: Maybe<(
+    { __typename?: 'LobbyMemberRoleChangedPayload' }
+    & { record: (
+      { __typename?: 'LobbyMemberRoleChangedRecord' }
+      & Pick<LobbyMemberRoleChangedRecord, 'playerId' | 'role'>
+    ) }
+  )> }
+);
+
+export type LobbyStatusChangedSubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type LobbyStatusChangedSubscription = (
+  { __typename?: 'Subscription' }
+  & { lobbyStatusChanged?: Maybe<(
+    { __typename?: 'LobbyStatusChangedPayload' }
+    & { record: (
+      { __typename?: 'LobbyStatusChangedRecord' }
+      & Pick<LobbyStatusChangedRecord, 'lobbyId' | 'status'>
+    ) }
+  )> }
+);
+
+export type MatchAcceptedSubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type MatchAcceptedSubscription = (
+  { __typename?: 'Subscription' }
+  & { matchAccepted?: Maybe<(
+    { __typename?: 'MatchAcceptedPayload' }
+    & { record: (
+      { __typename?: 'MatchAcceptedRecord' }
+      & Pick<MatchAcceptedRecord, 'matchId' | 'playerId'>
+    ) }
+  )> }
+);
+
+export type MatchCanceledSubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type MatchCanceledSubscription = (
+  { __typename?: 'Subscription' }
+  & { matchCanceled?: Maybe<(
+    { __typename?: 'MatchCanceledPayload' }
+    & { record: (
+      { __typename?: 'MatchCanceledRecord' }
+      & Pick<MatchCanceledRecord, 'matchId'>
+    ) }
+  )> }
+);
+
+export type MatchFinishedSubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type MatchFinishedSubscription = (
+  { __typename?: 'Subscription' }
+  & { matchFinished?: Maybe<(
+    { __typename?: 'MatchFinishedPayload' }
+    & { record: (
+      { __typename?: 'MatchFinishedRecord' }
+      & Pick<MatchFinishedRecord, 'matchId'>
+    ) }
+  )> }
+);
+
+export type MatchPlayerLeftSubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type MatchPlayerLeftSubscription = (
+  { __typename?: 'Subscription' }
+  & { matchPlayerLeft?: Maybe<(
+    { __typename?: 'MatchPlayerLeftPayload' }
+    & { record: (
+      { __typename?: 'MatchPlayerLeftRecord' }
+      & Pick<MatchPlayerLeftRecord, 'playerId'>
+    ) }
+  )> }
+);
+
+export type MatchReadySubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type MatchReadySubscription = (
+  { __typename?: 'Subscription' }
+  & { matchReady?: Maybe<(
+    { __typename?: 'MatchReadyPayload' }
+    & { record: (
+      { __typename?: 'MatchReadyRecord' }
+      & Pick<MatchReadyRecord, 'map' | 'matchId' | 'expiresAt'>
+    ) }
+  )> }
+);
+
+export type MatchStartedSubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type MatchStartedSubscription = (
+  { __typename?: 'Subscription' }
+  & { matchStarted?: Maybe<(
+    { __typename?: 'MatchStartedPayload' }
+    & { record: (
+      { __typename?: 'MatchStartedRecord' }
+      & Pick<MatchStartedRecord, 'matchId' | 'address' | 'map' | 'mode'>
+    ) }
+  )> }
+);
+
+export type MatchStartingSubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type MatchStartingSubscription = (
+  { __typename?: 'Subscription' }
+  & { matchStarting?: Maybe<(
+    { __typename?: 'MatchStartingPayload' }
+    & { record: (
+      { __typename?: 'MatchStartingRecord' }
+      & Pick<MatchStartingRecord, 'matchId'>
+    ) }
+  )> }
+);
+
+export type MatchTimedOutSubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type MatchTimedOutSubscription = (
+  { __typename?: 'Subscription' }
+  & { matchTimedOut?: Maybe<(
+    { __typename?: 'MatchTimedOutRecord' }
+    & Pick<MatchTimedOutRecord, 'matchId'>
   )> }
 );
 
@@ -1031,23 +1414,23 @@ export type GetFriendsViewQuery = (
     { __typename?: 'User' }
     & { friends?: Maybe<(
       { __typename?: 'UserConnection' }
-      & { nodes?: Maybe<Array<Maybe<(
+      & { nodes?: Maybe<Array<(
         { __typename?: 'User' }
         & FriendFragment
-      )>>> }
+      )>> }
     )> }
   )>, blockedUsers?: Maybe<(
     { __typename?: 'UserConnection' }
-    & { nodes?: Maybe<Array<Maybe<(
+    & { nodes?: Maybe<Array<(
       { __typename?: 'User' }
       & FriendFragment
-    )>>> }
+    )>> }
   )>, friendshipInvitations?: Maybe<(
     { __typename?: 'UserConnection' }
-    & { nodes?: Maybe<Array<Maybe<(
+    & { nodes?: Maybe<Array<(
       { __typename?: 'User' }
       & FriendFragment
-    )>>> }
+    )>> }
   )> }
 );
 
@@ -1061,17 +1444,17 @@ export type GetMatchesQuery = (
   { __typename?: 'Query' }
   & { matches?: Maybe<(
     { __typename?: 'MatchConnection' }
-    & { nodes?: Maybe<Array<Maybe<(
+    & { nodes?: Maybe<Array<(
       { __typename?: 'Match' }
       & Pick<Match, 'id' | 'map' | 'mode' | 'scoreT' | 'scoreCT' | 'winner' | 'createdAt' | 'finishedAt'>
-      & { teamTerrorists?: Maybe<Array<Maybe<(
+      & { teamTerrorists?: Maybe<Array<(
         { __typename?: 'MatchPlayer' }
         & TeamPlayerFragment
-      )>>>, teamCounterTerrorists?: Maybe<Array<Maybe<(
+      )>>, teamCounterTerrorists?: Maybe<Array<(
         { __typename?: 'MatchPlayer' }
         & TeamPlayerFragment
-      )>>> }
-    )>>> }
+      )>> }
+    )>> }
   )> }
 );
 
@@ -1085,17 +1468,17 @@ export type GetMatchesViewQuery = (
   { __typename?: 'Query' }
   & { matches?: Maybe<(
     { __typename?: 'MatchConnection' }
-    & { nodes?: Maybe<Array<Maybe<(
+    & { nodes?: Maybe<Array<(
       { __typename?: 'Match' }
       & Pick<Match, 'id' | 'map' | 'mode' | 'scoreT' | 'scoreCT' | 'winner' | 'createdAt' | 'finishedAt'>
-      & { teamTerrorists?: Maybe<Array<Maybe<(
+      & { teamTerrorists?: Maybe<Array<(
         { __typename?: 'MatchPlayer' }
         & TeamPlayerFragment
-      )>>>, teamCounterTerrorists?: Maybe<Array<Maybe<(
+      )>>, teamCounterTerrorists?: Maybe<Array<(
         { __typename?: 'MatchPlayer' }
         & TeamPlayerFragment
-      )>>> }
-    )>>> }
+      )>> }
+    )>> }
   )>, user?: Maybe<(
     { __typename?: 'User' }
     & { stats?: Maybe<(
@@ -1128,10 +1511,13 @@ export type FriendshipInvitationCreatedSubscription = (
   { __typename?: 'Subscription' }
   & { friendshipInvitationCreated?: Maybe<(
     { __typename?: 'FriendshipInvitationCreatedPayload' }
-    & { record?: Maybe<(
+    & { record: (
       { __typename?: 'FriendshipInvitationCreatedRecord' }
-      & Pick<FriendshipInvitationCreatedRecord, 'invitingUserId' | 'invitedUserId'>
-    )> }
+      & { invitingUser?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      )> }
+    ) }
   )> }
 );
 
@@ -1185,10 +1571,28 @@ declare module '*/getUsers.gql' {
 }
     
 
+declare module '*/LobbyFields.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const LobbyFields: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/acceptLobbyInvitation.gql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const acceptLobbyInvitation: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/acceptMatch.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const acceptMatch: DocumentNode;
 
   export default defaultDocument;
 }
@@ -1203,6 +1607,69 @@ declare module '*/cancelLobbyInvitation.gql' {
 }
     
 
+declare module '*/changeLobbyConfiguration.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const changeLobbyConfiguration: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/createLobby.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const createLobby: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/inviteUserToLobby.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const inviteUserToLobby: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/leaveLobby.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const leaveLobby: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/startSearchingForGame.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const startSearchingForGame: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/getFriends.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const getFriends: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/getLobby.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const getLobby: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/getLobbyInvitations.gql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -1212,10 +1679,127 @@ declare module '*/getLobbyInvitations.gql' {
 }
     
 
+declare module '*/lobbyConfigurationChanged.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const lobbyConfigurationChanged: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/lobbyInvitationAccepted.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const lobbyInvitationAccepted: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/lobbyInvitationCreated.gql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const lobbyInvitationCreated: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/lobbyMemberLeft.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const lobbyMemberLeft: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/lobbyMemberRoleChanged.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const lobbyMemberRoleChanged: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/lobbyStatusChanged.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const lobbyStatusChanged: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/matchAccepted.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const matchAccepted: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/matchCanceled.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const matchCanceled: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/matchFinished.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const matchFinished: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/matchPlayerLeft.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const matchPlayerLeft: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/matchReady.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const matchReady: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/matchStarted.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const matchStarted: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/matchStarting.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const matchStarting: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/matchTimedOut.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const matchTimedOut: DocumentNode;
 
   export default defaultDocument;
 }

@@ -8,12 +8,13 @@ const MainHeader = defineComponent({
     BaseButton
   },
   setup() {
-    const { state, signOut } = useAuth();
+    const { currentUser, isAuthenticated, signOut } = useAuth();
 
     const { open } = useUsersDialog();
 
     return {
-      state,
+      currentUser,
+      isAuthenticated,
       open,
       signOut
     };

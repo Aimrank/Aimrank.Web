@@ -1,4 +1,5 @@
 using Aimrank.Modules.Matches.Application.Lobbies.GetLobbyMatch;
+using HotChocolate.Types;
 using System;
 
 namespace Aimrank.Web.GraphQL.Queries.Models
@@ -18,6 +19,15 @@ namespace Aimrank.Web.GraphQL.Queries.Models
             Map = dto.Map;
             Mode = dto.Mode;
             Status = dto.Status;
+        }
+    }
+
+    public class LobbyMatchType : ObjectType<LobbyMatch>
+    {
+        protected override void Configure(IObjectTypeDescriptor<LobbyMatch> descriptor)
+        {
+            descriptor.Field(f => f.Address).Type<NonNullType<StringType>>();
+            descriptor.Field(f => f.Map).Type<NonNullType<StringType>>();
         }
     }
 }
