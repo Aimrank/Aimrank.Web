@@ -826,6 +826,22 @@ export type SignUpMutation = (
   )> }
 );
 
+export type GetUsersQueryVariables = Exact<{
+  username: Scalars['String'];
+}>;
+
+
+export type GetUsersQuery = (
+  { __typename?: 'Query' }
+  & { users?: Maybe<(
+    { __typename?: 'UserConnection' }
+    & { nodes?: Maybe<Array<Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username'>
+    )>>> }
+  )> }
+);
+
 export type AcceptFriendshipInvitationMutationVariables = Exact<{
   userId: Scalars['Uuid'];
 }>;
@@ -1099,6 +1115,15 @@ declare module '*/signUp.gql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const signUp: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/getUsers.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const getUsers: DocumentNode;
 
   export default defaultDocument;
 }

@@ -3,9 +3,9 @@
 
 <template>
   <base-dialog
-    :visible="state.isDialogVisible"
-    @click:outside="onClose"
-    @close="onClose"
+    :visible="isVisible"
+    @click:outside="close"
+    @close="close"
   >
     <template #header>
       {{ $t("common.components.UsersDialog.title") }}
@@ -13,11 +13,11 @@
     <div>
       <form-field-input
         :placeholder="$t('common.components.UsersDialog.label')"
-        v-model="state.searchQuery"
+        v-model="username"
       />
       <ul :class="$style.list">
         <li
-          v-for="user in state.searchResults"
+          v-for="user in users"
           :key="user.id"
           :class="$style.listItem"
           @click="onUserClick(user.id)"

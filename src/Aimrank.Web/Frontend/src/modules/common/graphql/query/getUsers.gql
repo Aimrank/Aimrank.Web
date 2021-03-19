@@ -1,0 +1,8 @@
+query getUsers($username: String!) {
+  users(username: $username take: 20) {
+    nodes {
+      id
+      username
+    }
+  }
+}

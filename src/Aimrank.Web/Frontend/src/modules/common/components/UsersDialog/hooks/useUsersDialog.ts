@@ -1,45 +1,17 @@
-import { reactive } from "vue";
-import { userService } from "~/services";
-import { IUserDto } from "@/profile/models/IUserDto";
+import { ref } from "vue";
 
-interface IState {
-  isDialogVisible: boolean;
-  searchQuery: string;
-  searchResults: IUserDto[];
-}
-
-const state = reactive<IState>({
-  isDialogVisible: false,
-  searchQuery: "",
-  searchResults: []
-});
+const isVisible = ref(false);
 
 const open = () => {
-  state.isDialogVisible = true;
+  isVisible.value = true;
 }
 
-const onFetchResults = async () => {
-  if (state.searchQuery.trim().length === 0) {
-    state.searchResults = [];
-    return;
-  }
-
-  const result = await userService.browse(state.searchQuery);
-
-  if (result.isOk()) {
-    state.searchResults = result.value;
-  }
-}
-
-const onClose = () => {
-  state.isDialogVisible = false;
-  state.searchQuery = "";
-  state.searchResults = [];
+const close = () => {
+  isVisible.value = false;
 }
 
 export const useUsersDialog = () => ({
-  state,
+  isVisible,
   open,
-  onFetchResults,
-  onClose
+  close
 });
