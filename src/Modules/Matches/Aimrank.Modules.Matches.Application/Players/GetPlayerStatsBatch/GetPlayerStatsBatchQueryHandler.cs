@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Aimrank.Modules.Matches.Application.Players.GetPlayerStatsBatch
 {
-    public class GetPlayerStatsBatchQueryHandler : IQueryHandler<GetPlayerStatsBatchQuery, IEnumerable<PlayerStatsDto>>
+    internal class GetPlayerStatsBatchQueryHandler : IQueryHandler<GetPlayerStatsBatchQuery, IEnumerable<PlayerStatsDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
