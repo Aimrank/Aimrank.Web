@@ -23,7 +23,7 @@ export class ErrorResponse implements IErrorResponse {
   static fromGraphQLError(error: GraphQLError) {
     if (error.extensions) {
       const errorResponse = new ErrorResponse(
-        error.extensions.message,
+        error.extensions.message || error.message,
         error.extensions.code);
 
       if (error.extensions.errors) {
