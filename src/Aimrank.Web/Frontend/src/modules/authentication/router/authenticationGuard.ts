@@ -4,7 +4,7 @@ import { useAuth } from "@/authentication/hooks/useAuth";
 export const authenticate = (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
   const { isAuthenticated } = useAuth();
 
-  if (isAuthenticated) {
+  if (isAuthenticated.value) {
     return next();
   }
 

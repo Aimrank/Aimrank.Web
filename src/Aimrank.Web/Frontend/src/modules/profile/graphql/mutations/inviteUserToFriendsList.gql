@@ -1,5 +1,5 @@
 mutation inviteUserToFriendsList($userId: Uuid!) {
-  inviteUserToFriendsList(command: {invitedUserId: $userId}) {
+  inviteUserToFriendsList(input: {invitedUserId: $userId}) {
     query {
       friendship(userId: $userId) {
         isAccepted

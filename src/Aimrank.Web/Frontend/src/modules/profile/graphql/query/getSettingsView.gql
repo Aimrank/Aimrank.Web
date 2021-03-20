@@ -1,4 +1,4 @@
-query getUser($userId: Uuid!) {
+query getSettingsView($userId: Uuid!) {
   user(userId: $userId) {
     id
     steamId

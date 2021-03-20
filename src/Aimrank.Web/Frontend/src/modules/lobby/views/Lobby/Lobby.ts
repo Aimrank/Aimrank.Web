@@ -51,7 +51,7 @@ const Lobby = defineComponent({
     }
 
     const onStartSearchingClick = async () => {
-      const { success, errors } = await startSearching();
+      const { success, errors } = await startSearching({ lobbyId: lobby.value?.id });
 
       if (!success) {
         notifications.danger(errors[0].message);

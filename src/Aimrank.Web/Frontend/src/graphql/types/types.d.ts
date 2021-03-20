@@ -229,82 +229,82 @@ export type Mutation = {
 
 
 export type MutationSignInArgs = {
-  command?: Maybe<AuthenticateCommandInput>;
+  input: AuthenticateCommandInput;
 };
 
 
 export type MutationSignUpArgs = {
-  command?: Maybe<RegisterNewUserCommandInput>;
+  input: RegisterNewUserCommandInput;
 };
 
 
 export type MutationInviteUserToLobbyArgs = {
-  command?: Maybe<InvitePlayerToLobbyCommandInput>;
+  input: InvitePlayerToLobbyCommandInput;
 };
 
 
 export type MutationAcceptLobbyInvitationArgs = {
-  command?: Maybe<AcceptLobbyInvitationCommandInput>;
+  input: AcceptLobbyInvitationCommandInput;
 };
 
 
 export type MutationCancelLobbyInvitationArgs = {
-  command?: Maybe<CancelLobbyInvitationCommandInput>;
+  input: CancelLobbyInvitationCommandInput;
 };
 
 
 export type MutationChangeLobbyConfigurationArgs = {
-  command?: Maybe<ChangeLobbyConfigurationCommandInput>;
+  input: ChangeLobbyConfigurationCommandInput;
 };
 
 
 export type MutationLeaveLobbyArgs = {
-  command?: Maybe<LeaveLobbyCommandInput>;
+  input: LeaveLobbyCommandInput;
 };
 
 
 export type MutationStartSearchingForGameArgs = {
-  command?: Maybe<StartSearchingForGameCommandInput>;
+  input: StartSearchingForGameCommandInput;
 };
 
 
 export type MutationCancelSearchingForGameArgs = {
-  command?: Maybe<CancelSearchingForGameCommandInput>;
+  input: CancelSearchingForGameCommandInput;
 };
 
 
 export type MutationAcceptMatchArgs = {
-  command?: Maybe<AcceptMatchCommandInput>;
+  input: AcceptMatchCommandInput;
 };
 
 
 export type MutationInviteUserToFriendsListArgs = {
-  command?: Maybe<InviteUserToFriendsListCommandInput>;
+  input: InviteUserToFriendsListCommandInput;
 };
 
 
 export type MutationAcceptFriendshipInvitationArgs = {
-  command?: Maybe<AcceptFriendshipInvitationCommandInput>;
+  input: AcceptFriendshipInvitationCommandInput;
 };
 
 
 export type MutationDeclineFriendshipInvitationArgs = {
-  command?: Maybe<DeclineFriendshipInvitationCommandInput>;
+  input: DeclineFriendshipInvitationCommandInput;
 };
 
 
 export type MutationBlockUserArgs = {
-  command?: Maybe<BlockUserCommandInput>;
+  input: BlockUserCommandInput;
 };
 
 
 export type MutationUnblockUserArgs = {
-  command?: Maybe<UnblockUserCommandInput>;
+  input: UnblockUserCommandInput;
 };
 
 
 export type MutationDeleteFriendshipArgs = {
-  command?: Maybe<DeleteFriendshipCommandInput>;
+  input: DeleteFriendshipCommandInput;
 };
 
 export type Subscription = {
@@ -315,7 +315,7 @@ export type Subscription = {
   matchReady?: Maybe<MatchReadyPayload>;
   matchStarting?: Maybe<MatchStartingPayload>;
   matchStarted?: Maybe<MatchStartedPayload>;
-  matchTimedOut?: Maybe<MatchTimedOutRecord>;
+  matchTimedOut?: Maybe<MatchTimedOutPayload>;
   matchCanceled?: Maybe<MatchCanceledPayload>;
   matchFinished?: Maybe<MatchFinishedPayload>;
   matchPlayerLeft?: Maybe<MatchPlayerLeftPayload>;
@@ -645,9 +645,10 @@ export type MatchStartedPayload = {
   record: MatchStartedRecord;
 };
 
-export type MatchTimedOutRecord = {
-  __typename?: 'MatchTimedOutRecord';
-  matchId: Scalars['Uuid'];
+export type MatchTimedOutPayload = {
+  __typename?: 'MatchTimedOutPayload';
+  query?: Maybe<Query>;
+  record: MatchTimedOutRecord;
 };
 
 export type MatchCanceledPayload = {
@@ -780,6 +781,11 @@ export type MatchCanceledRecord = {
   matchId: Scalars['Uuid'];
 };
 
+export type MatchTimedOutRecord = {
+  __typename?: 'MatchTimedOutRecord';
+  matchId: Scalars['Uuid'];
+};
+
 export type MatchStartedRecord = {
   __typename?: 'MatchStartedRecord';
   matchId: Scalars['Uuid'];
@@ -826,7 +832,7 @@ export type AuthenticationSuccessRecord = {
 };
 
 export type SignInMutationVariables = Exact<{
-  command: AuthenticateCommandInput;
+  input: AuthenticateCommandInput;
 }>;
 
 
@@ -853,7 +859,7 @@ export type SignOutMutation = (
 );
 
 export type SignUpMutationVariables = Exact<{
-  command: RegisterNewUserCommandInput;
+  input: RegisterNewUserCommandInput;
 }>;
 
 
@@ -1276,8 +1282,11 @@ export type MatchTimedOutSubscriptionVariables = Exact<{
 export type MatchTimedOutSubscription = (
   { __typename?: 'Subscription' }
   & { matchTimedOut?: Maybe<(
-    { __typename?: 'MatchTimedOutRecord' }
-    & Pick<MatchTimedOutRecord, 'matchId'>
+    { __typename?: 'MatchTimedOutPayload' }
+    & { record: (
+      { __typename?: 'MatchTimedOutRecord' }
+      & Pick<MatchTimedOutRecord, 'matchId'>
+    ) }
   )> }
 );
 
@@ -1504,6 +1513,19 @@ export type GetProfileViewQuery = (
   )> }
 );
 
+export type GetSettingsViewQueryVariables = Exact<{
+  userId: Scalars['Uuid'];
+}>;
+
+
+export type GetSettingsViewQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'steamId' | 'username'>
+  )> }
+);
+
 export type FriendshipInvitationCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1518,19 +1540,6 @@ export type FriendshipInvitationCreatedSubscription = (
         & Pick<User, 'id' | 'username'>
       )> }
     ) }
-  )> }
-);
-
-export type GetUserQueryVariables = Exact<{
-  userId: Scalars['Uuid'];
-}>;
-
-
-export type GetUserQuery = (
-  { __typename?: 'Query' }
-  & { user?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'steamId' | 'username'>
   )> }
 );
 
@@ -1905,19 +1914,19 @@ declare module '*/getProfileView.gql' {
 }
     
 
-declare module '*/friendshipInvitationCreated.gql' {
+declare module '*/getSettingsView.gql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
-  export const friendshipInvitationCreated: DocumentNode;
+  export const getSettingsView: DocumentNode;
 
   export default defaultDocument;
 }
     
 
-declare module '*/Settings.gql' {
+declare module '*/friendshipInvitationCreated.gql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
-  export const getUser: DocumentNode;
+  export const friendshipInvitationCreated: DocumentNode;
 
   export default defaultDocument;
 }

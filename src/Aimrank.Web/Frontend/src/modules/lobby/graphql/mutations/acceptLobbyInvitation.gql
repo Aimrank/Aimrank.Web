@@ -1,5 +1,5 @@
 mutation acceptLobbyInvitation($lobbyId: Uuid!) {
-  acceptLobbyInvitation(command: {lobbyId: $lobbyId}) {
+  acceptLobbyInvitation(input: {lobbyId: $lobbyId}) {
     status
   }
 }

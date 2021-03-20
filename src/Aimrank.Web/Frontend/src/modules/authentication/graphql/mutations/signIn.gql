@@ -1,5 +1,5 @@
-mutation signIn($command: AuthenticateCommandInput!) {
-  signIn(command: $command) {
+mutation signIn($input: AuthenticateCommandInput!) {
+  signIn(input: $input) {
     record {
       id
       email

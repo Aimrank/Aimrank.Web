@@ -1,5 +1,5 @@
-mutation signUp($command: RegisterNewUserCommandInput!) {
-  signUp(command: $command) {
+mutation signUp($input: RegisterNewUserCommandInput!) {
+  signUp(input: $input) {
     record {
       id
       email

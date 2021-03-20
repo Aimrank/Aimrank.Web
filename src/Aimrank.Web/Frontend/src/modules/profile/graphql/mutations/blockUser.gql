@@ -1,5 +1,5 @@
 mutation blockUser($userId: Uuid!) {
-  blockUser(command: {blockedUserId: $userId}) {
+  blockUser(input: {blockedUserId: $userId}) {
     query {
       friendship(userId: $userId) {
         isAccepted

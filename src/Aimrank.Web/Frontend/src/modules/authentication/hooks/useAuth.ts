@@ -32,10 +32,10 @@ const setCurrentUser = (user: IAuthUser | null) => {
   state.user = user;
 }
 
-const signIn = async (command: AuthenticateCommandInput) => {
+const signIn = async (input: AuthenticateCommandInput) => {
   const { mutate, result, errors } = useSignIn();
 
-  await mutate({ command });
+  await mutate({ input });
 
   if (result.value?.signIn?.record) {
     setCurrentUser({
@@ -53,10 +53,10 @@ const signIn = async (command: AuthenticateCommandInput) => {
   };
 }
 
-const signUp = async (command: RegisterNewUserCommandInput) => {
+const signUp = async (input: RegisterNewUserCommandInput) => {
   const { mutate, result, errors } = useSignUp();
 
-  await mutate({ command });
+  await mutate({ input });
 
   if (result.value?.signUp?.record) {
     setCurrentUser({

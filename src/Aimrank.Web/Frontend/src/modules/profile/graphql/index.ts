@@ -14,6 +14,7 @@ import INVITE_USER_TO_FRIENDS_LIST from "./mutations/inviteUserToFriendsList.gql
 import GET_FRIENDS_VIEW from "./query/getFriendsView.gql";
 import GET_PROFILE_VIEW from "./query/getProfileView.gql";
 import GET_MATCHES_VIEW from "./query/getMatchesView.gql";
+import GET_SETTINGS_VIEW from "./query/getSettingsView.gql";
 import GET_MATCHES from "./query/getMatches.gql";
 
 import FRIENDSHIP_INVITATION_CREATED from "./subscriptions/friendshipInvitationCreated.gql";
@@ -37,6 +38,8 @@ import {
   GetMatchesViewQueryVariables,
   GetProfileViewQuery,
   GetProfileViewQueryVariables,
+  GetSettingsViewQuery,
+  GetSettingsViewQueryVariables,
   InviteUserToFriendsListMutation,
   InviteUserToFriendsListMutationVariables,
   UnblockUserMutation,
@@ -85,6 +88,15 @@ export const useProfileView = (userId: string | Ref<string>) => useQuery<
     }
   });
 
+export const useGetSettingsView = (userId: string | Ref<string>) => useQuery<
+  GetSettingsViewQuery,
+  GetSettingsViewQueryVariables>({
+    query: GET_SETTINGS_VIEW,
+    variables: {
+      userId
+    }
+  });
+
 export const useMatchesView = (
   userId: string | Ref<string>,
   mode: number | Ref<number>
@@ -118,3 +130,4 @@ export const useFriendshipInvitationCreated = () => useSubscription<
     FriendshipInvitationCreatedSubscriptionVariables>({
       query: FRIENDSHIP_INVITATION_CREATED
     });
+

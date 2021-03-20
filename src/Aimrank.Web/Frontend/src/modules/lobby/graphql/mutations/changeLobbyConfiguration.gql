@@ -1,5 +1,5 @@
 mutation changeLobbyConfiguration($input: ChangeLobbyConfigurationCommandInput!) {
-  changeLobbyConfiguration(command: $input) {
+  changeLobbyConfiguration(input: $input) {
     status
   }
 }

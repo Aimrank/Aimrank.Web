@@ -1,5 +1,5 @@
 mutation leaveLobby($lobbyId: Uuid!) {
-  leaveLobby(command: {lobbyId: $lobbyId}) {
+  leaveLobby(input: {lobbyId: $lobbyId}) {
     status
   }
 }

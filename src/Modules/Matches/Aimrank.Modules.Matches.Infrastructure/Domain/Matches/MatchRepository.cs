@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace Aimrank.Modules.Matches.Infrastructure.Domain.Matches
 {
@@ -26,9 +27,9 @@ namespace Aimrank.Modules.Matches.Infrastructure.Domain.Matches
 
             const string sql = @"
                 SELECT DISTINCT
-                    [P].[UserId] AS [UserId],
+                    [P].[PlayerId] AS [PlayerId],
                     FIRST_VALUE([P].[RatingEnd]) OVER (
-                        PARTITION BY [P].[UserId]
+                        PARTITION BY [P].[PlayerId]
                         ORDER BY [M].[FinishedAt] DESC
                     ) AS [Rating]
                 FROM [matches].[Matches] AS [M]
@@ -36,21 +37,21 @@ namespace Aimrank.Modules.Matches.Infrastructure.Domain.Matches
                 WHERE
                     [M].[Mode] = @Mode AND
                     [M].[Status] = @Status AND
-                    [P].[UserId] IN @Users;";
+                    [P].[PlayerId] IN @PlayerIds;";
 
             var result = new Dictionary<PlayerId, int>();
             
-            await connection.QueryAsync<PlayerId, int, int>(sql,
-                (userId, rating) =>
+            await connection.QueryAsync<Guid, int, int>(sql,
+                (playerId, rating) =>
                 {
-                    result[userId] = rating;
+                    result[new PlayerId(playerId)] = rating;
                     return rating;
                 },
                 new
                 {
                     Mode = mode,
                     Status = MatchStatus.Finished,
-                    Users = ids.Select(id => id.Value)
+                    PlayerIds = ids.Select(id => id.Value)
                 },
                 splitOn: "Rating");
 

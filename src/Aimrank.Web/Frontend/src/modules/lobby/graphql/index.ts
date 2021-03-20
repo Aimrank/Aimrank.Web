@@ -177,34 +177,50 @@ export const useLobbyStatusChanged = () => useSubscription<
     query: LOBBY_STATUS_CHANGED
   }, true);
 
-export const useMatchAccepted = (lobbyId: string) => useSubscription<
+export const useMatchAccepted = () => useSubscription<
   MatchAcceptedSubscription,
-  MatchAcceptedSubscriptionVariables>({ query: MATCH_ACCEPTED, variables: {lobbyId} });
+  MatchAcceptedSubscriptionVariables>({
+    query: MATCH_ACCEPTED
+  }, true);
 
-export const useMatchCanceled = (lobbyId: string) => useSubscription<
+export const useMatchCanceled = () => useSubscription<
   MatchCanceledSubscription,
-  MatchCanceledSubscriptionVariables>({ query: MATCH_CANCELED, variables: {lobbyId} });
+  MatchCanceledSubscriptionVariables>({
+    query: MATCH_CANCELED
+  }, true);
 
-export const useMatchFinished = (lobbyId: string) => useSubscription<
+export const useMatchFinished = () => useSubscription<
   MatchFinishedSubscription,
-  MatchFinishedSubscriptionVariables>({ query: MATCH_FINISHED, variables: {lobbyId} });
+  MatchFinishedSubscriptionVariables>({
+    query: MATCH_FINISHED
+  }, true);
 
-export const useMatchPlayerLeft = (lobbyId: string) => useSubscription<
+export const useMatchPlayerLeft = () => useSubscription<
   MatchPlayerLeftSubscription,
-  MatchPlayerLeftSubscriptionVariables>({ query: MATCH_PLAYER_LEFT, variables: {lobbyId} });
+  MatchPlayerLeftSubscriptionVariables>({
+    query: MATCH_PLAYER_LEFT
+  }, true);
 
-export const useMatchReady = (lobbyId: string) => useSubscription<
+export const useMatchReady = () => useSubscription<
   MatchReadySubscription,
-  MatchReadySubscriptionVariables>({ query: MATCH_READY, variables: {lobbyId} });
+  MatchReadySubscriptionVariables>({
+    query: MATCH_READY
+  }, true);
 
-export const useMatchStarted = (lobbyId: string) => useSubscription<
+export const useMatchStarted = () => useSubscription<
   MatchStartedSubscription,
-  MatchStartedSubscriptionVariables>({ query: MATCH_STARTED, variables: {lobbyId} });
+  MatchStartedSubscriptionVariables>({
+    query: MATCH_STARTED
+  }, true);
 
-export const useMatchStarting = (lobbyId: string) => useSubscription<
+export const useMatchStarting = () => useSubscription<
   MatchStartingSubscription,
-  MatchStartingSubscriptionVariables>({ query: MATCH_STARTING, variables: {lobbyId} });
+  MatchStartingSubscriptionVariables>({
+    query: MATCH_STARTING
+  }, true);
 
-export const useMatchTimedOut = (lobbyId: string) => useSubscription<
+export const useMatchTimedOut = () => useSubscription<
   MatchTimedOutSubscription,
-  MatchTimedOutSubscriptionVariables>({ query: MATCH_TIMED_OUT, variables: {lobbyId} });
+  MatchTimedOutSubscriptionVariables>({
+    query: MATCH_TIMED_OUT
+  }, true);

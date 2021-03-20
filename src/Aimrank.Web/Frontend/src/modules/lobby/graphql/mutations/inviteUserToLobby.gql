@@ -1,5 +1,5 @@
 mutation inviteUserToLobby($lobbyId: Uuid! $userId: Uuid!) {
-  inviteUserToLobby(command: {lobbyId: $lobbyId invitedPlayerId: $userId}) {
+  inviteUserToLobby(input: {lobbyId: $lobbyId invitedPlayerId: $userId}) {
     status
   }
 }

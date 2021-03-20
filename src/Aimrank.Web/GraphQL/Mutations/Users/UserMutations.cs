@@ -22,21 +22,21 @@ namespace Aimrank.Web.GraphQL.Mutations.Users
         }
 
         public async Task<SignInPayload> SignIn(
-            AuthenticateCommand command,
+            [GraphQLNonNullType] AuthenticateCommand input,
             [Service] IHttpContextAccessor httpContextAccessor)
         {
-            var result = await SignInAsync(command, httpContextAccessor);
+            var result = await SignInAsync(input, httpContextAccessor);
             return new SignInPayload(result);
         }
 
         public async Task<SignUpPayload> SignUp(
-            RegisterNewUserCommand command,
+            [GraphQLNonNullType] RegisterNewUserCommand input,
             [Service] IHttpContextAccessor httpContextAccessor)
         {
-            await _userAccessModule.ExecuteCommandAsync(command);
+            await _userAccessModule.ExecuteCommandAsync(input);
 
             var result = await SignInAsync(
-                new AuthenticateCommand(command.Username, command.Password),
+                new AuthenticateCommand(input.Username, input.Password),
                 httpContextAccessor);
             
             return new SignUpPayload(result);

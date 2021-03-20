@@ -1,5 +1,5 @@
 mutation startSearchingForGame($lobbyId: Uuid!) {
-  startSearchingForGame(command: {lobbyId: $lobbyId}) {
+  startSearchingForGame(input: {lobbyId: $lobbyId}) {
     status
   }
 }

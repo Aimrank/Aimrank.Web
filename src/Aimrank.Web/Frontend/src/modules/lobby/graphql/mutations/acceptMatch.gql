@@ -1,5 +1,5 @@
 mutation acceptMatch($matchId: Uuid!) {
-  acceptMatch(command: {matchId: $matchId}) {
+  acceptMatch(input: {matchId: $matchId}) {
     status
   }
 }

@@ -55,12 +55,12 @@ namespace Aimrank.Web.GraphQL.Subscriptions.Lobbies
         }
 
         [SubscribeAndResolve]
-        public ValueTask<ISourceStream<MatchTimedOutRecord>> MatchTimedOut(
+        public ValueTask<ISourceStream<MatchTimedOutPayload>> MatchTimedOut(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
         {
             AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, MatchTimedOutRecord>($"MatchTimedOut:{lobbyId}");
+            return _receiver.SubscribeAsync<string, MatchTimedOutPayload>($"MatchTimedOut:{lobbyId}");
         }
 
         [SubscribeAndResolve]

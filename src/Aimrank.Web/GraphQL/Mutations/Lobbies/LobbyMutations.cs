@@ -14,6 +14,7 @@ using Aimrank.Web.GraphQL.Subscriptions.Users.Payloads;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Subscriptions;
 using HotChocolate.Types;
+using HotChocolate;
 using System.Threading.Tasks;
 using System;
 
@@ -45,79 +46,87 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
         }
 
         [Authorize]
-        public async Task<InviteUserToLobbyPayload> InviteUserToLobby(InvitePlayerToLobbyCommand command)
+        public async Task<InviteUserToLobbyPayload> InviteUserToLobby(
+            [GraphQLNonNullType] InvitePlayerToLobbyCommand input)
         {
-            await _matchesModule.ExecuteCommandAsync(command);
+            await _matchesModule.ExecuteCommandAsync(input);
 
-            await _sender.SendAsync($"LobbyInvitationCreated:{command.InvitedPlayerId}",
+            await _sender.SendAsync($"LobbyInvitationCreated:{input.InvitedPlayerId}",
                 new LobbyInvitationCreatedPayload(
                     new LobbyInvitationCreatedRecord(
-                        command.LobbyId, _executionContextAccessor.UserId)));
+                        input.LobbyId, _executionContextAccessor.UserId)));
 
             return new InviteUserToLobbyPayload();
         }
 
         [Authorize]
-        public async Task<AcceptLobbyInvitationPayload> AcceptLobbyInvitation(AcceptLobbyInvitationCommand command)
+        public async Task<AcceptLobbyInvitationPayload> AcceptLobbyInvitation(
+            [GraphQLNonNullType] AcceptLobbyInvitationCommand input)
         {
-            await _matchesModule.ExecuteCommandAsync(command);
+            await _matchesModule.ExecuteCommandAsync(input);
 
-            await _sender.SendAsync($"LobbyInvitationAccepted:{command.LobbyId}",
+            await _sender.SendAsync($"LobbyInvitationAccepted:{input.LobbyId}",
                 new LobbyInvitationAcceptedPayload(
-                    new LobbyInvitationAcceptedRecord(command.LobbyId, _executionContextAccessor.UserId)));
+                    new LobbyInvitationAcceptedRecord(input.LobbyId, _executionContextAccessor.UserId)));
 
             return new AcceptLobbyInvitationPayload();
         }
 
         [Authorize]
-        public async Task<CancelLobbyInvitationPayload> CancelLobbyInvitation(CancelLobbyInvitationCommand command)
+        public async Task<CancelLobbyInvitationPayload> CancelLobbyInvitation(
+            [GraphQLNonNullType] CancelLobbyInvitationCommand input)
         {
-            await _matchesModule.ExecuteCommandAsync(command);
+            await _matchesModule.ExecuteCommandAsync(input);
 
-            await _sender.SendAsync($"LobbyInvitationCanceled:{command.LobbyId}",
+            await _sender.SendAsync($"LobbyInvitationCanceled:{input.LobbyId}",
                 new LobbyInvitationCanceledPayload(
-                    new LobbyInvitationCanceledRecord(command.LobbyId, _executionContextAccessor.UserId)));
+                    new LobbyInvitationCanceledRecord(input.LobbyId, _executionContextAccessor.UserId)));
 
             return new CancelLobbyInvitationPayload();
         }
 
         [Authorize]
-        public async Task<ChangeLobbyConfigurationPayload> ChangeLobbyConfiguration(ChangeLobbyConfigurationCommand command)
+        public async Task<ChangeLobbyConfigurationPayload> ChangeLobbyConfiguration(
+            [GraphQLNonNullType] ChangeLobbyConfigurationCommand input)
         {
-            await _matchesModule.ExecuteCommandAsync(command);
+            await _matchesModule.ExecuteCommandAsync(input);
 
-            await _sender.SendAsync($"LobbyConfigurationChanged:{command.LobbyId}",
+            await _sender.SendAsync($"LobbyConfigurationChanged:{input.LobbyId}",
                 new LobbyConfigurationChangedPayload(
-                    new LobbyConfigurationChangedRecord(command.LobbyId, command.Map, command.Name, command.Mode)));
+                    new LobbyConfigurationChangedRecord(input.LobbyId, input.Map, input.Name, input.Mode)));
 
             return new ChangeLobbyConfigurationPayload();
         }
 
         [Authorize]
-        public async Task<LeaveLobbyPayload> LeaveLobby(LeaveLobbyCommand command)
+        public async Task<LeaveLobbyPayload> LeaveLobby(
+            [GraphQLNonNullType] LeaveLobbyCommand input)
         {
-            await _matchesModule.ExecuteCommandAsync(command);
+            await _matchesModule.ExecuteCommandAsync(input);
             return new LeaveLobbyPayload();
         }
 
         [Authorize]
-        public async Task<StartSearchingForGamePayload> StartSearchingForGame(StartSearchingForGameCommand command)
+        public async Task<StartSearchingForGamePayload> StartSearchingForGame(
+            [GraphQLNonNullType] StartSearchingForGameCommand input)
         {
-            await _matchesModule.ExecuteCommandAsync(command);
+            await _matchesModule.ExecuteCommandAsync(input);
             return new StartSearchingForGamePayload();
         }
 
         [Authorize]
-        public async Task<CancelSearchingForGamePayload> CancelSearchingForGame(CancelSearchingForGameCommand command)
+        public async Task<CancelSearchingForGamePayload> CancelSearchingForGame(
+            [GraphQLNonNullType] CancelSearchingForGameCommand input)
         {
-            await _matchesModule.ExecuteCommandAsync(command);
+            await _matchesModule.ExecuteCommandAsync(input);
             return new CancelSearchingForGamePayload();
         }
         
         [Authorize]
-        public async Task<AcceptMatchPayload> AcceptMatch(AcceptMatchCommand command)
+        public async Task<AcceptMatchPayload> AcceptMatch(
+            [GraphQLNonNullType] AcceptMatchCommand input)
         {
-            await _matchesModule.ExecuteCommandAsync(command);
+            await _matchesModule.ExecuteCommandAsync(input);
             return new AcceptMatchPayload();
         }
     }

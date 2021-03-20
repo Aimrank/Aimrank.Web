@@ -1,8 +1,8 @@
 import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "@/authentication/hooks/useAuth";
-import { useResponseErrors } from "@/common/hooks/useGQLResponseErrors";
-import { ErrorResponse } from "@/common/models/GErrorResponse";
+import { useResponseErrors } from "@/common/hooks/useResponseErrors";
+import { ErrorResponse } from "@/common/hooks/ErrorResponse";
 import BaseButton from "@/common/components/BaseButton";
 import FormFieldInput from "@/common/components/FormFieldInput";
 import ValidationSummary from "@/common/components/ValidationSummary";

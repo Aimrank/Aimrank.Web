@@ -86,7 +86,7 @@
         </template>
       </div>
       <div
-        v-else-if="isCurrentUserLeader"
+        v-else-if="isCurrentUserLeader && lobby.status === 0"
         :class="$style.section"
       >
         <lobby-configuration

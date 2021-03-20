@@ -1,14 +1,11 @@
 import { defineComponent, onMounted } from "vue";
-import { steamService } from "~/services";
-import { GetUserQuery, GetUserQueryVariables } from "~/graphql/types/types";
-import { useQuery } from "~/graphql/useQuery";
 import { useAuth } from "@/authentication/hooks/useAuth";
 import { useInitialState } from "@/common/hooks/useInitialState";
 import { useNotifications } from "@/common/hooks/useNotifications";
+import { useGetSettingsView } from "@/profile/graphql";
+import { signInWithSteam } from "@/profile/services/signInWithSteam";
 import BaseButton from "@/common/components/BaseButton";
 import Icon from "@/common/components/Icon";
-
-import GET_USER from "./Settings.gql";
 
 const Settings = defineComponent({
   components: {
@@ -20,12 +17,7 @@ const Settings = defineComponent({
     const initialState = useInitialState();
     const notifications = useNotifications();
 
-    const { result: state } = useQuery<GetUserQuery, GetUserQueryVariables>({
-      query: GET_USER,
-      variables: {
-        userId: currentUser.value!.id
-      }
-    });
+    const { result: state } = useGetSettingsView(currentUser.value!.id);
 
     onMounted(() => {
       const error = initialState.getError();
@@ -36,10 +28,10 @@ const Settings = defineComponent({
     });
 
     const onConnectSteamAccount = async () => {
-      const result = await steamService.signInWithSteam();
+      const result = await signInWithSteam();
 
-      if (!result.isOk()) {
-        notifications.danger(result.error.title);
+      if (!result.isOk) {
+        notifications.danger(result.error!.title);
       }
     }
 
