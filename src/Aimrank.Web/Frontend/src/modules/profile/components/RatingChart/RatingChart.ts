@@ -1,6 +1,6 @@
 import Chart from "chart.js";
 import { computed, defineComponent, onMounted, ref, watch } from "vue";
-import { IMatchEntry } from "@/profile/models/MatchEntry";
+import { IMatchEntry } from "@/profile/models/IMatchEntry";
 
 const colors = {
   blue: "#007bff",

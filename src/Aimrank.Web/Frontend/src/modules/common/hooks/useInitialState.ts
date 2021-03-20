@@ -1,13 +1,21 @@
 import { reactive } from "vue";
 
+interface IInitialAppStateUser {
+  id: string;
+  email: string;
+  username: string;
+}
+
 interface IInitialAppState {
   error: string | null;
+  user: IInitialAppStateUser | null;
 }
 
 const initialAppState = (window as any).initialAppState as IInitialAppState;
 
 const state = reactive<IInitialAppState>({
-  error: initialAppState.error
+  error: initialAppState.error,
+  user: initialAppState.user
 });
 
 export const useInitialState = () => {
@@ -17,5 +25,7 @@ export const useInitialState = () => {
     return error;
   }
 
-  return { getError };
+  const getUser = () => state.user;
+
+  return { getError, getUser };
 }

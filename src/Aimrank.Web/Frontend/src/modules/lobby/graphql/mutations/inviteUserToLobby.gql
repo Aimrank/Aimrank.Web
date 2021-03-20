@@ -1,0 +1,5 @@
+mutation inviteUserToLobby($lobbyId: Uuid! $userId: Uuid!) {
+  inviteUserToLobby(input: {lobbyId: $lobbyId invitedPlayerId: $userId}) {
+    status
+  }
+}

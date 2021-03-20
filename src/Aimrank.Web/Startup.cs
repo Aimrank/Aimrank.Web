@@ -1,40 +1,33 @@
-using Aimrank.Application.Commands.Users.SignIn;
-using Aimrank.Application.Commands.Users.SignUp;
-using Aimrank.Common.Application.Exceptions;
 using Aimrank.Common.Application;
-using Aimrank.Common.Domain;
 using Aimrank.Common.Infrastructure.EventBus;
-using Aimrank.Common.Infrastructure;
-using Aimrank.Infrastructure.Configuration.CSGO;
-using Aimrank.Infrastructure.Configuration.Jwt;
-using Aimrank.Infrastructure.Configuration.Redis;
-using Aimrank.Infrastructure.Configuration;
-using Aimrank.Infrastructure;
-using Aimrank.IntegrationEvents.Lobbies;
-using Aimrank.IntegrationEvents.Matches;
+using Aimrank.Modules.Matches.Infrastructure.Configuration;
+using Aimrank.Modules.Matches.IntegrationEvents.Lobbies;
+using Aimrank.Modules.Matches.IntegrationEvents.Matches;
+using Aimrank.Modules.UserAccess.Infrastructure.Configuration;
+using Aimrank.Web.Configuration.EventBus;
 using Aimrank.Web.Configuration.ExecutionContext;
-using Aimrank.Web.Configuration.Extensions;
-using Aimrank.Web.Configuration;
-using Aimrank.Web.Events.Handlers.Lobbies;
-using Aimrank.Web.Events.Handlers.Matches;
-using Aimrank.Web.Events.Handlers;
-using Aimrank.Web.Hubs.General;
-using Aimrank.Web.Hubs.Lobbies;
-using Aimrank.Web.Hubs;
-using Aimrank.Web.ProblemDetails;
+using Aimrank.Web.Configuration.SessionAuthentication;
+using Aimrank.Web.GraphQL.Mutations.Friendships;
+using Aimrank.Web.GraphQL.Mutations.Lobbies;
+using Aimrank.Web.GraphQL.Mutations.Users;
+using Aimrank.Web.GraphQL.Mutations;
+using Aimrank.Web.GraphQL.Queries;
+using Aimrank.Web.GraphQL.Subscriptions.Lobbies;
+using Aimrank.Web.GraphQL.Subscriptions.Users;
+using Aimrank.Web.GraphQL.Subscriptions;
+using Aimrank.Web.GraphQL;
+using Aimrank.Web.GraphQL.Queries.Models;
+using Aimrank.Web.Modules.Matches;
+using Aimrank.Web.Modules.UserAccess;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
-using FluentValidation.AspNetCore;
-using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StackExchange.Redis;
 
 namespace Aimrank.Web
 {
@@ -42,60 +35,74 @@ namespace Aimrank.Web
     {
         private readonly IEventBus _eventBus = new InMemoryEventBusClient();
         private readonly IConfiguration _configuration;
+        private readonly RedisSettings _redisSettings = new();
+        private readonly MatchesModuleSettings _matchesModuleSettings = new();
         
-        public Startup(IConfiguration configuration) => _configuration = configuration;
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            _configuration.GetSection(nameof(RedisSettings)).Bind(_redisSettings);
+            _configuration.GetSection(nameof(MatchesModuleSettings)).Bind(_matchesModuleSettings);
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
-            services.AddScoped<IUserIdProvider, HubUserIdProvider>();
 
-            services.AddSignalR();
-            services.AddSwagger();
-            services.AddAuthenticationWithBearer(_configuration);
-            services.AddProblemDetails(options =>
+            services.AddStackExchangeRedisCache(options =>
             {
-                options.ExceptionDetailsPropertyName = "exceptionDetails";
-                options.Map<SignUpException>(ex => new SignUpProblemDetails(ex));
-                options.Map<SignInException>(ex => new SignInProblemDetails(ex));
-                options.Map<ApplicationException>(ex => new ApplicationProblemDetails(ex));
-                options.Map<BusinessRuleValidationException>(ex => new BusinessRuleValidationProblemDetails(ex));
+                options.ConfigurationOptions = new ConfigurationOptions
+                {
+                    EndPoints = {_redisSettings.Endpoint},
+                    DefaultDatabase = _redisSettings.Database
+                };
             });
 
-            services.AddRouting(options => options.LowercaseUrls = true);
-            services.AddControllersWithViews()
-                .AddFluentValidation(options =>
-                {
-                    options.RegisterValidatorsFromAssemblyContaining<Startup>(lifetime: ServiceLifetime.Singleton);
-                    options.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
-                    options.ImplicitlyValidateChildProperties = true;
-                    options.LocalizationEnabled = false;
-                });
+            services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
-            /* services.AddDbContext<AimrankContext>(options =>
+            services.AddAuthorization();
+            services.AddAuthentication(SessionAuthenticationDefaults.AuthenticationScheme)
+                .AddSession()
+                .AddSteam(options =>
+                {
+                    options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
+                    options.SignInScheme = "Cookies";
+                })
+                .AddCookie();
+
+            services.AddApplicationGraphQL();
+
+            services.AddControllersWithViews();
+            services.AddRouting(options => options.LowercaseUrls = true);
+
+#if false
+            //Add db contexts so "dotnet ef" can find them when generating migrations
+
+            services.AddDbContext<MatchesContext>(options =>
             {
                 options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
                 options.UseSqlServer(_configuration.GetConnectionString("Database"),
                     x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
-            }); */
+            });
+            
+            services.AddDbContext<UserAccessContext>(options =>
+            {
+                options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
+                options.UseSqlServer(_configuration.GetConnectionString("Database"),
+                    x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
+            });
+#endif
         }
 
         public void ConfigureContainer(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterModule(new AimrankAutofacModule());
-
-            containerBuilder.RegisterType<MatchReadyEventHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<MatchAcceptedEventHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<MatchTimedOutEventHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<MatchStartingEventHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<MatchStartedEventHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<MatchCanceledEventHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<MatchFinishedEventHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<MatchPlayerLeftEventHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<LobbyStatusChangedEventHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<MemberLeftEventHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<MemberRoleChangedEventHandler>().AsImplementedInterfaces();
+            containerBuilder.RegisterModule(new MatchesAutofacModule());
+            containerBuilder.RegisterModule(new UserAccessAutofacModule());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -108,22 +115,21 @@ namespace Aimrank.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Aimrank API v1"));
             }
 
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseWebSockets();
+            
+            app.UseSession();
             
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseProblemDetails();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<GeneralHub>("/hubs/general");
-                endpoints.MapHub<LobbyHub>("/hubs/lobby");
+                endpoints.MapGraphQL();
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{*all}",
@@ -148,22 +154,18 @@ namespace Aimrank.Web
         private void InitializeModules(ILifetimeScope container)
         {
             var executionContextAccessor = container.Resolve<IExecutionContextAccessor>();
-            var jwtSettings = new JwtSettings();
-            var csgoSettings = new CSGOSettings();
-            var redisSettings = new RedisSettings();
-            _configuration.GetSection(nameof(JwtSettings)).Bind(jwtSettings);
-            _configuration.GetSection(nameof(CSGOSettings)).Bind(csgoSettings);
-            _configuration.GetSection(nameof(RedisSettings)).Bind(redisSettings);
-
-            var connectionString = _configuration.GetConnectionString("Database");
             
-            AimrankStartup.Initialize(
+            var connectionString = _configuration.GetConnectionString("Database");
+
+            MatchesStartup.Initialize(
                 connectionString,
                 executionContextAccessor,
                 _eventBus,
-                jwtSettings,
-                csgoSettings,
-                redisSettings);
+                _matchesModuleSettings);
+            
+            UserAccessStartup.Initialize(
+                connectionString,
+                executionContextAccessor);
         }
     }
 }

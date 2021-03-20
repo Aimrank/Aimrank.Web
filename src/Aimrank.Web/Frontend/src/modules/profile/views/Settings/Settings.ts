@@ -1,9 +1,9 @@
-import { defineComponent, onMounted, ref } from "vue";
-import { steamService, userService } from "~/services";
-import { useUser } from "@/profile/hooks/useUser";
-import { useNotifications } from "@/common/hooks/useNotifications";
+import { defineComponent, onMounted } from "vue";
+import { useAuth } from "@/authentication/hooks/useAuth";
 import { useInitialState } from "@/common/hooks/useInitialState";
-import { IUserDto } from "@/profile/models/IUserDto";
+import { useNotifications } from "@/common/hooks/useNotifications";
+import { useGetSettingsView } from "@/profile/graphql";
+import { signInWithSteam } from "@/profile/services/signInWithSteam";
 import BaseButton from "@/common/components/BaseButton";
 import Icon from "@/common/components/Icon";
 
@@ -13,40 +13,30 @@ const Settings = defineComponent({
     Icon
   },
   setup() {
-    const userDetails = ref<IUserDto | null>(null);
-
-    const user = useUser();
+    const { currentUser } = useAuth();
+    const initialState = useInitialState();
     const notifications = useNotifications();
-    const { getError } = useInitialState();
 
-    onMounted(async () => {
-      if (!user.state.user) {
-        return;
-      }
+    const { result: state } = useGetSettingsView(currentUser.value!.id);
 
-      const result = await userService.getUserDetails(user.state.user.id);
+    onMounted(() => {
+      const error = initialState.getError();
 
-      if (result.isOk()) {
-        userDetails.value = result.value;
-
-        const error = getError();
-
-        if (error) {
-          notifications.danger(error);
-        }
+      if (error) {
+        notifications.danger(error);
       }
     });
 
     const onConnectSteamAccount = async () => {
-      const result = await steamService.signInWithSteam();
+      const result = await signInWithSteam();
 
-      if (!result.isOk()) {
-        notifications.danger(result.error.title);
+      if (!result.isOk) {
+        notifications.danger(result.error!.title);
       }
     }
 
     return {
-      userDetails,
+      state,
       onConnectSteamAccount
     };
   }

@@ -1,0 +1,9 @@
+#import "../fragments/LobbyFields.gql"
+
+mutation createLobby {
+  createLobby {
+    record {
+      ...LobbyFields
+    }
+  }
+}

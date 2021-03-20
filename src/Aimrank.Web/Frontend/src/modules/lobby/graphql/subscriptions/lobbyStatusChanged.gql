@@ -1,0 +1,8 @@
+subscription lobbyStatusChanged($lobbyId: Uuid!) {
+  lobbyStatusChanged(lobbyId: $lobbyId) {
+    record {
+      lobbyId
+      status
+    }
+  }
+}

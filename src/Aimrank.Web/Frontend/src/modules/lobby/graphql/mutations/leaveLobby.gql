@@ -1,0 +1,5 @@
+mutation leaveLobby($lobbyId: Uuid!) {
+  leaveLobby(input: {lobbyId: $lobbyId}) {
+    status
+  }
+}

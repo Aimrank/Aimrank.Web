@@ -5,14 +5,18 @@
   "scripts": {
     "start": "webpack --env.dev --watch",
     "build-dev": "webpack --env.dev",
-    "build-prod": "webpack --env.prod"
+    "build-prod": "webpack --env.prod",
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "author": "Mariusz Baran",
   "license": "ISC",
   "dependencies": {
-    "@microsoft/signalr": "^5.0.2",
+    "@apollo/client": "^3.3.11",
     "axios": "^0.21.1",
     "chart.js": "^2.9.4",
+    "graphql": "^15.5.0",
+    "graphql-tag": "^2.12.1",
+    "subscriptions-transport-ws": "^0.9.18",
     "uuid": "^8.3.2",
     "vue": "^3.0.5",
     "vue-i18n": "^9.0.0-rc.4",
@@ -21,6 +25,10 @@
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
+    "@graphql-codegen/cli": "1.21.2",
+    "@graphql-codegen/typescript": "1.21.1",
+    "@graphql-codegen/typescript-graphql-files-modules": "1.18.1",
+    "@graphql-codegen/typescript-operations": "1.17.15",
     "@types/node": "^14.14.22",
     "@vue/compiler-sfc": "^3.0.5",
     "babel-loader": "^8.2.2",

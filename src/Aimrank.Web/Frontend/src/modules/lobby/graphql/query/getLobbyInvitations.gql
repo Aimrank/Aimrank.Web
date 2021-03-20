@@ -1,0 +1,10 @@
+query getLobbyInvitations {
+  lobbyInvitations {
+    lobbyId
+    createdAt
+    invitingUser {
+      id
+      username
+    }
+  }
+}

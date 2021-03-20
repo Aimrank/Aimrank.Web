@@ -1,5 +1,6 @@
-import { defineComponent, watch } from "vue";
+import { computed, defineComponent, ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import { useGetUsers } from "@/common/graphql";
 import { useUsersDialog } from "./hooks/useUsersDialog";
 import { debounce } from "@/common/utilities/debounce";
 import BaseButton from "@/common/components/BaseButton";
@@ -15,22 +16,35 @@ const UsersDialog = defineComponent({
   setup() {
     const router = useRouter();
 
-    const { state, onFetchResults, onClose } = useUsersDialog();
+    const username = ref("");
 
-    const onFetchResultsDebounced = debounce(onFetchResults, 300);
+    const { isVisible, close } = useUsersDialog();
+    const { result, fetch } = useGetUsers(username);
+
+    const users = computed(() => result.value?.users?.nodes ?? []);
+
+    const fetchUsersDebounced = debounce(() => {
+      if (username.value) {
+        fetch();
+      }
+    }, 300);
+
+    watch(
+      () => username.value,
+      fetchUsersDebounced
+    );
 
     const onUserClick = (userId: string) => {
       router.push({ name: "profile", params: { userId }});
-
-      onClose();
+      close();
     }
 
-    watch(() => state.searchQuery, onFetchResultsDebounced);
-
     return {
-      state,
+      isVisible,
+      username,
+      users,
+      close,
       onUserClick,
-      onClose
     };
   }
 });

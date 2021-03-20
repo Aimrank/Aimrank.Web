@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="6.1.0" />
+        <PackageReference Include="Quartz" Version="3.2.4" />
+        <PackageReference Include="StackExchange.Redis" Version="2.2.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Common\Aimrank.Common.Infrastructure\Aimrank.Common.Infrastructure.csproj" />
+      <ProjectReference Include="..\Aimrank.Modules.Matches.Application\Aimrank.Modules.Matches.Application.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,11 @@
+mutation acceptFriendshipInvitation($userId: Uuid!) {
+  acceptFriendshipInvitation(input: {invitingUserId: $userId}) {
+    query {
+      friendship(userId: $userId) {
+        isAccepted
+        invitingUserId
+        blockingUsersIds
+      }
+    }
+  }
+}

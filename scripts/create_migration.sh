@@ -1,5 +1,6 @@
 #!/bin/bash
 
-MIGRATION_NAME="$1"
+CONTEXT_NAME="$1"
+MIGRATION_NAME="$2"
 
-dotnet ef --startup-project ./src/Aimrank.Web --project ./src/Database/Aimrank.Database.Migrator migrations add $MIGRATION_NAME
+dotnet ef migrations add $MIGRATION_NAME --startup-project ./src/Aimrank.Web --project ./src/Database/Aimrank.Database.Migrator --context $CONTEXT_NAME

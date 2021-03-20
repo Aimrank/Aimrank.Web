@@ -2,30 +2,15 @@ using System;
 
 namespace Aimrank.Common.Application.Queries
 {
-    public class PaginationQuery
+    public record PaginationQuery
     {
-        private readonly int _page;
-        private readonly int _size;
+        public int Skip { get; }
+        public int Take { get; }
 
-        public int Page
+        public PaginationQuery(int? skip, int? take)
         {
-            get => _page;
-            private init => _page = Math.Max(1, value);
+            Skip = Math.Max(0, skip ?? 0);
+            Take = Math.Max(0, take ?? 0);
         }
-
-        public int Size
-        {
-            get => _size;
-            private init => _size = Math.Max(1, value);
-        }
-
-        public PaginationQuery(int page = 1, int size = 1)
-        {
-            Page = page;
-            Size = size;
-        }
-
-        public int Offset => (Page - 1) * Size;
-        public int Fetch => Size;
     }
 }

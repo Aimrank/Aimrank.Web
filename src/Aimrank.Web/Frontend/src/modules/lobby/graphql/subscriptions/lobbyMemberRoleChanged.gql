@@ -1,0 +1,8 @@
+subscription lobbyMemberRoleChanged($lobbyId: Uuid!) {
+  lobbyMemberRoleChanged(lobbyId: $lobbyId) {
+    record {
+      playerId
+      role
+    }
+  }
+}

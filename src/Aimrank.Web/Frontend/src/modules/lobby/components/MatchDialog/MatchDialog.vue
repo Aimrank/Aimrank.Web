@@ -2,7 +2,7 @@
 <style src="./MatchDialog.scss" lang="scss" module></style>
 
 <template>
-  <base-dialog :visible="isDialogVisible" hide-close-icon>
+  <base-dialog :visible="state.isVisible" hide-close-icon>
     <template #header>
       {{ $t("lobby.components.MatchDialog.header") }}
     </template>

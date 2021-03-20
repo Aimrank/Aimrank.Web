@@ -1,8 +1,7 @@
-import { defineComponent, onMounted, toRef } from "vue";
+import { computed, defineComponent } from "vue";
 import { useRouter } from "vue-router";
-import { lobbyHub, lobbyService } from "~/services";
 import { useNotifications } from "@/common/hooks/useNotifications";
-import { useInvitations } from "@/lobby/hooks/useInvitations";
+import { useAcceptLobbyInvitation, useCancelLobbyInvitation, useGetLobbyInvitations } from "@/lobby/graphql";
 import BaseButton from "@/common/components/BaseButton";
 
 const Invitations = defineComponent({
@@ -10,45 +9,45 @@ const Invitations = defineComponent({
     BaseButton
   },
   setup() {
-    const invitations = useInvitations();
-
     const router = useRouter();
     const notifications = useNotifications();
 
-    onMounted(async () => {
-      const result = await lobbyService.getInvitations();
+    const { result: state } = useGetLobbyInvitations();
+    const { mutate: acceptInvitation } = useAcceptLobbyInvitation();
+    const { mutate: cancelInvitation } = useCancelLobbyInvitation();
 
-      if (result.isOk()) {
-        invitations.setInvitations(result.value);
-      }
-    });
+    const invitations = computed(() => state.value?.lobbyInvitations ?? []);
 
     const onInvitationAccept = async (lobbyId: string) => {
-      const result = await lobbyService.acceptInvitation(lobbyId);
+      const { success, errors } = await acceptInvitation({ lobbyId });
 
-      if (result.isOk()) {
-        invitations.removeInvitation(lobbyId);
-
-        lobbyHub.disconnect();
+      if (success) {
+        state.value = {
+          ...state.value,
+          lobbyInvitations: state.value?.lobbyInvitations?.filter(i => i?.lobbyId !== lobbyId)
+        };
 
         router.push({ name: "lobby" });
       } else {
-        notifications.danger(result.error.title);
+        notifications.danger(errors[0].message);
       }
     }
 
     const onInvitationCancel = async (lobbyId: string) => {
-      const result = await lobbyService.cancelInvitation(lobbyId);
+      const { success, errors } = await cancelInvitation({ lobbyId });
 
-      if (result.isOk()) {
-        invitations.removeInvitation(lobbyId);
+      if (success) {
+        state.value = {
+          ...state.value,
+          lobbyInvitations: state.value?.lobbyInvitations?.filter(i => i?.lobbyId !== lobbyId)
+        };
       } else {
-        notifications.danger(result.error.title);
+        notifications.danger(errors[0].message);
       }
     }
 
     return {
-      invitations: toRef(invitations.state, "invitations"),
+      invitations,
       onInvitationAccept,
       onInvitationCancel
     };

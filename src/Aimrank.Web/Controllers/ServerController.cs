@@ -1,6 +1,6 @@
-using Aimrank.Application.CSGO.Commands.ProcessServerEvent;
-using Aimrank.Application.Contracts;
-using Aimrank.Web.Contracts.CSGO;
+using Aimrank.Modules.Matches.Application.CSGO.Commands.ProcessServerEvent;
+using Aimrank.Modules.Matches.Application.Contracts;
+using Aimrank.Web.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -10,17 +10,17 @@ namespace Aimrank.Web.Controllers
     [Route("api/[controller]")]
     public class ServerController : ControllerBase
     {
-        private readonly IAimrankModule _aimrankModule;
+        private readonly IMatchesModule _matchesModule;
 
-        public ServerController(IAimrankModule aimrankModule)
+        public ServerController(IMatchesModule matchesModule)
         {
-            _aimrankModule = aimrankModule;
+            _matchesModule = matchesModule;
         }
 
         [HttpPost]
         public async Task<IActionResult> ProcessServerEvent(ProcessServerEventRequest request)
         {
-            await _aimrankModule.ExecuteCommandAsync(new ProcessServerEventCommand(
+            await _matchesModule.ExecuteCommandAsync(new ProcessServerEventCommand(
                 request.MatchId,
                 request.Name,
                 request.Data));

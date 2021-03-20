@@ -11,3 +11,5 @@ container_fs/csgo/sourcemod/plugins/*.smx
 **/node_modules
 
 src/Aimrank.Web/wwwroot/base
+
+*.DotSettings.user

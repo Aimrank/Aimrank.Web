@@ -2,44 +2,41 @@
 <style src="./FriendshipButtons.scss" lang="scss" module></style>
 
 <template>
-  <div
-    v-if="state.user && !state.isLoading"
-    :class="$style.buttons"
-  >
+  <div :class="$style.buttons">
     <base-button
-      v-if="state.friendship && friendshipState === FriendshipState.Blocked"
+      v-if="friendshipState === FriendshipState.Blocked"
       :class="$style.button"
-      :disabled="!state.friendship.blockingUsersIds.includes(currentUserId)"
+      :disabled="!blockingUsersIds.includes(currentUserId)"
       small
       primary
-      @click="unblockFriend(userId, currentUserId)"
+      @click="onUnblock(profileUserId)"
     >
-      {{ $t(`profile.components.FriendshipButtons.${state.friendship.blockingUsersIds.includes(currentUserId) ? "unblock" : "blocked"}`) }}
+      {{ $t(`profile.components.FriendshipButtons.${blockingUsersIds.includes(currentUserId) ? "unblock" : "blocked"}`) }}
     </base-button>
     <base-button
       v-else-if="friendshipState === FriendshipState.Active"
       :class="$style.button"
       small
       primary
-      @click="deleteFriend(userId, currentUserId)"
+      @click="onDelete(profileUserId)"
     >
       {{ $t("profile.components.FriendshipButtons.removeFriend") }}
     </base-button>
     <template v-else-if="friendshipState === FriendshipState.Pending">
       <base-button
-        v-if="state.friendship && state.friendship.invitingUserId === currentUserId"
+        v-if="invitingUserId === currentUserId"
         :class="$style.button"
         small
         primary
-        @click="deleteFriend(userId, currentUserId)"
+        @click="onDelete(profileUserId)"
       >
         {{ $t("profile.components.FriendshipButtons.removeInvitation") }}
       </base-button>
       <template v-else>
-        <base-button :class="$style.button" small primary @click="acceptFriend(userId, currentUserId)">
+        <base-button :class="$style.button" small primary @click="onAccept(profileUserId)">
           {{ $t("profile.components.FriendshipButtons.accept") }}
         </base-button>
-        <base-button :class="$style.button" small primary @click="declineFriend(userId, currentUserId)">
+        <base-button :class="$style.button" small primary @click="onDecline(profileUserId)">
           {{ $t("profile.components.FriendshipButtons.decline") }}
         </base-button>
       </template>
@@ -49,7 +46,7 @@
       :class="$style.button"
       small
       primary
-      @click="inviteFriend(userId, currentUserId)"
+      @click="onInvite(profileUserId)"
     >
       {{ $t("profile.components.FriendshipButtons.invite") }}
     </base-button>

@@ -1,0 +1,7 @@
+subscription matchFinished($lobbyId: Uuid!) {
+  matchFinished(lobbyId: $lobbyId) {
+    record {
+      matchId
+    }
+  }
+}

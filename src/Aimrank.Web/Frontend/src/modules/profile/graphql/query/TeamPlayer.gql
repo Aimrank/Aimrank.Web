@@ -1,0 +1,13 @@
+fragment TeamPlayer on MatchPlayer {
+  team
+  kills
+  assists
+  deaths
+  hs
+  ratingStart
+  ratingEnd
+  user {
+    id
+    username
+  }
+}

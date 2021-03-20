@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import { authenticate } from "@/authentication/router/authenticationGuard";
 
+import { routes as app } from "@/app/router/routes";
 import { routes as authentication } from "@/authentication/router/routes";
 import { routes as home } from "@/home/router/routes";
 import { routes as lobby } from "@/lobby/router/routes";
@@ -17,6 +18,7 @@ export const router = createRouter({
     {
       path: "/app",
       children: [
+        ...app,
         ...lobby,
         ...profile
       ],

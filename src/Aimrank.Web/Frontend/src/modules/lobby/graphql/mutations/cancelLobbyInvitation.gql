@@ -1,0 +1,5 @@
+mutation cancelLobbyInvitation($lobbyId: Uuid!) {
+  cancelLobbyInvitation(input: {lobbyId: $lobbyId}) {
+    status
+  }
+}

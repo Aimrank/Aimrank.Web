@@ -1,9 +1,10 @@
-import { computed, defineComponent, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
-import { useUser } from "@/profile/hooks/useUser";
-import { useProfile } from "@/profile/hooks/useProfile";
+import { computed, defineComponent, reactive, ref, watch } from "vue";
+import { useProfileUser } from "@/profile/hooks/useProfileUser";
+import { useProfileView } from "@/profile/graphql";
+import { useProfileStore } from "@/profile/hooks/useProfileStore";
 import BaseButton from "@/common/components/BaseButton";
 import FriendshipButtons from "@/profile/components/FriendshipButtons";
+
 
 const Profile = defineComponent({
   components: {
@@ -11,13 +12,9 @@ const Profile = defineComponent({
     FriendshipButtons
   },
   setup() {
-    const user = useUser();
-    const route = useRoute();
-
-    const { state, fetchPage } = useProfile();
-
-    const userId = computed(() => route.params.userId as string || user.state.user!.id);
-    const currentUserId = computed(() => user.state.user!.id);
+    const { profileUserId, isCurrentUserProfile } = useProfileUser();
+    const { state, setState } = useProfileStore();
+    const { result, fetch } = useProfileView(profileUserId);
 
     const links = computed(() => {
       const result = [
@@ -26,21 +23,23 @@ const Profile = defineComponent({
         { name: "friends", label: "Friends" }
       ];
 
-      return result.map(l => userId.value === currentUserId.value ? l : ({ ...l, params: { userId: state.user?.id }}));
+      return result.map(l => isCurrentUserProfile.value ? l : ({ ...l, params: { userId: profileUserId.value }}));
     });
 
     watch(
-      () => userId.value,
-      () => fetchPage(userId.value, user.state.user!.id)
+      () => result.value,
+      () => setState(result.value)
     );
 
-    onMounted(() => fetchPage(userId.value, user.state.user!.id));
+    watch(
+      () => profileUserId.value,
+      () => fetch()
+    );
 
     return {
-      userId,
-      currentUserId,
       state,
-      links
+      links,
+      isCurrentUserProfile
     };
   }
 });

@@ -1,30 +1,9 @@
 <template>
   <div>
-    <main-header />
-    <match-dialog />
-    <users-dialog />
-    <notifications-list />
     <router-view />
     <div id="dialogs" />
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-import MatchDialog from "@/lobby/components/MatchDialog";
-import UsersDialog from "@/common/components/UsersDialog";
-import MainHeader from "@/common/components/MainHeader";
-import NotificationsList from "@/common/components/NotificationsList";
-
-export default defineComponent({
-  components: {
-    MatchDialog,
-    UsersDialog,
-    MainHeader,
-    NotificationsList
-  }
-});
-</script>
 
 <style lang="scss">
 @use "~/styles/variables/fonts" as fonts;

@@ -3,12 +3,12 @@
 
 <template>
   <div
-    v-if="state.user"
+    v-if="state && state.user"
     :class="$style.container"
   >
     <h3 :class="$style.title">{{ $t("profile.views.Profile.title", [state.user.username]) }}</h3>
     <div
-      v-if="userId !== currentUserId"
+      v-if="!isCurrentUserProfile"
       :class="$style.buttons"
     >
       <friendship-buttons />

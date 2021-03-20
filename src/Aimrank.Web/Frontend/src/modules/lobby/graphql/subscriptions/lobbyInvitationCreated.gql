@@ -1,0 +1,11 @@
+subscription lobbyInvitationCreated {
+  lobbyInvitationCreated {
+    record {
+      lobbyId
+      invitingUser {
+        id
+        username
+      }
+    }
+  }
+}

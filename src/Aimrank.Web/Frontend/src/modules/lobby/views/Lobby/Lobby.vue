@@ -40,11 +40,11 @@
           <td>
             <ul>
               <li
-                v-for="member in lobby.members"
-                :key="member.userId"
+                v-for="member in members"
+                :key="member.user.id"
               >
-                <router-link :to="{ name: 'profile', params: { userId: member.userId }}">
-                  {{ member.username }}
+                <router-link :to="{ name: 'profile', params: { userId: member.user.id }}">
+                  {{ member.user.username }}
                 </router-link>
                 <strong v-if="member.isLeader">
                   ({{ $t("lobby.views.Lobby.leader") }})
@@ -56,40 +56,45 @@
       </table>
       <div :class="$style.section">
         <h3>{{ $t("lobby.views.Lobby.invitations") }}</h3>
-        <base-button @click="invitationDialog.onInviteClick">
+        <base-button @click="invitationDialog.open">
           {{ $t("lobby.views.Lobby.inviteButton") }}
         </base-button>
         <lobby-invitation-dialog
           :lobby-id="lobby.id"
           :is-visible="invitationDialog.isVisible.value"
-          @close="invitationDialog.onInvitationDialogClose"
+          @close="invitationDialog.close"
         />
       </div>
       <div
-        v-if="match"
+        v-if="lobby.match"
         :class="$style.section"
       >
         <h3>{{ $t("lobby.views.Lobby.match") }}</h3>
-        <div>Map: {{ match.map }}</div>
-        <div>Status: {{ ["Created", "Ready", "Starting", "Started", "Finished"][match.status] }}</div>
-        <template v-if="match.status === MatchStatus.Started">
+        <div>Map: {{ lobby.match.map }}</div>
+        <div>Status: {{ ["Created", "Ready", "Starting", "Started", "Finished"][lobby.match.status] }}</div>
+        <template v-if="lobby.match.status === MatchStatus.Started">
           <div>
-            Address: aimrank.pl{{ match.address.slice(match.address.indexOf(":")) }}
+            Address: aimrank.pl{{ lobby.match.address.slice(lobby.match.address.indexOf(":")) }}
           </div>
           <code :class="$style.code">
             <pre>
               sv_allowupload 1;
               sv_allowdownload 1;
-              connect aimrank.pl{{ match.address.slice(match.address.indexOf(":")) }}
+              connect aimrank.pl{{ lobby.match.address.slice(lobby.match.address.indexOf(":")) }}
             </pre>
           </code>
         </template>
       </div>
       <div
-        v-else-if="currentUserMembership && currentUserMembership.isLeader"
+        v-else-if="isCurrentUserLeader && lobby.status === 0"
         :class="$style.section"
       >
-        <lobby-configuration />
+        <lobby-configuration
+          :lobby-id="lobby.id"
+          :map="lobby.configuration.map"
+          :mode="lobby.configuration.mode"
+          :name="lobby.configuration.name"
+        />
         <base-button
           :class="$style.startButton"
           primary

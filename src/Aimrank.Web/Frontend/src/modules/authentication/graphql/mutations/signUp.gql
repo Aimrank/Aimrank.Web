@@ -1,0 +1,9 @@
+mutation signUp($input: RegisterNewUserCommandInput!) {
+  signUp(input: $input) {
+    record {
+      id
+      email
+      username
+    }
+  }
+}

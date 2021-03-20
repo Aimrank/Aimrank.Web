@@ -1,0 +1,7 @@
+subscription matchTimedOut($lobbyId: Uuid!) {
+  matchTimedOut(lobbyId: $lobbyId) {
+    record {
+      matchId
+    }
+  }
+}

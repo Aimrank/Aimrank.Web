@@ -1,7 +1,6 @@
 import { defineComponent } from "vue";
-import { lobbyService } from "~/services";
-import { useLobby } from "@/lobby/hooks/useLobby";
 import { useNotifications } from "@/common/hooks/useNotifications";
+import { useChangeLobbyConfiguration } from "@/lobby/graphql";
 import { MatchMode } from "@/profile/models/MatchMode";
 import MapButton from "@/lobby/components/MapButton";
 
@@ -14,50 +13,61 @@ const LobbyConfiguration = defineComponent({
   components: {
     MapButton
   },
-  setup() {
+  props: {
+    lobbyId: {
+      type: String,
+      required: true
+    },
+    map: {
+      type: String,
+      required: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    mode: {
+      type: Number,
+      required: true
+    }
+  },
+  setup(props) {
     const notifications = useNotifications();
 
-    const { state, isAvailable, setLobbyConfiguration } = useLobby();
+    const { mutate: changeLobbyConfiguration } = useChangeLobbyConfiguration();
 
     const onMapSelected = async (map: string) => {
-      if (!isAvailable || map === state.lobby?.configuration.map) {
-        return;
-      }
-
-      const result = await lobbyService.changeConfiguration(state.lobby!.id, {
-        map,
-        name: state.lobby!.configuration.name,
-        mode: state.lobby!.configuration.mode
+      const { success, errors } = await changeLobbyConfiguration({
+        input: {
+          lobbyId: props.lobbyId,
+          map,
+          name: props.name,
+          mode: props.mode
+        }
       });
 
-      if (result.isOk()) {
-        setLobbyConfiguration({ ...state.lobby!.configuration, map });
-      } else {
-        notifications.danger(result.error.title);
+      if (!success) {
+        notifications.danger(errors[0].message);
       }
     }
 
     const onModeSelected = async (mode: MatchMode) => {
-      if (!isAvailable || mode === state.lobby?.configuration.mode) {
-        return;
-      }
-
-      const result = await lobbyService.changeConfiguration(state.lobby!.id, {
-        mode,
-        map: state.lobby!.configuration.map,
-        name: state.lobby!.configuration.name,
+      const { success, errors } = await changeLobbyConfiguration({
+        input: {
+          lobbyId: props.lobbyId,
+          map: props.map,
+          mode,
+          name: props.name
+        }
       });
 
-      if (result.isOk()) {
-        setLobbyConfiguration({ ...state.lobby!.configuration, mode });
-      } else {
-        notifications.danger(result.error.title);
+      if (!success) {
+        notifications.danger(errors[0].message)
       }
     }
 
     return {
       maps,
-      state,
       MatchMode: Object.freeze(MatchMode),
       onMapSelected,
       onModeSelected

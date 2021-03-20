@@ -1,0 +1,7 @@
+subscription matchCanceled($lobbyId: Uuid!) {
+  matchCanceled(lobbyId: $lobbyId) {
+    record {
+      matchId
+    }
+  }
+}

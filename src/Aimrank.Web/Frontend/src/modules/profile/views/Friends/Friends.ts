@@ -1,14 +1,19 @@
-import { computed, defineComponent, onMounted, reactive } from "vue";
-import { useRoute } from "vue-router";
-import { friendshipService } from "~/services";
-import { useUser } from "@/profile/hooks/useUser";
-import { IUserDto } from "@/profile/models/IUserDto";
+import { defineComponent, reactive, watch } from "vue";
+import { useProfileUser } from "@/profile/hooks/useProfileUser";
+import {
+  useAcceptFriendshipInvitation,
+  useDeclineFriendshipInvitation,
+  useBlockUser,
+  useUnblockUser,
+  useDeleteFriendship,
+  useFriendsView
+} from "@/profile/graphql";
 import BaseButton from "@/common/components/BaseButton";
 
 interface IState {
-  friends: IUserDto[];
-  invites: IUserDto[];
-  blocked: IUserDto[];
+  friends: any[];
+  invites: any[];
+  blocked: any[];
 }
 
 const Friends = defineComponent({
@@ -16,91 +21,72 @@ const Friends = defineComponent({
     BaseButton
   },
   setup() {
-    const user = useUser();
-    const route = useRoute();
-
     const state = reactive<IState>({
+      blocked: [],
       friends: [],
-      invites: [],
-      blocked: []
+      invites: []
     });
 
-    const userId = computed(() => route.params.userId || user.state.user?.id);
+    const { profileUserId, isCurrentUserProfile } = useProfileUser();
+    const { result, fetch } = useFriendsView(profileUserId);
 
-    const isSelf = computed(() => userId.value === user.state.user?.id);
-
-    onMounted(async () => {
-      if (userId.value) {
-        const friends = await friendshipService.getFriendsList(userId.value as string);
-        const invites = await friendshipService.getFriendshipInvitations();
-        const blocked = await friendshipService.getBlockedUsers();
-
-        if (friends.isOk() && invites.isOk() && blocked.isOk()) {
-          state.friends = friends.value;
-          state.invites = invites.value;
-          state.blocked = blocked.value;
-        }
+    watch(
+      () => result.value,
+      () => {
+        state.blocked = result.value?.blockedUsers?.nodes ?? [];
+        state.friends = result.value?.user?.friends?.nodes ?? [];
+        state.invites = result.value?.friendshipInvitations?.nodes ?? [];
       }
-    });
+    );
+
+    const { mutate: acceptInvitation } = useAcceptFriendshipInvitation();
+    const { mutate: declineInvitation } = useDeclineFriendshipInvitation();
+    const { mutate: blockUser } = useBlockUser();
+    const { mutate: unblockUser } = useUnblockUser();
+    const { mutate: deleteFriendship } = useDeleteFriendship();
 
     const onAccept = async (userId: string) => {
-      const result = await friendshipService.acceptInvitation(userId);
+      await acceptInvitation({ userId });
 
-      if (result.isOk()) {
-        const user = state.invites.find(u => u.id === userId);
+      const user = state.invites.find(u => u.id === userId);
 
-        if (user) {
-          state.invites = state.invites.filter(u => u.id !== userId);
-          state.friends = [...state.friends, user];
-        }
+      if (user) {
+        state.invites = state.invites.filter(u => u.id !== userId);
+        state.friends = [...state.friends, user];
       }
     }
 
     const onDecline = async (userId: string) => {
-      const result = await friendshipService.declineInvitation(userId);
+      await declineInvitation({ userId });
 
-      if (result.isOk()) {
-        state.invites = state.invites.filter(u => u.id !== userId);
-      }
+      state.invites = state.invites.filter(u => u.id !== userId);
     }
 
     const onBlock = async (userId: string) => {
-      const result = await friendshipService.blockUser(userId);
+      await blockUser({ userId });
 
-      if (result.isOk()) {
-        const user = state.friends.find(u => u.id === userId);
+      const user = state.friends.find(u => u.id === userId);
 
-        if (user) {
-          state.friends = state.friends.filter(u => u.id !== userId);
-          state.blocked = [...state.blocked, user];
-        }
+      if (user) {
+        state.friends = state.friends.filter(u => u.id !== userId);
+        state.blocked = [...state.blocked, user];
       }
     }
 
     const onUnblock = async (userId: string) => {
-      const result = await friendshipService.unblockUser(userId);
-
-      if (result.isOk()) {
-        const friends = await friendshipService.getFriendsList(userId);
-
-        if (friends.isOk()) {
-          state.friends = friends.value;
-          state.blocked = state.blocked.filter(u => u.id !== userId);
-        }
-      }
+      await unblockUser({ userId })
+      await fetch();
     }
 
     const onDelete = async (userId: string) => {
-      const result = await friendshipService.deleteFriend(userId);
+      await deleteFriendship({ userId });
 
-      if (result.isOk()) {
-        state.friends = state.friends.filter(u => u.id !== userId);
-      }
+      state.friends = state.friends.filter(u => u.id !== userId);
     }
 
     return {
       state,
-      isSelf,
+      isCurrentUserProfile,
       onAccept,
       onDecline,
       onBlock,

@@ -1,9 +1,8 @@
-using Aimrank.Application.Commands.Users.UpdateUserSteamDetails;
-using Aimrank.Application.Contracts;
 using Aimrank.Common.Application;
 using Aimrank.Common.Domain;
-using Aimrank.Web.Attributes;
-using Aimrank.Web.Contracts.Users;
+using Aimrank.Modules.Matches.Application.Contracts;
+using Aimrank.Modules.Matches.Application.Players.CreateOrUpdatePlayer;
+using Aimrank.Web.Contracts;
 using Aimrank.Web.Steam;
 using AspNet.Security.OpenId.Steam;
 using Microsoft.AspNetCore.Authentication;
@@ -20,14 +19,14 @@ namespace Aimrank.Web.Controllers
     public class SteamController : Controller
     {
         private readonly IExecutionContextAccessor _executionContextAccessor;
-        private readonly IAimrankModule _aimrankModule;
+        private readonly IMatchesModule _matchesModule;
 
         public SteamController(
             IExecutionContextAccessor executionContextAccessor,
-            IAimrankModule aimrankModule)
+            IMatchesModule matchesModule)
         {
             _executionContextAccessor = executionContextAccessor;
-            _aimrankModule = aimrankModule;
+            _matchesModule = matchesModule;
         }
 
         [Authorize(AuthenticationSchemes = SteamAuthenticationDefaults.AuthenticationScheme)]
@@ -46,8 +45,8 @@ namespace Aimrank.Web.Controllers
             {
                 var data = HttpContext.GetSteamData();
 
-                var command = new UpdateUserSteamDetailsCommand(Guid.Parse(userId), data.Id);
-                await _aimrankModule.ExecuteCommandAsync(command);
+                var command = new CreateOrUpdatePlayerCommand(Guid.Parse(userId), data.Id);
+                await _matchesModule.ExecuteCommandAsync(command);
             }
             catch (BusinessRuleValidationException exception)
             {
@@ -57,7 +56,7 @@ namespace Aimrank.Web.Controllers
             return Redirect("/app/settings");
         }
         
-        [JwtAuth]
+        [Authorize]
         [HttpPost("openid")]
         public async Task<ActionResult<SteamSignInResponse>> SignInWithSteam()
         {

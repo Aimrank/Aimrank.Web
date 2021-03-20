@@ -24,10 +24,10 @@
         :errors="errors.errors['Password']"
       />
       <form-field-input
-        :label="$t('authentication.views.SignUp.form.repeatPassword')"
+        :label="$t('authentication.views.SignUp.form.passwordRepeat')"
         type="password"
-        v-model="state.repeatPassword"
-        :errors="errors.errors['RepeatPassword']"
+        v-model="state.passwordRepeat"
+        :errors="errors.errors['PasswordRepeat']"
       />
       <base-button>
         {{ $t("authentication.views.SignUp.form.submit") }}

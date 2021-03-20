@@ -1,73 +1,96 @@
-import { reactive, readonly } from "vue";
-import { authService, httpClient } from "~/services";
+import { computed, reactive } from "vue";
 import { router } from "~/router";
-import { useUser } from "@/profile/hooks/useUser";
-import { ISignInRequest, ISignUpRequest } from "@/authentication/services/AuthService";
+import { reconnect } from "~/graphql/apolloClient";
+import {
+  AuthenticateCommandInput,
+  RegisterNewUserCommandInput,
+} from "~/graphql/types/types";
+import {
+  useSignIn,
+  useSignOut,
+  useSignUp
+} from "@/authentication/graphql";
+
+interface IAuthUser {
+  id: string;
+  email: string;
+  username: string;
+}
 
 interface IAuthState {
   isAuthenticated: boolean;
+  user: IAuthUser | null;
 }
 
 const state = reactive<IAuthState>({
-  isAuthenticated: false
+  isAuthenticated: false,
+  user: null
 });
 
-const setAuthenticated = (isAuthenticated: boolean) => {
-  state.isAuthenticated = isAuthenticated;
+const setCurrentUser = (user: IAuthUser | null) => {
+  state.isAuthenticated = user !== null;
+  state.user = user;
 }
 
-const signIn = async (request: ISignInRequest) => {
-  const result = await authService.signIn(request);
+const signIn = async (input: AuthenticateCommandInput) => {
+  const { mutate, result, errors } = useSignIn();
 
-  if (result.isOk()) {
-    httpClient.setAuthorizationToken(
-      result.value.jwt,
-      result.value.refreshToken
-    );
-    
-    await updateUser();
-    setAuthenticated(true);
+  await mutate({ input });
+
+  if (result.value?.signIn?.record) {
+    setCurrentUser({
+      id: result.value.signIn.record.id,
+      email: result.value.signIn.record.email,
+      username: result.value.signIn.record.username
+    });
+
+    reconnect();
   }
 
-  return result;
+  return {
+    result: result.value?.signIn?.record,
+    errors: errors.value
+  };
 }
 
-const signUp = async (request: ISignUpRequest) => {
-  const result = await authService.signUp(request);
+const signUp = async (input: RegisterNewUserCommandInput) => {
+  const { mutate, result, errors } = useSignUp();
 
-  if (result.isOk()) {
-    httpClient.setAuthorizationToken(
-      result.value.jwt,
-      result.value.refreshToken
-    );
+  await mutate({ input });
 
-    await updateUser();
-    setAuthenticated(true);
+  if (result.value?.signUp?.record) {
+    setCurrentUser({
+      id: result.value.signUp.record.id,
+      email: result.value.signUp.record.email,
+      username: result.value.signUp.record.username
+    });
+
+    reconnect();
   }
 
-  return result;
+  return {
+    result: result.value?.signUp?.record,
+    errors: errors.value
+  };
 }
 
 const signOut = async () => {
-  const { setUser } = useUser();
+  const { mutate } = useSignOut();
 
-  setUser(null);
-  setAuthenticated(false);
-
-  httpClient.setAuthorizationToken(undefined, undefined);
+  await mutate();
 
   await router.push({ name: "home" });
-}
 
-const updateUser = async () => {
-  const user = useUser();
-  await user.updateUser(httpClient.getUserId()!);
+  setCurrentUser(null);
+
+  reconnect();
 }
 
 export const useAuth = () => ({
-  state: readonly(state),
+  currentUser: computed(() => state.user),
+  isAuthenticated: computed(() => state.isAuthenticated),
   signIn,
   signUp,
   signOut,
-  setAuthenticated
+  setCurrentUser
 });

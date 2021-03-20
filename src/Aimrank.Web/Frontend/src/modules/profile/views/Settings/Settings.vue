@@ -4,11 +4,11 @@
 <template>
   <div :class="$style.container">
     <h3 :class="$style.title">{{ $t("profile.views.Settings.title") }}</h3>
-    <div v-if="userDetails">
+    <div v-if="state && state.user">
       <table :class="$style.table">
         <tr>
           <th>{{ $t("profile.views.Settings.username") }}</th>
-          <td>{{ userDetails.username }}</td>
+          <td>{{ state.user.username }}</td>
           <td></td>
         </tr>
         <tr>
@@ -17,11 +17,11 @@
             <icon
               :class="{
                 [$style.icon]: true,
-                [$style.iconSuccess]: userDetails.steamId
+                [$style.iconSuccess]: state.user.steamId
               }"
-              :name="userDetails.steamId ? 'check' : 'times'"
+              :name="state.user.steamId ? 'check' : 'times'"
             />
-            {{ userDetails.steamId || $t("profile.views.Settings.steamNotConnected") }}
+            {{ state.user.steamId || $t("profile.views.Settings.steamNotConnected") }}
           </td>
           <td>
             <base-button

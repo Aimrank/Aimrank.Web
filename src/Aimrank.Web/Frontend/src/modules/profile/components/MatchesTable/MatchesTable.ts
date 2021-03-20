@@ -1,5 +1,5 @@
-import { IMatchEntry } from "@/profile/models/MatchEntry";
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
+import { IMatchEntry } from "@/profile/models/IMatchEntry";
 
 const MatchesTable = defineComponent({
   props: {
@@ -7,6 +7,10 @@ const MatchesTable = defineComponent({
       type: Array as () => IMatchEntry[],
       required: true
     }
+  },
+  setup(props) {
+    const matchesFiltered = computed(() => props.matches.filter(m => m.matchPlayerResult));
+    return { matchesFiltered };
   }
 });
 

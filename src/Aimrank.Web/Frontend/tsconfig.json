@@ -22,6 +22,7 @@
     "src/**/*.vue"
   ],
   "files": [
-    "shims-vue.d.ts"
+    "shims-vue.d.ts",
+    "shims-gql.d.ts"
   ]
 }
