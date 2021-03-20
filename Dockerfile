@@ -10,29 +10,36 @@ ENV NODE_ENV=Production
 
 COPY *.sln .
 COPY src/Aimrank.Web/*.csproj ./src/Aimrank.Web/
-COPY src/Aimrank.Domain/*.csproj ./src/Aimrank.Domain/
-COPY src/Aimrank.Application/*.csproj ./src/Aimrank.Application/
-COPY src/Aimrank.Infrastructure/*.csproj ./src/Aimrank.Infrastructure/
-COPY src/Aimrank.IntegrationEvents/*.csproj ./src/Aimrank.IntegrationEvents/
 COPY src/Common/Aimrank.Common.Domain/*.csproj ./src/Common/Aimrank.Common.Domain/
 COPY src/Common/Aimrank.Common.Application/*.csproj ./src/Common/Aimrank.Common.Application/
 COPY src/Common/Aimrank.Common.Infrastructure/*.csproj ./src/Common/Aimrank.Common.Infrastructure/
 COPY src/Database/Aimrank.Database.Migrator/*.csproj ./src/Database/Aimrank.Database.Migrator/
-COPY src/Tests/Aimrank.UnitTests/*.csproj ./src/Tests/Aimrank.UnitTests/
-COPY src/Tests/Aimrank.ArchTests/*.csproj ./src/Tests/Aimrank.ArchTests/
-COPY src/Tests/Aimrank.IntegrationTests/*.csproj ./src/Tests/Aimrank.IntegrationTests/
+COPY src/Modules/Matches/Aimrank.Modules.Matches.Domain/*.csproj ./src/Modules/Matches/Aimrank.Modules.Matches.Domain/
+COPY src/Modules/Matches/Aimrank.Modules.Matches.Application/*.csproj ./src/Modules/Matches/Aimrank.Modules.Matches.Application/
+COPY src/Modules/Matches/Aimrank.Modules.Matches.Infrastructure/*.csproj ./src/Modules/Matches/Aimrank.Modules.Matches.Infrastructure/
+COPY src/Modules/Matches/Aimrank.Modules.Matches.IntegrationEvents/*.csproj ./src/Modules/Matches/Aimrank.Modules.Matches.IntegrationEvents/
+COPY src/Modules/Matches/Tests/Aimrank.Modules.Matches.ArchTests/*.csproj ./src/Modules/Matches/Tests/Aimrank.Modules.Matches.ArchTests/
+COPY src/Modules/Matches/Tests/Aimrank.Modules.Matches.IntegrationTests/*.csproj ./src/Modules/Matches/Tests/Aimrank.Modules.Matches.IntegrationTests/
+COPY src/Modules/Matches/Tests/Aimrank.Modules.Matches.UnitTests/*.csproj ./src/Modules/Matches/Tests/Aimrank.Modules.Matches.UnitTests/
+COPY src/Modules/UserAccess/Aimrank.Modules.UserAccess.Domain/*.csproj ./src/Modules/UserAccess/Aimrank.Modules.UserAccess.Domain/
+COPY src/Modules/UserAccess/Aimrank.Modules.UserAccess.Application/*.csproj ./src/Modules/UserAccess/Aimrank.Modules.UserAccess.Application/
+COPY src/Modules/UserAccess/Aimrank.Modules.UserAccess.Infrastructure/*.csproj ./src/Modules/UserAccess/Aimrank.Modules.UserAccess.Infrastructure/
+COPY src/Modules/UserAccess/Tests/Aimrank.Modules.UserAccess.UnitTests/*.csproj ./src/Modules/UserAccess/Tests/Aimrank.Modules.UserAccess.UnitTests/
 
 RUN dotnet restore
 
 COPY src/Aimrank.Web/. ./src/Aimrank.Web/
-COPY src/Aimrank.Domain/. ./src/Aimrank.Domain/
-COPY src/Aimrank.Application/. ./src/Aimrank.Application/
-COPY src/Aimrank.Infrastructure/. ./src/Aimrank.Infrastructure/
-COPY src/Aimrank.IntegrationEvents/. ./src/Aimrank.IntegrationEvents/
 COPY src/Common/Aimrank.Common.Domain/. ./src/Common/Aimrank.Common.Domain/
 COPY src/Common/Aimrank.Common.Application/. ./src/Common/Aimrank.Common.Application/
 COPY src/Common/Aimrank.Common.Infrastructure/. ./src/Common/Aimrank.Common.Infrastructure/
 COPY src/Database/Aimrank.Database.Migrator/. ./src/Database/Aimrank.Database.Migrator/
+COPY src/Modules/Matches/Aimrank.Modules.Matches.Domain/. ./src/Modules/Matches/Aimrank.Modules.Matches.Domain/
+COPY src/Modules/Matches/Aimrank.Modules.Matches.Application/. ./src/Modules/Matches/Aimrank.Modules.Matches.Application/
+COPY src/Modules/Matches/Aimrank.Modules.Matches.Infrastructure/. ./src/Modules/Matches/Aimrank.Modules.Matches.Infrastructure/
+COPY src/Modules/Matches/Aimrank.Modules.Matches.IntegrationEvents/. ./src/Modules/Matches/Aimrank.Modules.Matches.IntegrationEvents/
+COPY src/Modules/UserAccess/Aimrank.Modules.UserAccess.Domain/. ./src/Modules/UserAccess/Aimrank.Modules.UserAccess.Domain/
+COPY src/Modules/UserAccess/Aimrank.Modules.UserAccess.Application/. ./src/Modules/UserAccess/Aimrank.Modules.UserAccess.Application/
+COPY src/Modules/UserAccess/Aimrank.Modules.UserAccess.Infrastructure/. ./src/Modules/UserAccess/Aimrank.Modules.UserAccess.Infrastructure/
 
 WORKDIR /app/src/Aimrank.Web/Frontend
 
