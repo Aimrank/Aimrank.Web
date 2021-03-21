@@ -4,11 +4,12 @@ using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System;
 
 namespace Aimrank.Web.GraphQL.Subscriptions.Users
 {
     [ExtendObjectType("Subscription")]
-    public class UserSubscriptions : AuthenticatedSubscriptions
+    public class UserSubscriptions
     {
         private readonly ITopicEventReceiver _receiver;
         
@@ -20,25 +21,19 @@ namespace Aimrank.Web.GraphQL.Subscriptions.Users
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<LobbyInvitationCreatedPayload>> LobbyInvitationCreated(
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-
-            var userId = GetUserId(principal);
-
-            return _receiver.SubscribeAsync<string, LobbyInvitationCreatedPayload>(
-                $"LobbyInvitationCreated:{userId}");
-        }
+            => SubscribeAuthenticated<LobbyInvitationCreatedPayload>(
+                $"LobbyInvitationCreated:{principal.GetUserId()}", principal);
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<FriendshipInvitationCreatedPayload>> FriendshipInvitationCreated(
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            
-            var userId = GetUserId(principal);
-            
-            return _receiver.SubscribeAsync<string, FriendshipInvitationCreatedPayload>(
-                $"FriendshipInvitationCreated:{userId}");
-        }
+            => SubscribeAuthenticated<FriendshipInvitationCreatedPayload>(
+                $"FriendshipInvitationCreated:{principal.GetUserId()}", principal);
+        
+        private ValueTask<ISourceStream<TMessage>> SubscribeAuthenticated<TMessage>(string topic,
+            ClaimsPrincipal principal)
+            => principal.GetUserId() == Guid.Empty
+                ? new ValueTask<ISourceStream<TMessage>>(new EmptySourceStream<TMessage>())
+                : _receiver.SubscribeAsync<string, TMessage>(topic);
     }
 }

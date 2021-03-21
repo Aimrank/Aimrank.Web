@@ -3,7 +3,7 @@ using Aimrank.Modules.Matches.Application.Contracts;
 using Aimrank.Modules.Matches.Application.Matches.TimeoutReadyMatch;
 using Aimrank.Modules.Matches.IntegrationEvents.Matches;
 using Aimrank.Web.GraphQL.Subscriptions.Lobbies.Payloads;
-using HotChocolate.Subscriptions;
+using Aimrank.Web.GraphQL.Subscriptions.Lobbies;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
@@ -12,12 +12,12 @@ namespace Aimrank.Web.Modules.Matches.Matches
 {
     public class MatchReadyEventHandler : IIntegrationEventHandler<MatchReadyEvent>
     {
-        private readonly ITopicEventSender _topicEventSender;
+        private readonly LobbyEventSender _lobbyEventSender;
         private readonly IMatchesModule _matchesModule;
 
-        public MatchReadyEventHandler(ITopicEventSender topicEventSender, IMatchesModule matchesModule)
+        public MatchReadyEventHandler(LobbyEventSender lobbyEventSender, IMatchesModule matchesModule)
         {
-            _topicEventSender = topicEventSender;
+            _lobbyEventSender = lobbyEventSender;
             _matchesModule = matchesModule;
         }
 
@@ -42,7 +42,7 @@ namespace Aimrank.Web.Modules.Matches.Matches
 
             foreach (var lobbyId in @event.Lobbies)
             {
-                await _topicEventSender.SendAsync($"MatchReady:{lobbyId}", payload, cancellationToken);
+                await _lobbyEventSender.SendAsync($"MatchReady", lobbyId, payload, cancellationToken);
             }
         }
     }

@@ -1,7 +1,7 @@
 using Aimrank.Common.Application.Events;
 using Aimrank.Modules.Matches.IntegrationEvents.Matches;
 using Aimrank.Web.GraphQL.Subscriptions.Lobbies.Payloads;
-using HotChocolate.Subscriptions;
+using Aimrank.Web.GraphQL.Subscriptions.Lobbies;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -9,11 +9,11 @@ namespace Aimrank.Web.Modules.Matches.Matches
 {
     public class MatchCanceledEventHandler :  IIntegrationEventHandler<MatchCanceledEvent>
     {
-        private readonly ITopicEventSender _topicEventSender;
+        private readonly LobbyEventSender _lobbyEventSender;
 
-        public MatchCanceledEventHandler(ITopicEventSender topicEventSender)
+        public MatchCanceledEventHandler(LobbyEventSender lobbyEventSender)
         {
-            _topicEventSender = topicEventSender;
+            _lobbyEventSender = lobbyEventSender;
         }
 
         public async Task HandleAsync(MatchCanceledEvent @event, CancellationToken cancellationToken = default)
@@ -22,7 +22,7 @@ namespace Aimrank.Web.Modules.Matches.Matches
             
             foreach (var lobbyId in @event.Lobbies)
             {
-                await _topicEventSender.SendAsync($"MatchCanceled:{lobbyId}", payload, cancellationToken);
+                await _lobbyEventSender.SendAsync($"MatchCanceled", lobbyId, payload, cancellationToken);
             }
         }
     }
