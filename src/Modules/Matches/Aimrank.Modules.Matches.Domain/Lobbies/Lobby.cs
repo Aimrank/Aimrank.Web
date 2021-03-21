@@ -115,6 +115,19 @@ namespace Aimrank.Modules.Matches.Domain.Lobbies
             }
         }
 
+        public void Kick(PlayerId kickingPlayerId, PlayerId kickedPlayerId)
+        {
+            BusinessRules.Check(new PlayerMustBeLobbyMemberRule(_members, kickedPlayerId));
+            BusinessRules.Check(new PlayerMustBeLobbyLeaderRule(_members, kickingPlayerId));
+            BusinessRules.Check(new LobbyLeaderCannotKickHimselfRule(_members, kickingPlayerId, kickedPlayerId));
+
+            var member = _members.FirstOrDefault(m => m.PlayerId == kickedPlayerId);
+            if (member is not null)
+            {
+                _members.Remove(member);
+            }
+        }
+
         public void ChangeConfiguration(PlayerId playerId, LobbyConfiguration configuration)
         {
             BusinessRules.Check(new PlayerMustBeLobbyLeaderRule(_members, playerId));

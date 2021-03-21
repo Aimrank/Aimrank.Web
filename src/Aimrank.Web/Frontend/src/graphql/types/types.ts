@@ -212,7 +212,8 @@ export type Mutation = {
   signOut?: Maybe<SignOutPayload>;
   createLobby?: Maybe<CreateLobbyPayload>;
   changeLobbyConfiguration?: Maybe<ChangeLobbyConfigurationPayload>;
-  inviteUserToLobby?: Maybe<InviteUserToLobbyPayload>;
+  invitePlayerToLobby?: Maybe<InvitePlayerToLobbyPayload>;
+  kickPlayerFromLobby?: Maybe<KickPlayerFromLobbyPayload>;
   acceptLobbyInvitation?: Maybe<AcceptLobbyInvitationPayload>;
   cancelLobbyInvitation?: Maybe<CancelLobbyInvitationPayload>;
   leaveLobby?: Maybe<LeaveLobbyPayload>;
@@ -243,8 +244,13 @@ export type MutationChangeLobbyConfigurationArgs = {
 };
 
 
-export type MutationInviteUserToLobbyArgs = {
+export type MutationInvitePlayerToLobbyArgs = {
   input: InvitePlayerToLobbyCommandInput;
+};
+
+
+export type MutationKickPlayerFromLobbyArgs = {
+  input: KickPlayerFromLobbyCommandInput;
 };
 
 
@@ -324,6 +330,7 @@ export type Subscription = {
   lobbyStatusChanged?: Maybe<LobbyStatusChangedPayload>;
   lobbyMemberLeft?: Maybe<LobbyMemberLeftPayload>;
   lobbyMemberRoleChanged?: Maybe<LobbyMemberRoleChangedPayload>;
+  lobbyMemberKicked?: Maybe<LobbyMemberKickedPayload>;
 };
 
 
@@ -391,6 +398,11 @@ export type SubscriptionLobbyMemberRoleChangedArgs = {
   lobbyId: Scalars['Uuid'];
 };
 
+
+export type SubscriptionLobbyMemberKickedArgs = {
+  lobbyId: Scalars['Uuid'];
+};
+
 export type Friendship = {
   __typename?: 'Friendship';
   user1?: Maybe<User>;
@@ -418,12 +430,6 @@ export type PlayerStatsDto = {
   modes?: Maybe<Array<Maybe<PlayerStatsModeDto>>>;
 };
 
-export type CancelSearchingForGamePayload = {
-  __typename?: 'CancelSearchingForGamePayload';
-  query?: Maybe<Query>;
-  status: Scalars['String'];
-};
-
 export type StartSearchingForGamePayload = {
   __typename?: 'StartSearchingForGamePayload';
   query?: Maybe<Query>;
@@ -448,8 +454,14 @@ export type AcceptLobbyInvitationPayload = {
   status: Scalars['String'];
 };
 
-export type InviteUserToLobbyPayload = {
-  __typename?: 'InviteUserToLobbyPayload';
+export type KickPlayerFromLobbyPayload = {
+  __typename?: 'KickPlayerFromLobbyPayload';
+  query?: Maybe<Query>;
+  status: Scalars['String'];
+};
+
+export type InvitePlayerToLobbyPayload = {
+  __typename?: 'InvitePlayerToLobbyPayload';
   query?: Maybe<Query>;
   status: Scalars['String'];
 };
@@ -501,6 +513,12 @@ export type SignInPayload = {
   status: Scalars['String'];
 };
 
+export type CancelSearchingForGamePayload = {
+  __typename?: 'CancelSearchingForGamePayload';
+  query?: Maybe<Query>;
+  status: Scalars['String'];
+};
+
 export type AcceptMatchPayload = {
   __typename?: 'AcceptMatchPayload';
   query?: Maybe<Query>;
@@ -517,6 +535,11 @@ export type ChangeLobbyConfigurationCommandInput = {
 export type InvitePlayerToLobbyCommandInput = {
   lobbyId: Scalars['Uuid'];
   invitedPlayerId: Scalars['Uuid'];
+};
+
+export type KickPlayerFromLobbyCommandInput = {
+  lobbyId: Scalars['Uuid'];
+  playerId: Scalars['Uuid'];
 };
 
 export type AcceptLobbyInvitationCommandInput = {
@@ -693,6 +716,12 @@ export type LobbyMemberRoleChangedPayload = {
   record: LobbyMemberRoleChangedRecord;
 };
 
+export type LobbyMemberKickedPayload = {
+  __typename?: 'LobbyMemberKickedPayload';
+  query?: Maybe<Query>;
+  record: LobbyMemberKickedRecord;
+};
+
 export type PlayerStatsModeDto = {
   __typename?: 'PlayerStatsModeDto';
   mode: Scalars['Int'];
@@ -712,6 +741,12 @@ export type PlayerStatsMapDto = {
   totalKills: Scalars['Int'];
   totalDeaths: Scalars['Int'];
   totalHs: Scalars['Int'];
+};
+
+export type LobbyMemberKickedRecord = {
+  __typename?: 'LobbyMemberKickedRecord';
+  lobbyId: Scalars['Uuid'];
+  playerId: Scalars['Uuid'];
 };
 
 export type LobbyMemberRoleChangedRecord = {
@@ -957,17 +992,31 @@ export type CreateLobbyMutation = (
   )> }
 );
 
-export type InviteUserToLobbyMutationVariables = Exact<{
+export type InvitePlayerToLobbyMutationVariables = Exact<{
   lobbyId: Scalars['Uuid'];
-  userId: Scalars['Uuid'];
+  playerId: Scalars['Uuid'];
 }>;
 
 
-export type InviteUserToLobbyMutation = (
+export type InvitePlayerToLobbyMutation = (
   { __typename?: 'Mutation' }
-  & { inviteUserToLobby?: Maybe<(
-    { __typename?: 'InviteUserToLobbyPayload' }
-    & Pick<InviteUserToLobbyPayload, 'status'>
+  & { invitePlayerToLobby?: Maybe<(
+    { __typename?: 'InvitePlayerToLobbyPayload' }
+    & Pick<InvitePlayerToLobbyPayload, 'status'>
+  )> }
+);
+
+export type KickPlayerFromLobbyMutationVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+  playerId: Scalars['Uuid'];
+}>;
+
+
+export type KickPlayerFromLobbyMutation = (
+  { __typename?: 'Mutation' }
+  & { kickPlayerFromLobby?: Maybe<(
+    { __typename?: 'KickPlayerFromLobbyPayload' }
+    & Pick<KickPlayerFromLobbyPayload, 'status'>
   )> }
 );
 
@@ -1092,6 +1141,22 @@ export type LobbyInvitationCreatedSubscription = (
         { __typename?: 'User' }
         & Pick<User, 'id' | 'username'>
       )> }
+    ) }
+  )> }
+);
+
+export type LobbyMemberKickedSubscriptionVariables = Exact<{
+  lobbyId: Scalars['Uuid'];
+}>;
+
+
+export type LobbyMemberKickedSubscription = (
+  { __typename?: 'Subscription' }
+  & { lobbyMemberKicked?: Maybe<(
+    { __typename?: 'LobbyMemberKickedPayload' }
+    & { record: (
+      { __typename?: 'LobbyMemberKickedRecord' }
+      & Pick<LobbyMemberKickedRecord, 'lobbyId' | 'playerId'>
     ) }
   )> }
 );
@@ -1537,7 +1602,8 @@ import ACCEPT_MATCH from "../../modules/lobby/graphql/mutations/acceptMatch.gql"
 import CANCEL_LOBBY_INVITATION from "../../modules/lobby/graphql/mutations/cancelLobbyInvitation.gql";
 import CHANGE_LOBBY_CONFIGURATION from "../../modules/lobby/graphql/mutations/changeLobbyConfiguration.gql";
 import CREATE_LOBBY from "../../modules/lobby/graphql/mutations/createLobby.gql";
-import INVITE_USER_TO_LOBBY from "../../modules/lobby/graphql/mutations/inviteUserToLobby.gql";
+import INVITE_PLAYER_TO_LOBBY from "../../modules/lobby/graphql/mutations/invitePlayerToLobby.gql";
+import KICK_PLAYER_FROM_LOBBY from "../../modules/lobby/graphql/mutations/kickPlayerFromLobby.gql";
 import LEAVE_LOBBY from "../../modules/lobby/graphql/mutations/leaveLobby.gql";
 import START_SEARCHING_FOR_GAME from "../../modules/lobby/graphql/mutations/startSearchingForGame.gql";
 import GET_FRIENDS from "../../modules/lobby/graphql/query/getFriends.gql";
@@ -1546,6 +1612,7 @@ import GET_LOBBY_INVITATIONS from "../../modules/lobby/graphql/query/getLobbyInv
 import LOBBY_CONFIGURATION_CHANGED from "../../modules/lobby/graphql/subscriptions/lobbyConfigurationChanged.gql";
 import LOBBY_INVITATION_ACCEPTED from "../../modules/lobby/graphql/subscriptions/lobbyInvitationAccepted.gql";
 import LOBBY_INVITATION_CREATED from "../../modules/lobby/graphql/subscriptions/lobbyInvitationCreated.gql";
+import LOBBY_MEMBER_KICKED from "../../modules/lobby/graphql/subscriptions/lobbyMemberKicked.gql";
 import LOBBY_MEMBER_LEFT from "../../modules/lobby/graphql/subscriptions/lobbyMemberLeft.gql";
 import LOBBY_MEMBER_ROLE_CHANGED from "../../modules/lobby/graphql/subscriptions/lobbyMemberRoleChanged.gql";
 import LOBBY_STATUS_CHANGED from "../../modules/lobby/graphql/subscriptions/lobbyStatusChanged.gql";
@@ -1581,7 +1648,8 @@ export const useAcceptMatch = (options?: Omit<UseMutationOptions<AcceptMatchMuta
 export const useCancelLobbyInvitation = (options?: Omit<UseMutationOptions<CancelLobbyInvitationMutationVariables>, "mutation">) => useMutation<CancelLobbyInvitationMutation, CancelLobbyInvitationMutationVariables>(apolloClient, { ...(options ?? {}), mutation: CANCEL_LOBBY_INVITATION });
 export const useChangeLobbyConfiguration = (options?: Omit<UseMutationOptions<ChangeLobbyConfigurationMutationVariables>, "mutation">) => useMutation<ChangeLobbyConfigurationMutation, ChangeLobbyConfigurationMutationVariables>(apolloClient, { ...(options ?? {}), mutation: CHANGE_LOBBY_CONFIGURATION });
 export const useCreateLobby = (options?: Omit<UseMutationOptions<CreateLobbyMutationVariables>, "mutation">) => useMutation<CreateLobbyMutation, CreateLobbyMutationVariables>(apolloClient, { ...(options ?? {}), mutation: CREATE_LOBBY });
-export const useInviteUserToLobby = (options?: Omit<UseMutationOptions<InviteUserToLobbyMutationVariables>, "mutation">) => useMutation<InviteUserToLobbyMutation, InviteUserToLobbyMutationVariables>(apolloClient, { ...(options ?? {}), mutation: INVITE_USER_TO_LOBBY });
+export const useInvitePlayerToLobby = (options?: Omit<UseMutationOptions<InvitePlayerToLobbyMutationVariables>, "mutation">) => useMutation<InvitePlayerToLobbyMutation, InvitePlayerToLobbyMutationVariables>(apolloClient, { ...(options ?? {}), mutation: INVITE_PLAYER_TO_LOBBY });
+export const useKickPlayerFromLobby = (options?: Omit<UseMutationOptions<KickPlayerFromLobbyMutationVariables>, "mutation">) => useMutation<KickPlayerFromLobbyMutation, KickPlayerFromLobbyMutationVariables>(apolloClient, { ...(options ?? {}), mutation: KICK_PLAYER_FROM_LOBBY });
 export const useLeaveLobby = (options?: Omit<UseMutationOptions<LeaveLobbyMutationVariables>, "mutation">) => useMutation<LeaveLobbyMutation, LeaveLobbyMutationVariables>(apolloClient, { ...(options ?? {}), mutation: LEAVE_LOBBY });
 export const useStartSearchingForGame = (options?: Omit<UseMutationOptions<StartSearchingForGameMutationVariables>, "mutation">) => useMutation<StartSearchingForGameMutation, StartSearchingForGameMutationVariables>(apolloClient, { ...(options ?? {}), mutation: START_SEARCHING_FOR_GAME });
 export const useGetFriends = (options?: Omit<UseQueryOptions<RefWrapper<GetFriendsQueryVariables>>, "query">) => useQuery<GetFriendsQuery, RefWrapper<GetFriendsQueryVariables>>(apolloClient, { ...(options ?? {}), query: GET_FRIENDS });
@@ -1590,6 +1658,7 @@ export const useGetLobbyInvitations = (options?: Omit<UseQueryOptions<RefWrapper
 export const useLobbyConfigurationChanged = (options?: Omit<UseSubscriptionOptions<RefWrapper<LobbyConfigurationChangedSubscriptionVariables>>, "query">) => useSubscription<LobbyConfigurationChangedSubscription, RefWrapper<LobbyConfigurationChangedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: LOBBY_CONFIGURATION_CHANGED });
 export const useLobbyInvitationAccepted = (options?: Omit<UseSubscriptionOptions<RefWrapper<LobbyInvitationAcceptedSubscriptionVariables>>, "query">) => useSubscription<LobbyInvitationAcceptedSubscription, RefWrapper<LobbyInvitationAcceptedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: LOBBY_INVITATION_ACCEPTED });
 export const useLobbyInvitationCreated = (options?: Omit<UseSubscriptionOptions<RefWrapper<LobbyInvitationCreatedSubscriptionVariables>>, "query">) => useSubscription<LobbyInvitationCreatedSubscription, RefWrapper<LobbyInvitationCreatedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: LOBBY_INVITATION_CREATED });
+export const useLobbyMemberKicked = (options?: Omit<UseSubscriptionOptions<RefWrapper<LobbyMemberKickedSubscriptionVariables>>, "query">) => useSubscription<LobbyMemberKickedSubscription, RefWrapper<LobbyMemberKickedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: LOBBY_MEMBER_KICKED });
 export const useLobbyMemberLeft = (options?: Omit<UseSubscriptionOptions<RefWrapper<LobbyMemberLeftSubscriptionVariables>>, "query">) => useSubscription<LobbyMemberLeftSubscription, RefWrapper<LobbyMemberLeftSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: LOBBY_MEMBER_LEFT });
 export const useLobbyMemberRoleChanged = (options?: Omit<UseSubscriptionOptions<RefWrapper<LobbyMemberRoleChangedSubscriptionVariables>>, "query">) => useSubscription<LobbyMemberRoleChangedSubscription, RefWrapper<LobbyMemberRoleChangedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: LOBBY_MEMBER_ROLE_CHANGED });
 export const useLobbyStatusChanged = (options?: Omit<UseSubscriptionOptions<RefWrapper<LobbyStatusChangedSubscriptionVariables>>, "query">) => useSubscription<LobbyStatusChangedSubscription, RefWrapper<LobbyStatusChangedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: LOBBY_STATUS_CHANGED });

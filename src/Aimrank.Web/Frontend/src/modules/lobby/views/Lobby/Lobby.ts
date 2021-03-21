@@ -4,7 +4,7 @@ import { useAuth } from "@/authentication/hooks/useAuth";
 import { useNotifications } from "@/common/hooks/useNotifications";
 import { useInvitationDialog } from "@/lobby/components/LobbyInvitationDialog/hooks/useLobbyInvitationDialog";
 import { useLobbySubscriptions } from "./hooks/useLobbySubscriptions";
-import { useCreateLobby, useGetLobby, useLeaveLobby, useStartSearchingForGame } from "~/graphql/types/types";
+import { useCreateLobby, useGetLobby, useKickPlayerFromLobby, useLeaveLobby, useStartSearchingForGame } from "~/graphql/types/types";
 import { MatchStatus } from "@/profile/models/MatchStatus";
 import BaseButton from "@/common/components/BaseButton";
 import LobbyConfiguration from "@/lobby/components/LobbyConfiguration";
@@ -31,6 +31,7 @@ const Lobby = defineComponent({
     const { mutate: createLobby } = useCreateLobby();
     const { mutate: leaveLobby } = useLeaveLobby();
     const { mutate: startSearching } = useStartSearchingForGame();
+    const { mutate: kickPlayer } = useKickPlayerFromLobby();
 
     const lobby = computed(() => state.value?.lobby);
     const members = computed(() => lobby.value?.members ?? []);
@@ -68,6 +69,17 @@ const Lobby = defineComponent({
       }
     }
 
+    const onKickPlayerClick = async (playerId: string) => {
+      const { success, errors } = await kickPlayer({
+        lobbyId: state.value?.lobby?.id,
+        playerId
+      });
+
+      if (!success) {
+        notifications.danger(errors[0].message);
+      }
+    }
+
     return {
       maps,
       lobby,
@@ -77,6 +89,7 @@ const Lobby = defineComponent({
       onCreateLobbyClick,
       onLeaveLobbyClick,
       onStartSearchingClick,
+      onKickPlayerClick,
       MatchStatus: Object.freeze(MatchStatus)
     };
   }

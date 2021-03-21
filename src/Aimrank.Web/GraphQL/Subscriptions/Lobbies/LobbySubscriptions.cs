@@ -109,6 +109,13 @@ namespace Aimrank.Web.GraphQL.Subscriptions.Lobbies
             => SubscribeAuthenticated<LobbyMemberRoleChangedPayload>(
                 $"LobbyMemberRoleChanged:{lobbyId}:{principal.GetUserId()}", principal);
 
+        [SubscribeAndResolve]
+        public ValueTask<ISourceStream<LobbyMemberKickedPayload>> LobbyMemberKicked(
+            Guid lobbyId,
+            [ClaimsPrincipal] ClaimsPrincipal principal)
+            => SubscribeAuthenticated<LobbyMemberKickedPayload>(
+                $"LobbyMemberKicked:{lobbyId}:{principal.GetUserId()}", principal);
+
         private ValueTask<ISourceStream<TMessage>> SubscribeAuthenticated<TMessage>(string topic,
             ClaimsPrincipal principal)
             => principal.GetUserId() == Guid.Empty

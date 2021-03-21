@@ -49,6 +49,13 @@
                 <strong v-if="member.isLeader">
                   ({{ $t("lobby.views.Lobby.leader") }})
                 </strong>
+                <base-button
+                  v-else-if="isCurrentUserLeader"
+                  small
+                  @click="onKickPlayerClick(member.user.id)"
+                >
+                  {{ $t("lobby.views.Lobby.kick") }}
+                </base-button>
               </li>
             </ul>
           </td>

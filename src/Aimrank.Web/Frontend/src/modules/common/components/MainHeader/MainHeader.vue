@@ -6,7 +6,7 @@
     <div>
       <router-link
         :class="$style.brand"
-        :to="{ name: 'home' }"
+        :to="{ name: 'app' }"
       >
         Aimrank
       </router-link>
