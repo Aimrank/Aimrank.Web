@@ -1543,391 +1543,91 @@ export type FriendshipInvitationCreatedSubscription = (
   )> }
 );
 
-
-declare module '*/signIn.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const signIn: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/signOut.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const signOut: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/signUp.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const signUp: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/getUsers.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const getUsers: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/LobbyFields.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const LobbyFields: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/acceptLobbyInvitation.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const acceptLobbyInvitation: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/acceptMatch.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const acceptMatch: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/cancelLobbyInvitation.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const cancelLobbyInvitation: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/changeLobbyConfiguration.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const changeLobbyConfiguration: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/createLobby.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const createLobby: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/inviteUserToLobby.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const inviteUserToLobby: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/leaveLobby.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const leaveLobby: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/startSearchingForGame.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const startSearchingForGame: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/getFriends.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const getFriends: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/getLobby.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const getLobby: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/getLobbyInvitations.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const getLobbyInvitations: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/lobbyConfigurationChanged.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const lobbyConfigurationChanged: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/lobbyInvitationAccepted.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const lobbyInvitationAccepted: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/lobbyInvitationCreated.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const lobbyInvitationCreated: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/lobbyMemberLeft.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const lobbyMemberLeft: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/lobbyMemberRoleChanged.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const lobbyMemberRoleChanged: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/lobbyStatusChanged.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const lobbyStatusChanged: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/matchAccepted.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const matchAccepted: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/matchCanceled.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const matchCanceled: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/matchFinished.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const matchFinished: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/matchPlayerLeft.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const matchPlayerLeft: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/matchReady.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const matchReady: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/matchStarted.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const matchStarted: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/matchStarting.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const matchStarting: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/matchTimedOut.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const matchTimedOut: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/acceptFriendshipInvitation.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const acceptFriendshipInvitation: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/blockUser.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const blockUser: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/declineFriendshipInvitation.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const declineFriendshipInvitation: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/deleteFriendship.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const deleteFriendship: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/inviteUserToFriendsList.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const inviteUserToFriendsList: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/unblockUser.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const unblockUser: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/TeamPlayer.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const TeamPlayer: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/getFriendsView.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const Friend: DocumentNode;
-export const getFriendsView: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/getMatches.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const getMatches: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/getMatchesView.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const getMatchesView: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/getProfileView.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const getProfileView: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/getSettingsView.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const getSettingsView: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/friendshipInvitationCreated.gql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const friendshipInvitationCreated: DocumentNode;
-
-  export default defaultDocument;
-}
-    
+import { Ref } from "vue";
+import { apolloClient } from "~/graphql/apolloClient";
+import { useQuery, useMutation, useSubscription, UseQueryOptions, UseMutationOptions, UseSubscriptionOptions } from "~/graphql/hooks";
+import SIGN_IN from "../../modules/authentication/graphql/mutations/signIn.gql";
+import SIGN_OUT from "../../modules/authentication/graphql/mutations/signOut.gql";
+import SIGN_UP from "../../modules/authentication/graphql/mutations/signUp.gql";
+import GET_USERS from "../../modules/common/graphql/query/getUsers.gql";
+import ACCEPT_LOBBY_INVITATION from "../../modules/lobby/graphql/mutations/acceptLobbyInvitation.gql";
+import ACCEPT_MATCH from "../../modules/lobby/graphql/mutations/acceptMatch.gql";
+import CANCEL_LOBBY_INVITATION from "../../modules/lobby/graphql/mutations/cancelLobbyInvitation.gql";
+import CHANGE_LOBBY_CONFIGURATION from "../../modules/lobby/graphql/mutations/changeLobbyConfiguration.gql";
+import CREATE_LOBBY from "../../modules/lobby/graphql/mutations/createLobby.gql";
+import INVITE_USER_TO_LOBBY from "../../modules/lobby/graphql/mutations/inviteUserToLobby.gql";
+import LEAVE_LOBBY from "../../modules/lobby/graphql/mutations/leaveLobby.gql";
+import START_SEARCHING_FOR_GAME from "../../modules/lobby/graphql/mutations/startSearchingForGame.gql";
+import GET_FRIENDS from "../../modules/lobby/graphql/query/getFriends.gql";
+import GET_LOBBY from "../../modules/lobby/graphql/query/getLobby.gql";
+import GET_LOBBY_INVITATIONS from "../../modules/lobby/graphql/query/getLobbyInvitations.gql";
+import LOBBY_CONFIGURATION_CHANGED from "../../modules/lobby/graphql/subscriptions/lobbyConfigurationChanged.gql";
+import LOBBY_INVITATION_ACCEPTED from "../../modules/lobby/graphql/subscriptions/lobbyInvitationAccepted.gql";
+import LOBBY_INVITATION_CREATED from "../../modules/lobby/graphql/subscriptions/lobbyInvitationCreated.gql";
+import LOBBY_MEMBER_LEFT from "../../modules/lobby/graphql/subscriptions/lobbyMemberLeft.gql";
+import LOBBY_MEMBER_ROLE_CHANGED from "../../modules/lobby/graphql/subscriptions/lobbyMemberRoleChanged.gql";
+import LOBBY_STATUS_CHANGED from "../../modules/lobby/graphql/subscriptions/lobbyStatusChanged.gql";
+import MATCH_ACCEPTED from "../../modules/lobby/graphql/subscriptions/matchAccepted.gql";
+import MATCH_CANCELED from "../../modules/lobby/graphql/subscriptions/matchCanceled.gql";
+import MATCH_FINISHED from "../../modules/lobby/graphql/subscriptions/matchFinished.gql";
+import MATCH_PLAYER_LEFT from "../../modules/lobby/graphql/subscriptions/matchPlayerLeft.gql";
+import MATCH_READY from "../../modules/lobby/graphql/subscriptions/matchReady.gql";
+import MATCH_STARTED from "../../modules/lobby/graphql/subscriptions/matchStarted.gql";
+import MATCH_STARTING from "../../modules/lobby/graphql/subscriptions/matchStarting.gql";
+import MATCH_TIMED_OUT from "../../modules/lobby/graphql/subscriptions/matchTimedOut.gql";
+import ACCEPT_FRIENDSHIP_INVITATION from "../../modules/profile/graphql/mutations/acceptFriendshipInvitation.gql";
+import BLOCK_USER from "../../modules/profile/graphql/mutations/blockUser.gql";
+import DECLINE_FRIENDSHIP_INVITATION from "../../modules/profile/graphql/mutations/declineFriendshipInvitation.gql";
+import DELETE_FRIENDSHIP from "../../modules/profile/graphql/mutations/deleteFriendship.gql";
+import INVITE_USER_TO_FRIENDS_LIST from "../../modules/profile/graphql/mutations/inviteUserToFriendsList.gql";
+import UNBLOCK_USER from "../../modules/profile/graphql/mutations/unblockUser.gql";
+import GET_FRIENDS_VIEW from "../../modules/profile/graphql/query/getFriendsView.gql";
+import GET_MATCHES from "../../modules/profile/graphql/query/getMatches.gql";
+import GET_MATCHES_VIEW from "../../modules/profile/graphql/query/getMatchesView.gql";
+import GET_PROFILE_VIEW from "../../modules/profile/graphql/query/getProfileView.gql";
+import GET_SETTINGS_VIEW from "../../modules/profile/graphql/query/getSettingsView.gql";
+import FRIENDSHIP_INVITATION_CREATED from "../../modules/profile/graphql/subscriptions/friendshipInvitationCreated.gql";
+
+type RefWrapper<T extends object> = Record<keyof T, T[keyof T] | Ref<T[keyof T]>>;
+
+export const useSignIn = (options?: Omit<UseMutationOptions<SignInMutationVariables>, "mutation">) => useMutation<SignInMutation, SignInMutationVariables>(apolloClient, { ...(options ?? {}), mutation: SIGN_IN });
+export const useSignOut = (options?: Omit<UseMutationOptions<SignOutMutationVariables>, "mutation">) => useMutation<SignOutMutation, SignOutMutationVariables>(apolloClient, { ...(options ?? {}), mutation: SIGN_OUT });
+export const useSignUp = (options?: Omit<UseMutationOptions<SignUpMutationVariables>, "mutation">) => useMutation<SignUpMutation, SignUpMutationVariables>(apolloClient, { ...(options ?? {}), mutation: SIGN_UP });
+export const useGetUsers = (options?: Omit<UseQueryOptions<RefWrapper<GetUsersQueryVariables>>, "query">) => useQuery<GetUsersQuery, RefWrapper<GetUsersQueryVariables>>(apolloClient, { ...(options ?? {}), query: GET_USERS });
+export const useAcceptLobbyInvitation = (options?: Omit<UseMutationOptions<AcceptLobbyInvitationMutationVariables>, "mutation">) => useMutation<AcceptLobbyInvitationMutation, AcceptLobbyInvitationMutationVariables>(apolloClient, { ...(options ?? {}), mutation: ACCEPT_LOBBY_INVITATION });
+export const useAcceptMatch = (options?: Omit<UseMutationOptions<AcceptMatchMutationVariables>, "mutation">) => useMutation<AcceptMatchMutation, AcceptMatchMutationVariables>(apolloClient, { ...(options ?? {}), mutation: ACCEPT_MATCH });
+export const useCancelLobbyInvitation = (options?: Omit<UseMutationOptions<CancelLobbyInvitationMutationVariables>, "mutation">) => useMutation<CancelLobbyInvitationMutation, CancelLobbyInvitationMutationVariables>(apolloClient, { ...(options ?? {}), mutation: CANCEL_LOBBY_INVITATION });
+export const useChangeLobbyConfiguration = (options?: Omit<UseMutationOptions<ChangeLobbyConfigurationMutationVariables>, "mutation">) => useMutation<ChangeLobbyConfigurationMutation, ChangeLobbyConfigurationMutationVariables>(apolloClient, { ...(options ?? {}), mutation: CHANGE_LOBBY_CONFIGURATION });
+export const useCreateLobby = (options?: Omit<UseMutationOptions<CreateLobbyMutationVariables>, "mutation">) => useMutation<CreateLobbyMutation, CreateLobbyMutationVariables>(apolloClient, { ...(options ?? {}), mutation: CREATE_LOBBY });
+export const useInviteUserToLobby = (options?: Omit<UseMutationOptions<InviteUserToLobbyMutationVariables>, "mutation">) => useMutation<InviteUserToLobbyMutation, InviteUserToLobbyMutationVariables>(apolloClient, { ...(options ?? {}), mutation: INVITE_USER_TO_LOBBY });
+export const useLeaveLobby = (options?: Omit<UseMutationOptions<LeaveLobbyMutationVariables>, "mutation">) => useMutation<LeaveLobbyMutation, LeaveLobbyMutationVariables>(apolloClient, { ...(options ?? {}), mutation: LEAVE_LOBBY });
+export const useStartSearchingForGame = (options?: Omit<UseMutationOptions<StartSearchingForGameMutationVariables>, "mutation">) => useMutation<StartSearchingForGameMutation, StartSearchingForGameMutationVariables>(apolloClient, { ...(options ?? {}), mutation: START_SEARCHING_FOR_GAME });
+export const useGetFriends = (options?: Omit<UseQueryOptions<RefWrapper<GetFriendsQueryVariables>>, "query">) => useQuery<GetFriendsQuery, RefWrapper<GetFriendsQueryVariables>>(apolloClient, { ...(options ?? {}), query: GET_FRIENDS });
+export const useGetLobby = (options?: Omit<UseQueryOptions<RefWrapper<GetLobbyQueryVariables>>, "query">) => useQuery<GetLobbyQuery, RefWrapper<GetLobbyQueryVariables>>(apolloClient, { ...(options ?? {}), query: GET_LOBBY });
+export const useGetLobbyInvitations = (options?: Omit<UseQueryOptions<RefWrapper<GetLobbyInvitationsQueryVariables>>, "query">) => useQuery<GetLobbyInvitationsQuery, RefWrapper<GetLobbyInvitationsQueryVariables>>(apolloClient, { ...(options ?? {}), query: GET_LOBBY_INVITATIONS });
+export const useLobbyConfigurationChanged = (options?: Omit<UseSubscriptionOptions<RefWrapper<LobbyConfigurationChangedSubscriptionVariables>>, "query">) => useSubscription<LobbyConfigurationChangedSubscription, RefWrapper<LobbyConfigurationChangedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: LOBBY_CONFIGURATION_CHANGED });
+export const useLobbyInvitationAccepted = (options?: Omit<UseSubscriptionOptions<RefWrapper<LobbyInvitationAcceptedSubscriptionVariables>>, "query">) => useSubscription<LobbyInvitationAcceptedSubscription, RefWrapper<LobbyInvitationAcceptedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: LOBBY_INVITATION_ACCEPTED });
+export const useLobbyInvitationCreated = (options?: Omit<UseSubscriptionOptions<RefWrapper<LobbyInvitationCreatedSubscriptionVariables>>, "query">) => useSubscription<LobbyInvitationCreatedSubscription, RefWrapper<LobbyInvitationCreatedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: LOBBY_INVITATION_CREATED });
+export const useLobbyMemberLeft = (options?: Omit<UseSubscriptionOptions<RefWrapper<LobbyMemberLeftSubscriptionVariables>>, "query">) => useSubscription<LobbyMemberLeftSubscription, RefWrapper<LobbyMemberLeftSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: LOBBY_MEMBER_LEFT });
+export const useLobbyMemberRoleChanged = (options?: Omit<UseSubscriptionOptions<RefWrapper<LobbyMemberRoleChangedSubscriptionVariables>>, "query">) => useSubscription<LobbyMemberRoleChangedSubscription, RefWrapper<LobbyMemberRoleChangedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: LOBBY_MEMBER_ROLE_CHANGED });
+export const useLobbyStatusChanged = (options?: Omit<UseSubscriptionOptions<RefWrapper<LobbyStatusChangedSubscriptionVariables>>, "query">) => useSubscription<LobbyStatusChangedSubscription, RefWrapper<LobbyStatusChangedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: LOBBY_STATUS_CHANGED });
+export const useMatchAccepted = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchAcceptedSubscriptionVariables>>, "query">) => useSubscription<MatchAcceptedSubscription, RefWrapper<MatchAcceptedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_ACCEPTED });
+export const useMatchCanceled = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchCanceledSubscriptionVariables>>, "query">) => useSubscription<MatchCanceledSubscription, RefWrapper<MatchCanceledSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_CANCELED });
+export const useMatchFinished = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchFinishedSubscriptionVariables>>, "query">) => useSubscription<MatchFinishedSubscription, RefWrapper<MatchFinishedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_FINISHED });
+export const useMatchPlayerLeft = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchPlayerLeftSubscriptionVariables>>, "query">) => useSubscription<MatchPlayerLeftSubscription, RefWrapper<MatchPlayerLeftSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_PLAYER_LEFT });
+export const useMatchReady = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchReadySubscriptionVariables>>, "query">) => useSubscription<MatchReadySubscription, RefWrapper<MatchReadySubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_READY });
+export const useMatchStarted = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchStartedSubscriptionVariables>>, "query">) => useSubscription<MatchStartedSubscription, RefWrapper<MatchStartedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_STARTED });
+export const useMatchStarting = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchStartingSubscriptionVariables>>, "query">) => useSubscription<MatchStartingSubscription, RefWrapper<MatchStartingSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_STARTING });
+export const useMatchTimedOut = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchTimedOutSubscriptionVariables>>, "query">) => useSubscription<MatchTimedOutSubscription, RefWrapper<MatchTimedOutSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_TIMED_OUT });
+export const useAcceptFriendshipInvitation = (options?: Omit<UseMutationOptions<AcceptFriendshipInvitationMutationVariables>, "mutation">) => useMutation<AcceptFriendshipInvitationMutation, AcceptFriendshipInvitationMutationVariables>(apolloClient, { ...(options ?? {}), mutation: ACCEPT_FRIENDSHIP_INVITATION });
+export const useBlockUser = (options?: Omit<UseMutationOptions<BlockUserMutationVariables>, "mutation">) => useMutation<BlockUserMutation, BlockUserMutationVariables>(apolloClient, { ...(options ?? {}), mutation: BLOCK_USER });
+export const useDeclineFriendshipInvitation = (options?: Omit<UseMutationOptions<DeclineFriendshipInvitationMutationVariables>, "mutation">) => useMutation<DeclineFriendshipInvitationMutation, DeclineFriendshipInvitationMutationVariables>(apolloClient, { ...(options ?? {}), mutation: DECLINE_FRIENDSHIP_INVITATION });
+export const useDeleteFriendship = (options?: Omit<UseMutationOptions<DeleteFriendshipMutationVariables>, "mutation">) => useMutation<DeleteFriendshipMutation, DeleteFriendshipMutationVariables>(apolloClient, { ...(options ?? {}), mutation: DELETE_FRIENDSHIP });
+export const useInviteUserToFriendsList = (options?: Omit<UseMutationOptions<InviteUserToFriendsListMutationVariables>, "mutation">) => useMutation<InviteUserToFriendsListMutation, InviteUserToFriendsListMutationVariables>(apolloClient, { ...(options ?? {}), mutation: INVITE_USER_TO_FRIENDS_LIST });
+export const useUnblockUser = (options?: Omit<UseMutationOptions<UnblockUserMutationVariables>, "mutation">) => useMutation<UnblockUserMutation, UnblockUserMutationVariables>(apolloClient, { ...(options ?? {}), mutation: UNBLOCK_USER });
+export const useGetFriendsView = (options?: Omit<UseQueryOptions<RefWrapper<GetFriendsViewQueryVariables>>, "query">) => useQuery<GetFriendsViewQuery, RefWrapper<GetFriendsViewQueryVariables>>(apolloClient, { ...(options ?? {}), query: GET_FRIENDS_VIEW });
+export const useGetMatches = (options?: Omit<UseQueryOptions<RefWrapper<GetMatchesQueryVariables>>, "query">) => useQuery<GetMatchesQuery, RefWrapper<GetMatchesQueryVariables>>(apolloClient, { ...(options ?? {}), query: GET_MATCHES });
+export const useGetMatchesView = (options?: Omit<UseQueryOptions<RefWrapper<GetMatchesViewQueryVariables>>, "query">) => useQuery<GetMatchesViewQuery, RefWrapper<GetMatchesViewQueryVariables>>(apolloClient, { ...(options ?? {}), query: GET_MATCHES_VIEW });
+export const useGetProfileView = (options?: Omit<UseQueryOptions<RefWrapper<GetProfileViewQueryVariables>>, "query">) => useQuery<GetProfileViewQuery, RefWrapper<GetProfileViewQueryVariables>>(apolloClient, { ...(options ?? {}), query: GET_PROFILE_VIEW });
+export const useGetSettingsView = (options?: Omit<UseQueryOptions<RefWrapper<GetSettingsViewQueryVariables>>, "query">) => useQuery<GetSettingsViewQuery, RefWrapper<GetSettingsViewQueryVariables>>(apolloClient, { ...(options ?? {}), query: GET_SETTINGS_VIEW });
+export const useFriendshipInvitationCreated = (options?: Omit<UseSubscriptionOptions<RefWrapper<FriendshipInvitationCreatedSubscriptionVariables>>, "query">) => useSubscription<FriendshipInvitationCreatedSubscription, RefWrapper<FriendshipInvitationCreatedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: FRIENDSHIP_INVITATION_CREATED });

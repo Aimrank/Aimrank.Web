@@ -1,7 +1,7 @@
-import { computed, defineComponent, reactive, ref, watch } from "vue";
+import { computed, defineComponent, watch } from "vue";
 import { useProfileUser } from "@/profile/hooks/useProfileUser";
-import { useProfileView } from "@/profile/graphql";
 import { useProfileStore } from "@/profile/hooks/useProfileStore";
+import { useGetProfileView } from "~/graphql/types/types";
 import BaseButton from "@/common/components/BaseButton";
 import FriendshipButtons from "@/profile/components/FriendshipButtons";
 
@@ -14,7 +14,7 @@ const Profile = defineComponent({
   setup() {
     const { profileUserId, isCurrentUserProfile } = useProfileUser();
     const { state, setState } = useProfileStore();
-    const { result, fetch } = useProfileView(profileUserId);
+    const { result, fetch } = useGetProfileView({ variables: {userId: profileUserId} });
 
     const links = computed(() => {
       const result = [

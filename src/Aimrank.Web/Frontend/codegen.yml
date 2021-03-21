@@ -2,8 +2,10 @@ overwrite: true
 schema: "http://localhost:5000/graphql"
 documents: "src/**/*.gql"
 generates:
-  src/graphql/types/types.d.ts:
+  src/graphql/types/types.ts:
     plugins:
       - "typescript"
       - "typescript-operations"
-      - "typescript-graphql-files-modules"
+      - codegen/vue-composition.js:
+          hooksImportPath: "~/graphql/hooks"
+          apolloImportPath: "~/graphql/apolloClient"

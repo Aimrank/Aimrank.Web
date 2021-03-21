@@ -1,7 +1,7 @@
 import { defineComponent, computed, watch, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useAuth } from "@/authentication/hooks/useAuth";
-import { useMatches, useMatchesView } from "@/profile/graphql";
+import { useGetMatches, useGetMatchesView } from "~/graphql/types/types";
 import { MatchMode } from "@/profile/models/MatchMode";
 import { MatchWinner } from "@/profile/models/MatchWinner";
 import MatchesTable from "@/profile/components/MatchesTable";
@@ -20,8 +20,11 @@ const Matches = defineComponent({
 
     const userId = computed(() => route.params.userId as string || currentUser.value!.id);
 
-    const { result: state, loading: isStateLoading } = useMatchesView(userId.value, mode.value);
-    const { result, fetch, loading: isMatchLoading } = useMatches(userId, mode);
+    const { result: state, loading: isStateLoading } = useGetMatchesView({variables: {userId, mode}});
+    const { result, fetch, loading: isMatchLoading } = useGetMatches({
+      variables: {userId, mode},
+      lazy: true
+    });
 
     watch(
       () => mode.value,

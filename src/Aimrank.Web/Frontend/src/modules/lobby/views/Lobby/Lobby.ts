@@ -4,7 +4,7 @@ import { useAuth } from "@/authentication/hooks/useAuth";
 import { useNotifications } from "@/common/hooks/useNotifications";
 import { useInvitationDialog } from "@/lobby/components/LobbyInvitationDialog/hooks/useLobbyInvitationDialog";
 import { useLobbySubscriptions } from "./hooks/useLobbySubscriptions";
-import { useCreateLobby, useGetLobby, useLeaveLobby, useStartSearchingForGame } from "@/lobby/graphql";
+import { useCreateLobby, useGetLobby, useLeaveLobby, useStartSearchingForGame } from "~/graphql/types/types";
 import { MatchStatus } from "@/profile/models/MatchStatus";
 import BaseButton from "@/common/components/BaseButton";
 import LobbyConfiguration from "@/lobby/components/LobbyConfiguration";

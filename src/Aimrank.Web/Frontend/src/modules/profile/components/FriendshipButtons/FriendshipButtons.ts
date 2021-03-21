@@ -8,7 +8,7 @@ import {
   useDeleteFriendship,
   useInviteUserToFriendsList,
   useUnblockUser
-} from "@/profile/graphql";
+} from "~/graphql/types/types";
 import BaseButton from "@/common/components/BaseButton";
 
 const FriendshipButtons = defineComponent({

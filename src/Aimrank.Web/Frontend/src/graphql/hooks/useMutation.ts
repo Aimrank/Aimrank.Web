@@ -1,14 +1,15 @@
 import { ref } from "vue";
 import { GraphQLError } from "graphql";
-import { DocumentNode, MutationOptions } from "@apollo/client/core";
-import { apolloClient } from "~/graphql/apolloClient";
+import { ApolloClient, MutationOptions, NormalizedCacheObject } from "@apollo/client/core";
 
 type MutationErrorCallback = (errors?: readonly GraphQLError[]) => void;
 type MutationDoneCallback<T> = (result: T) => void;
 
+export type UseMutationOptions<TVariables> = MutationOptions<any, TVariables>;
+
 export const useMutation = <T = any, TVariables = Record<string, any>>(
-  mutation: DocumentNode,
-  options?: MutationOptions<any, TVariables>
+  apolloClient: ApolloClient<NormalizedCacheObject>,
+  options: UseMutationOptions<TVariables>
 ) => {
   const errors = ref<readonly GraphQLError[]>([]);
   const result = ref<T>();
@@ -31,9 +32,8 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
 
     try {
       const res = await apolloClient.mutate({
-        mutation,
-        variables,
-        ...(options ?? {})
+        ...options,
+        variables: variables ?? options.variables
       });
 
       loading.value = false;

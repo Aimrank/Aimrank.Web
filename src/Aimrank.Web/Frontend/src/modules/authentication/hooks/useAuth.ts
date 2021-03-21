@@ -4,12 +4,10 @@ import { reconnect } from "~/graphql/apolloClient";
 import {
   AuthenticateCommandInput,
   RegisterNewUserCommandInput,
-} from "~/graphql/types/types";
-import {
   useSignIn,
   useSignOut,
-  useSignUp
-} from "@/authentication/graphql";
+  useSignUp,
+} from "~/graphql/types/types";
 
 interface IAuthUser {
   id: string;

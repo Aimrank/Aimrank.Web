@@ -1,6 +1,6 @@
 import { defineComponent } from "vue";
 import { useNotifications } from "@/common/hooks/useNotifications";
-import { useChangeLobbyConfiguration } from "@/lobby/graphql";
+import { useChangeLobbyConfiguration } from "~/graphql/types/types";
 import { MatchMode } from "@/profile/models/MatchMode";
 import MapButton from "@/lobby/components/MapButton";
 

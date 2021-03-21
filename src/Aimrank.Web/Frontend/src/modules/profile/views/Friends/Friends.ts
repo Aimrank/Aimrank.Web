@@ -6,8 +6,8 @@ import {
   useBlockUser,
   useUnblockUser,
   useDeleteFriendship,
-  useFriendsView
-} from "@/profile/graphql";
+  useGetFriendsView
+} from "~/graphql/types/types";
 import BaseButton from "@/common/components/BaseButton";
 
 interface IState {
@@ -28,7 +28,7 @@ const Friends = defineComponent({
     });
 
     const { profileUserId, isCurrentUserProfile } = useProfileUser();
-    const { result, fetch } = useFriendsView(profileUserId);
+    const { result, fetch } = useGetFriendsView({ variables: {userId: profileUserId} });
 
     watch(
       () => result.value,

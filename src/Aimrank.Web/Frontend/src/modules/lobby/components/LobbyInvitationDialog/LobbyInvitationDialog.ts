@@ -1,7 +1,7 @@
 import { computed, defineComponent, watch } from "vue";
 import { useAuth } from "@/authentication/hooks/useAuth";
 import { useNotifications } from "@/common/hooks/useNotifications";
-import { useGetFriends, useInviteUserToLobby } from "@/lobby/graphql";
+import { useGetFriends, useInviteUserToLobby } from "~/graphql/types/types";
 import BaseButton from "@/common/components/BaseButton";
 import BaseDialog from "@/common/components/BaseDialog";
 
@@ -22,7 +22,10 @@ const LobbyInvitationDialog = defineComponent({
     const { currentUser } = useAuth();
     const notifications = useNotifications();
     const { mutate: inviteUserToLobby } = useInviteUserToLobby();
-    const { result, fetch } = useGetFriends(currentUser.value!.id);
+    const { result, fetch } = useGetFriends({
+      variables: {userId: currentUser.value!.id },
+      lazy: true
+    });
     
     const users = computed(() => result.value?.user?.friends?.nodes ?? []);
 

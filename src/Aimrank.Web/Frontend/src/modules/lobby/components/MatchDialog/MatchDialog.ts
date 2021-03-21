@@ -1,7 +1,7 @@
 import { computed, defineComponent, watch } from "vue";
 import { useExpirationTime } from "./hooks/useExpirationTime";
 import { useMatchDialog } from "./hooks/useMatchDialog";
-import { useAcceptMatch } from "@/lobby/graphql";
+import { useAcceptMatch } from "~/graphql/types/types";
 import { useAuth } from "@/authentication/hooks/useAuth";
 import { MatchMode } from "@/profile/models/MatchMode";
 import BaseButton from "@/common/components/BaseButton";

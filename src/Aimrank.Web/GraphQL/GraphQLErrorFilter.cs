@@ -20,7 +20,7 @@ namespace Aimrank.Web.GraphQL
                     .WithCode(e.Code)
                     .WithMessage(e.Message)
                     .SetExtension("errors", JsonSerializer.Serialize(e.Errors)),
-                _ => error
+                _ => error.WithMessage("Internal server error")
             };
     }
 }

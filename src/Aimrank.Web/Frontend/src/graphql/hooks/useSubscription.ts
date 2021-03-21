@@ -1,14 +1,15 @@
 import { onBeforeUnmount, ref } from "vue";
 import { GraphQLError } from "graphql";
-import { FetchResult, SubscriptionOptions } from "@apollo/client/core";
-import { apolloClient } from "~/graphql/apolloClient";
+import { ApolloClient, FetchResult, NormalizedCacheObject, SubscriptionOptions } from "@apollo/client/core";
 
 type SubscriptionErrorCallback = (errors?: readonly GraphQLError[]) => void;
 type SubscriptionResultCallback<T> = (result: T) => void;
 
+export type UseSubscriptionOptions<TVariables> = SubscriptionOptions<TVariables> & { lazy?: boolean };
+
 export const useSubscription = <T = any, TVariables = Record<string, any>>(
-  options: SubscriptionOptions<TVariables>,
-  lazy = false
+  apolloClient: ApolloClient<NormalizedCacheObject>,
+  options: UseSubscriptionOptions<TVariables>
 ) => {
   const errors = ref<readonly GraphQLError[]>([]);
   const result = ref<T>();
@@ -84,8 +85,8 @@ export const useSubscription = <T = any, TVariables = Record<string, any>>(
 
     subscription = apolloClient
       .subscribe({
-        variables,
-        ...options
+        ...options,
+        variables: variables ?? options.variables
       })
       .subscribe(subscriptionHandler);
   }
@@ -97,7 +98,7 @@ export const useSubscription = <T = any, TVariables = Record<string, any>>(
     }
   }
 
-  if (!lazy) {
+  if (!options.lazy) {
     subscribe();
   }
 

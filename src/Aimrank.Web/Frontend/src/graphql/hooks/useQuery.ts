@@ -1,14 +1,15 @@
 import { ref } from "vue";
 import { GraphQLError } from "graphql";
-import { QueryOptions } from "@apollo/client/core";
-import { apolloClient } from "~/graphql/apolloClient";
+import { ApolloClient, NormalizedCacheObject, QueryOptions } from "@apollo/client/core";
 
 type QueryDoneCallback = () => void;
 type QueryErrorCallback = () => void;
 
+export type UseQueryOptions<TVariables> = QueryOptions<TVariables> & { lazy?: boolean };
+
 export const useQuery = <T = any, TVariables = Record<string, any>>(
-  options: QueryOptions<TVariables>,
-  lazy = false
+  apolloClient: ApolloClient<NormalizedCacheObject>,
+  options: UseQueryOptions<TVariables>
 ) => {
   const errors = ref<readonly GraphQLError[]>([]);
   const result = ref<T>();
@@ -46,7 +47,7 @@ export const useQuery = <T = any, TVariables = Record<string, any>>(
     }
   }
 
-  if (!lazy) {
+  if (!options.lazy) {
     fetch();
   }
 

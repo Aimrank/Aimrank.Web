@@ -2,7 +2,7 @@ import { defineComponent, onMounted } from "vue";
 import { useAuth } from "@/authentication/hooks/useAuth";
 import { useInitialState } from "@/common/hooks/useInitialState";
 import { useNotifications } from "@/common/hooks/useNotifications";
-import { useGetSettingsView } from "@/profile/graphql";
+import { useGetSettingsView } from "~/graphql/types/types";
 import { signInWithSteam } from "@/profile/services/signInWithSteam";
 import BaseButton from "@/common/components/BaseButton";
 import Icon from "@/common/components/Icon";
@@ -17,7 +17,7 @@ const Settings = defineComponent({
     const initialState = useInitialState();
     const notifications = useNotifications();
 
-    const { result: state } = useGetSettingsView(currentUser.value!.id);
+    const { result: state } = useGetSettingsView({ variables: { userId: currentUser.value?.id }});
 
     onMounted(() => {
       const error = initialState.getError();

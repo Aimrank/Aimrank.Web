@@ -10,9 +10,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useFriendshipInvitationCreated } from "@/profile/graphql";
-import { useLobbyInvitationCreated } from "@/lobby/graphql";
 import { useNotifications } from "@/common/hooks/useNotifications";
+import { useFriendshipInvitationCreated, useLobbyInvitationCreated } from "./graphql/types/types";
 import MatchDialog from "@/lobby/components/MatchDialog";
 import UsersDialog from "@/common/components/UsersDialog";
 import MainHeader from "@/common/components/MainHeader";

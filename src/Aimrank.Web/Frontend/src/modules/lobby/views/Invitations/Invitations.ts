@@ -1,7 +1,7 @@
 import { computed, defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import { useNotifications } from "@/common/hooks/useNotifications";
-import { useAcceptLobbyInvitation, useCancelLobbyInvitation, useGetLobbyInvitations } from "@/lobby/graphql";
+import { useAcceptLobbyInvitation, useCancelLobbyInvitation, useGetLobbyInvitations } from "~/graphql/types/types";
 import BaseButton from "@/common/components/BaseButton";
 
 const Invitations = defineComponent({

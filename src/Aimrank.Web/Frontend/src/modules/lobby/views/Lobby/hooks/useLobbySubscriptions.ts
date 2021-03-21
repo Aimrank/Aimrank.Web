@@ -16,7 +16,7 @@ import {
   useMatchStarted,
   useMatchStarting,
   useMatchTimedOut
-} from "@/lobby/graphql";
+} from "~/graphql/types/types";
 import { GetLobbyQuery } from "~/graphql/types/types";
 import { MatchStatus } from "@/profile/models/MatchStatus";
 import { LobbyStatus } from "@/lobby/models/LobbyStatus";
@@ -29,20 +29,20 @@ export const useLobbySubscriptions = (
 
   const { open, close, accept } = useMatchDialog();
 
-  const lobbyInvitationAccepted = useLobbyInvitationAccepted();
-  const lobbyConfigurationChanged = useLobbyConfigurationChanged();
-  const lobbyMemberLeft = useLobbyMemberLeft();
-  const lobbyMemberRoleChanged = useLobbyMemberRoleChanged();
-  const lobbyStatusChanged = useLobbyStatusChanged();
+  const lobbyInvitationAccepted = useLobbyInvitationAccepted({ lazy: true });
+  const lobbyConfigurationChanged = useLobbyConfigurationChanged({ lazy: true });
+  const lobbyMemberLeft = useLobbyMemberLeft({ lazy: true });
+  const lobbyMemberRoleChanged = useLobbyMemberRoleChanged({ lazy: true });
+  const lobbyStatusChanged = useLobbyStatusChanged({ lazy: true });
 
-  const matchReady = useMatchReady();
-  const matchAccepted = useMatchAccepted();
-  const matchStarted = useMatchStarted();
-  const matchStarting = useMatchStarting();
-  const matchCanceled = useMatchCanceled();
-  const matchFinished = useMatchFinished();
-  const matchTimedOut = useMatchTimedOut();
-  const matchPlayerLeft = useMatchPlayerLeft();
+  const matchReady = useMatchReady({ lazy: true });
+  const matchAccepted = useMatchAccepted({ lazy: true });
+  const matchStarted = useMatchStarted({ lazy: true });
+  const matchStarting = useMatchStarting({ lazy: true });
+  const matchCanceled = useMatchCanceled({ lazy: true });
+  const matchFinished = useMatchFinished({ lazy: true });
+  const matchTimedOut = useMatchTimedOut({ lazy: true });
+  const matchPlayerLeft = useMatchPlayerLeft({ lazy: true });
 
   const unsubscribeAll = () => {
     lobbyInvitationAccepted.unsubscribe();

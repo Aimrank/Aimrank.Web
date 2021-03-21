@@ -1,7 +1,7 @@
 import { computed, defineComponent, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useGetUsers } from "@/common/graphql";
 import { useUsersDialog } from "./hooks/useUsersDialog";
+import { useGetUsers } from "~/graphql/types/types";
 import { debounce } from "@/common/utilities/debounce";
 import BaseButton from "@/common/components/BaseButton";
 import BaseDialog from "@/common/components/BaseDialog";
@@ -19,7 +19,7 @@ const UsersDialog = defineComponent({
     const username = ref("");
 
     const { isVisible, close } = useUsersDialog();
-    const { result, fetch } = useGetUsers(username);
+    const { result, fetch } = useGetUsers({ variables: {username}, lazy: true});
 
     const users = computed(() => result.value?.users?.nodes ?? []);
 
