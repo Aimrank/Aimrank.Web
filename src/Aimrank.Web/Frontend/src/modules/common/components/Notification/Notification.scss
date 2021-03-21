@@ -41,3 +41,22 @@
   justify-content: space-between;
   border-left: 1px solid colors.$lightGray;
 }
+
+.buttons {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.button {
+  flex: 1;
+
+  &:not(:first-child) {
+    margin-left: 5px;
+  }
+
+  &:not(:last-child) {
+    margin-right: 5px;
+  }
+}

@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useNotifications } from "@/common/hooks/useNotifications";
+import { NotificationColor, useNotifications } from "@/common/hooks/useNotifications";
 import { useFriendshipInvitationCreated, useLobbyInvitationCreated } from "./graphql/types/types";
 import MatchDialog from "@/lobby/components/MatchDialog";
 import UsersDialog from "@/common/components/UsersDialog";
@@ -25,12 +25,33 @@ const AppAuthenticated = defineComponent({
     NotificationsList
   },
   setup() {
-    const { success } = useNotifications();
+    const { showNotification } = useNotifications();
     const { onResult: onFriendshipInvitationCreated } = useFriendshipInvitationCreated();
     const { onResult: onLobbyInvitationCreated } = useLobbyInvitationCreated();
 
-    onFriendshipInvitationCreated(result => success(`${result.friendshipInvitationCreated?.record.invitingUser?.username} sent you friendship invitation`));
-    onLobbyInvitationCreated(result => success(`${result.lobbyInvitationCreated?.record.invitingUser?.username} invited you to lobby`));
+    onFriendshipInvitationCreated(result =>
+      showNotification({
+        content: `${result.friendshipInvitationCreated?.record.invitingUser?.username} sent you friendship invitation`,
+        timeout: -1,
+        color: NotificationColor.Success,
+        params: {
+          type: "FRIENDSHIP_INVITATION",
+          userId: result.friendshipInvitationCreated?.record.invitingUser?.id
+        }
+      })
+    );
+
+    onLobbyInvitationCreated(result =>
+      showNotification({
+        content: `${result.lobbyInvitationCreated?.record.invitingUser?.username} invited you to lobby`,
+        timeout: -1,
+        color: NotificationColor.Success,
+        params: {
+          type: "LOBBY_INVITATION",
+          lobbyId: result.lobbyInvitationCreated?.record.lobbyId
+        }
+      })
+    );
   }
 });
 

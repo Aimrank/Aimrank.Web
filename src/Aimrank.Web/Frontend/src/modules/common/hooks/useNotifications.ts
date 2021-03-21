@@ -12,12 +12,20 @@ export interface INotification {
   content: string;
   timeout: number;
   color: NotificationColor;
+  params?: {
+    type: string
+    [key: string]: any;
+  }
 }
 
 export interface INotificationOptions {
   content: string;
   timeout: number;
   color: NotificationColor;
+  params?: {
+    type: string
+    [key: string]: any;
+  }
 }
 
 const timeouts = new Map<string, any>();
