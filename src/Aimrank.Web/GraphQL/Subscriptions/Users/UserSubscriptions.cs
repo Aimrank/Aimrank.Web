@@ -4,6 +4,7 @@ using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System;
 
 namespace Aimrank.Web.GraphQL.Subscriptions.Users
 {
@@ -20,13 +21,19 @@ namespace Aimrank.Web.GraphQL.Subscriptions.Users
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<LobbyInvitationCreatedPayload>> LobbyInvitationCreated(
             [ClaimsPrincipal] ClaimsPrincipal principal)
-            => _receiver.SubscribeAsync<string, LobbyInvitationCreatedPayload>(
-                $"LobbyInvitationCreated:{principal.GetUserId()}");
+            => SubscribeAuthenticated<LobbyInvitationCreatedPayload>(
+                $"LobbyInvitationCreated:{principal.GetUserId()}", principal);
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<FriendshipInvitationCreatedPayload>> FriendshipInvitationCreated(
             [ClaimsPrincipal] ClaimsPrincipal principal)
-            => _receiver.SubscribeAsync<string, FriendshipInvitationCreatedPayload>(
-                $"FriendshipInvitationCreated:{principal.GetUserId()}");
+            => SubscribeAuthenticated<FriendshipInvitationCreatedPayload>(
+                $"FriendshipInvitationCreated:{principal.GetUserId()}", principal);
+        
+        private ValueTask<ISourceStream<TMessage>> SubscribeAuthenticated<TMessage>(string topic,
+            ClaimsPrincipal principal)
+            => principal.GetUserId() == Guid.Empty
+                ? new ValueTask<ISourceStream<TMessage>>(new EmptySourceStream<TMessage>())
+                : _receiver.SubscribeAsync<string, TMessage>(topic);
     }
 }
