@@ -1,7 +1,7 @@
 using Aimrank.Common.Application.Events;
 using Aimrank.Modules.Matches.IntegrationEvents.Lobbies;
 using Aimrank.Web.GraphQL.Subscriptions.Lobbies.Payloads;
-using HotChocolate.Subscriptions;
+using Aimrank.Web.GraphQL.Subscriptions.Lobbies;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -9,15 +9,15 @@ namespace Aimrank.Web.Modules.Matches.Lobbies
 {
     public class MemberRoleChangedEventHandler : IIntegrationEventHandler<MemberRoleChangedEvent>
     {
-        private readonly ITopicEventSender _topicEventSender;
+        private readonly LobbyEventSender _lobbyEventSender;
 
-        public MemberRoleChangedEventHandler(ITopicEventSender topicEventSender)
+        public MemberRoleChangedEventHandler(LobbyEventSender lobbyEventSender)
         {
-            _topicEventSender = topicEventSender;
+            _lobbyEventSender = lobbyEventSender;
         }
 
         public async Task HandleAsync(MemberRoleChangedEvent @event, CancellationToken cancellationToken = default)
-            => await _topicEventSender.SendAsync($"LobbyMemberRoleChanged:{@event.LobbyId}",
+            => await _lobbyEventSender.SendAsync($"LobbyMemberRoleChanged", @event.LobbyId,
                 new LobbyMemberRoleChangedPayload(new LobbyMemberRoleChangedRecord(@event.PlayerId, @event.Role)),
                 cancellationToken);
     }

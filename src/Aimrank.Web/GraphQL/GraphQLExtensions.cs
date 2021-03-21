@@ -18,6 +18,8 @@ namespace Aimrank.Web.GraphQL
     {
         public static IServiceCollection AddApplicationGraphQL(this IServiceCollection services)
         {
+            services.AddScoped<LobbyEventSender>();
+            
             services
                 .AddGraphQLServer()
                 .AddQueryType<QueryType>()

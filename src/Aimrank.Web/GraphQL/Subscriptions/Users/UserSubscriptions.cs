@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Aimrank.Web.GraphQL.Subscriptions.Users
 {
     [ExtendObjectType("Subscription")]
-    public class UserSubscriptions : AuthenticatedSubscriptions
+    public class UserSubscriptions
     {
         private readonly ITopicEventReceiver _receiver;
         
@@ -20,25 +20,13 @@ namespace Aimrank.Web.GraphQL.Subscriptions.Users
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<LobbyInvitationCreatedPayload>> LobbyInvitationCreated(
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-
-            var userId = GetUserId(principal);
-
-            return _receiver.SubscribeAsync<string, LobbyInvitationCreatedPayload>(
-                $"LobbyInvitationCreated:{userId}");
-        }
+            => _receiver.SubscribeAsync<string, LobbyInvitationCreatedPayload>(
+                $"LobbyInvitationCreated:{principal.GetUserId()}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<FriendshipInvitationCreatedPayload>> FriendshipInvitationCreated(
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            
-            var userId = GetUserId(principal);
-            
-            return _receiver.SubscribeAsync<string, FriendshipInvitationCreatedPayload>(
-                $"FriendshipInvitationCreated:{userId}");
-        }
+            => _receiver.SubscribeAsync<string, FriendshipInvitationCreatedPayload>(
+                $"FriendshipInvitationCreated:{principal.GetUserId()}");
     }
 }

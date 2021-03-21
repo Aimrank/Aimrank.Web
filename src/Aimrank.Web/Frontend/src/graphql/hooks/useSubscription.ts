@@ -25,38 +25,6 @@ export const useSubscription = <T = any, TVariables = Record<string, any>>(
   const subscriptionHandler = (res: FetchResult<any, Record<string, any>, Record<string, any>>) => {
     errors.value = [];
 
-    if (res.extensions?.unauthorized) {
-      errors.value = [
-        {
-          name: "unauthorized",
-          path: [],
-          nodes: [],
-          locations: [],
-          positions: [],
-          originalError: null,
-          message: "Unauthorized",
-          extensions: {
-            message: "Unauthorized",
-            code: "unauthorized"
-          },
-          source: {
-            name: "",
-            body: "",
-            locationOffset: {
-              line: 0,
-              column: 0
-            }
-          }
-        }
-      ];
-
-      if (onErrorCallback) {
-        onErrorCallback(errors.value);
-      }
-
-      return;
-    }
-
     if (res.errors) {
       errors.value = res.errors;
 

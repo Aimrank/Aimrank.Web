@@ -9,7 +9,7 @@ using System;
 namespace Aimrank.Web.GraphQL.Subscriptions.Lobbies
 {
     [ExtendObjectType("Subscription")]
-    public class LobbySubscriptions : AuthenticatedSubscriptions
+    public class LobbySubscriptions
     {
         private readonly ITopicEventReceiver _receiver;
         
@@ -17,131 +17,96 @@ namespace Aimrank.Web.GraphQL.Subscriptions.Lobbies
         {
             _receiver = receiver;
         }
-        
+
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<MatchAcceptedPayload>> MatchAccepted(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, MatchAcceptedPayload>($"MatchAccepted:{lobbyId}");
-        }
+            => _receiver.SubscribeAsync<string, MatchAcceptedPayload>(
+                $"MatchAccepted:{lobbyId}:{principal.GetUserId()}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<MatchReadyPayload>> MatchReady(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, MatchReadyPayload>($"MatchReady:{lobbyId}");
-        }
+            => _receiver.SubscribeAsync<string, MatchReadyPayload>(
+                $"MatchReady:{lobbyId}:{principal.GetUserId()}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<MatchStartingPayload>> MatchStarting(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, MatchStartingPayload>($"MatchStarting:{lobbyId}");
-        }
+            => _receiver.SubscribeAsync<string, MatchStartingPayload>(
+                $"MatchStarting:{lobbyId}:{principal.GetUserId()}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<MatchStartedPayload>> MatchStarted(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, MatchStartedPayload>($"MatchStarted:{lobbyId}");
-        }
+            => _receiver.SubscribeAsync<string, MatchStartedPayload>(
+                $"MatchStarted:{lobbyId}:{principal.GetUserId()}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<MatchTimedOutPayload>> MatchTimedOut(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, MatchTimedOutPayload>($"MatchTimedOut:{lobbyId}");
-        }
+            => _receiver.SubscribeAsync<string, MatchTimedOutPayload>(
+                $"MatchTimedOut:{lobbyId}:{principal.GetUserId()}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<MatchCanceledPayload>> MatchCanceled(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, MatchCanceledPayload>($"MatchCanceled:{lobbyId}");
-        }
+            => _receiver.SubscribeAsync<string, MatchCanceledPayload>(
+                $"MatchCanceled:{lobbyId}:{principal.GetUserId()}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<MatchFinishedPayload>> MatchFinished(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, MatchFinishedPayload>($"MatchFinished:{lobbyId}");
-        }
+            => _receiver.SubscribeAsync<string, MatchFinishedPayload>(
+                $"MatchFinished:{lobbyId}:{principal.GetUserId()}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<MatchPlayerLeftPayload>> MatchPlayerLeft(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, MatchPlayerLeftPayload>($"MatchPlayerLeft:{lobbyId}");
-        }
+            => _receiver.SubscribeAsync<string, MatchPlayerLeftPayload>(
+                $"MatchPlayerLeft:{lobbyId}:{principal.GetUserId()}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<LobbyInvitationAcceptedPayload>> LobbyInvitationAccepted(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, LobbyInvitationAcceptedPayload>($"LobbyInvitationAccepted:{lobbyId}");
-        }
-
-        [SubscribeAndResolve]
-        public ValueTask<ISourceStream<LobbyInvitationCanceledPayload>> LobbyInvitationCanceled(
-            Guid lobbyId,
-            [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, LobbyInvitationCanceledPayload>($"LobbyInvitationCanceled:{lobbyId}");
-        }
+            => _receiver.SubscribeAsync<string, LobbyInvitationAcceptedPayload>(
+                $"LobbyInvitationAccepted:{lobbyId}:{principal.GetUserId()}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<LobbyConfigurationChangedPayload>> LobbyConfigurationChanged(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, LobbyConfigurationChangedPayload>($"LobbyConfigurationChanged:{lobbyId}");
-        }
+            => _receiver.SubscribeAsync<string, LobbyConfigurationChangedPayload>(
+                $"LobbyConfigurationChanged:{lobbyId}:{principal.GetUserId()}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<LobbyStatusChangedPayload>> LobbyStatusChanged(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, LobbyStatusChangedPayload>($"LobbyStatusChanged:{lobbyId}");
-        }
+            => _receiver.SubscribeAsync<string, LobbyStatusChangedPayload>(
+                $"LobbyStatusChanged:{lobbyId}:{principal.GetUserId()}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<LobbyMemberLeftPayload>> LobbyMemberLeft(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, LobbyMemberLeftPayload>($"LobbyMemberLeft:{lobbyId}");
-        }
+            => _receiver.SubscribeAsync<string, LobbyMemberLeftPayload>(
+                $"LobbyMemberLeft:{lobbyId}:{principal.GetUserId()}");
 
         [SubscribeAndResolve]
         public ValueTask<ISourceStream<LobbyMemberRoleChangedPayload>> LobbyMemberRoleChanged(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)
-        {
-            AssertAuthenticated(principal);
-            return _receiver.SubscribeAsync<string, LobbyMemberRoleChangedPayload>($"LobbyMemberRoleChanged:{lobbyId}");
-        }
+            => _receiver.SubscribeAsync<string, LobbyMemberRoleChangedPayload>(
+                $"LobbyMemberRoleChanged:{lobbyId}:{principal.GetUserId()}");
     }
 }

@@ -10,6 +10,7 @@ using Aimrank.Modules.Matches.Application.Lobbies.LeaveLobby;
 using Aimrank.Modules.Matches.Application.Lobbies.StartSearchingForGame;
 using Aimrank.Modules.Matches.Application.Matches.AcceptMatch;
 using Aimrank.Web.GraphQL.Subscriptions.Lobbies.Payloads;
+using Aimrank.Web.GraphQL.Subscriptions.Lobbies;
 using Aimrank.Web.GraphQL.Subscriptions.Users.Payloads;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Subscriptions;
@@ -23,19 +24,23 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
     [ExtendObjectType("Mutation")]
     public class LobbyMutations
     {
-        private readonly IMatchesModule _matchesModule;
-        private readonly ITopicEventSender _sender;
         private readonly IExecutionContextAccessor _executionContextAccessor;
+        private readonly IMatchesModule _matchesModule;
+        private readonly ITopicEventSender _topicEventSender;
+        private readonly LobbyEventSender _lobbyEventSender;
 
         public LobbyMutations(
+            IExecutionContextAccessor executionContextAccessor,
             IMatchesModule matchesModule,
-            ITopicEventSender sender,
-            IExecutionContextAccessor executionContextAccessor)
+            ITopicEventSender topicEventSender,
+            LobbyEventSender lobbyEventSender)
         {
-            _matchesModule = matchesModule;
-            _sender = sender;
             _executionContextAccessor = executionContextAccessor;
+            _matchesModule = matchesModule;
+            _topicEventSender = topicEventSender;
+            _lobbyEventSender = lobbyEventSender;
         }
+
 
         [Authorize]
         public async Task<CreateLobbyPayload> CreateLobby()
@@ -44,6 +49,20 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
             await _matchesModule.ExecuteCommandAsync(new CreateLobbyCommand(lobbyId));
             return new CreateLobbyPayload(lobbyId);
         }
+        
+        [Authorize]
+        public async Task<ChangeLobbyConfigurationPayload> ChangeLobbyConfiguration(
+            [GraphQLNonNullType] ChangeLobbyConfigurationCommand input)
+        {
+            await _matchesModule.ExecuteCommandAsync(input);
+
+            var payload = new LobbyConfigurationChangedPayload(new LobbyConfigurationChangedRecord(
+                input.LobbyId, input.Map, input.Name, input.Mode));
+            
+            await _lobbyEventSender.SendAsync("LobbyConfigurationChanged", input.LobbyId, payload);
+
+            return new ChangeLobbyConfigurationPayload();
+        }
 
         [Authorize]
         public async Task<InviteUserToLobbyPayload> InviteUserToLobby(
@@ -51,7 +70,7 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
         {
             await _matchesModule.ExecuteCommandAsync(input);
 
-            await _sender.SendAsync($"LobbyInvitationCreated:{input.InvitedPlayerId}",
+            await _topicEventSender.SendAsync($"LobbyInvitationCreated:{input.InvitedPlayerId}",
                 new LobbyInvitationCreatedPayload(
                     new LobbyInvitationCreatedRecord(
                         input.LobbyId, _executionContextAccessor.UserId)));
@@ -65,9 +84,10 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
         {
             await _matchesModule.ExecuteCommandAsync(input);
 
-            await _sender.SendAsync($"LobbyInvitationAccepted:{input.LobbyId}",
-                new LobbyInvitationAcceptedPayload(
-                    new LobbyInvitationAcceptedRecord(input.LobbyId, _executionContextAccessor.UserId)));
+            var payload = new LobbyInvitationAcceptedPayload(new LobbyInvitationAcceptedRecord(
+                input.LobbyId, _executionContextAccessor.UserId));
+            
+            await _lobbyEventSender.SendAsync("LobbyInvitationAccepted", input.LobbyId, payload);
 
             return new AcceptLobbyInvitationPayload();
         }
@@ -77,25 +97,7 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
             [GraphQLNonNullType] CancelLobbyInvitationCommand input)
         {
             await _matchesModule.ExecuteCommandAsync(input);
-
-            await _sender.SendAsync($"LobbyInvitationCanceled:{input.LobbyId}",
-                new LobbyInvitationCanceledPayload(
-                    new LobbyInvitationCanceledRecord(input.LobbyId, _executionContextAccessor.UserId)));
-
             return new CancelLobbyInvitationPayload();
-        }
-
-        [Authorize]
-        public async Task<ChangeLobbyConfigurationPayload> ChangeLobbyConfiguration(
-            [GraphQLNonNullType] ChangeLobbyConfigurationCommand input)
-        {
-            await _matchesModule.ExecuteCommandAsync(input);
-
-            await _sender.SendAsync($"LobbyConfigurationChanged:{input.LobbyId}",
-                new LobbyConfigurationChangedPayload(
-                    new LobbyConfigurationChangedRecord(input.LobbyId, input.Map, input.Name, input.Mode)));
-
-            return new ChangeLobbyConfigurationPayload();
         }
 
         [Authorize]
