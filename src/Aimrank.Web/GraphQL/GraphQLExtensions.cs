@@ -33,6 +33,7 @@ namespace Aimrank.Web.GraphQL
                 .AddType<LobbySubscriptions>()
                 .AddErrorFilter<GraphQLErrorFilter>()
                 .AddInMemorySubscriptions()
+                .AddMaxExecutionDepthRule(8)
                 .AddAuthorization();
 
             return services;
