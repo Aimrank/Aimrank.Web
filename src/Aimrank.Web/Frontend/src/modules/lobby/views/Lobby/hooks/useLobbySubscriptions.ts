@@ -1,10 +1,12 @@
 import { computed, onBeforeUnmount, Ref, watch } from "vue";
+import { useRouter } from "vue-router";
 import { useAuth } from "@/authentication/hooks/useAuth";
 import { useMatchDialog } from "@/lobby/components/MatchDialog/hooks/useMatchDialog";
 import { useNotifications } from "@/common/hooks/useNotifications";
 import {
   useLobbyConfigurationChanged,
   useLobbyInvitationAccepted,
+  useLobbyMemberKicked,
   useLobbyMemberLeft,
   useLobbyMemberRoleChanged,
   useLobbyStatusChanged,
@@ -25,6 +27,7 @@ export const useLobbySubscriptions = (
   state: Ref<GetLobbyQuery | undefined>
 ) => {
   const { currentUser } = useAuth();
+  const router = useRouter();
   const notifications = useNotifications();
 
   const { open, close, accept } = useMatchDialog();
@@ -34,6 +37,7 @@ export const useLobbySubscriptions = (
   const lobbyMemberLeft = useLobbyMemberLeft({ lazy: true });
   const lobbyMemberRoleChanged = useLobbyMemberRoleChanged({ lazy: true });
   const lobbyStatusChanged = useLobbyStatusChanged({ lazy: true });
+  const lobbyMemberKicked = useLobbyMemberKicked({ lazy: true });
 
   const matchReady = useMatchReady({ lazy: true });
   const matchAccepted = useMatchAccepted({ lazy: true });
@@ -50,6 +54,7 @@ export const useLobbySubscriptions = (
     lobbyMemberLeft.unsubscribe();
     lobbyMemberRoleChanged.unsubscribe();
     lobbyStatusChanged.unsubscribe();
+    lobbyMemberKicked.unsubscribe();
     
     matchReady.unsubscribe();
     matchAccepted.unsubscribe();
@@ -74,6 +79,7 @@ export const useLobbySubscriptions = (
         lobbyMemberLeft.subscribe({ lobbyId: lobbyId.value });
         lobbyMemberRoleChanged.subscribe({ lobbyId: lobbyId.value });
         lobbyStatusChanged.subscribe({ lobbyId: lobbyId.value });
+        lobbyMemberKicked.subscribe({ lobbyId: lobbyId.value });
 
         matchReady.subscribe({ lobbyId: lobbyId.value });
         matchAccepted.subscribe({ lobbyId: lobbyId.value });
@@ -188,6 +194,26 @@ export const useLobbySubscriptions = (
           status: record.status
         }
       };
+    }
+  });
+
+  lobbyMemberKicked.onResult(result => {
+    const record = result.lobbyMemberKicked?.record;
+    const lobby = state.value?.lobby;
+
+    if (lobby && record) {
+      state.value = {
+        ...state.value,
+        lobby: {
+          ...lobby,
+          members: lobby.members?.filter(m => m.user.id !== record.playerId)
+        }
+      };
+
+      if (currentUser.value?.id === record.playerId) {
+        notifications.warning("You were kicked from lobby");
+        router.replace({ name: "app" });
+      }
     }
   });
 

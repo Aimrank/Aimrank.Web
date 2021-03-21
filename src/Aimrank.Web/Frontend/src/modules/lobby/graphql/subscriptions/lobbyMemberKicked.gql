@@ -1,0 +1,8 @@
+subscription lobbyMemberKicked($lobbyId: Uuid!) {
+  lobbyMemberKicked(lobbyId: $lobbyId) {
+    record {
+      lobbyId
+      playerId
+    }
+  }
+}

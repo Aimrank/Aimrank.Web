@@ -20,7 +20,8 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
             => loader.LoadAsync(0, CancellationToken.None);
     }
     
-    public record InviteUserToLobbyPayload : MutationPayloadBase;
+    public record InvitePlayerToLobbyPayload : MutationPayloadBase;
+    public record KickPlayerFromLobbyPayload : MutationPayloadBase;
     public record AcceptLobbyInvitationPayload : MutationPayloadBase;
     public record CancelLobbyInvitationPayload : MutationPayloadBase;
     public record ChangeLobbyConfigurationPayload : MutationPayloadBase;

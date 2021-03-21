@@ -6,6 +6,7 @@ using Aimrank.Modules.Matches.Application.Lobbies.CancelSearchingForGame;
 using Aimrank.Modules.Matches.Application.Lobbies.ChangeLobbyConfiguration;
 using Aimrank.Modules.Matches.Application.Lobbies.CreateLobby;
 using Aimrank.Modules.Matches.Application.Lobbies.InvitePlayerToLobby;
+using Aimrank.Modules.Matches.Application.Lobbies.KickPlayerFromLobby;
 using Aimrank.Modules.Matches.Application.Lobbies.LeaveLobby;
 using Aimrank.Modules.Matches.Application.Lobbies.StartSearchingForGame;
 using Aimrank.Modules.Matches.Application.Matches.AcceptMatch;
@@ -65,7 +66,7 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
         }
 
         [Authorize]
-        public async Task<InviteUserToLobbyPayload> InviteUserToLobby(
+        public async Task<InvitePlayerToLobbyPayload> InvitePlayerToLobby(
             [GraphQLNonNullType] InvitePlayerToLobbyCommand input)
         {
             await _matchesModule.ExecuteCommandAsync(input);
@@ -75,7 +76,21 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
                     new LobbyInvitationCreatedRecord(
                         input.LobbyId, _executionContextAccessor.UserId)));
 
-            return new InviteUserToLobbyPayload();
+            return new InvitePlayerToLobbyPayload();
+        }
+        
+        [Authorize]
+        public async Task<KickPlayerFromLobbyPayload> KickPlayerFromLobby(
+            [GraphQLNonNullType] KickPlayerFromLobbyCommand input)
+        {
+            await _matchesModule.ExecuteCommandAsync(input);
+
+            var payload = new LobbyMemberKickedPayload(new LobbyMemberKickedRecord(input.LobbyId, input.PlayerId));
+
+            await _lobbyEventSender.SendAsync("LobbyMemberKicked", input.LobbyId, payload);
+            await _topicEventSender.SendAsync($"LobbyMemberKicked:{input.LobbyId}:{input.PlayerId}", payload);
+            
+            return new KickPlayerFromLobbyPayload();
         }
 
         [Authorize]

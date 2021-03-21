@@ -29,6 +29,7 @@ export const useMutation = <T = any, TVariables = Record<string, any>>(
 
   const mutate = async (variables?: TVariables) => {
     loading.value = true;
+    errors.value = [];
 
     try {
       const res = await apolloClient.mutate({

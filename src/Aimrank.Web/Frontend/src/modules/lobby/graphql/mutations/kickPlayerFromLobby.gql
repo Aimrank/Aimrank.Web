@@ -1,0 +1,5 @@
+mutation kickPlayerFromLobby($lobbyId: Uuid! $playerId: Uuid!) {
+  kickPlayerFromLobby(input: {lobbyId: $lobbyId playerId: $playerId}) {
+    status
+  }
+}

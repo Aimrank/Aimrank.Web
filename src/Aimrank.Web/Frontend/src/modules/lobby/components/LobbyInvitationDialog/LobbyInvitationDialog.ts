@@ -1,7 +1,7 @@
 import { computed, defineComponent, watch } from "vue";
 import { useAuth } from "@/authentication/hooks/useAuth";
 import { useNotifications } from "@/common/hooks/useNotifications";
-import { useGetFriends, useInviteUserToLobby } from "~/graphql/types/types";
+import { useGetFriends, useInvitePlayerToLobby } from "~/graphql/types/types";
 import BaseButton from "@/common/components/BaseButton";
 import BaseDialog from "@/common/components/BaseDialog";
 
@@ -21,7 +21,7 @@ const LobbyInvitationDialog = defineComponent({
   setup(props, { emit }) {
     const { currentUser } = useAuth();
     const notifications = useNotifications();
-    const { mutate: inviteUserToLobby } = useInviteUserToLobby();
+    const { mutate: invitePlayerToLobby } = useInvitePlayerToLobby();
     const { result, fetch } = useGetFriends({
       variables: {userId: currentUser.value!.id },
       lazy: true
@@ -31,10 +31,10 @@ const LobbyInvitationDialog = defineComponent({
 
     const close = () => emit("close");
 
-    const onInviteClick = async (userId: string) => {
-      const { success, errors } = await inviteUserToLobby({
+    const onInviteClick = async (playerId: string) => {
+      const { success, errors } = await invitePlayerToLobby({
         lobbyId: props.lobbyId,
-        userId
+        playerId
       });
 
       if (success) {
