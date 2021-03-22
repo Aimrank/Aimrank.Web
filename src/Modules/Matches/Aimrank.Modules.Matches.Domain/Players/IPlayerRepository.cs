@@ -10,6 +10,5 @@ namespace Aimrank.Modules.Matches.Domain.Players
         Task<Player> GetByIdOptionalAsync(PlayerId id);
         Task<bool> ExistsSteamIdAsync(PlayerId id, string steamId);
         void Add(Player player);
-        void Update(Player player);
     }
 }

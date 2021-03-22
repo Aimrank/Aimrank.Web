@@ -10,8 +10,6 @@ namespace Aimrank.Modules.UserAccess.UnitTests.Mock
     {
         private readonly Dictionary<UserId, User> _users = new();
 
-        public IEnumerable<User> Users => _users.Values;
-
         public Task<User> GetByIdAsync(UserId id)
         {
             var user = _users.GetValueOrDefault(id);

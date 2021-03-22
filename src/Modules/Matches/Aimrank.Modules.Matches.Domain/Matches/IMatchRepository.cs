@@ -9,7 +9,6 @@ namespace Aimrank.Modules.Matches.Domain.Matches
         Task<Dictionary<PlayerId, int>> BrowsePlayersRatingAsync(IEnumerable<PlayerId> ids, MatchMode mode);
         Task<Match> GetByIdAsync(MatchId id);
         void Add(Match match);
-        void Update(Match match);
         void Delete(Match match);
     }
 }

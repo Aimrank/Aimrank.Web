@@ -107,10 +107,6 @@ namespace Aimrank.Modules.UserAccess.Domain.Friendships
             {
                 friendshipRepository.Delete(this);
             }
-            else
-            {
-                friendshipRepository.Update(this);
-            }
         }
 
         public void Delete(UserId deletingUserId, IFriendshipRepository friendshipRepository)
@@ -132,8 +128,6 @@ namespace Aimrank.Modules.UserAccess.Domain.Friendships
                     _isAccepted = false;
                     
                     BlockingUsers = BlockingUsers.Remove(deletingUserId);
-                    
-                    friendshipRepository.Update(this);
                 }
             }
         }

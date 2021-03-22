@@ -20,8 +20,6 @@ namespace Aimrank.Modules.Matches.Application.CSGO.Commands.StartMatch
             
             match.SetStarted();
             
-            _matchRepository.Update(match);
-            
             return Unit.Value;
         }
     }

@@ -11,8 +11,6 @@ namespace Aimrank.Modules.Matches.Domain.Lobbies
         Task<Lobby> GetByIdAsync(LobbyId id);
         Task<bool> ExistsForMemberAsync(Guid userId);
         void Add(Lobby lobby);
-        void Update(Lobby lobby);
-        void UpdateRange(IEnumerable<Lobby> lobbies);
         void Delete(Lobby lobby);
     }
 }

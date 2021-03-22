@@ -25,8 +25,6 @@ namespace Aimrank.Modules.UserAccess.UnitTests.Mock
 
         public void Add(Friendship friendship) => _friendships.Add(friendship.Members, friendship);
 
-        public void Update(Friendship friendship) => _friendships[friendship.Members] = friendship;
-
         public void Delete(Friendship friendship) => _friendships.Remove(friendship.Members);
     }
 }

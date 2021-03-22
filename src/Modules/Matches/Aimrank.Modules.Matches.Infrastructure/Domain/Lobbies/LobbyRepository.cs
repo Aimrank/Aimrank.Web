@@ -39,10 +39,6 @@ namespace Aimrank.Modules.Matches.Infrastructure.Domain.Lobbies
 
         public void Add(Lobby lobby) => _context.Lobbies.Add(lobby);
 
-        public void Update(Lobby lobby) => _context.Lobbies.Update(lobby);
-
-        public void UpdateRange(IEnumerable<Lobby> lobbies) => _context.Lobbies.UpdateRange(lobbies);
-
         public void Delete(Lobby lobby) => _context.Lobbies.Remove(lobby);
     }
 }

@@ -1,6 +1,7 @@
 using Aimrank.Common.Application.Exceptions;
 using Aimrank.Common.Domain;
 using HotChocolate;
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace Aimrank.Web.GraphQL
@@ -20,7 +21,9 @@ namespace Aimrank.Web.GraphQL
                     .WithCode(e.Code)
                     .WithMessage(e.Message)
                     .SetExtension("errors", JsonSerializer.Serialize(e.Errors)),
-                _ => error.WithMessage("Internal server error")
+                _ => error
+                    .WithMessage("Internal server error")
+                    .WithExtensions(new Dictionary<string, object>())
             };
     }
 }

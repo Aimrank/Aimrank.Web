@@ -11,8 +11,6 @@ namespace Aimrank.Modules.Matches.UnitTests.Mock
     {
         private readonly Dictionary<LobbyId, Lobby> _lobbies = new();
 
-        public IEnumerable<Lobby> Lobbies => _lobbies.Values;
-
         public Task<IEnumerable<Lobby>> BrowseByStatusAsync(LobbyStatus? status)
             => Task.FromResult(_lobbies.Values.Where(l => !status.HasValue || l.Status == status));
 
@@ -34,16 +32,6 @@ namespace Aimrank.Modules.Matches.UnitTests.Mock
             => Task.FromResult(_lobbies.Values.Any(l => l.Members.Any(m => m.PlayerId == userId)));
 
         public void Add(Lobby lobby) => _lobbies.Add(lobby.Id, lobby);
-
-        public void Update(Lobby lobby) => _lobbies[lobby.Id] = lobby;
-
-        public void UpdateRange(IEnumerable<Lobby> lobbies)
-        {
-            foreach (var lobby in lobbies)
-            {
-                _lobbies[lobby.Id] = lobby;
-            }
-        }
 
         public void Delete(Lobby lobby) => _lobbies.Remove(lobby.Id);
     }

@@ -105,7 +105,6 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.ProcessLobbies
                         _serverProcessManager.CreateReservation(match.Id);
                         
                         _matchRepository.Add(match);
-                        _lobbyRepository.UpdateRange(lobbiesToClose);
                         
                         buffer.Clear();
                     }

@@ -41,7 +41,6 @@ namespace Aimrank.Modules.Matches.Application.CSGO.Commands.CancelMatch
             }
             
             _matchRepository.Delete(match);
-            _lobbyRepository.UpdateRange(lobbies);
             
             _eventDispatcher.Dispatch(new MatchCanceledEvent(match.Id, lobbies.Select(l => l.Id.Value)));
 

@@ -32,8 +32,6 @@ namespace Aimrank.Modules.Matches.Application.Players.CreateOrUpdatePlayer
 
             await player.SetSteamIdAsync(request.SteamId, _playerRepository);
             
-            _playerRepository.Update(player);
-            
             return Unit.Value;
         }
     }

@@ -32,7 +32,6 @@ namespace Aimrank.Modules.UserAccess.Application.Friendships.BlockUser
             {
                 var friendship = await _friendshipRepository.GetByMembersAsync(members);
                 friendship.Block(blockingUserId);
-                _friendshipRepository.Update(friendship);
             }
             else
             {
