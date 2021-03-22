@@ -30,8 +30,6 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.KickPlayerFromLobby
 
             lobby.Kick(kickingPlayerId, kickedPlayerId);
             
-            _lobbyRepository.Update(lobby);
-            
             return Unit.Value;
         }
     }

@@ -10,8 +10,6 @@ namespace Aimrank.Modules.Matches.UnitTests.Mock
     {
         private readonly Dictionary<PlayerId, Player> _players = new();
 
-        public IEnumerable<Player> Players => _players.Values;
-
         public Task<IEnumerable<Player>> BrowseByIdAsync(IEnumerable<PlayerId> ids)
             => Task.FromResult(_players.Values.Where(p => ids.Contains(p.Id)));
 
@@ -33,7 +31,5 @@ namespace Aimrank.Modules.Matches.UnitTests.Mock
             => Task.FromResult(_players.Values.Any(p => p.Id != id && p.SteamId == steamId));
 
         public void Add(Player player) => _players.Add(player.Id, player);
-
-        public void Update(Player player) => _players[player.Id] = player;
     }
 }

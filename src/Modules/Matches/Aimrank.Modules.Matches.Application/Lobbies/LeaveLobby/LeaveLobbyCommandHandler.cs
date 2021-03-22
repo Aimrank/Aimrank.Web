@@ -28,11 +28,7 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.LeaveLobby
             
             lobby.Leave(new PlayerId(_executionContextAccessor.UserId));
 
-            if (lobby.Members.Any())
-            {
-                _lobbyRepository.Update(lobby);
-            }
-            else
+            if (!lobby.Members.Any())
             {
                 _lobbyRepository.Delete(lobby);
             }

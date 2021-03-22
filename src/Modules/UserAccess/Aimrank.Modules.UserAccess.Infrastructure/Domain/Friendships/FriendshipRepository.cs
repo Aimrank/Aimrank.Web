@@ -35,8 +35,6 @@ namespace Aimrank.Modules.UserAccess.Infrastructure.Domain.Friendships
 
         public void Add(Friendship friendship) => _context.Friendships.Add(friendship);
 
-        public void Update(Friendship friendship) => _context.Friendships.Update(friendship);
-
         public void Delete(Friendship friendship) => _context.Friendships.Remove(friendship);
     }
 }

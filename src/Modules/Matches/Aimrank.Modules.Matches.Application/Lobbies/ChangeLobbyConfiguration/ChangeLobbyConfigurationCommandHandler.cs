@@ -31,8 +31,6 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.ChangeLobbyConfiguration
                 request.Map,
                 (MatchMode) request.Mode));
             
-            _lobbyRepository.Update(lobby);
-            
             return Unit.Value;
         }
     }

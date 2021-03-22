@@ -31,8 +31,6 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.CancelLobbyInvitation
             
             lobby.CancelInvitation(invitedPlayer);
             
-            _lobbyRepository.Update(lobby);
-            
             return Unit.Value;
         }
     }

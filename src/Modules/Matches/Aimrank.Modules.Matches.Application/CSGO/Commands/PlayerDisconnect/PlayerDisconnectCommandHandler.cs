@@ -20,8 +20,6 @@ namespace Aimrank.Modules.Matches.Application.CSGO.Commands.PlayerDisconnect
 
             match.MarkPlayerAsLeaver(request.SteamId);
             
-            _matchRepository.Update(match);
-            
             return Unit.Value;
         }
     }

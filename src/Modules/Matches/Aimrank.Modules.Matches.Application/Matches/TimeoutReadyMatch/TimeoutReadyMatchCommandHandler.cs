@@ -63,7 +63,6 @@ namespace Aimrank.Modules.Matches.Application.Matches.TimeoutReadyMatch
                 }
             }
             
-            _lobbyRepository.UpdateRange(lobbies);
             _matchRepository.Delete(match);
 
             _eventDispatcher.Dispatch(new MatchTimedOutEvent(match.Id, match.Lobbies.Select(l => l.LobbyId.Value)));

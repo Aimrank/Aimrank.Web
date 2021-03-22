@@ -32,8 +32,6 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.InvitePlayerToLobby
             
             lobby.Invite(invitingPlayer, invitedPlayer);
             
-            _lobbyRepository.Update(lobby);
-            
             return Unit.Value;
         }
     }

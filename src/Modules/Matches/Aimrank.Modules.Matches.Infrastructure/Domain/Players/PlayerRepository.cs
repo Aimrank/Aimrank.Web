@@ -39,7 +39,5 @@ namespace Aimrank.Modules.Matches.Infrastructure.Domain.Players
             => _context.Players.AnyAsync(p => p.Id != id && p.SteamId == steamId);
 
         public void Add(Player player) => _context.Players.Add(player);
-
-        public void Update(Player player) => _context.Players.Update(player);
     }
 }

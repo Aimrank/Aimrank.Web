@@ -51,9 +51,6 @@ namespace Aimrank.Modules.Matches.Application.CSGO.Commands.FinishMatch
                 lobby.Open();
             }
             
-            _matchRepository.Update(match);
-            _lobbyRepository.UpdateRange(lobbies);
-            
             return Unit.Value;
         }
     }

@@ -63,8 +63,6 @@ namespace Aimrank.Modules.Matches.Infrastructure.Domain.Matches
 
         public void Add(Match match) => _context.Matches.Add(match);
 
-        public void Update(Match match) => _context.Matches.Update(match);
-
         public void Delete(Match match) => _context.Matches.Remove(match);
     }
 }

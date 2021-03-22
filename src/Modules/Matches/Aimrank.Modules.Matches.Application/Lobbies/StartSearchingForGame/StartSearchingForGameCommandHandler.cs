@@ -27,8 +27,6 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.StartSearchingForGame
             
             lobby.StartSearching(new PlayerId(_executionContextAccessor.UserId));
             
-            _lobbyRepository.Update(lobby);
-            
             return Unit.Value;
         }
     }

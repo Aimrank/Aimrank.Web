@@ -32,8 +32,6 @@ namespace Aimrank.Modules.UserAccess.Application.Friendships.AcceptFriendshipInv
             
             friendship.Accept(invitedUserId);
             
-            _friendshipRepository.Update(friendship);
-            
             return Unit.Value;
         }
     }

@@ -40,8 +40,6 @@ namespace Aimrank.Modules.Matches.UnitTests.Mock
 
         public void Add(Match match) => _matches.Add(match.Id, match);
 
-        public void Update(Match match) => _matches[match.Id] = match;
-
         public void Delete(Match match) => _matches.Remove(match.Id);
     }
 }
