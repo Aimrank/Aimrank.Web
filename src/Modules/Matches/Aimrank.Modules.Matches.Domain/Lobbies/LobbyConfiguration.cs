@@ -1,27 +1,34 @@
 using Aimrank.Common.Domain;
-using System.Collections.Generic;
 using Aimrank.Modules.Matches.Domain.Matches;
+using System.Collections.Generic;
 
 namespace Aimrank.Modules.Matches.Domain.Lobbies
 {
     public class LobbyConfiguration : ValueObject
     {
+        private readonly string _maps;
+        
         public string Name { get; }
-        public string Map { get; }
         public MatchMode Mode { get; }
 
-        public LobbyConfiguration(string name, string map, MatchMode mode)
+        public IEnumerable<string> Maps  => _maps.Split(',');
+        
+        private LobbyConfiguration()
+        {
+        }
+
+        public LobbyConfiguration(string name, MatchMode mode, IEnumerable<string> maps)
         {
             Name = name;
-            Map = map;
             Mode = mode;
+            _maps = string.Join(',', maps);
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Name;
-            yield return Map;
             yield return Mode;
+            yield return _maps;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Aimrank.Modules.Matches.Domain.Lobbies
         
         public LobbyId Id { get; }
         public LobbyStatus Status { get; private set; }
-        private LobbyConfiguration _configuration;
+        public LobbyConfiguration Configuration { get; private set; }
         private readonly HashSet<LobbyMember> _members = new();
         private readonly HashSet<LobbyInvitation> _invitations = new();
 
@@ -37,7 +37,7 @@ namespace Aimrank.Modules.Matches.Domain.Lobbies
         private Lobby(LobbyId id, string name, Player player)
         {
             Id = id;
-            _configuration = new LobbyConfiguration(name, Maps.AimMap, MatchMode.OneVsOne);
+            Configuration = new LobbyConfiguration(name, MatchMode.OneVsOne, new []{Maps.AimMap});
             _members.Add(new LobbyMember(player.Id, LobbyMemberRole.Leader));
         }
 
@@ -132,9 +132,9 @@ namespace Aimrank.Modules.Matches.Domain.Lobbies
         {
             BusinessRules.Check(new PlayerMustBeLobbyLeaderRule(_members, playerId));
             BusinessRules.Check(new LobbyStatusMustMatchRule(Status, LobbyStatus.Open));
-            BusinessRules.Check(new MapMustBeSupportedRule(configuration.Map));
+            BusinessRules.Check(new LobbyConfigurationMustBeValidRule(configuration));
 
-            _configuration = configuration;
+            Configuration = configuration;
         }
 
         public void StartSearching(PlayerId playerId)
@@ -169,10 +169,6 @@ namespace Aimrank.Modules.Matches.Domain.Lobbies
         }
 
         public bool IsFull() => _members.Count == MaxMembers;
-        
-        public string GetMap() => _configuration.Map;
-        
-        public MatchMode GetMode() => _configuration.Mode;
 
         private void ChangeStatus(LobbyStatus status)
         {
