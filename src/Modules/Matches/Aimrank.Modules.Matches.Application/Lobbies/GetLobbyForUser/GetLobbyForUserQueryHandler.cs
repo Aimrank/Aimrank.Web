@@ -37,7 +37,7 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.GetLobbyForUser
                 SELECT
                     [L].[Id] AS [Id],
                     [L].[Status] AS [Status],
-                    [L].[Configuration_Map] AS [Map],
+                    [L].[Configuration_Maps] AS [Maps],
                     [L].[Configuration_Name] AS [Name],
                     [L].[Configuration_Mode] AS [Mode],
                     [M].[PlayerId] AS [PlayerId],
@@ -76,7 +76,7 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.GetLobbyForUser
                     return lobby;
                 },
                 new {PlayerId = _executionContextAccessor.UserId},
-                splitOn: "Map,PlayerId");
+                splitOn: "Maps,PlayerId");
 
             return lookup.Values.FirstOrDefault();
         }

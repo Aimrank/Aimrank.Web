@@ -1,0 +1,28 @@
+.section {
+  &:not(:last-child) {
+    margin-bottom: 20px;
+  }
+}
+
+.headline {
+  margin-bottom: 10px;
+}
+
+.input {
+  display: block;
+
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button {
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+}

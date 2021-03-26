@@ -65,6 +65,14 @@ export type QueryFriendshipArgs = {
   userId: Scalars['Uuid'];
 };
 
+export type LobbyConfigurationChangedRecord = {
+  __typename?: 'LobbyConfigurationChangedRecord';
+  name: Scalars['String'];
+  maps: Array<Scalars['String']>;
+  lobbyId: Scalars['Uuid'];
+  mode: Scalars['Int'];
+};
+
 export type Lobby = {
   __typename?: 'Lobby';
   configuration: LobbyConfiguration;
@@ -76,7 +84,7 @@ export type Lobby = {
 
 export type LobbyConfiguration = {
   __typename?: 'LobbyConfiguration';
-  map: Scalars['String'];
+  maps: Array<Scalars['String']>;
   name: Scalars['String'];
   mode: Scalars['Int'];
 };
@@ -527,9 +535,9 @@ export type AcceptMatchPayload = {
 
 export type ChangeLobbyConfigurationCommandInput = {
   lobbyId: Scalars['Uuid'];
-  map?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   mode: Scalars['Int'];
+  maps?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type InvitePlayerToLobbyCommandInput = {
@@ -767,14 +775,6 @@ export type LobbyStatusChangedRecord = {
   status: Scalars['Int'];
 };
 
-export type LobbyConfigurationChangedRecord = {
-  __typename?: 'LobbyConfigurationChangedRecord';
-  lobbyId: Scalars['Uuid'];
-  map: Scalars['String'];
-  name: Scalars['String'];
-  mode: Scalars['Int'];
-};
-
 export type LobbyInvitationAcceptedRecord = {
   __typename?: 'LobbyInvitationAcceptedRecord';
   invitingUser?: Maybe<User>;
@@ -915,7 +915,7 @@ export type LobbyFieldsFragment = (
     & Pick<LobbyMatch, 'id' | 'map' | 'mode' | 'status' | 'address'>
   )>, configuration: (
     { __typename?: 'LobbyConfiguration' }
-    & Pick<LobbyConfiguration, 'map' | 'mode' | 'name'>
+    & Pick<LobbyConfiguration, 'maps' | 'mode' | 'name'>
   ), members?: Maybe<Array<(
     { __typename?: 'LobbyMember' }
     & Pick<LobbyMember, 'isLeader'>
@@ -1102,7 +1102,7 @@ export type LobbyConfigurationChangedSubscription = (
     { __typename?: 'LobbyConfigurationChangedPayload' }
     & { record: (
       { __typename?: 'LobbyConfigurationChangedRecord' }
-      & Pick<LobbyConfigurationChangedRecord, 'lobbyId' | 'map' | 'mode' | 'name'>
+      & Pick<LobbyConfigurationChangedRecord, 'lobbyId' | 'maps' | 'mode' | 'name'>
     ) }
   )> }
 );

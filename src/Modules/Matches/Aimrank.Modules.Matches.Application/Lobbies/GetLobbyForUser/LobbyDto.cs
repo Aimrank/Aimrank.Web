@@ -13,7 +13,7 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.GetLobbyForUser
 
     public class LobbyConfigurationDto
     {
-        public string Map { get; set; }
+        public string Maps { get; set; }
         public string Name { get; set; }
         public int Mode { get; set; }
     }

@@ -23,16 +23,21 @@
     <div v-else>
       <table :class="$style.table">
         <tr>
-          <th>Mode</th>
+          <th>{{ $t("lobby.views.Lobby.table.mode") }}</th>
           <td>{{ ["One vs One", "Two vs Two"][lobby.configuration.mode] }}</td>
         </tr>
         <tr>
-          <th>{{ $t("lobby.views.Lobby.table.map") }}</th>
+          <th>{{ $t("lobby.views.Lobby.table.maps") }}</th>
           <td>
-            <img
-              :src="maps[lobby.configuration.map]"
-              :alt="lobby.configuration.map"
-            />
+            <div :class="$style.tableImages">
+              <img
+                :class="$style.tableImage"
+                v-for="map in lobby.configuration.maps"
+                :key="map"
+                :alt="map"
+                :src="maps[map]"
+              />
+            </div>
           </td>
         </tr>
         <tr>
@@ -96,12 +101,9 @@
         v-else-if="isCurrentUserLeader && lobby.status === 0"
         :class="$style.section"
       >
-        <lobby-configuration
-          :lobby-id="lobby.id"
-          :map="lobby.configuration.map"
-          :mode="lobby.configuration.mode"
-          :name="lobby.configuration.name"
-        />
+        <base-button @click="onChangeMapsClick">
+          {{ $t("lobby.views.Lobby.changeConfiguration") }}
+        </base-button>
         <base-button
           :class="$style.startButton"
           primary
@@ -110,6 +112,15 @@
           {{ $t("lobby.views.Lobby.start") }}
         </base-button>
       </div>
+      <lobby-configuration-dialog
+        ref="configurationDialog"
+        :configuration="{
+          lobbyId: lobby.id,
+          maps: lobby.configuration.maps,
+          mode: lobby.configuration.mode,
+          name: lobby.configuration.name
+        }"
+      />
     </div>
   </div>
 </template>

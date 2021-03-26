@@ -106,7 +106,7 @@ export const useLobbySubscriptions = (
           ...lobby,
           configuration: {
             ...lobby.configuration,
-            map: record.map,
+            maps: record.maps,
             mode: record.mode,
             name: record.name
           }
@@ -228,7 +228,7 @@ export const useLobbySubscriptions = (
           ...lobby,
           match: {
             id: record.matchId,
-            map: lobby.configuration.map,
+            map: record.map,
             mode: lobby.configuration.mode,
             status: MatchStatus.Ready,
             address: ""
