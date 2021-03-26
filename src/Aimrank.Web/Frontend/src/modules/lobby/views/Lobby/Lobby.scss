@@ -27,6 +27,21 @@
   }
 }
 
+.tableImages {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tableImage {
+  display: block;
+  width: 200px;
+  height: 200px;
+  
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+}
+
 .section {
   padding-top: 20px;
 
@@ -54,4 +69,5 @@
 
 .startButton {
   margin-top: 20px;
+  margin-left: 10px;
 }

@@ -31,18 +31,18 @@ namespace Aimrank.Modules.Matches.Infrastructure.Application.CSGO
             _availablePorts.Enqueue(27019);
         }
 
-        public void CreateReservation(Guid matchId)
+        public bool TryCreateReservation(Guid matchId)
         {
             lock (_locker)
             {
                 if (_processes.ContainsKey(matchId))
                 {
-                    throw new ServerReservationException();
+                    return false;
                 }
 
                 if (!_availablePorts.TryDequeue(out var port))
                 {
-                    throw new ServerReservationException();
+                    return false;
                 }
                 
                 var steamKey = GetUnusedSteamKey();
@@ -50,6 +50,8 @@ namespace Aimrank.Modules.Matches.Infrastructure.Application.CSGO
                 var reservation = new ServerReservation(matchId, steamKey, port);
 
                 _reservations.TryAdd(reservation.MatchId, reservation);
+
+                return true;
             }
         }
 

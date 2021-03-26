@@ -6,9 +6,9 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.ChangeLobbyConfiguration
     {
         public ChangeLobbyConfigurationCommandValidator()
         {
-            RuleFor(x => x.Map).NotEmpty().MaximumLength(50);
             RuleFor(x => x.Name).NotEmpty().MaximumLength(450);
             RuleFor(x => x.Mode).InclusiveBetween(0, 1);
+            RuleFor(x => x.Maps).NotEmpty();
         }
     }
 }

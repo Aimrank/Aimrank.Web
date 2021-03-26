@@ -25,11 +25,10 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.ChangeLobbyConfiguration
         public async Task<Unit> Handle(ChangeLobbyConfigurationCommand request, CancellationToken cancellationToken)
         {
             var lobby = await _lobbyRepository.GetByIdAsync(new LobbyId(request.LobbyId));
-            
-            lobby.ChangeConfiguration(new PlayerId(_executionContextAccessor.UserId), new LobbyConfiguration(
-                request.Name,
-                request.Map,
-                (MatchMode) request.Mode));
+
+            var lobbyConfiguration = new LobbyConfiguration(request.Name, (MatchMode) request.Mode, request.Maps);
+
+            lobby.ChangeConfiguration(new PlayerId(_executionContextAccessor.UserId), lobbyConfiguration);
             
             return Unit.Value;
         }

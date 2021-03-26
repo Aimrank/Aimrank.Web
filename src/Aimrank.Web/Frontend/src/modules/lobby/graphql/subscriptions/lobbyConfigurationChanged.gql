@@ -2,7 +2,7 @@ subscription lobbyConfigurationChanged($lobbyId: Uuid!) {
   lobbyConfigurationChanged(lobbyId: $lobbyId) {
     record {
       lobbyId
-      map
+      maps
       mode
       name
     }

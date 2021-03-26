@@ -16,13 +16,14 @@ namespace Aimrank.Modules.Matches.Infrastructure.Domain.Lobbies
             builder.Property(l => l.Id).HasColumnName("Id");
             builder.Property(l => l.Status).HasColumnName("Status");
 
-            builder.OwnsOne<LobbyConfiguration>("_configuration", b =>
+            builder.OwnsOne(l => l.Configuration, b =>
                 {
-                    b.Property(c => c.Map).HasColumnName("Configuration_Map").IsRequired().HasMaxLength(50);
+                    b.Property<string>("_maps").HasColumnName("Configuration_Maps").IsRequired();
                     b.Property(c => c.Name).HasColumnName("Configuration_Name").IsRequired().HasMaxLength(450);
                     b.Property(c => c.Mode).HasColumnName("Configuration_Mode");
+                    b.Ignore(c => c.Maps);
                 })
-                .Navigation("_configuration").IsRequired();
+                .Navigation(l => l.Configuration).IsRequired();
 
             builder.OwnsMany(l => l.Members, b =>
             {

@@ -50,13 +50,16 @@
         "title": "Invite friends to lobby",
         "invite": "Invite"
       },
-      "LobbyConfiguration": {
+      "LobbyConfigurationDialog": {
+        "title": "Change lobby configuration",
         "selectMapHeadline": "Select match map",
         "selectModeHeadline": "Select match mode",
         "mode": {
           "OneVsOne": "One vs One",
           "TwoVsTwo": "Two vs Two"
-        }
+        },
+        "submit": "Change",
+        "cancel": "Cancel"
       },
       "MatchDialog": {
         "header": "Your match is ready",
@@ -80,7 +83,8 @@
         "leave": "Leave lobby",
         "table": {
           "id": "Id",
-          "map": "Map",
+          "mode": "Mode",
+          "maps": "Map",
           "members": "Members"
         },
         "invitations": "Invitations",

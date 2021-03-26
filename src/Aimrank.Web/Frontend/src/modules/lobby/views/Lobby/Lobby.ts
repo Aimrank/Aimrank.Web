@@ -1,4 +1,4 @@
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "@/authentication/hooks/useAuth";
 import { useNotifications } from "@/common/hooks/useNotifications";
@@ -7,8 +7,8 @@ import { useLobbySubscriptions } from "./hooks/useLobbySubscriptions";
 import { useCreateLobby, useGetLobby, useKickPlayerFromLobby, useLeaveLobby, useStartSearchingForGame } from "~/graphql/types/types";
 import { MatchStatus } from "@/profile/models/MatchStatus";
 import BaseButton from "@/common/components/BaseButton";
-import LobbyConfiguration from "@/lobby/components/LobbyConfiguration";
 import LobbyInvitationDialog from "@/lobby/components/LobbyInvitationDialog";
+import LobbyConfigurationDialog from "@/lobby/components/LobbyConfigurationDialog";
 
 const maps = {
   aim_map: require("~/assets/images/aim_map.jpg").default,
@@ -18,10 +18,12 @@ const maps = {
 const Lobby = defineComponent({
   components: {
     BaseButton,
-    LobbyConfiguration,
-    LobbyInvitationDialog
+    LobbyInvitationDialog,
+    LobbyConfigurationDialog
   },
   setup() {
+    const configurationDialog = ref();
+
     const { currentUser } = useAuth();
     const router = useRouter();
     const notifications = useNotifications();
@@ -80,16 +82,24 @@ const Lobby = defineComponent({
       }
     }
 
+    const onChangeMapsClick = () => {
+      if (configurationDialog.value) {
+        configurationDialog.value.open();
+      }
+    }
+
     return {
       maps,
       lobby,
       members,
       isCurrentUserLeader,
       invitationDialog: useInvitationDialog(),
+      configurationDialog,
       onCreateLobbyClick,
       onLeaveLobbyClick,
       onStartSearchingClick,
       onKickPlayerClick,
+      onChangeMapsClick,
       MatchStatus: Object.freeze(MatchStatus)
     };
   }

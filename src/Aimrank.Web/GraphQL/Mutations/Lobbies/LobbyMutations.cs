@@ -58,7 +58,7 @@ namespace Aimrank.Web.GraphQL.Mutations.Lobbies
             await _matchesModule.ExecuteCommandAsync(input);
 
             var payload = new LobbyConfigurationChangedPayload(new LobbyConfigurationChangedRecord(
-                input.LobbyId, input.Map, input.Name, input.Mode));
+                input.LobbyId, input.Mode, input.Name, input.Maps));
             
             await _lobbyEventSender.SendAsync("LobbyConfigurationChanged", input.LobbyId, payload);
 
