@@ -25,28 +25,7 @@ namespace Aimrank.Web.GraphQL.Mutations.Users
             [GraphQLNonNullType] AuthenticateCommand input,
             [Service] IHttpContextAccessor httpContextAccessor)
         {
-            var result = await SignInAsync(input, httpContextAccessor);
-            return new SignInPayload(result);
-        }
-
-        public async Task<SignUpPayload> SignUp(
-            [GraphQLNonNullType] RegisterNewUserCommand input,
-            [Service] IHttpContextAccessor httpContextAccessor)
-        {
-            await _userAccessModule.ExecuteCommandAsync(input);
-
-            var result = await SignInAsync(
-                new AuthenticateCommand(input.Username, input.Password),
-                httpContextAccessor);
-            
-            return new SignUpPayload(result);
-        }
-        
-        private async Task<AuthenticationSuccessRecord> SignInAsync(
-            AuthenticateCommand command,
-            IHttpContextAccessor httpContextAccessor)
-        {
-            var result = await _userAccessModule.ExecuteCommandAsync(command);
+            var result = await _userAccessModule.ExecuteCommandAsync(input);
 
             if (!result.IsAuthenticated || httpContextAccessor.HttpContext is null)
             {
@@ -58,10 +37,16 @@ namespace Aimrank.Web.GraphQL.Mutations.Users
 
             await httpContextAccessor.HttpContext.SignInAsync(principal);
 
-            return new AuthenticationSuccessRecord(
+            return new SignInPayload(new AuthenticationSuccessRecord(
                 result.User.Id,
                 result.User.Username,
-                result.User.Email);
+                result.User.Email));
+        }
+
+        public async Task<SignUpPayload> SignUp([GraphQLNonNullType] RegisterNewUserCommand input)
+        {
+            await _userAccessModule.ExecuteCommandAsync(input);
+            return new SignUpPayload();
         }
 
         public async Task<SignOutPayload> SignOut([Service] IHttpContextAccessor httpContextAccessor)

@@ -1,4 +1,5 @@
 using Aimrank.Common.Application.Data;
+using Aimrank.Modules.UserAccess.Application.Authentication.Authenticate;
 using Aimrank.Modules.UserAccess.Application.Contracts;
 using Dapper;
 using System.Collections.Generic;
@@ -7,18 +8,18 @@ using System.Threading.Tasks;
 using System.Threading;
 using System;
 
-namespace Aimrank.Modules.UserAccess.Application.Authentication.Authenticate
+namespace Aimrank.Modules.UserAccess.Application.Authentication.AuthenticateUser
 {
-    internal class AuthenticateCommandHandler : ICommandHandler<AuthenticateCommand, AuthenticationResult>
+    internal class AuthenticateUserCommandHandler : ICommandHandler<AuthenticateUserCommand, AuthenticationResult>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public AuthenticateCommandHandler(ISqlConnectionFactory sqlConnectionFactory)
+        public AuthenticateUserCommandHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<AuthenticationResult> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
+        public async Task<AuthenticationResult> Handle(AuthenticateUserCommand request, CancellationToken cancellationToken)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
@@ -26,29 +27,14 @@ namespace Aimrank.Modules.UserAccess.Application.Authentication.Authenticate
                 SELECT
                     [U].[Id],
                     [U].[Email],
-                    [U].[Username],
-                    [U].[Password],
-                    [U].[IsActive]
+                    [U].[Username]
                 FROM [users].[Users] AS [U]
-                WHERE
-                    [U].[Email] = @UsernameOrEmail OR
-                    [U].[Username] = @UsernameOrEmail;";
+                WHERE [U].[Id] = @UserId;";
 
-            var user = await connection.QueryFirstOrDefaultAsync<UserResult>(sql, new {request.UsernameOrEmail});
-
+            var user = await connection.QueryFirstAsync<UserResult>(sql, new {request.UserId});
             if (user is null)
             {
                 return AuthenticationResult.Error("Invalid credentials");
-            }
-
-            if (!PasswordManager.VerifyPassword(user.Password, request.Password))
-            {
-                return AuthenticationResult.Error("Invalid credentials");
-            }
-
-            if (!user.IsActive)
-            {
-                return AuthenticationResult.Error("You must confirm your email address");
             }
             
             return AuthenticationResult.Success(new AuthenticatedUserDto
@@ -65,6 +51,6 @@ namespace Aimrank.Modules.UserAccess.Application.Authentication.Authenticate
             });
         }
 
-        private record UserResult(Guid Id, string Email, string Username, string Password, bool IsActive);
+        private record UserResult(Guid Id, string Email, string Username);
     }
 }

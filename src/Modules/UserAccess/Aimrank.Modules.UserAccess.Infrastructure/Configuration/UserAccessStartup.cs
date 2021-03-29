@@ -1,6 +1,7 @@
 using Aimrank.Common.Application;
 using Aimrank.Modules.UserAccess.Infrastructure.Configuration.DataAccess;
 using Aimrank.Modules.UserAccess.Infrastructure.Configuration.Mediator;
+using Aimrank.Modules.UserAccess.Infrastructure.Configuration.Processing;
 using Autofac;
 
 namespace Aimrank.Modules.UserAccess.Infrastructure.Configuration
@@ -26,6 +27,7 @@ namespace Aimrank.Modules.UserAccess.Infrastructure.Configuration
 
             containerBuilder.RegisterModule(new DataAccessModule(connectionString));
             containerBuilder.RegisterModule(new MediatorModule());
+            containerBuilder.RegisterModule(new ProcessingModule());
             containerBuilder.RegisterInstance(executionContextAccessor);
 
             _container = containerBuilder.Build();

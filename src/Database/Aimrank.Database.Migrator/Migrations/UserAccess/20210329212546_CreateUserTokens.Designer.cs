@@ -4,14 +4,16 @@ using Aimrank.Modules.UserAccess.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aimrank.Database.Migrator.Migrations.UserAccess
 {
     [DbContext(typeof(UserAccessContext))]
-    partial class UserAccessContextModelSnapshot : ModelSnapshot
+    [Migration("20210329212546_CreateUserTokens")]
+    partial class CreateUserTokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
