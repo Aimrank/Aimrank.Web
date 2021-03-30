@@ -10,11 +10,18 @@ namespace Aimrank.Modules.UserAccess.Domain.Users
         public UserTokenType Type { get; }
         public DateTime? ExpiresAt { get; }
 
-        public UserToken(string token, UserTokenType type, DateTime? expiresAt = null)
+        private UserToken(string token, UserTokenType type, DateTime? expiresAt = null)
         {
             Token = token;
             Type = type;
             ExpiresAt = expiresAt;
+        }
+
+        public static UserToken Create(UserTokenType type, DateTime? expiresAt = null)
+        {
+            const string token = "Test";
+            
+            return new UserToken(token, type, expiresAt);
         }
         
         protected override IEnumerable<object> GetEqualityComponents()

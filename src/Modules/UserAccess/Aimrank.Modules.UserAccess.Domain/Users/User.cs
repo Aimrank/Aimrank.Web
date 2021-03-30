@@ -38,7 +38,7 @@ namespace Aimrank.Modules.UserAccess.Domain.Users
             await BusinessRules.CheckAsync(new EmailMustBeUniqueRule(userRepository, email));
             await BusinessRules.CheckAsync(new UsernameMustBeUniqueRule(userRepository, username));
 
-            var token = new UserToken(UserTokenFactory.GenerateToken(), UserTokenType.EmailConfirmation);
+            var token = UserToken.Create(UserTokenType.EmailConfirmation);
 
             var user = new User(id, email, username, password, token);
             
