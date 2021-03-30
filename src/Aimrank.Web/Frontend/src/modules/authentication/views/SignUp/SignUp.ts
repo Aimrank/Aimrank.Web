@@ -34,10 +34,10 @@ const SignUp = defineComponent({
         passwordRepeat: state.passwordRepeat
       });
 
-      if (result.result) {
-        router.push({ name: "app" });
-      } else {
+      if (result.errors[0]) {
         errors.setErrors(ErrorResponse.fromGraphQLError(result.errors[0]));
+      } else {
+        router.push({ name: "sign-up-success" });
       }
     }
 

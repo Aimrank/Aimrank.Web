@@ -1,5 +1,6 @@
 using Aimrank.Common.Application.Events;
 using Aimrank.Common.Domain;
+using Aimrank.Common.Infrastructure;
 using Aimrank.Modules.Matches.Infrastructure.Configuration.Outbox;
 using Autofac;
 using System.Collections.Generic;
@@ -11,23 +12,26 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration.Processing
 {
     internal class EventDispatcher : IEventDispatcher
     {
-        private readonly IEventMapper _eventMapper;
-        private readonly ILifetimeScope _lifetimeScope;
         private readonly MatchesContext _context;
+        private readonly ILifetimeScope _lifetimeScope;
+        private readonly IEventMapper _eventMapper;
+        private readonly IDomainEventAccessor _domainEventAccessor;
 
         public EventDispatcher(
-            IEventMapper eventMapper,
+            MatchesContext context,
             ILifetimeScope lifetimeScope,
-            MatchesContext context)
+            IEventMapper eventMapper,
+            IDomainEventAccessor domainEventAccessor)
         {
-            _eventMapper = eventMapper;
-            _lifetimeScope = lifetimeScope;
             _context = context;
+            _lifetimeScope = lifetimeScope;
+            _eventMapper = eventMapper;
+            _domainEventAccessor = domainEventAccessor;
         }
 
         public async Task DispatchAsync()
         {
-            var domainEvents = new Queue<IDomainEvent>(GetDomainEventsFromTrackedEntities());
+            var domainEvents = new Queue<IDomainEvent>(_domainEventAccessor.GetDomainEvents());
             
             var integrationEvents = new List<IIntegrationEvent>();
 
@@ -44,7 +48,7 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration.Processing
                 {
                     await handler.HandleAsync((dynamic) domainEvent);
 
-                    foreach (var newEvent in GetDomainEventsFromTrackedEntities())
+                    foreach (var newEvent in _domainEventAccessor.GetDomainEvents())
                     {
                         domainEvents.Enqueue(newEvent);
                     }
@@ -61,25 +65,6 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration.Processing
         }
 
         public void Dispatch(IIntegrationEvent @event) => AddIntegrationEventsToOutbox(@event);
-
-        private IEnumerable<IDomainEvent> GetDomainEventsFromTrackedEntities()
-        {
-            var domainEntities = _context.ChangeTracker
-                .Entries<Entity>()
-                .Where(x => x.Entity.DomainEvents.Any())
-                .ToList();
-            
-            var domainEvents = domainEntities
-                .SelectMany(x => x.Entity.DomainEvents)
-                .ToList();
-
-            foreach (var entity in domainEntities)
-            {
-                entity.Entity.ClearDomainEvents();
-            }
-
-            return domainEvents;
-        }
 
         private void AddIntegrationEventsToOutbox(IEnumerable<IIntegrationEvent> events)
         {

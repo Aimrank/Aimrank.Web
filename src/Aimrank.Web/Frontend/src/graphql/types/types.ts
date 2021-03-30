@@ -510,7 +510,6 @@ export type SignOutPayload = {
 export type SignUpPayload = {
   __typename?: 'SignUpPayload';
   query?: Maybe<Query>;
-  record?: Maybe<AuthenticationSuccessRecord>;
   status: Scalars['String'];
 };
 
@@ -884,10 +883,7 @@ export type SignUpMutation = (
   { __typename?: 'Mutation' }
   & { signUp?: Maybe<(
     { __typename?: 'SignUpPayload' }
-    & { record?: Maybe<(
-      { __typename?: 'AuthenticationSuccessRecord' }
-      & Pick<AuthenticationSuccessRecord, 'id' | 'email' | 'username'>
-    )> }
+    & Pick<SignUpPayload, 'status'>
   )> }
 );
 

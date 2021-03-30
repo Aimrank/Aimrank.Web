@@ -3,10 +3,12 @@ using Aimrank.Common.Infrastructure.EventBus;
 using Aimrank.Modules.Matches.Infrastructure.Configuration;
 using Aimrank.Modules.Matches.IntegrationEvents.Lobbies;
 using Aimrank.Modules.Matches.IntegrationEvents.Matches;
+using Aimrank.Modules.UserAccess.Application.Services;
 using Aimrank.Modules.UserAccess.Infrastructure.Configuration;
 using Aimrank.Web.Configuration.EventBus;
 using Aimrank.Web.Configuration.ExecutionContext;
 using Aimrank.Web.Configuration.SessionAuthentication;
+using Aimrank.Web.Configuration.UrlFactory;
 using Aimrank.Web.GraphQL;
 using Aimrank.Web.Modules.Matches;
 using Aimrank.Web.Modules.UserAccess;
@@ -28,16 +30,19 @@ namespace Aimrank.Web
         private readonly IConfiguration _configuration;
         private readonly RedisSettings _redisSettings = new();
         private readonly MatchesModuleSettings _matchesModuleSettings = new();
+        private readonly UserAccessModuleSettings _userAccessModuleSettings = new();
         
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
             _configuration.GetSection(nameof(RedisSettings)).Bind(_redisSettings);
             _configuration.GetSection(nameof(MatchesModuleSettings)).Bind(_matchesModuleSettings);
+            _configuration.GetSection(nameof(UserAccessModuleSettings)).Bind(_userAccessModuleSettings);
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IUrlFactory, ApplicationUrlFactory>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
 
@@ -145,6 +150,7 @@ namespace Aimrank.Web
         private void InitializeModules(ILifetimeScope container)
         {
             var executionContextAccessor = container.Resolve<IExecutionContextAccessor>();
+            var urlFactory = container.Resolve<IUrlFactory>();
             
             var connectionString = _configuration.GetConnectionString("Database");
 
@@ -156,7 +162,9 @@ namespace Aimrank.Web
             
             UserAccessStartup.Initialize(
                 connectionString,
-                executionContextAccessor);
+                executionContextAccessor,
+                urlFactory,
+                _userAccessModuleSettings);
         }
     }
 }

@@ -52,22 +52,12 @@ const signIn = async (input: AuthenticateCommandInput) => {
 }
 
 const signUp = async (input: RegisterNewUserCommandInput) => {
-  const { mutate, result, errors } = useSignUp();
+  const { mutate, errors } = useSignUp();
 
   await mutate({ input });
 
-  if (result.value?.signUp?.record) {
-    setCurrentUser({
-      id: result.value.signUp.record.id,
-      email: result.value.signUp.record.email,
-      username: result.value.signUp.record.username
-    });
-
-    reconnect();
-  }
-
   return {
-    result: result.value?.signUp?.record,
+    result: null,
     errors: errors.value
   };
 }

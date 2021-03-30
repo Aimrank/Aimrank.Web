@@ -41,6 +41,10 @@
           "passwordRepeat": "Repeat password",
           "submit": "Sign up"
         }
+      },
+      "SignUpSuccess": {
+        "title": "Confirm your email",
+        "description": "A confirmation link has ben sent to your email. You have to confirm your email before accessing the app for the first time."
       }
     }
   },

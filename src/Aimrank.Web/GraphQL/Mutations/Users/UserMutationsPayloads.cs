@@ -9,7 +9,7 @@ namespace Aimrank.Web.GraphQL.Mutations.Users
         [GraphQLNonNullType] string Email);
     
     public record SignInPayload(AuthenticationSuccessRecord Record) : MutationPayloadBase;
-    public record SignUpPayload(AuthenticationSuccessRecord Record) : MutationPayloadBase;
+    public record SignUpPayload : MutationPayloadBase;
     
     public record SignOutPayload(bool Record = true) : MutationPayloadBase;
 }
