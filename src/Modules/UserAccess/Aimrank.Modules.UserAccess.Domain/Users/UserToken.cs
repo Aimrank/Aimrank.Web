@@ -1,5 +1,6 @@
 using Aimrank.Common.Domain;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System;
 
 namespace Aimrank.Modules.UserAccess.Domain.Users
@@ -18,10 +19,14 @@ namespace Aimrank.Modules.UserAccess.Domain.Users
         }
 
         public static UserToken Create(UserTokenType type, DateTime? expiresAt = null)
+            => new UserToken(CreateRandomToken(), type, expiresAt);
+
+        private static string CreateRandomToken()
         {
-            const string token = "Test";
-            
-            return new UserToken(token, type, expiresAt);
+            var bytes = new byte[64];
+            var rng = new RNGCryptoServiceProvider();
+            rng.GetBytes(bytes);
+            return Convert.ToBase64String(bytes);
         }
         
         protected override IEnumerable<object> GetEqualityComponents()

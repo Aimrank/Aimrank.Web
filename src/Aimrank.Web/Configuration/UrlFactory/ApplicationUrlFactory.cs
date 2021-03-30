@@ -17,7 +17,13 @@ namespace Aimrank.Web.Configuration.UrlFactory
         {
             var request = _httpContextAccessor.HttpContext.Request;
             
-            return $"{request.Scheme}://{request.Host.ToUriComponent()}/api/user/verification?userId={userId}&token={token}";
+            return string.Concat(
+                request.Scheme,
+                "://",
+                request.Host.ToUriComponent(),
+                "/api/user/verification?",
+                $"userId={Uri.EscapeDataString(userId.ToString())}&",
+                $"token={Uri.EscapeDataString(token)}");
         }
     }
 }
