@@ -25,12 +25,18 @@
     }
   },
   "authentication": {
+    "components": {
+      "EmailConfirmationButton": {
+        "text": "Re-send confirmation email"
+      }
+    },
     "views": {
       "SignIn": {
         "title": "Sign in",
         "usernameOrEmail": "Username or E-Mail",
         "password": "Password",
-        "submit": "Sign in"
+        "submit": "Sign in",
+        "emailNotConfirmed": "You must confirm your email address before accessing app. In case you didn't receive confirmation email, please click button below to send it again."
       },
       "SignUp": {
         "title": "Sign up",
@@ -44,7 +50,8 @@
       },
       "SignUpSuccess": {
         "title": "Confirm your email",
-        "description": "A confirmation link has ben sent to your email. You have to confirm your email before accessing the app for the first time."
+        "description": "A confirmation link has ben sent to your email. You have to confirm your email before accessing the app for the first time.",
+        "resendEmailTitle": "In case you didn't receive any email, please click button below to send it again."
       }
     }
   },

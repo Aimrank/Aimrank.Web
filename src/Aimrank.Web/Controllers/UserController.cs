@@ -31,25 +31,19 @@ namespace Aimrank.Web.Controllers
                 await _userAccessModule.ExecuteCommandAsync(new ConfirmEmailAddressCommand(request.UserId, request.Token));
                 
                 var result = await _userAccessModule.ExecuteCommandAsync(new AuthenticateUserCommand(request.UserId));
-                if (result.IsAuthenticated)
-                {
-                    var identity = new ClaimsIdentity(result.User.Claims, SessionAuthenticationDefaults.AuthenticationScheme);
-                    var principal = new ClaimsPrincipal(identity);
-                    
-                    await HttpContext.SignInAsync(principal);
-                    
-                    return Redirect("/app");
-                }
                 
-                TempData["error"] = result.AuthenticationError;
+                var identity = new ClaimsIdentity(result.User.Claims, SessionAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
                 
-                return RedirectToAction("Index", "Home");
+                await HttpContext.SignInAsync(principal);
+                
+                return Redirect("/app");
             }
             catch (BusinessRuleValidationException exception)
             { 
                 TempData["error"] = exception.BrokenRule.Message;
             }
-            catch (EntityNotFoundException exception)
+            catch (ApplicationException exception)
             {
                 TempData["error"] = exception.Message;
             }

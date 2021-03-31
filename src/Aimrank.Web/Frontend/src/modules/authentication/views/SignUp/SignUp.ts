@@ -37,7 +37,7 @@ const SignUp = defineComponent({
       if (result.errors[0]) {
         errors.setErrors(ErrorResponse.fromGraphQLError(result.errors[0]));
       } else {
-        router.push({ name: "sign-up-success" });
+        router.push({ name: "sign-up-success", query: {email: state.email} });
       }
     }
 

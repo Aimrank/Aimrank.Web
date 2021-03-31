@@ -34,10 +34,10 @@ namespace Aimrank.Modules.UserAccess.Application.Authentication.AuthenticateUser
             var user = await connection.QueryFirstAsync<UserResult>(sql, new {request.UserId});
             if (user is null)
             {
-                return AuthenticationResult.Error("Invalid credentials");
+                throw new InvalidCredentialsException();
             }
             
-            return AuthenticationResult.Success(new AuthenticatedUserDto
+            return new AuthenticationResult(new AuthenticatedUserDto
             {
                 Id = user.Id,
                 Email = user.Email,

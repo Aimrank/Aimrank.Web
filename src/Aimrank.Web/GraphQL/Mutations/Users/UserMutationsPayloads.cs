@@ -12,4 +12,6 @@ namespace Aimrank.Web.GraphQL.Mutations.Users
     public record SignUpPayload : MutationPayloadBase;
     
     public record SignOutPayload(bool Record = true) : MutationPayloadBase;
+
+    public record RequestEmailConfirmationPayload : MutationPayloadBase;
 }

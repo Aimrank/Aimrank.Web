@@ -218,6 +218,7 @@ export type Mutation = {
   signIn?: Maybe<SignInPayload>;
   signUp?: Maybe<SignUpPayload>;
   signOut?: Maybe<SignOutPayload>;
+  requestEmailConfirmation?: Maybe<RequestEmailConfirmationPayload>;
   createLobby?: Maybe<CreateLobbyPayload>;
   changeLobbyConfiguration?: Maybe<ChangeLobbyConfigurationPayload>;
   invitePlayerToLobby?: Maybe<InvitePlayerToLobbyPayload>;
@@ -244,6 +245,11 @@ export type MutationSignInArgs = {
 
 export type MutationSignUpArgs = {
   input: RegisterNewUserCommandInput;
+};
+
+
+export type MutationRequestEmailConfirmationArgs = {
+  input: RequestEmailConfirmationCommandInput;
 };
 
 
@@ -438,18 +444,6 @@ export type PlayerStatsDto = {
   modes?: Maybe<Array<Maybe<PlayerStatsModeDto>>>;
 };
 
-export type StartSearchingForGamePayload = {
-  __typename?: 'StartSearchingForGamePayload';
-  query?: Maybe<Query>;
-  status: Scalars['String'];
-};
-
-export type LeaveLobbyPayload = {
-  __typename?: 'LeaveLobbyPayload';
-  query?: Maybe<Query>;
-  status: Scalars['String'];
-};
-
 export type CancelLobbyInvitationPayload = {
   __typename?: 'CancelLobbyInvitationPayload';
   query?: Maybe<Query>;
@@ -488,6 +482,10 @@ export type CreateLobbyPayload = {
   status: Scalars['String'];
 };
 
+export type RequestEmailConfirmationCommandInput = {
+  usernameOrEmail?: Maybe<Scalars['String']>;
+};
+
 export type RegisterNewUserCommandInput = {
   email?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
@@ -498,6 +496,12 @@ export type RegisterNewUserCommandInput = {
 export type AuthenticateCommandInput = {
   usernameOrEmail?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
+};
+
+export type RequestEmailConfirmationPayload = {
+  __typename?: 'RequestEmailConfirmationPayload';
+  query?: Maybe<Query>;
+  status: Scalars['String'];
 };
 
 export type SignOutPayload = {
@@ -517,6 +521,18 @@ export type SignInPayload = {
   __typename?: 'SignInPayload';
   query?: Maybe<Query>;
   record?: Maybe<AuthenticationSuccessRecord>;
+  status: Scalars['String'];
+};
+
+export type LeaveLobbyPayload = {
+  __typename?: 'LeaveLobbyPayload';
+  query?: Maybe<Query>;
+  status: Scalars['String'];
+};
+
+export type StartSearchingForGamePayload = {
+  __typename?: 'StartSearchingForGamePayload';
+  query?: Maybe<Query>;
   status: Scalars['String'];
 };
 
@@ -846,6 +862,19 @@ export type AuthenticationSuccessRecord = {
   username: Scalars['String'];
   email: Scalars['String'];
 };
+
+export type RequestEmailConfirmationMutationVariables = Exact<{
+  input: RequestEmailConfirmationCommandInput;
+}>;
+
+
+export type RequestEmailConfirmationMutation = (
+  { __typename?: 'Mutation' }
+  & { requestEmailConfirmation?: Maybe<(
+    { __typename?: 'RequestEmailConfirmationPayload' }
+    & Pick<RequestEmailConfirmationPayload, 'status'>
+  )> }
+);
 
 export type SignInMutationVariables = Exact<{
   input: AuthenticateCommandInput;
@@ -1589,6 +1618,7 @@ export type FriendshipInvitationCreatedSubscription = (
 import { Ref } from "vue";
 import { apolloClient } from "~/graphql/apolloClient";
 import { useQuery, useMutation, useSubscription, UseQueryOptions, UseMutationOptions, UseSubscriptionOptions } from "~/graphql/hooks";
+import REQUEST_EMAIL_CONFIRMATION from "../../modules/authentication/graphql/mutations/requestEmailConfirmation.gql";
 import SIGN_IN from "../../modules/authentication/graphql/mutations/signIn.gql";
 import SIGN_OUT from "../../modules/authentication/graphql/mutations/signOut.gql";
 import SIGN_UP from "../../modules/authentication/graphql/mutations/signUp.gql";
@@ -1635,6 +1665,7 @@ import FRIENDSHIP_INVITATION_CREATED from "../../modules/profile/graphql/subscri
 
 type RefWrapper<T extends object> = Record<keyof T, T[keyof T] | Ref<T[keyof T]>>;
 
+export const useRequestEmailConfirmation = (options?: Omit<UseMutationOptions<RequestEmailConfirmationMutationVariables>, "mutation">) => useMutation<RequestEmailConfirmationMutation, RequestEmailConfirmationMutationVariables>(apolloClient, { ...(options ?? {}), mutation: REQUEST_EMAIL_CONFIRMATION });
 export const useSignIn = (options?: Omit<UseMutationOptions<SignInMutationVariables>, "mutation">) => useMutation<SignInMutation, SignInMutationVariables>(apolloClient, { ...(options ?? {}), mutation: SIGN_IN });
 export const useSignOut = (options?: Omit<UseMutationOptions<SignOutMutationVariables>, "mutation">) => useMutation<SignOutMutation, SignOutMutationVariables>(apolloClient, { ...(options ?? {}), mutation: SIGN_OUT });
 export const useSignUp = (options?: Omit<UseMutationOptions<SignUpMutationVariables>, "mutation">) => useMutation<SignUpMutation, SignUpMutationVariables>(apolloClient, { ...(options ?? {}), mutation: SIGN_UP });

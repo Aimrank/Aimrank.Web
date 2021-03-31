@@ -38,20 +38,20 @@ namespace Aimrank.Modules.UserAccess.Application.Authentication.Authenticate
 
             if (user is null)
             {
-                return AuthenticationResult.Error("Invalid credentials");
+                throw new InvalidCredentialsException();
             }
 
             if (!PasswordManager.VerifyPassword(user.Password, request.Password))
             {
-                return AuthenticationResult.Error("Invalid credentials");
+                throw new InvalidCredentialsException();
             }
 
             if (!user.IsActive)
             {
-                return AuthenticationResult.Error("You must confirm your email address");
+                throw new EmailNotConfirmedException();
             }
-            
-            return AuthenticationResult.Success(new AuthenticatedUserDto
+
+            return new AuthenticationResult(new AuthenticatedUserDto
             {
                 Id = user.Id,
                 Email = user.Email,

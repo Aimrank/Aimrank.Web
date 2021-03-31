@@ -6,17 +6,20 @@ import { ErrorResponse } from "@/common/hooks/ErrorResponse";
 import BaseButton from "@/common/components/BaseButton";
 import FormFieldInput from "@/common/components/FormFieldInput";
 import ValidationSummary from "@/common/components/ValidationSummary";
+import EmailConfirmationButton from "@/authentication/components/EmailConfirmationButton";
 
 const SignIn = defineComponent({
   components: {
     BaseButton,
     FormFieldInput,
-    ValidationSummary
+    ValidationSummary,
+    EmailConfirmationButton
   },
   setup() {
     const state = reactive({
       usernameOrEmail: "",
-      password: ""
+      password: "",
+      emailNotConfirmed: false
     });
 
     const route = useRoute();
@@ -39,6 +42,8 @@ const SignIn = defineComponent({
         }
       } else {
         errors.setErrors(ErrorResponse.fromGraphQLError(result.errors[0]));
+
+        state.emailNotConfirmed = result.errors[0].extensions?.code === "email_not_confirmed";
       }
     }
 

@@ -1,6 +1,7 @@
 using Aimrank.Modules.UserAccess.Application.Authentication.Authenticate;
 using Aimrank.Modules.UserAccess.Application.Contracts;
 using Aimrank.Modules.UserAccess.Application.Users.RegisterNewUser;
+using Aimrank.Modules.UserAccess.Application.Users.RequestEmailConfirmation;
 using Aimrank.Web.Configuration.SessionAuthentication;
 using HotChocolate.Types;
 using HotChocolate;
@@ -25,12 +26,12 @@ namespace Aimrank.Web.GraphQL.Mutations.Users
             [GraphQLNonNullType] AuthenticateCommand input,
             [Service] IHttpContextAccessor httpContextAccessor)
         {
-            var result = await _userAccessModule.ExecuteCommandAsync(input);
-
-            if (!result.IsAuthenticated || httpContextAccessor.HttpContext is null)
+            if (httpContextAccessor.HttpContext is null)
             {
-                throw new AuthenticationException(result.AuthenticationError);
+                throw new InvalidCredentialsException();
             }
+            
+            var result = await _userAccessModule.ExecuteCommandAsync(input);
 
             var identity = new ClaimsIdentity(result.User.Claims, SessionAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
@@ -57,6 +58,13 @@ namespace Aimrank.Web.GraphQL.Mutations.Users
             }
             
             return new SignOutPayload();
+        }
+        
+        public async Task<RequestEmailConfirmationPayload> RequestEmailConfirmation(
+            [GraphQLNonNullType] RequestEmailConfirmationCommand input)
+        {
+            await _userAccessModule.ExecuteCommandAsync(input);
+            return new RequestEmailConfirmationPayload();
         }
     }
 }
