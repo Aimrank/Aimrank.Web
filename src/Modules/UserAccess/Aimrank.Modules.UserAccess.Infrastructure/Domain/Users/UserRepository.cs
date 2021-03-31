@@ -29,6 +29,12 @@ namespace Aimrank.Modules.UserAccess.Infrastructure.Domain.Users
             return user;
         }
 
+        public Task<User> GetByEmailOptionalAsync(string email) =>
+            _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+        public Task<User> GetByUsernameOptionalAsync(string username) =>
+            _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+
         public async Task<bool> ExistsEmailAsync(string email)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();

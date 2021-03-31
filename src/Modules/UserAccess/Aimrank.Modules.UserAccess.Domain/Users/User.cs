@@ -55,5 +55,18 @@ namespace Aimrank.Modules.UserAccess.Domain.Users
             
             IsActive = true;
         }
+
+        public void RequestEmailConfirmation()
+        {
+            BusinessRules.Check(new UserMustNotBeActiveRule(this));
+
+            _tokens.RemoveAll(t => t.Type == UserTokenType.EmailConfirmation);
+
+            var token = UserToken.Create(UserTokenType.EmailConfirmation);
+            
+            _tokens.Add(token);
+            
+            AddDomainEvent(new UserEmailConfirmationRequestedDomainEvent(this, token));
+        }
     }
 }

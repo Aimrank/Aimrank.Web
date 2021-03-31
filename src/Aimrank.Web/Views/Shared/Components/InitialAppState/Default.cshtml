@@ -1,6 +1,5 @@
-@using System.Text.Json
 @model Aimrank.Web.ViewModels.InitialAppStateViewModel
 
 <script>
-window.initialAppState = @Html.Raw(JsonSerializer.Serialize(Model, new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase}))
+window.initialAppState = @Html.Raw(Json.Serialize(Model))
 </script>

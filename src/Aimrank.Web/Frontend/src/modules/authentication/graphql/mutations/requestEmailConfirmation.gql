@@ -1,0 +1,5 @@
+mutation requestEmailConfirmation($input: RequestEmailConfirmationCommandInput!) {
+  requestEmailConfirmation(input: $input) {
+    status
+  }
+}

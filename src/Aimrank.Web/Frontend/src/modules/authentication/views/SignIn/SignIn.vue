@@ -21,5 +21,12 @@
         {{ $t("authentication.views.SignIn.submit") }}
       </base-button>
     </form>
+    <div
+      v-if="state.emailNotConfirmed"
+      :class="$style.emailConfirmation"
+    >
+      <p :class="$style.emailConfirmationText">{{ $t("authentication.views.SignIn.emailNotConfirmed") }}</p>
+      <email-confirmation-button :username-or-email="state.usernameOrEmail" />
+    </div>
   </div>
 </template>
