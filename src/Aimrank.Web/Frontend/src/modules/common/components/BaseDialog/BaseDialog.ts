@@ -1,4 +1,4 @@
-import { defineComponent, reactive, watch, ref } from "vue";
+import { defineComponent, reactive, watch, ref, onBeforeUnmount } from "vue";
 import Icon from "@/common/components/Icon";
 
 const BaseDialog = defineComponent({
@@ -30,6 +30,12 @@ const BaseDialog = defineComponent({
       isVisible: false
     });
 
+    const escapeClickEventListener = (event) => {
+      if (event.keyCode == 27) {
+        emit("close");
+      }
+    }
+
     watch(() => props.visible, async (visible) => {
       if (visible) {
         state.isVisible = true;
@@ -43,6 +49,8 @@ const BaseDialog = defineComponent({
         setTimeout(() => {
           state.isEnterActive = false;
         }, 400);
+
+        document.addEventListener("keyup", escapeClickEventListener);
       } else {
         state.isLeaving = true;
         state.isLeaveActive = true;
@@ -52,7 +60,13 @@ const BaseDialog = defineComponent({
           state.isLeaving = false;
           state.isLeaveActive = false;
         }, 400);
+
+        document.removeEventListener("keyup", escapeClickEventListener);
       }
+    });
+
+    onBeforeUnmount(() => {
+      document.removeEventListener("keyup", escapeClickEventListener);
     });
 
     const onBackgroundClick = (event: any) => {
