@@ -219,6 +219,7 @@ export type Mutation = {
   signUp?: Maybe<SignUpPayload>;
   signOut?: Maybe<SignOutPayload>;
   requestEmailConfirmation?: Maybe<RequestEmailConfirmationPayload>;
+  changePassword?: Maybe<ChangePasswordPayload>;
   createLobby?: Maybe<CreateLobbyPayload>;
   changeLobbyConfiguration?: Maybe<ChangeLobbyConfigurationPayload>;
   invitePlayerToLobby?: Maybe<InvitePlayerToLobbyPayload>;
@@ -250,6 +251,11 @@ export type MutationSignUpArgs = {
 
 export type MutationRequestEmailConfirmationArgs = {
   input: RequestEmailConfirmationCommandInput;
+};
+
+
+export type MutationChangePasswordArgs = {
+  input: ChangePasswordCommandInput;
 };
 
 
@@ -444,18 +450,6 @@ export type PlayerStatsDto = {
   modes?: Maybe<Array<Maybe<PlayerStatsModeDto>>>;
 };
 
-export type CancelLobbyInvitationPayload = {
-  __typename?: 'CancelLobbyInvitationPayload';
-  query?: Maybe<Query>;
-  status: Scalars['String'];
-};
-
-export type AcceptLobbyInvitationPayload = {
-  __typename?: 'AcceptLobbyInvitationPayload';
-  query?: Maybe<Query>;
-  status: Scalars['String'];
-};
-
 export type KickPlayerFromLobbyPayload = {
   __typename?: 'KickPlayerFromLobbyPayload';
   query?: Maybe<Query>;
@@ -482,6 +476,12 @@ export type CreateLobbyPayload = {
   status: Scalars['String'];
 };
 
+export type ChangePasswordCommandInput = {
+  oldPassword?: Maybe<Scalars['String']>;
+  newPassword?: Maybe<Scalars['String']>;
+  repeatNewPassword?: Maybe<Scalars['String']>;
+};
+
 export type RequestEmailConfirmationCommandInput = {
   usernameOrEmail?: Maybe<Scalars['String']>;
 };
@@ -496,6 +496,12 @@ export type RegisterNewUserCommandInput = {
 export type AuthenticateCommandInput = {
   usernameOrEmail?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
+};
+
+export type ChangePasswordPayload = {
+  __typename?: 'ChangePasswordPayload';
+  query?: Maybe<Query>;
+  status: Scalars['String'];
 };
 
 export type RequestEmailConfirmationPayload = {
@@ -521,6 +527,18 @@ export type SignInPayload = {
   __typename?: 'SignInPayload';
   query?: Maybe<Query>;
   record?: Maybe<AuthenticationSuccessRecord>;
+  status: Scalars['String'];
+};
+
+export type AcceptLobbyInvitationPayload = {
+  __typename?: 'AcceptLobbyInvitationPayload';
+  query?: Maybe<Query>;
+  status: Scalars['String'];
+};
+
+export type CancelLobbyInvitationPayload = {
+  __typename?: 'CancelLobbyInvitationPayload';
+  query?: Maybe<Query>;
   status: Scalars['String'];
 };
 
@@ -1400,6 +1418,19 @@ export type BlockUserMutation = (
   )> }
 );
 
+export type ChangePasswordMutationVariables = Exact<{
+  input: ChangePasswordCommandInput;
+}>;
+
+
+export type ChangePasswordMutation = (
+  { __typename?: 'Mutation' }
+  & { changePassword?: Maybe<(
+    { __typename?: 'ChangePasswordPayload' }
+    & Pick<ChangePasswordPayload, 'status'>
+  )> }
+);
+
 export type DeclineFriendshipInvitationMutationVariables = Exact<{
   userId: Scalars['Uuid'];
 }>;
@@ -1652,6 +1683,7 @@ import MATCH_STARTING from "../../modules/lobby/graphql/subscriptions/matchStart
 import MATCH_TIMED_OUT from "../../modules/lobby/graphql/subscriptions/matchTimedOut.gql";
 import ACCEPT_FRIENDSHIP_INVITATION from "../../modules/profile/graphql/mutations/acceptFriendshipInvitation.gql";
 import BLOCK_USER from "../../modules/profile/graphql/mutations/blockUser.gql";
+import CHANGE_PASSWORD from "../../modules/profile/graphql/mutations/changePassword.gql";
 import DECLINE_FRIENDSHIP_INVITATION from "../../modules/profile/graphql/mutations/declineFriendshipInvitation.gql";
 import DELETE_FRIENDSHIP from "../../modules/profile/graphql/mutations/deleteFriendship.gql";
 import INVITE_USER_TO_FRIENDS_LIST from "../../modules/profile/graphql/mutations/inviteUserToFriendsList.gql";
@@ -1699,6 +1731,7 @@ export const useMatchStarting = (options?: Omit<UseSubscriptionOptions<RefWrappe
 export const useMatchTimedOut = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchTimedOutSubscriptionVariables>>, "query">) => useSubscription<MatchTimedOutSubscription, RefWrapper<MatchTimedOutSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_TIMED_OUT });
 export const useAcceptFriendshipInvitation = (options?: Omit<UseMutationOptions<AcceptFriendshipInvitationMutationVariables>, "mutation">) => useMutation<AcceptFriendshipInvitationMutation, AcceptFriendshipInvitationMutationVariables>(apolloClient, { ...(options ?? {}), mutation: ACCEPT_FRIENDSHIP_INVITATION });
 export const useBlockUser = (options?: Omit<UseMutationOptions<BlockUserMutationVariables>, "mutation">) => useMutation<BlockUserMutation, BlockUserMutationVariables>(apolloClient, { ...(options ?? {}), mutation: BLOCK_USER });
+export const useChangePassword = (options?: Omit<UseMutationOptions<ChangePasswordMutationVariables>, "mutation">) => useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(apolloClient, { ...(options ?? {}), mutation: CHANGE_PASSWORD });
 export const useDeclineFriendshipInvitation = (options?: Omit<UseMutationOptions<DeclineFriendshipInvitationMutationVariables>, "mutation">) => useMutation<DeclineFriendshipInvitationMutation, DeclineFriendshipInvitationMutationVariables>(apolloClient, { ...(options ?? {}), mutation: DECLINE_FRIENDSHIP_INVITATION });
 export const useDeleteFriendship = (options?: Omit<UseMutationOptions<DeleteFriendshipMutationVariables>, "mutation">) => useMutation<DeleteFriendshipMutation, DeleteFriendshipMutationVariables>(apolloClient, { ...(options ?? {}), mutation: DELETE_FRIENDSHIP });
 export const useInviteUserToFriendsList = (options?: Omit<UseMutationOptions<InviteUserToFriendsListMutationVariables>, "mutation">) => useMutation<InviteUserToFriendsListMutation, InviteUserToFriendsListMutationVariables>(apolloClient, { ...(options ?? {}), mutation: INVITE_USER_TO_FRIENDS_LIST });

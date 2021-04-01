@@ -3,11 +3,13 @@ import { useAuth } from "@/authentication/hooks/useAuth";
 import { useNotifications } from "@/common/hooks/useNotifications";
 import { useGetSettingsView } from "~/graphql/types/types";
 import { signInWithSteam } from "@/profile/services/signInWithSteam";
+import ChangePasswordForm from "@/profile/components/ChangePasswordForm";
 import BaseButton from "@/common/components/BaseButton";
 import Icon from "@/common/components/Icon";
 
 const Settings = defineComponent({
   components: {
+    ChangePasswordForm,
     BaseButton,
     Icon
   },

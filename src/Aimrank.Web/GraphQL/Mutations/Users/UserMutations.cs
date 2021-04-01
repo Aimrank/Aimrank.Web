@@ -1,8 +1,10 @@
 using Aimrank.Modules.UserAccess.Application.Authentication.Authenticate;
 using Aimrank.Modules.UserAccess.Application.Contracts;
+using Aimrank.Modules.UserAccess.Application.Users.ChangePassword;
 using Aimrank.Modules.UserAccess.Application.Users.RegisterNewUser;
 using Aimrank.Modules.UserAccess.Application.Users.RequestEmailConfirmation;
 using Aimrank.Web.Configuration.SessionAuthentication;
+using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types;
 using HotChocolate;
 using Microsoft.AspNetCore.Authentication;
@@ -65,6 +67,13 @@ namespace Aimrank.Web.GraphQL.Mutations.Users
         {
             await _userAccessModule.ExecuteCommandAsync(input);
             return new RequestEmailConfirmationPayload();
+        }
+
+        [Authorize]
+        public async Task<ChangePasswordPayload> ChangePassword([GraphQLNonNullType] ChangePasswordCommand input)
+        {
+            await _userAccessModule.ExecuteCommandAsync(input);
+            return new ChangePasswordPayload();
         }
     }
 }
