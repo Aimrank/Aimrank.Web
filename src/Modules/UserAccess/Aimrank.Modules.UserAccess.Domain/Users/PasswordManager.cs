@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System;
 
-namespace Aimrank.Modules.UserAccess.Application.Authentication
+namespace Aimrank.Modules.UserAccess.Domain.Users
 {
     public static class PasswordManager
     {

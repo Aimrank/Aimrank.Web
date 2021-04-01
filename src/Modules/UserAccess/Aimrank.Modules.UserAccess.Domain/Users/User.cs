@@ -68,5 +68,12 @@ namespace Aimrank.Modules.UserAccess.Domain.Users
             
             AddDomainEvent(new UserEmailConfirmationRequestedDomainEvent(this, token));
         }
+
+        public void ChangePassword(string oldPassword, string newPasswordHash)
+        {
+            BusinessRules.Check(new PasswordMustMatchRule(oldPassword, _password));
+
+            _password = newPasswordHash;
+        }
     }
 }

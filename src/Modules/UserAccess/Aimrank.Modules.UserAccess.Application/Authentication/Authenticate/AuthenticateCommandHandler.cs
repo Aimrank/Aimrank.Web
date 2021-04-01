@@ -1,5 +1,6 @@
 using Aimrank.Common.Application.Data;
 using Aimrank.Modules.UserAccess.Application.Contracts;
+using Aimrank.Modules.UserAccess.Domain.Users;
 using Dapper;
 using System.Collections.Generic;
 using System.Security.Claims;

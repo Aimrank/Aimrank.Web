@@ -119,6 +119,12 @@
         "accept": "Accept",
         "decline": "Decline",
         "invite": "Send invitation"
+      },
+      "ChangePasswordForm": {
+        "oldPassword": "Old password",
+        "newPassword": "New password",
+        "repeatNewPassword": "Repeat new password",
+        "submit": "Change password"
       }
     },
     "views": {
@@ -129,7 +135,8 @@
         "title": "Settings",
         "username": "Username",
         "steamNotConnected": "Not connected",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "changePasswordForm": "Change password"
       },
       "Friends": {
         "invitations": "Invitations",

@@ -3,8 +3,8 @@
 
 <template>
   <div :class="$style.container">
-    <h3 :class="$style.title">{{ $t("profile.views.Settings.title") }}</h3>
     <div v-if="state && state.user">
+      <h3 :class="$style.title">{{ $t("profile.views.Settings.title") }}</h3>
       <table :class="$style.table">
         <tr>
           <th>{{ $t("profile.views.Settings.username") }}</th>
@@ -34,6 +34,8 @@
           </td>
         </tr>
       </table>
+      <h3 :class="$style.title">{{ $t("profile.views.Settings.changePasswordForm") }}</h3>
+      <change-password-form />
     </div>
     <div v-else>
       {{ $t("profile.views.Settings.loading") }}
