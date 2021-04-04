@@ -28,6 +28,10 @@
     "components": {
       "EmailConfirmationButton": {
         "text": "Re-send confirmation email"
+      },
+      "RequestPasswordReminderForm": {
+        "usernameOrEmail": "Username or E-Mail",
+        "submit": "Send password reminder"
       }
     },
     "views": {
@@ -36,7 +40,8 @@
         "usernameOrEmail": "Username or E-Mail",
         "password": "Password",
         "submit": "Sign in",
-        "emailNotConfirmed": "You must confirm your email address before accessing app. In case you didn't receive confirmation email, please click button below to send it again."
+        "emailNotConfirmed": "You must confirm your email address before accessing app. In case you didn't receive confirmation email, please click button below to send it again.",
+        "requestPasswordReminder": "Forgot your password? Please input your username or email and we will send password reset link to your inbox."
       },
       "SignUp": {
         "title": "Sign up",

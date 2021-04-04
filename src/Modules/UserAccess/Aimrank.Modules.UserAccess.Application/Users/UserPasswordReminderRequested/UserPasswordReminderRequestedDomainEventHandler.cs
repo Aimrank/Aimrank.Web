@@ -10,7 +10,13 @@ namespace Aimrank.Modules.UserAccess.Application.Users.UserPasswordReminderReque
     {
         private readonly IEmailSender _emailSender;
         private readonly IUrlFactory _urlFactory;
-        
+
+        public UserPasswordReminderRequestedDomainEventHandler(IEmailSender emailSender, IUrlFactory urlFactory)
+        {
+            _emailSender = emailSender;
+            _urlFactory = urlFactory;
+        }
+
         public async Task HandleAsync(UserPasswordReminderRequestedDomainEvent @event, CancellationToken cancellationToken = default)
         {
             var resetPasswordLink = _urlFactory.CreateResetPasswordLink(@event.User.Id, @event.Token.Token);
