@@ -4,6 +4,7 @@ using Aimrank.Modules.UserAccess.Infrastructure.Configuration.DataAccess;
 using Aimrank.Modules.UserAccess.Infrastructure.Configuration.Emails;
 using Aimrank.Modules.UserAccess.Infrastructure.Configuration.Mediator;
 using Aimrank.Modules.UserAccess.Infrastructure.Configuration.Processing;
+using Aimrank.Modules.UserAccess.Infrastructure.Configuration.Quartz;
 using Autofac;
 
 namespace Aimrank.Modules.UserAccess.Infrastructure.Configuration
@@ -23,6 +24,8 @@ namespace Aimrank.Modules.UserAccess.Infrastructure.Configuration
                 executionContextAccessor,
                 urlFactory,
                 userAccessModuleSettings);
+            
+            QuartzStartup.Initialize();
         }
 
         private static void ConfigureCompositionRoot(
@@ -37,6 +40,7 @@ namespace Aimrank.Modules.UserAccess.Infrastructure.Configuration
             containerBuilder.RegisterModule(new MediatorModule());
             containerBuilder.RegisterModule(new ProcessingModule());
             containerBuilder.RegisterModule(new EmailModule(userAccessModuleSettings.EmailSettings));
+            containerBuilder.RegisterModule(new QuartzModule());
             containerBuilder.RegisterInstance(executionContextAccessor);
             containerBuilder.RegisterInstance(urlFactory);
 
