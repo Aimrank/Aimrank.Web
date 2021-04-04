@@ -4,7 +4,6 @@ using Dapper;
 using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
-using System;
 
 namespace Aimrank.Modules.UserAccess.Infrastructure.Domain.Users.RemoveExpiredTokens
 {
@@ -23,10 +22,10 @@ namespace Aimrank.Modules.UserAccess.Infrastructure.Domain.Users.RemoveExpiredTo
 
             const string sql = @"
                 DELETE
-                FROM [users].[UsersTokens] AS [T]
-                WHERE [T].[ExpiresAt] >= @UtcNow;";
+                FROM [users].[UsersTokens]
+                WHERE DATEDIFF(SECOND, GETUTCDATE(), [ExpiresAt]) <= 0;";
 
-            await connection.ExecuteAsync(sql, new {DateTime.UtcNow});
+            await connection.ExecuteAsync(sql);
             
             return Unit.Value;
         }
