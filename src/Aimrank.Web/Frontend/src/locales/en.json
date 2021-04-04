@@ -52,6 +52,12 @@
         "title": "Confirm your email",
         "description": "A confirmation link has ben sent to your email. You have to confirm your email before accessing the app for the first time.",
         "resendEmailTitle": "In case you didn't receive any email, please click button below to send it again."
+      },
+      "ResetPassword": {
+        "title": "Reset password",
+        "newPassword": "New password",
+        "repeatNewPassword": "Repeat new password",
+        "submit": "Reset password"
       }
     }
   },

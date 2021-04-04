@@ -219,7 +219,9 @@ export type Mutation = {
   signUp?: Maybe<SignUpPayload>;
   signOut?: Maybe<SignOutPayload>;
   requestEmailConfirmation?: Maybe<RequestEmailConfirmationPayload>;
+  requestPasswordReminder?: Maybe<RequestPasswordReminderPayload>;
   changePassword?: Maybe<ChangePasswordPayload>;
+  resetPassword?: Maybe<ResetPasswordPayload>;
   createLobby?: Maybe<CreateLobbyPayload>;
   changeLobbyConfiguration?: Maybe<ChangeLobbyConfigurationPayload>;
   invitePlayerToLobby?: Maybe<InvitePlayerToLobbyPayload>;
@@ -254,8 +256,18 @@ export type MutationRequestEmailConfirmationArgs = {
 };
 
 
+export type MutationRequestPasswordReminderArgs = {
+  input: RequestPasswordReminderCommandInput;
+};
+
+
 export type MutationChangePasswordArgs = {
   input: ChangePasswordCommandInput;
+};
+
+
+export type MutationResetPasswordArgs = {
+  input: ResetPasswordCommandInput;
 };
 
 
@@ -450,36 +462,21 @@ export type PlayerStatsDto = {
   modes?: Maybe<Array<Maybe<PlayerStatsModeDto>>>;
 };
 
-export type KickPlayerFromLobbyPayload = {
-  __typename?: 'KickPlayerFromLobbyPayload';
-  query?: Maybe<Query>;
-  status: Scalars['String'];
-};
-
-export type InvitePlayerToLobbyPayload = {
-  __typename?: 'InvitePlayerToLobbyPayload';
-  query?: Maybe<Query>;
-  status: Scalars['String'];
-};
-
-export type ChangeLobbyConfigurationPayload = {
-  __typename?: 'ChangeLobbyConfigurationPayload';
-  query?: Maybe<Query>;
-  status: Scalars['String'];
-};
-
-export type CreateLobbyPayload = {
-  __typename?: 'CreateLobbyPayload';
-  record: Lobby;
-  query?: Maybe<Query>;
-  recordId: Scalars['Uuid'];
-  status: Scalars['String'];
+export type ResetPasswordCommandInput = {
+  userId: Scalars['Uuid'];
+  token?: Maybe<Scalars['String']>;
+  newPassword?: Maybe<Scalars['String']>;
+  repeatNewPassword?: Maybe<Scalars['String']>;
 };
 
 export type ChangePasswordCommandInput = {
   oldPassword?: Maybe<Scalars['String']>;
   newPassword?: Maybe<Scalars['String']>;
   repeatNewPassword?: Maybe<Scalars['String']>;
+};
+
+export type RequestPasswordReminderCommandInput = {
+  usernameOrEmail?: Maybe<Scalars['String']>;
 };
 
 export type RequestEmailConfirmationCommandInput = {
@@ -498,8 +495,20 @@ export type AuthenticateCommandInput = {
   password?: Maybe<Scalars['String']>;
 };
 
+export type ResetPasswordPayload = {
+  __typename?: 'ResetPasswordPayload';
+  query?: Maybe<Query>;
+  status: Scalars['String'];
+};
+
 export type ChangePasswordPayload = {
   __typename?: 'ChangePasswordPayload';
+  query?: Maybe<Query>;
+  status: Scalars['String'];
+};
+
+export type RequestPasswordReminderPayload = {
+  __typename?: 'RequestPasswordReminderPayload';
   query?: Maybe<Query>;
   status: Scalars['String'];
 };
@@ -527,6 +536,32 @@ export type SignInPayload = {
   __typename?: 'SignInPayload';
   query?: Maybe<Query>;
   record?: Maybe<AuthenticationSuccessRecord>;
+  status: Scalars['String'];
+};
+
+export type CreateLobbyPayload = {
+  __typename?: 'CreateLobbyPayload';
+  record: Lobby;
+  query?: Maybe<Query>;
+  recordId: Scalars['Uuid'];
+  status: Scalars['String'];
+};
+
+export type ChangeLobbyConfigurationPayload = {
+  __typename?: 'ChangeLobbyConfigurationPayload';
+  query?: Maybe<Query>;
+  status: Scalars['String'];
+};
+
+export type InvitePlayerToLobbyPayload = {
+  __typename?: 'InvitePlayerToLobbyPayload';
+  query?: Maybe<Query>;
+  status: Scalars['String'];
+};
+
+export type KickPlayerFromLobbyPayload = {
+  __typename?: 'KickPlayerFromLobbyPayload';
+  query?: Maybe<Query>;
   status: Scalars['String'];
 };
 
@@ -891,6 +926,32 @@ export type RequestEmailConfirmationMutation = (
   & { requestEmailConfirmation?: Maybe<(
     { __typename?: 'RequestEmailConfirmationPayload' }
     & Pick<RequestEmailConfirmationPayload, 'status'>
+  )> }
+);
+
+export type RequestPasswordReminderMutationVariables = Exact<{
+  input: RequestPasswordReminderCommandInput;
+}>;
+
+
+export type RequestPasswordReminderMutation = (
+  { __typename?: 'Mutation' }
+  & { requestPasswordReminder?: Maybe<(
+    { __typename?: 'RequestPasswordReminderPayload' }
+    & Pick<RequestPasswordReminderPayload, 'status'>
+  )> }
+);
+
+export type ResetPasswordMutationVariables = Exact<{
+  input: ResetPasswordCommandInput;
+}>;
+
+
+export type ResetPasswordMutation = (
+  { __typename?: 'Mutation' }
+  & { resetPassword?: Maybe<(
+    { __typename?: 'ResetPasswordPayload' }
+    & Pick<ResetPasswordPayload, 'status'>
   )> }
 );
 
@@ -1650,6 +1711,8 @@ import { Ref } from "vue";
 import { apolloClient } from "~/graphql/apolloClient";
 import { useQuery, useMutation, useSubscription, UseQueryOptions, UseMutationOptions, UseSubscriptionOptions } from "~/graphql/hooks";
 import REQUEST_EMAIL_CONFIRMATION from "../../modules/authentication/graphql/mutations/requestEmailConfirmation.gql";
+import REQUEST_PASSWORD_REMINDER from "../../modules/authentication/graphql/mutations/requestPasswordReminder.gql";
+import RESET_PASSWORD from "../../modules/authentication/graphql/mutations/resetPassword.gql";
 import SIGN_IN from "../../modules/authentication/graphql/mutations/signIn.gql";
 import SIGN_OUT from "../../modules/authentication/graphql/mutations/signOut.gql";
 import SIGN_UP from "../../modules/authentication/graphql/mutations/signUp.gql";
@@ -1698,6 +1761,8 @@ import FRIENDSHIP_INVITATION_CREATED from "../../modules/profile/graphql/subscri
 type RefWrapper<T extends object> = Record<keyof T, T[keyof T] | Ref<T[keyof T]>>;
 
 export const useRequestEmailConfirmation = (options?: Omit<UseMutationOptions<RequestEmailConfirmationMutationVariables>, "mutation">) => useMutation<RequestEmailConfirmationMutation, RequestEmailConfirmationMutationVariables>(apolloClient, { ...(options ?? {}), mutation: REQUEST_EMAIL_CONFIRMATION });
+export const useRequestPasswordReminder = (options?: Omit<UseMutationOptions<RequestPasswordReminderMutationVariables>, "mutation">) => useMutation<RequestPasswordReminderMutation, RequestPasswordReminderMutationVariables>(apolloClient, { ...(options ?? {}), mutation: REQUEST_PASSWORD_REMINDER });
+export const useResetPassword = (options?: Omit<UseMutationOptions<ResetPasswordMutationVariables>, "mutation">) => useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(apolloClient, { ...(options ?? {}), mutation: RESET_PASSWORD });
 export const useSignIn = (options?: Omit<UseMutationOptions<SignInMutationVariables>, "mutation">) => useMutation<SignInMutation, SignInMutationVariables>(apolloClient, { ...(options ?? {}), mutation: SIGN_IN });
 export const useSignOut = (options?: Omit<UseMutationOptions<SignOutMutationVariables>, "mutation">) => useMutation<SignOutMutation, SignOutMutationVariables>(apolloClient, { ...(options ?? {}), mutation: SIGN_OUT });
 export const useSignUp = (options?: Omit<UseMutationOptions<SignUpMutationVariables>, "mutation">) => useMutation<SignUpMutation, SignUpMutationVariables>(apolloClient, { ...(options ?? {}), mutation: SIGN_UP });

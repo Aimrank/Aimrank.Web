@@ -26,7 +26,7 @@ namespace Aimrank.Modules.UserAccess.Infrastructure.Configuration.Quartz
                 TriggerBuilder
                     .Create()
                     .StartNow()
-                    .WithCronSchedule("0 0 0 * * *")
+                    .WithCronSchedule("0 0 0 ? * *")
                     .Build();
 
             _scheduler.ScheduleJob(removeExpiredTokensJob, removeExpiredTokensTrigger).GetAwaiter().GetResult();
