@@ -25,5 +25,18 @@ namespace Aimrank.Web.Configuration.UrlFactory
                 $"userId={Uri.EscapeDataString(userId.ToString())}&",
                 $"token={Uri.EscapeDataString(token)}");
         }
+
+        public string CreateResetPasswordLink(Guid userId, string token)
+        {
+            var request = _httpContextAccessor.HttpContext.Request;
+            
+            return string.Concat(
+                request.Scheme,
+                "://",
+                request.Host.ToUriComponent(),
+                "/reset-password?",
+                $"userId={Uri.EscapeDataString(userId.ToString())}&",
+                $"token={Uri.EscapeDataString(token)}");
+        }
     }
 }
