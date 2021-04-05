@@ -7,13 +7,15 @@ import BaseButton from "@/common/components/BaseButton";
 import FormFieldInput from "@/common/components/FormFieldInput";
 import ValidationSummary from "@/common/components/ValidationSummary";
 import EmailConfirmationButton from "@/authentication/components/EmailConfirmationButton";
+import RequestPasswordReminderForm from "@/authentication/components/RequestPasswordReminderForm";
 
 const SignIn = defineComponent({
   components: {
     BaseButton,
     FormFieldInput,
     ValidationSummary,
-    EmailConfirmationButton
+    EmailConfirmationButton,
+    RequestPasswordReminderForm
   },
   setup() {
     const state = reactive({

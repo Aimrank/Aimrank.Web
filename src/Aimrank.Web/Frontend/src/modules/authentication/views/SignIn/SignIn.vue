@@ -23,10 +23,14 @@
     </form>
     <div
       v-if="state.emailNotConfirmed"
-      :class="$style.emailConfirmation"
+      :class="$style.section"
     >
-      <p :class="$style.emailConfirmationText">{{ $t("authentication.views.SignIn.emailNotConfirmed") }}</p>
+      <p :class="$style.sectionText">{{ $t("authentication.views.SignIn.emailNotConfirmed") }}</p>
       <email-confirmation-button :username-or-email="state.usernameOrEmail" />
+    </div>
+    <div :class="$style.section">
+      <p :class="$style.sectionText">{{ $t("authentication.views.SignIn.requestPasswordReminder") }}</p>
+      <request-password-reminder-form />
     </div>
   </div>
 </template>

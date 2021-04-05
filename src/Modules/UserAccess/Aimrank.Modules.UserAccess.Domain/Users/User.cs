@@ -3,6 +3,7 @@ using Aimrank.Modules.UserAccess.Domain.Users.Events;
 using Aimrank.Modules.UserAccess.Domain.Users.Rules;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 
 namespace Aimrank.Modules.UserAccess.Domain.Users
 {
@@ -69,9 +70,31 @@ namespace Aimrank.Modules.UserAccess.Domain.Users
             AddDomainEvent(new UserEmailConfirmationRequestedDomainEvent(this, token));
         }
 
+        public void RequestPasswordReminder()
+        {
+            BusinessRules.Check(new UserMustBeActiveRule(this));
+            
+            _tokens.RemoveAll(t => t.Type == UserTokenType.PasswordReminder);
+
+            var token = UserToken.Create(UserTokenType.PasswordReminder, DateTime.UtcNow.AddMinutes(10));
+            
+            _tokens.Add(token);
+            
+            AddDomainEvent(new UserPasswordReminderRequestedDomainEvent(this, token));
+        }
+
         public void ChangePassword(string oldPassword, string newPasswordHash)
         {
             BusinessRules.Check(new PasswordMustMatchRule(oldPassword, _password));
+
+            _password = newPasswordHash;
+        }
+
+        public void ResetPassword(string newPasswordHash, string token)
+        {
+            BusinessRules.Check(new UserTokenMustBeValidRule(UserTokenType.PasswordReminder, _tokens, token));
+
+            _tokens.RemoveAll(t => t.Type == UserTokenType.PasswordReminder);
 
             _password = newPasswordHash;
         }
