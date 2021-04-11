@@ -1,5 +1,6 @@
 using Aimrank.Common.Application;
 using Aimrank.Common.Infrastructure.EventBus;
+using Aimrank.Modules.CSGO.Infrastructure.Configuration;
 using Aimrank.Modules.Matches.Infrastructure.Configuration;
 using Aimrank.Modules.Matches.IntegrationEvents.Lobbies;
 using Aimrank.Modules.Matches.IntegrationEvents.Matches;
@@ -10,6 +11,7 @@ using Aimrank.Web.Configuration.ExecutionContext;
 using Aimrank.Web.Configuration.SessionAuthentication;
 using Aimrank.Web.Configuration.UrlFactory;
 using Aimrank.Web.GraphQL;
+using Aimrank.Web.Modules.CSGO;
 using Aimrank.Web.Modules.Matches;
 using Aimrank.Web.Modules.UserAccess;
 using Autofac.Extensions.DependencyInjection;
@@ -79,6 +81,10 @@ namespace Aimrank.Web
 #if false
             //Add db contexts so "dotnet ef" can find them when generating migrations
 
+            services.AddDbContext<CSGOContext>(options =>
+                options.UseSqlServer(_configuration.GetConnectionString("Database"),
+                    x => x.MigrationsAssembly("Aimrank.Database.Migrator")));
+
             services.AddDbContext<MatchesContext>(options =>
             {
                 options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
@@ -97,6 +103,7 @@ namespace Aimrank.Web
 
         public void ConfigureContainer(ContainerBuilder containerBuilder)
         {
+            containerBuilder.RegisterModule(new CSGOAutofacModule());
             containerBuilder.RegisterModule(new MatchesAutofacModule());
             containerBuilder.RegisterModule(new UserAccessAutofacModule());
         }
@@ -153,6 +160,8 @@ namespace Aimrank.Web
             var urlFactory = container.Resolve<IUrlFactory>();
             
             var connectionString = _configuration.GetConnectionString("Database");
+            
+            CSGOStartup.Initialize(connectionString);
 
             MatchesStartup.Initialize(
                 connectionString,

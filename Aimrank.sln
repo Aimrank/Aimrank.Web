@@ -46,6 +46,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E94A77B2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Modules.UserAccess.UnitTests", "src\Modules\UserAccess\Tests\Aimrank.Modules.UserAccess.UnitTests\Aimrank.Modules.UserAccess.UnitTests.csproj", "{BE342DB5-4FBB-4FB0-8E78-0FA37EE686B6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSGO", "CSGO", "{22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Modules.CSGO.Application", "src\Modules\CSGO\Aimrank.Modules.CSGO.Application\Aimrank.Modules.CSGO.Application.csproj", "{99D41473-44AF-46A7-99B3-1938A30A938D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Modules.CSGO.Infrastructure", "src\Modules\CSGO\Aimrank.Modules.CSGO.Infrastructure\Aimrank.Modules.CSGO.Infrastructure.csproj", "{53E60CAF-7414-4572-95CF-A4CE835CD96C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +77,9 @@ Global
 		{EC02E7AE-133F-41D0-BB30-A09D95A6C340} = {CB3E8F47-FF5F-44D3-B79B-7B7930E78289}
 		{E94A77B2-D745-47A5-8EFE-B6482C373CA6} = {6D5200E6-01F3-4679-8B98-94D06222FE65}
 		{BE342DB5-4FBB-4FB0-8E78-0FA37EE686B6} = {E94A77B2-D745-47A5-8EFE-B6482C373CA6}
+		{22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4} = {C85B20C0-AD41-4622-BAA8-70F1C2FB8C64}
+		{99D41473-44AF-46A7-99B3-1938A30A938D} = {22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4}
+		{53E60CAF-7414-4572-95CF-A4CE835CD96C} = {22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{528383BC-4260-41C0-89CE-F00138B63F4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -137,5 +146,13 @@ Global
 		{BE342DB5-4FBB-4FB0-8E78-0FA37EE686B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE342DB5-4FBB-4FB0-8E78-0FA37EE686B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE342DB5-4FBB-4FB0-8E78-0FA37EE686B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99D41473-44AF-46A7-99B3-1938A30A938D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99D41473-44AF-46A7-99B3-1938A30A938D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99D41473-44AF-46A7-99B3-1938A30A938D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99D41473-44AF-46A7-99B3-1938A30A938D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53E60CAF-7414-4572-95CF-A4CE835CD96C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53E60CAF-7414-4572-95CF-A4CE835CD96C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53E60CAF-7414-4572-95CF-A4CE835CD96C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53E60CAF-7414-4572-95CF-A4CE835CD96C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
