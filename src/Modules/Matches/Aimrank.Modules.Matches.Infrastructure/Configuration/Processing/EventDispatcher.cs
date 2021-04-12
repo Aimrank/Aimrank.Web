@@ -64,7 +64,11 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration.Processing
             AddIntegrationEventsToOutbox(integrationEvents);
         }
 
-        public void Dispatch(IIntegrationEvent @event) => AddIntegrationEventsToOutbox(@event);
+        public Task DispatchAsync(IIntegrationEvent @event)
+        {
+            AddIntegrationEventsToOutbox(@event);
+            return Task.CompletedTask;
+        }
 
         private void AddIntegrationEventsToOutbox(IEnumerable<IIntegrationEvent> events)
         {

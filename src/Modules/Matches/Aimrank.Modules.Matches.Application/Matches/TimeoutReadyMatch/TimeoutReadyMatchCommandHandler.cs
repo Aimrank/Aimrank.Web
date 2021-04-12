@@ -65,7 +65,7 @@ namespace Aimrank.Modules.Matches.Application.Matches.TimeoutReadyMatch
             
             _matchRepository.Delete(match);
 
-            _eventDispatcher.Dispatch(new MatchTimedOutEvent(match.Id, match.Lobbies.Select(l => l.LobbyId.Value)));
+            await _eventDispatcher.DispatchAsync(new MatchTimedOutEvent(match.Id, match.Lobbies.Select(l => l.LobbyId.Value)));
             
             return Unit.Value;
         }

@@ -11,6 +11,11 @@
     
     <ItemGroup>
       <ProjectReference Include="..\..\..\Common\Aimrank.Common.Application\Aimrank.Common.Application.csproj" />
+      <ProjectReference Include="..\Aimrank.Modules.CSGO.IntegrationEvents\Aimrank.Modules.CSGO.IntegrationEvents.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Remove="Repositories\ISteamTokenRepository.cs" />
     </ItemGroup>
 
 </Project>

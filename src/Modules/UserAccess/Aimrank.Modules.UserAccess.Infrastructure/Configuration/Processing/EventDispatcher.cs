@@ -21,9 +21,7 @@ namespace Aimrank.Modules.UserAccess.Infrastructure.Configuration.Processing
             _domainEventAccessor = domainEventAccessor;
         }
 
-        public void Dispatch(IIntegrationEvent @event)
-        {
-        }
+        public Task DispatchAsync(IIntegrationEvent @event) => Task.CompletedTask;
 
         public async Task DispatchAsync()
         {

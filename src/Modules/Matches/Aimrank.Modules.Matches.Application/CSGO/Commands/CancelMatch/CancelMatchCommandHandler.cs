@@ -42,7 +42,7 @@ namespace Aimrank.Modules.Matches.Application.CSGO.Commands.CancelMatch
             
             _matchRepository.Delete(match);
             
-            _eventDispatcher.Dispatch(new MatchCanceledEvent(match.Id, lobbies.Select(l => l.Id.Value)));
+            await _eventDispatcher.DispatchAsync(new MatchCanceledEvent(match.Id, lobbies.Select(l => l.Id.Value)));
 
             return Unit.Value;
         }

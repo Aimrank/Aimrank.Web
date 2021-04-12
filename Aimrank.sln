@@ -52,6 +52,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Modules.CSGO.Applic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Modules.CSGO.Infrastructure", "src\Modules\CSGO\Aimrank.Modules.CSGO.Infrastructure\Aimrank.Modules.CSGO.Infrastructure.csproj", "{53E60CAF-7414-4572-95CF-A4CE835CD96C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Modules.CSGO.IntegrationEvents", "src\Modules\CSGO\Aimrank.Modules.CSGO.IntegrationEvents\Aimrank.Modules.CSGO.IntegrationEvents.csproj", "{7B859A1B-5FD1-4B33-A83E-88A101B25036}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,7 @@ Global
 		{22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4} = {C85B20C0-AD41-4622-BAA8-70F1C2FB8C64}
 		{99D41473-44AF-46A7-99B3-1938A30A938D} = {22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4}
 		{53E60CAF-7414-4572-95CF-A4CE835CD96C} = {22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4}
+		{7B859A1B-5FD1-4B33-A83E-88A101B25036} = {22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{528383BC-4260-41C0-89CE-F00138B63F4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -154,5 +157,9 @@ Global
 		{53E60CAF-7414-4572-95CF-A4CE835CD96C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53E60CAF-7414-4572-95CF-A4CE835CD96C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53E60CAF-7414-4572-95CF-A4CE835CD96C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B859A1B-5FD1-4B33-A83E-88A101B25036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B859A1B-5FD1-4B33-A83E-88A101B25036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B859A1B-5FD1-4B33-A83E-88A101B25036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B859A1B-5FD1-4B33-A83E-88A101B25036}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

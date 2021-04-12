@@ -1,5 +1,7 @@
 using Aimrank.Modules.CSGO.Infrastructure.Configuration.DataAccess;
 using Aimrank.Modules.CSGO.Infrastructure.Configuration.Mediator;
+using Aimrank.Modules.CSGO.Infrastructure.Configuration.Pods;
+using Aimrank.Modules.CSGO.Infrastructure.Configuration.Processing;
 using Aimrank.Modules.CSGO.Infrastructure.Configuration.Quartz;
 using Autofac;
 
@@ -22,7 +24,9 @@ namespace Aimrank.Modules.CSGO.Infrastructure.Configuration
 
             containerBuilder.RegisterModule(new DataAccessModule(connectionString));
             containerBuilder.RegisterModule(new MediatorModule());
+            containerBuilder.RegisterModule(new ProcessingModule());
             containerBuilder.RegisterModule(new QuartzModule());
+            containerBuilder.RegisterModule(new PodsModule());
 
             _container = containerBuilder.Build();
             
