@@ -23,6 +23,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
+using System.Net.Http;
 
 namespace Aimrank.Web
 {
@@ -44,6 +45,8 @@ namespace Aimrank.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
+            
             services.AddSingleton<IUrlFactory, ApplicationUrlFactory>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
@@ -157,11 +160,14 @@ namespace Aimrank.Web
         private void InitializeModules(ILifetimeScope container)
         {
             var executionContextAccessor = container.Resolve<IExecutionContextAccessor>();
+            var httpClientFactory = container.Resolve<IHttpClientFactory>();
             var urlFactory = container.Resolve<IUrlFactory>();
             
             var connectionString = _configuration.GetConnectionString("Database");
             
-            CSGOStartup.Initialize(connectionString);
+            CSGOStartup.Initialize(
+                connectionString,
+                httpClientFactory);
 
             MatchesStartup.Initialize(
                 connectionString,

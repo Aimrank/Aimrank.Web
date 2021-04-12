@@ -7,7 +7,7 @@ namespace Aimrank.Modules.CSGO.Infrastructure.Configuration.Pods
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<PodService>().As<IPodService>().InstancePerLifetimeScope();
+            builder.RegisterType<PodClient>().As<IPodClient>().InstancePerLifetimeScope();
         }
     }
 }

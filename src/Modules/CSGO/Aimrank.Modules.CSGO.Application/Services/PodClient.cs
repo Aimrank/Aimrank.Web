@@ -1,18 +1,21 @@
 using Aimrank.Modules.CSGO.Application.Entities;
 using Aimrank.Modules.CSGO.Application.Repositories;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
 namespace Aimrank.Modules.CSGO.Application.Services
 {
-    public class PodService : IPodService
+    public class PodClient : IPodClient
     {
         private readonly IPodRepository _podRepository;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public PodService(IPodRepository podRepository)
+        public PodClient(IPodRepository podRepository, IHttpClientFactory httpClientFactory)
         {
             _podRepository = podRepository;
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<IEnumerable<Pod>> GetInactivePodsAsync()
@@ -34,6 +37,13 @@ namespace Aimrank.Modules.CSGO.Application.Services
             }
 
             return inactivePods;
+        }
+
+        public async Task StopServerAsync(Server server)
+        {
+            using var httpClient = _httpClientFactory.CreateClient();
+            
+            await httpClient.DeleteAsync($"http://{server.Pod.IpAddress}/server/{server.MatchId}");
         }
     }
 }

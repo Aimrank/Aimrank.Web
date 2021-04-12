@@ -12,18 +12,18 @@ namespace Aimrank.Modules.CSGO.Application.Commands.RemoveInactivePods
 {
     internal class RemoveInactivePodsCommandHandler : ICommandHandler<RemoveInactivePodsCommand>
     {
-        private readonly IPodService _podService;
+        private readonly IPodClient _podClient;
         private readonly IPodRepository _podRepository;
         private readonly IServerRepository _serverRepository;
         private readonly IEventDispatcher _eventDispatcher;
 
         public RemoveInactivePodsCommandHandler(
-            IPodService podService,
+            IPodClient podClient,
             IPodRepository podRepository,
             IServerRepository serverRepository,
             IEventDispatcher eventDispatcher)
         {
-            _podService = podService;
+            _podClient = podClient;
             _podRepository = podRepository;
             _serverRepository = serverRepository;
             _eventDispatcher = eventDispatcher;
@@ -31,7 +31,7 @@ namespace Aimrank.Modules.CSGO.Application.Commands.RemoveInactivePods
 
         public async Task<Unit> Handle(RemoveInactivePodsCommand request, CancellationToken cancellationToken)
         {
-            var inactivePods = (await _podService.GetInactivePodsAsync()).ToList();
+            var inactivePods = (await _podClient.GetInactivePodsAsync()).ToList();
             var inactivePodsIp = inactivePods.Select(p => p.IpAddress);
 
             var inactiveServers = (await _serverRepository.BrowseByIpAddressesAsync(inactivePodsIp)).ToList();
