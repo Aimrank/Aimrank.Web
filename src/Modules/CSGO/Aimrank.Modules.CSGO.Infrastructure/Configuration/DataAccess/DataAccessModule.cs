@@ -1,5 +1,3 @@
-using Aimrank.Common.Application.Data;
-using Aimrank.Common.Infrastructure.Data;
 using Autofac;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,11 +14,6 @@ namespace Aimrank.Modules.CSGO.Infrastructure.Configuration.DataAccess
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<SqlConnectionFactory>()
-                .As<ISqlConnectionFactory>()
-                .WithParameter("connectionString", _databaseConnectionString)
-                .InstancePerLifetimeScope();
-
             builder.Register(c =>
                 {
                     var dbContextOptionsBuilder = new DbContextOptionsBuilder<CSGOContext>();

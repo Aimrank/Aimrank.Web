@@ -1,6 +1,7 @@
 using Aimrank.Modules.CSGO.Application.Entities;
 using Aimrank.Modules.CSGO.Application.Repositories;
 using System.Collections.Generic;
+using System.Net.Http.Json;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
@@ -44,6 +45,18 @@ namespace Aimrank.Modules.CSGO.Application.Services
             using var httpClient = _httpClientFactory.CreateClient();
             
             await httpClient.DeleteAsync($"http://{server.Pod.IpAddress}/server/{server.MatchId}");
+        }
+
+        public async Task StartServerAsync(Server server, string map, IEnumerable<string> whitelist)
+        {
+            using var httpClient = _httpClientFactory.CreateClient();
+
+            await httpClient.PostAsJsonAsync($"http://{server.Pod.IpAddress}/server", new
+            {
+                server.MatchId,
+                Map = map,
+                Whitelist = whitelist
+            });
         }
     }
 }

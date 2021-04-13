@@ -6,6 +6,7 @@ namespace Aimrank.Modules.CSGO.Application.Repositories
 {
     public interface IPodRepository
     {
+        Task<int> GetAvailableServersCountAsync();
         Task<Pod> GetByIpAddressAsync(string ipAddress);
         Task<IEnumerable<Pod>> BrowseAsync();
         void Add(Pod pod);

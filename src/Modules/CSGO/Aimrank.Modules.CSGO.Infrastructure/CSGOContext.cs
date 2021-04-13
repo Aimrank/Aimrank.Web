@@ -11,7 +11,7 @@ namespace Aimrank.Modules.CSGO.Infrastructure
     {
         public DbSet<Pod> Pods { get; set; }
         public DbSet<Server> Servers { get; set; }
-        public DbSet<SteamToken> SteamKeys { get; set; }
+        public DbSet<SteamToken> SteamTokens { get; set; }
         
         public CSGOContext(DbContextOptions<CSGOContext> options) : base(options)
         {

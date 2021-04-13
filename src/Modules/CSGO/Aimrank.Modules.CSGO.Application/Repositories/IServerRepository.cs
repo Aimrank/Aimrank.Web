@@ -7,7 +7,7 @@ namespace Aimrank.Modules.CSGO.Application.Repositories
 {
     public interface IServerRepository
     {
-        Task<IEnumerable<Server>> BrowseByIpAddressesAsync(IEnumerable<string> ipAddress);
+        Task<IEnumerable<Server>> BrowseByIpAddressesAsync(IEnumerable<string> ipAddresses);
         Task<Server> GetByMatchIdAsync(Guid matchId);
         void Delete(Server server);
         void DeleteRange(IEnumerable<Server> servers);
