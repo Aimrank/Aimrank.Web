@@ -44,13 +44,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E94A77B2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Web.Modules.UserAccess.UnitTests", "src\Modules\UserAccess\Tests\Aimrank.Web.Modules.UserAccess.UnitTests\Aimrank.Web.Modules.UserAccess.UnitTests.csproj", "{BE342DB5-4FBB-4FB0-8E78-0FA37EE686B6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSGO", "CSGO", "{22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cluster", "Cluster", "{22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Web.Modules.CSGO.Application", "src\Modules\CSGO\Aimrank.Web.Modules.CSGO.Application\Aimrank.Web.Modules.CSGO.Application.csproj", "{99D41473-44AF-46A7-99B3-1938A30A938D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Web.Modules.Cluster.Application", "src\Modules\Cluster\Aimrank.Web.Modules.Cluster.Application\Aimrank.Web.Modules.Cluster.Application.csproj", "{99D41473-44AF-46A7-99B3-1938A30A938D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Web.Modules.CSGO.Infrastructure", "src\Modules\CSGO\Aimrank.Web.Modules.CSGO.Infrastructure\Aimrank.Web.Modules.CSGO.Infrastructure.csproj", "{53E60CAF-7414-4572-95CF-A4CE835CD96C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Web.Modules.Cluster.Infrastructure", "src\Modules\Cluster\Aimrank.Web.Modules.Cluster.Infrastructure\Aimrank.Web.Modules.Cluster.Infrastructure.csproj", "{53E60CAF-7414-4572-95CF-A4CE835CD96C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Web.Modules.CSGO.IntegrationEvents", "src\Modules\CSGO\Aimrank.Web.Modules.CSGO.IntegrationEvents\Aimrank.Web.Modules.CSGO.IntegrationEvents.csproj", "{7B859A1B-5FD1-4B33-A83E-88A101B25036}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Web.Modules.Cluster.IntegrationEvents", "src\Modules\Cluster\Aimrank.Web.Modules.Cluster.IntegrationEvents\Aimrank.Web.Modules.Cluster.IntegrationEvents.csproj", "{7B859A1B-5FD1-4B33-A83E-88A101B25036}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,7 +1,7 @@
 using Aimrank.Web.Common.Application;
 using Aimrank.Web.Common.Infrastructure.EventBus;
-using Aimrank.Web.Modules.CSGO.Application.Contracts;
-using Aimrank.Web.Modules.CSGO.Infrastructure.Configuration;
+using Aimrank.Web.Modules.Cluster.Application.Contracts;
+using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration;
 using Aimrank.Web.Modules.Matches.IntegrationEvents.Lobbies;
 using Aimrank.Web.Modules.Matches.IntegrationEvents.Matches;
@@ -12,7 +12,7 @@ using Aimrank.Web.App.Configuration.ExecutionContext;
 using Aimrank.Web.App.Configuration.SessionAuthentication;
 using Aimrank.Web.App.Configuration.UrlFactory;
 using Aimrank.Web.App.GraphQL;
-using Aimrank.Web.App.Modules.CSGO;
+using Aimrank.Web.App.Modules.Cluster;
 using Aimrank.Web.App.Modules.Matches;
 using Aimrank.Web.App.Modules.UserAccess;
 using Autofac.Extensions.DependencyInjection;
@@ -83,7 +83,7 @@ namespace Aimrank.Web.App
             //Add db contexts so "dotnet ef" can find them when generating migrations
             var connectionString = Configuration.GetConnectionString("Database");
 
-            services.AddDbContext<CSGOContext>(options =>
+            services.AddDbContext<ClusterContext>(options =>
                 options.UseSqlServer(connectionString,
                     x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator")));
 
@@ -105,7 +105,7 @@ namespace Aimrank.Web.App
 
         public void ConfigureContainer(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterModule(new CSGOAutofacModule());
+            containerBuilder.RegisterModule(new ClusterAutofacModule());
             containerBuilder.RegisterModule(new MatchesAutofacModule());
             containerBuilder.RegisterModule(new UserAccessAutofacModule());
         }
@@ -158,17 +158,17 @@ namespace Aimrank.Web.App
 
         private void InitializeModules(ILifetimeScope container)
         {
-            var csgoModule = container.Resolve<ICSGOModule>();
+            var csgoModule = container.Resolve<IClusterModule>();
             var urlFactory = container.Resolve<IUrlFactory>();
             var httpClientFactory = container.Resolve<IHttpClientFactory>();
             var executionContextAccessor = container.Resolve<IExecutionContextAccessor>();
             
             var connectionString = Configuration.GetConnectionString("Database");
-            var csgoModuleSettings = Configuration.GetSection(nameof(CSGOModuleSettings)).Get<CSGOModuleSettings>();
-            var matchesModuleSettings =Configuration.GetSection(nameof(MatchesModuleSettings)).Get<MatchesModuleSettings>();
+            var csgoModuleSettings = Configuration.GetSection(nameof(ClusterModuleSettings)).Get<ClusterModuleSettings>();
+            var matchesModuleSettings = Configuration.GetSection(nameof(MatchesModuleSettings)).Get<MatchesModuleSettings>();
             var userAccessModuleSettings = Configuration.GetSection(nameof(UserAccessModuleSettings)).Get<UserAccessModuleSettings>();
             
-            CSGOStartup.Initialize(
+            ClusterStartup.Initialize(
                 connectionString,
                 _eventBus,
                 httpClientFactory,

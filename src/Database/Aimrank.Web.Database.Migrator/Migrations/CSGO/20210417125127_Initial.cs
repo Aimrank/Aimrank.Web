@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Aimrank.Web.Database.Migrator.Migrations.CSGO
+namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
 {
     public partial class Initial : Migration
     {

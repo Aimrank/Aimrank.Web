@@ -1,6 +1,6 @@
-using Aimrank.Web.Modules.CSGO.Application.Commands.CreateServers;
-using Aimrank.Web.Modules.CSGO.Application.Contracts;
-using Aimrank.Web.Modules.CSGO.Application.Queries.GetAvailableServers;
+using Aimrank.Web.Modules.Cluster.Application.Commands.CreateServers;
+using Aimrank.Web.Modules.Cluster.Application.Contracts;
+using Aimrank.Web.Modules.Cluster.Application.Queries.GetAvailableServers;
 using Aimrank.Web.Modules.Matches.Application.Lobbies.ProcessLobbies.Matchmaking;
 using Aimrank.Web.Modules.Matches.Domain.Lobbies;
 using Aimrank.Web.Modules.Matches.Domain.Matches;
@@ -15,18 +15,18 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.ProcessLobbies
 {
     internal class ProcessLobbiesCommandHandler : Contracts.ICommandHandler<ProcessLobbiesCommand>
     {
-        private readonly ICSGOModule _csgoModule;
+        private readonly IClusterModule _clusterModule;
         private readonly ILobbyRepository _lobbyRepository;
         private readonly IMatchRepository _matchRepository;
         private readonly IPlayerRepository _playerRepository;
 
         public ProcessLobbiesCommandHandler(
-            ICSGOModule csgoModule,
+            IClusterModule clusterModule,
             ILobbyRepository lobbyRepository,
             IMatchRepository matchRepository,
             IPlayerRepository playerRepository)
         {
-            _csgoModule = csgoModule;
+            _clusterModule = clusterModule;
             _lobbyRepository = lobbyRepository;
             _matchRepository = matchRepository;
             _playerRepository = playerRepository;
@@ -40,7 +40,7 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.ProcessLobbies
 
             var manager = await MatchmakingManager.CreateAsync(_matchRepository, lobbies, players);
             
-            var serversCount = await _csgoModule.ExecuteQueryAsync(new GetAvailableServersQuery());
+            var serversCount = await _clusterModule.ExecuteQueryAsync(new GetAvailableServersQuery());
 
             var matches = manager.CreateMatches().Take(serversCount).ToList();
             
@@ -56,7 +56,7 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.ProcessLobbies
                 _matchRepository.Add(match);
             }
 
-            await _csgoModule.ExecuteCommandAsync(new CreateServersCommand(matches.Select(m => m.Id.Value)));
+            await _clusterModule.ExecuteCommandAsync(new CreateServersCommand(matches.Select(m => m.Id.Value)));
 
             return Unit.Value;
         }

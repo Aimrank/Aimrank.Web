@@ -1,6 +1,6 @@
 using Aimrank.Web.Common.Infrastructure.EventBus;
-using Aimrank.Web.Modules.CSGO.Application.Commands.StartServer;
-using Aimrank.Web.Modules.CSGO.Application.Contracts;
+using Aimrank.Web.Modules.Cluster.Application.Commands.StartServer;
+using Aimrank.Web.Modules.Cluster.Application.Contracts;
 using Aimrank.Web.Modules.Matches.Application.Matches;
 using Aimrank.Web.Modules.Matches.Domain.Matches;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Redis;
@@ -17,13 +17,13 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Application.Matches
     {
         private readonly IDatabase _database;
         private readonly IEventBus _eventBus;
-        private readonly ICSGOModule _csgoModule;
+        private readonly IClusterModule _clusterModule;
 
-        public MatchService(IConnectionMultiplexer connectionMultiplexer, IEventBus eventBus, ICSGOModule csgoModule)
+        public MatchService(IConnectionMultiplexer connectionMultiplexer, IEventBus eventBus, IClusterModule clusterModule)
         {
             _database = connectionMultiplexer.GetDatabase();
             _eventBus = eventBus;
-            _csgoModule = csgoModule;
+            _clusterModule = clusterModule;
         }
         
         public async Task AcceptMatchAsync(Match match, Guid playerId)
@@ -40,7 +40,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Application.Matches
             {
                 await _database.KeyDeleteAsync(key);
 
-                var address = await _csgoModule.ExecuteCommandAsync(new StartServerCommand(
+                var address = await _clusterModule.ExecuteCommandAsync(new StartServerCommand(
                     match.Id, match.Map, match.Players.Select(p => $"{p.SteamId}:{(int) p.Team}")));
                 
                 match.SetStarting(address);

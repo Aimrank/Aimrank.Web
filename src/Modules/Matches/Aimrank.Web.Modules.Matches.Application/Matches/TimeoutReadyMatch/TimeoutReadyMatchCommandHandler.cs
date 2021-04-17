@@ -1,6 +1,6 @@
 using Aimrank.Web.Common.Application.Events;
-using Aimrank.Web.Modules.CSGO.Application.Commands.DeleteAndStopServer;
-using Aimrank.Web.Modules.CSGO.Application.Contracts;
+using Aimrank.Web.Modules.Cluster.Application.Commands.DeleteAndStopServer;
+using Aimrank.Web.Modules.Cluster.Application.Contracts;
 using Aimrank.Web.Modules.Matches.Domain.Lobbies;
 using Aimrank.Web.Modules.Matches.Domain.Matches;
 using Aimrank.Web.Modules.Matches.IntegrationEvents.Matches;
@@ -15,20 +15,20 @@ namespace Aimrank.Web.Modules.Matches.Application.Matches.TimeoutReadyMatch
 {
     internal class TimeoutReadyMatchCommandHandler : Contracts.ICommandHandler<TimeoutReadyMatchCommand>
     {
-        private readonly ICSGOModule _csgoModule;
+        private readonly IClusterModule _clusterModule;
         private readonly ILobbyRepository _lobbyRepository;
         private readonly IMatchRepository _matchRepository;
         private readonly IEventDispatcher _eventDispatcher;
         private readonly IMatchService _matchService;
 
         public TimeoutReadyMatchCommandHandler(
-            ICSGOModule csgoModule,
+            IClusterModule clusterModule,
             ILobbyRepository lobbyRepository,
             IMatchRepository matchRepository,
             IEventDispatcher eventDispatcher,
             IMatchService matchService)
         {
-            _csgoModule = csgoModule;
+            _clusterModule = clusterModule;
             _lobbyRepository = lobbyRepository;
             _matchRepository = matchRepository;
             _eventDispatcher = eventDispatcher;
@@ -44,7 +44,7 @@ namespace Aimrank.Web.Modules.Matches.Application.Matches.TimeoutReadyMatch
                 return Unit.Value;
             }
 
-            await _csgoModule.ExecuteCommandAsync(new DeleteAndStopServerCommand(match.Id));
+            await _clusterModule.ExecuteCommandAsync(new DeleteAndStopServerCommand(match.Id));
             
             var lobbies = await _lobbyRepository.BrowseByIdAsync(match.Lobbies.Select(l => l.LobbyId));
 

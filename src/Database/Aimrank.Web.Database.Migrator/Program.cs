@@ -1,5 +1,5 @@
 ﻿using Aimrank.Web.Common.Infrastructure;
-using Aimrank.Web.Modules.CSGO.Infrastructure;
+using Aimrank.Web.Modules.Cluster.Infrastructure;
 using Aimrank.Web.Modules.Matches.Infrastructure;
 using Aimrank.Web.Modules.UserAccess.Infrastructure;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -38,7 +38,7 @@ static void MigrateDatabase(IConfiguration configuration)
     
     var connectionString = configuration.GetConnectionString("Database");
 
-    var optionsBuilderCSGO = new DbContextOptionsBuilder<CSGOContext>()
+    var optionsBuilderCluster = new DbContextOptionsBuilder<ClusterContext>()
         .UseSqlServer(connectionString, ConfigureContext);
 
     var optionsBuilderMatches = new DbContextOptionsBuilder<MatchesContext>()
@@ -49,11 +49,11 @@ static void MigrateDatabase(IConfiguration configuration)
         .ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>()
         .UseSqlServer(connectionString, ConfigureContext);
 
-    using var contextCSGO = new CSGOContext(optionsBuilderCSGO.Options);
+    using var contextCluster = new ClusterContext(optionsBuilderCluster.Options);
     using var contextMatches = new MatchesContext(optionsBuilderMatches.Options);
     using var contextUserAccess = new UserAccessContext(optionsBuilderUserAccess.Options);
     
-    MigrateContexts(contextCSGO, contextMatches, contextUserAccess);
+    MigrateContexts(contextCluster, contextMatches, contextUserAccess);
 }
 
 static void ConfigureContext(SqlServerDbContextOptionsBuilder optionsBuilder)
