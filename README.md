@@ -1,6 +1,6 @@
 # Aimrank.Web
 
-![Docker build status](https://github.com/mariusz-ba/aimrank/workflows/Build/badge.svg)
+![Docker build status](https://github.com/Aimrank/Aimrank.Web/workflows/Build/badge.svg)
 
 Aimrank is a website that let's you play competitive CS:GO matches on aim maps. You pick maps that you want to play and based on match configuration you can play 1 vs 1 or 2 vs 2. All statistics from games are tracked and after each match players rating is adjusted. Aimrank automatically pairs you with other players with similar rating, configures and starts CS:GO server. Then players are given server ip address and can connect from the in-game console.
 
