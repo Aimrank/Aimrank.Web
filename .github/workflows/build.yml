@@ -24,11 +24,12 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
-  build-docker:
+  docker-build:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
     - name: Build Docker image
-      run: docker build -t aimrank:test .
+      shell: bash
+      run: ./scripts/docker-build.sh latest
