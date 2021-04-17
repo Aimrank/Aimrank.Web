@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Dapper" Version="2.0.78" />
+        <PackageReference Include="FluentValidation" Version="10.0.0-preview2" />
+        <PackageReference Include="MediatR" Version="9.0.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Common\Aimrank.Web.Common.Application\Aimrank.Web.Common.Application.csproj" />
+      <ProjectReference Include="..\..\CSGO\Aimrank.Web.Modules.CSGO.Application\Aimrank.Web.Modules.CSGO.Application.csproj" />
+      <ProjectReference Include="..\Aimrank.Web.Modules.Matches.Domain\Aimrank.Web.Modules.Matches.Domain.csproj" />
+      <ProjectReference Include="..\Aimrank.Web.Modules.Matches.IntegrationEvents\Aimrank.Web.Modules.Matches.IntegrationEvents.csproj" />
+    </ItemGroup>
+
+</Project>

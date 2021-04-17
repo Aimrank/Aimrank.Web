@@ -1,4 +1,4 @@
 #!/bin/bash
 
-dotnet Aimrank.Database.Migrator.dll
-dotnet Aimrank.Web.dll
+dotnet Aimrank.Web.Database.Migrator.dll
+dotnet Aimrank.Web.App.dll

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="10.0.0-preview2" />
+        <PackageReference Include="MediatR" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Common\Aimrank.Web.Common.Application\Aimrank.Web.Common.Application.csproj" />
+      <ProjectReference Include="..\Aimrank.Web.Modules.CSGO.IntegrationEvents\Aimrank.Web.Modules.CSGO.IntegrationEvents.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -7,44 +7,44 @@ ENV NODE_VERSION=12.6.0
 ENV NODE_ENV=Production
 
 COPY *.sln .
-COPY src/Aimrank.Web/*.csproj ./src/Aimrank.Web/
-COPY src/Common/Aimrank.Common.Domain/*.csproj ./src/Common/Aimrank.Common.Domain/
-COPY src/Common/Aimrank.Common.Application/*.csproj ./src/Common/Aimrank.Common.Application/
-COPY src/Common/Aimrank.Common.Infrastructure/*.csproj ./src/Common/Aimrank.Common.Infrastructure/
-COPY src/Database/Aimrank.Database.Migrator/*.csproj ./src/Database/Aimrank.Database.Migrator/
-COPY src/Modules/CSGO/Aimrank.Modules.CSGO.Application/*.csproj ./src/Modules/CSGO/Aimrank.Modules.CSGO.Application/
-COPY src/Modules/CSGO/Aimrank.Modules.CSGO.Infrastructure/*.csproj ./src/Modules/CSGO/Aimrank.Modules.CSGO.Infrastructure/
-COPY src/Modules/CSGO/Aimrank.Modules.CSGO.IntegrationEvents/*.csproj ./src/Modules/CSGO/Aimrank.Modules.CSGO.IntegrationEvents/
-COPY src/Modules/Matches/Aimrank.Modules.Matches.Domain/*.csproj ./src/Modules/Matches/Aimrank.Modules.Matches.Domain/
-COPY src/Modules/Matches/Aimrank.Modules.Matches.Application/*.csproj ./src/Modules/Matches/Aimrank.Modules.Matches.Application/
-COPY src/Modules/Matches/Aimrank.Modules.Matches.Infrastructure/*.csproj ./src/Modules/Matches/Aimrank.Modules.Matches.Infrastructure/
-COPY src/Modules/Matches/Aimrank.Modules.Matches.IntegrationEvents/*.csproj ./src/Modules/Matches/Aimrank.Modules.Matches.IntegrationEvents/
-COPY src/Modules/Matches/Tests/Aimrank.Modules.Matches.ArchTests/*.csproj ./src/Modules/Matches/Tests/Aimrank.Modules.Matches.ArchTests/
-COPY src/Modules/Matches/Tests/Aimrank.Modules.Matches.UnitTests/*.csproj ./src/Modules/Matches/Tests/Aimrank.Modules.Matches.UnitTests/
-COPY src/Modules/UserAccess/Aimrank.Modules.UserAccess.Domain/*.csproj ./src/Modules/UserAccess/Aimrank.Modules.UserAccess.Domain/
-COPY src/Modules/UserAccess/Aimrank.Modules.UserAccess.Application/*.csproj ./src/Modules/UserAccess/Aimrank.Modules.UserAccess.Application/
-COPY src/Modules/UserAccess/Aimrank.Modules.UserAccess.Infrastructure/*.csproj ./src/Modules/UserAccess/Aimrank.Modules.UserAccess.Infrastructure/
-COPY src/Modules/UserAccess/Tests/Aimrank.Modules.UserAccess.UnitTests/*.csproj ./src/Modules/UserAccess/Tests/Aimrank.Modules.UserAccess.UnitTests/
+COPY src/Aimrank.Web.App/*.csproj ./src/Aimrank.Web.App/
+COPY src/Common/Aimrank.Web.Common.Domain/*.csproj ./src/Common/Aimrank.Web.Common.Domain/
+COPY src/Common/Aimrank.Web.Common.Application/*.csproj ./src/Common/Aimrank.Web.Common.Application/
+COPY src/Common/Aimrank.Web.Common.Infrastructure/*.csproj ./src/Common/Aimrank.Web.Common.Infrastructure/
+COPY src/Database/Aimrank.Web.Database.Migrator/*.csproj ./src/Database/Aimrank.Web.Database.Migrator/
+COPY src/Modules/CSGO/Aimrank.Web.Modules.CSGO.Application/*.csproj ./src/Modules/CSGO/Aimrank.Web.Modules.CSGO.Application/
+COPY src/Modules/CSGO/Aimrank.Web.Modules.CSGO.Infrastructure/*.csproj ./src/Modules/CSGO/Aimrank.Web.Modules.CSGO.Infrastructure/
+COPY src/Modules/CSGO/Aimrank.Web.Modules.CSGO.IntegrationEvents/*.csproj ./src/Modules/CSGO/Aimrank.Web.Modules.CSGO.IntegrationEvents/
+COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/
+COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/
+COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/
+COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.IntegrationEvents/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.IntegrationEvents/
+COPY src/Modules/Matches/Tests/Aimrank.Web.Modules.Matches.ArchTests/*.csproj ./src/Modules/Matches/Tests/Aimrank.Web.Modules.Matches.ArchTests/
+COPY src/Modules/Matches/Tests/Aimrank.Web.Modules.Matches.UnitTests/*.csproj ./src/Modules/Matches/Tests/Aimrank.Web.Modules.Matches.UnitTests/
+COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Domain/*.csproj ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Domain/
+COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/*.csproj ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/
+COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/*.csproj ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/
+COPY src/Modules/UserAccess/Tests/Aimrank.Web.Modules.UserAccess.UnitTests/*.csproj ./src/Modules/UserAccess/Tests/Aimrank.Web.Modules.UserAccess.UnitTests/
 
 RUN dotnet restore
 
-COPY src/Aimrank.Web/. ./src/Aimrank.Web/
-COPY src/Common/Aimrank.Common.Domain/. ./src/Common/Aimrank.Common.Domain/
-COPY src/Common/Aimrank.Common.Application/. ./src/Common/Aimrank.Common.Application/
-COPY src/Common/Aimrank.Common.Infrastructure/. ./src/Common/Aimrank.Common.Infrastructure/
-COPY src/Database/Aimrank.Database.Migrator/. ./src/Database/Aimrank.Database.Migrator/
-COPY src/Modules/CSGO/Aimrank.Modules.CSGO.Application/. ./src/Modules/CSGO/Aimrank.Modules.CSGO.Application/
-COPY src/Modules/CSGO/Aimrank.Modules.CSGO.Infrastructure/. ./src/Modules/CSGO/Aimrank.Modules.CSGO.Infrastructure/
-COPY src/Modules/CSGO/Aimrank.Modules.CSGO.IntegrationEvents/. ./src/Modules/CSGO/Aimrank.Modules.CSGO.IntegrationEvents/
-COPY src/Modules/Matches/Aimrank.Modules.Matches.Domain/. ./src/Modules/Matches/Aimrank.Modules.Matches.Domain/
-COPY src/Modules/Matches/Aimrank.Modules.Matches.Application/. ./src/Modules/Matches/Aimrank.Modules.Matches.Application/
-COPY src/Modules/Matches/Aimrank.Modules.Matches.Infrastructure/. ./src/Modules/Matches/Aimrank.Modules.Matches.Infrastructure/
-COPY src/Modules/Matches/Aimrank.Modules.Matches.IntegrationEvents/. ./src/Modules/Matches/Aimrank.Modules.Matches.IntegrationEvents/
-COPY src/Modules/UserAccess/Aimrank.Modules.UserAccess.Domain/. ./src/Modules/UserAccess/Aimrank.Modules.UserAccess.Domain/
-COPY src/Modules/UserAccess/Aimrank.Modules.UserAccess.Application/. ./src/Modules/UserAccess/Aimrank.Modules.UserAccess.Application/
-COPY src/Modules/UserAccess/Aimrank.Modules.UserAccess.Infrastructure/. ./src/Modules/UserAccess/Aimrank.Modules.UserAccess.Infrastructure/
+COPY src/Aimrank.Web.App/. ./src/Aimrank.Web.App/
+COPY src/Common/Aimrank.Web.Common.Domain/. ./src/Common/Aimrank.Web.Common.Domain/
+COPY src/Common/Aimrank.Web.Common.Application/. ./src/Common/Aimrank.Web.Common.Application/
+COPY src/Common/Aimrank.Web.Common.Infrastructure/. ./src/Common/Aimrank.Web.Common.Infrastructure/
+COPY src/Database/Aimrank.Web.Database.Migrator/. ./src/Database/Aimrank.Web.Database.Migrator/
+COPY src/Modules/CSGO/Aimrank.Web.Modules.CSGO.Application/. ./src/Modules/CSGO/Aimrank.Web.Modules.CSGO.Application/
+COPY src/Modules/CSGO/Aimrank.Web.Modules.CSGO.Infrastructure/. ./src/Modules/CSGO/Aimrank.Web.Modules.CSGO.Infrastructure/
+COPY src/Modules/CSGO/Aimrank.Web.Modules.CSGO.IntegrationEvents/. ./src/Modules/CSGO/Aimrank.Web.Modules.CSGO.IntegrationEvents/
+COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/
+COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/
+COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/
+COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.IntegrationEvents/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.IntegrationEvents/
+COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Domain/. ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Domain/
+COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/. ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/
+COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/. ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/
 
-WORKDIR /app/src/Aimrank.Web/Frontend
+WORKDIR /app/src/Aimrank.Web.App/Frontend
 
 RUN apt install -y curl
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
