@@ -73,7 +73,7 @@ static void MigrateContexts(params DbContext[] contexts)
         {
             Console.WriteLine($"[{name}] Running database migration...");
             context.Database.Migrate();
-            Console.WriteLine($"[{name}] {migrations} migrations applied successfully.");
+            Console.WriteLine($"[{name}] {migrations.Count} migrations applied successfully.");
         }
         else
         {

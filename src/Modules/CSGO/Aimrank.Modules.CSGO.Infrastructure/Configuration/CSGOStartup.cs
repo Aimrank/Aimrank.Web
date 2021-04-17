@@ -1,3 +1,4 @@
+using Aimrank.Common.Infrastructure.EventBus;
 using Aimrank.Modules.CSGO.Infrastructure.Configuration.DataAccess;
 using Aimrank.Modules.CSGO.Infrastructure.Configuration.Mediator;
 using Aimrank.Modules.CSGO.Infrastructure.Configuration.Pods;
@@ -15,21 +16,24 @@ namespace Aimrank.Modules.CSGO.Infrastructure.Configuration
 
         public static void Initialize(
             string connectionString,
+            IEventBus eventBus,
             IHttpClientFactory httpClientFactory,
-            RabbitMQSettings rabbitMqSettings)
+            CSGOModuleSettings csgoModuleSettings)
         {
             ConfigureCompositionRoot(
                 connectionString,
+                eventBus,
                 httpClientFactory,
-                rabbitMqSettings);
+                csgoModuleSettings);
             
             QuartzStartup.Initialize();
         }
 
         private static void ConfigureCompositionRoot(
             string connectionString,
+            IEventBus eventBus,
             IHttpClientFactory httpClientFactory,
-            RabbitMQSettings rabbitMqSettings)
+            CSGOModuleSettings csgoModuleSettings)
         {
             var containerBuilder = new ContainerBuilder();
 
@@ -38,8 +42,9 @@ namespace Aimrank.Modules.CSGO.Infrastructure.Configuration
             containerBuilder.RegisterModule(new ProcessingModule());
             containerBuilder.RegisterModule(new QuartzModule());
             containerBuilder.RegisterModule(new PodsModule());
-            containerBuilder.RegisterModule(new RabbitMQModule(rabbitMqSettings));
+            containerBuilder.RegisterModule(new RabbitMQModule(csgoModuleSettings.RabbitMQSettings));
             containerBuilder.RegisterInstance(httpClientFactory);
+            containerBuilder.RegisterInstance(eventBus);
 
             _container = containerBuilder.Build();
             

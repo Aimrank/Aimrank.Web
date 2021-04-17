@@ -5,7 +5,7 @@ using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
 using System.Collections.Generic;
 
-namespace Aimrank.Modules.CSGO.Infrastructure.Configuration.Rabbit
+namespace Aimrank.Modules.Matches.Infrastructure.Configuration.Rabbit
 {
     internal class RabbitMQEventBus : RabbitMQEventBusBase
     {
@@ -29,7 +29,7 @@ namespace Aimrank.Modules.CSGO.Infrastructure.Configuration.Rabbit
                 var integrationEventHandlerType = typeof(IIntegrationEventHandler<>).MakeGenericType(integrationEventType);
                 var integrationEventHandlersCollectionType = typeof(IEnumerable<>).MakeGenericType(integrationEventHandlerType);
 
-                await using var scope = CSGOCompositionRoot.BeginLifetimeScope();
+                await using var scope = MatchesCompositionRoot.BeginLifetimeScope();
 
                 dynamic handlers = scope.Resolve(integrationEventHandlersCollectionType);
 

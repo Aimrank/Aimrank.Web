@@ -1,7 +1,6 @@
 using Aimrank.Common.Application;
 using Aimrank.Common.Infrastructure.EventBus;
 using Aimrank.Modules.CSGO.Application.Contracts;
-using Aimrank.Modules.CSGO.Infrastructure.Configuration.Rabbit;
 using Aimrank.Modules.CSGO.Infrastructure.Configuration;
 using Aimrank.Modules.Matches.Infrastructure.Configuration;
 using Aimrank.Modules.Matches.IntegrationEvents.Lobbies;
@@ -165,14 +164,15 @@ namespace Aimrank.Web
             var executionContextAccessor = container.Resolve<IExecutionContextAccessor>();
             
             var connectionString = Configuration.GetConnectionString("Database");
-            var rabbitMqSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
+            var csgoModuleSettings = Configuration.GetSection(nameof(CSGOModuleSettings)).Get<CSGOModuleSettings>();
             var matchesModuleSettings =Configuration.GetSection(nameof(MatchesModuleSettings)).Get<MatchesModuleSettings>();
             var userAccessModuleSettings = Configuration.GetSection(nameof(UserAccessModuleSettings)).Get<UserAccessModuleSettings>();
             
             CSGOStartup.Initialize(
                 connectionString,
+                _eventBus,
                 httpClientFactory,
-                rabbitMqSettings);
+                csgoModuleSettings);
 
             MatchesStartup.Initialize(
                 connectionString,

@@ -5,6 +5,7 @@ using Aimrank.Modules.Matches.Infrastructure.Configuration.DataAccess;
 using Aimrank.Modules.Matches.Infrastructure.Configuration.Mediator;
 using Aimrank.Modules.Matches.Infrastructure.Configuration.Processing;
 using Aimrank.Modules.Matches.Infrastructure.Configuration.Quartz;
+using Aimrank.Modules.Matches.Infrastructure.Configuration.Rabbit;
 using Aimrank.Modules.Matches.Infrastructure.Configuration.Redis;
 using Autofac;
 
@@ -45,6 +46,7 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration
             containerBuilder.RegisterModule(new ProcessingModule());
             containerBuilder.RegisterModule(new QuartzModule());
             containerBuilder.RegisterModule(new RedisModule(matchesModuleSettings.RedisSettings));
+            containerBuilder.RegisterModule(new RabbitMQModule(matchesModuleSettings.RabbitMQSettings));
             containerBuilder.RegisterInstance(executionContextAccessor);
             containerBuilder.RegisterInstance(eventBus);
             containerBuilder.RegisterInstance(csgoModule);

@@ -1,5 +1,5 @@
 using Aimrank.Common.Application.Events;
-using Aimrank.Modules.CSGO.Application.Commands.DeleteServer;
+using Aimrank.Modules.CSGO.Application.Commands.DeleteAndStopServer;
 using Aimrank.Modules.CSGO.Application.Contracts;
 using Aimrank.Modules.Matches.Domain.Lobbies;
 using Aimrank.Modules.Matches.Domain.Matches;
@@ -44,7 +44,7 @@ namespace Aimrank.Modules.Matches.Application.Matches.TimeoutReadyMatch
                 return Unit.Value;
             }
 
-            await _csgoModule.ExecuteCommandAsync(new DeleteServerCommand(match.Id));
+            await _csgoModule.ExecuteCommandAsync(new DeleteAndStopServerCommand(match.Id));
             
             var lobbies = await _lobbyRepository.BrowseByIdAsync(match.Lobbies.Select(l => l.LobbyId));
 
