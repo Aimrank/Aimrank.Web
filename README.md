@@ -1,4 +1,4 @@
-# Aimrank
+# Aimrank.Web
 
 ![Docker build status](https://github.com/mariusz-ba/aimrank/workflows/Build/badge.svg)
 
