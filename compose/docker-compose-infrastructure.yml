@@ -9,6 +9,12 @@ services:
     ports:
       - 1433:1433
 
+  rabbitmq:
+    image: rabbitmq:3.8.9-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+
   redis:
     image: redis:6.0.10-alpine
     ports:

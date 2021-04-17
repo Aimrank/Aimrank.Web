@@ -1,0 +1,5 @@
+@model Aimrank.Web.App.ViewModels.InitialAppStateViewModel
+
+<script>
+window.initialAppState = @Html.Raw(Json.Serialize(Model))
+</script>

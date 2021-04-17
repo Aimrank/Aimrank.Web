@@ -1,8 +1,7 @@
-﻿**/bin
-**/obj
+﻿.vs
+.idea
 
-container_data
-container_fs/csgo/sourcemod/plugins/build/
-container_fs/csgo/sourcemod/plugins/*.smx
+**/bin
+**/obj
 
 node_modules

@@ -6,7 +6,7 @@ services:
     environment:
       - ConnectionStrings__Database=Server=db;Database=Aimrank;User=sa;Password=Secret123!
     volumes:
-      - ../src/Aimrank.Web/wwwroot:/home/app/wwwroot
+      - ../src/Aimrank.Web.App/wwwroot:/home/app/wwwroot
   
   db:
     environment:
@@ -14,6 +14,11 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - 1433:1433
+  
+  rabbitmq:
+    ports:
+      - 5672:5672
+      - 15672:15672
 
   redis:
     ports:
