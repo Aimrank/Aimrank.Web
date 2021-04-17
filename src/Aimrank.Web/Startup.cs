@@ -1,5 +1,7 @@
 using Aimrank.Common.Application;
 using Aimrank.Common.Infrastructure.EventBus;
+using Aimrank.Modules.CSGO.Application.Contracts;
+using Aimrank.Modules.CSGO.Infrastructure.Configuration.Rabbit;
 using Aimrank.Modules.CSGO.Infrastructure.Configuration;
 using Aimrank.Modules.Matches.Infrastructure.Configuration;
 using Aimrank.Modules.Matches.IntegrationEvents.Lobbies;
@@ -30,17 +32,12 @@ namespace Aimrank.Web
     public class Startup
     {
         private readonly IEventBus _eventBus = new InMemoryEventBusClient();
-        private readonly IConfiguration _configuration;
-        private readonly RedisSettings _redisSettings = new();
-        private readonly MatchesModuleSettings _matchesModuleSettings = new();
-        private readonly UserAccessModuleSettings _userAccessModuleSettings = new();
+        
+        private IConfiguration Configuration { get; }
         
         public Startup(IConfiguration configuration)
         {
-            _configuration = configuration;
-            _configuration.GetSection(nameof(RedisSettings)).Bind(_redisSettings);
-            _configuration.GetSection(nameof(MatchesModuleSettings)).Bind(_matchesModuleSettings);
-            _configuration.GetSection(nameof(UserAccessModuleSettings)).Bind(_userAccessModuleSettings);
+            Configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -50,13 +47,15 @@ namespace Aimrank.Web
             services.AddSingleton<IUrlFactory, ApplicationUrlFactory>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
+            
+            var redisSettings = Configuration.GetSection(nameof(RedisSettings)).Get<RedisSettings>();
 
             services.AddStackExchangeRedisCache(options =>
             {
                 options.ConfigurationOptions = new ConfigurationOptions
                 {
-                    EndPoints = {_redisSettings.Endpoint},
-                    DefaultDatabase = _redisSettings.Database
+                    EndPoints = {redisSettings.Endpoint},
+                    DefaultDatabase = redisSettings.Database
                 };
             });
 
@@ -83,22 +82,23 @@ namespace Aimrank.Web
 
 #if false
             //Add db contexts so "dotnet ef" can find them when generating migrations
+            var connectionString = Configuration.GetConnectionString("Database");
 
             services.AddDbContext<CSGOContext>(options =>
-                options.UseSqlServer(_configuration.GetConnectionString("Database"),
+                options.UseSqlServer(connectionString,
                     x => x.MigrationsAssembly("Aimrank.Database.Migrator")));
 
             services.AddDbContext<MatchesContext>(options =>
             {
                 options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
-                options.UseSqlServer(_configuration.GetConnectionString("Database"),
+                options.UseSqlServer(connectionString,
                     x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
             });
             
             services.AddDbContext<UserAccessContext>(options =>
             {
                 options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
-                options.UseSqlServer(_configuration.GetConnectionString("Database"),
+                options.UseSqlServer(connectionString,
                     x => x.MigrationsAssembly("Aimrank.Database.Migrator"));
             });
 #endif
@@ -159,27 +159,33 @@ namespace Aimrank.Web
 
         private void InitializeModules(ILifetimeScope container)
         {
-            var executionContextAccessor = container.Resolve<IExecutionContextAccessor>();
-            var httpClientFactory = container.Resolve<IHttpClientFactory>();
+            var csgoModule = container.Resolve<ICSGOModule>();
             var urlFactory = container.Resolve<IUrlFactory>();
+            var httpClientFactory = container.Resolve<IHttpClientFactory>();
+            var executionContextAccessor = container.Resolve<IExecutionContextAccessor>();
             
-            var connectionString = _configuration.GetConnectionString("Database");
+            var connectionString = Configuration.GetConnectionString("Database");
+            var rabbitMqSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
+            var matchesModuleSettings =Configuration.GetSection(nameof(MatchesModuleSettings)).Get<MatchesModuleSettings>();
+            var userAccessModuleSettings = Configuration.GetSection(nameof(UserAccessModuleSettings)).Get<UserAccessModuleSettings>();
             
             CSGOStartup.Initialize(
                 connectionString,
-                httpClientFactory);
+                httpClientFactory,
+                rabbitMqSettings);
 
             MatchesStartup.Initialize(
                 connectionString,
+                csgoModule,
                 executionContextAccessor,
                 _eventBus,
-                _matchesModuleSettings);
+                matchesModuleSettings);
             
             UserAccessStartup.Initialize(
                 connectionString,
                 executionContextAccessor,
                 urlFactory,
-                _userAccessModuleSettings);
+                userAccessModuleSettings);
         }
     }
 }

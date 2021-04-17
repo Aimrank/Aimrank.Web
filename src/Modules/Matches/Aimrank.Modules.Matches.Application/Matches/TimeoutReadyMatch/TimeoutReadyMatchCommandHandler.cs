@@ -1,6 +1,6 @@
 using Aimrank.Common.Application.Events;
-using Aimrank.Modules.Matches.Application.CSGO;
-using Aimrank.Modules.Matches.Application.Contracts;
+using Aimrank.Modules.CSGO.Application.Commands.DeleteServer;
+using Aimrank.Modules.CSGO.Application.Contracts;
 using Aimrank.Modules.Matches.Domain.Lobbies;
 using Aimrank.Modules.Matches.Domain.Matches;
 using Aimrank.Modules.Matches.IntegrationEvents.Matches;
@@ -13,22 +13,22 @@ using System;
 
 namespace Aimrank.Modules.Matches.Application.Matches.TimeoutReadyMatch
 {
-    internal class TimeoutReadyMatchCommandHandler : ICommandHandler<TimeoutReadyMatchCommand>
+    internal class TimeoutReadyMatchCommandHandler : Contracts.ICommandHandler<TimeoutReadyMatchCommand>
     {
-        private readonly IServerProcessManager _serverProcessManager;
+        private readonly ICSGOModule _csgoModule;
         private readonly ILobbyRepository _lobbyRepository;
         private readonly IMatchRepository _matchRepository;
         private readonly IEventDispatcher _eventDispatcher;
         private readonly IMatchService _matchService;
 
         public TimeoutReadyMatchCommandHandler(
-            IServerProcessManager serverProcessManager,
+            ICSGOModule csgoModule,
             ILobbyRepository lobbyRepository,
             IMatchRepository matchRepository,
             IEventDispatcher eventDispatcher,
             IMatchService matchService)
         {
-            _serverProcessManager = serverProcessManager;
+            _csgoModule = csgoModule;
             _lobbyRepository = lobbyRepository;
             _matchRepository = matchRepository;
             _eventDispatcher = eventDispatcher;
@@ -43,9 +43,8 @@ namespace Aimrank.Modules.Matches.Application.Matches.TimeoutReadyMatch
             {
                 return Unit.Value;
             }
-            
-            _serverProcessManager.StopServer(match.Id);
-            _serverProcessManager.DeleteReservation(match.Id);
+
+            await _csgoModule.ExecuteCommandAsync(new DeleteServerCommand(match.Id));
             
             var lobbies = await _lobbyRepository.BrowseByIdAsync(match.Lobbies.Select(l => l.LobbyId));
 

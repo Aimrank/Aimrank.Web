@@ -4,7 +4,7 @@ using System;
 
 namespace Aimrank.Modules.CSGO.Application.Commands.StartServer
 {
-    public class StartServerCommand : ICommand
+    public class StartServerCommand : ICommand<string>
     {
         public Guid MatchId { get; }
         public string Map { get; }

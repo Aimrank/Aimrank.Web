@@ -47,16 +47,27 @@ namespace Aimrank.Modules.CSGO.Application.Services
             await httpClient.DeleteAsync($"http://{server.Pod.IpAddress}/server/{server.MatchId}");
         }
 
-        public async Task StartServerAsync(Server server, string map, IEnumerable<string> whitelist)
+        public async Task<string> StartServerAsync(Server server, string map, IEnumerable<string> whitelist)
         {
             using var httpClient = _httpClientFactory.CreateClient();
 
-            await httpClient.PostAsJsonAsync($"http://{server.Pod.IpAddress}/server", new
+            var response = await httpClient.PostAsJsonAsync($"http://{server.Pod.IpAddress}/server", new
             {
                 server.MatchId,
+                server.SteamToken,
                 Map = map,
                 Whitelist = whitelist
             });
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ServerDto>();
+                return result?.Address;
+            }
+
+            return null;
         }
+
+        private record ServerDto(string Address);
     }
 }

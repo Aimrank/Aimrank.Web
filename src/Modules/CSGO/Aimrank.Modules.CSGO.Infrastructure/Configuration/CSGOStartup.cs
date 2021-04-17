@@ -3,6 +3,7 @@ using Aimrank.Modules.CSGO.Infrastructure.Configuration.Mediator;
 using Aimrank.Modules.CSGO.Infrastructure.Configuration.Pods;
 using Aimrank.Modules.CSGO.Infrastructure.Configuration.Processing;
 using Aimrank.Modules.CSGO.Infrastructure.Configuration.Quartz;
+using Aimrank.Modules.CSGO.Infrastructure.Configuration.Rabbit;
 using Autofac;
 using System.Net.Http;
 
@@ -14,18 +15,21 @@ namespace Aimrank.Modules.CSGO.Infrastructure.Configuration
 
         public static void Initialize(
             string connectionString,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory,
+            RabbitMQSettings rabbitMqSettings)
         {
             ConfigureCompositionRoot(
                 connectionString,
-                httpClientFactory);
+                httpClientFactory,
+                rabbitMqSettings);
             
             QuartzStartup.Initialize();
         }
 
         private static void ConfigureCompositionRoot(
             string connectionString,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory,
+            RabbitMQSettings rabbitMqSettings)
         {
             var containerBuilder = new ContainerBuilder();
 
@@ -34,6 +38,7 @@ namespace Aimrank.Modules.CSGO.Infrastructure.Configuration
             containerBuilder.RegisterModule(new ProcessingModule());
             containerBuilder.RegisterModule(new QuartzModule());
             containerBuilder.RegisterModule(new PodsModule());
+            containerBuilder.RegisterModule(new RabbitMQModule(rabbitMqSettings));
             containerBuilder.RegisterInstance(httpClientFactory);
 
             _container = containerBuilder.Build();

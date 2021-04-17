@@ -10,7 +10,14 @@ namespace Aimrank.Modules.CSGO.Infrastructure.Application.Entities
         {
             builder.ToTable("Servers", "csgo");
             builder.HasKey(s => s.MatchId);
-            builder.HasIndex(s => s.SteamToken).IsUnique();
+            
+            builder
+                .HasOne(s => s.SteamToken)
+                .WithOne(t => t.Server)
+                .HasForeignKey<Server>();
+                
+            builder.Navigation(s => s.Pod).IsRequired();
+            builder.Navigation(s => s.SteamToken).IsRequired();
         }
     }
 }

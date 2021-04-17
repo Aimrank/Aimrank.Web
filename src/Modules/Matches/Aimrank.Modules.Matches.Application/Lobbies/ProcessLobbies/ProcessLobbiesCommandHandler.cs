@@ -1,5 +1,6 @@
-using Aimrank.Modules.Matches.Application.CSGO;
-using Aimrank.Modules.Matches.Application.Contracts;
+using Aimrank.Modules.CSGO.Application.Commands.CreateServers;
+using Aimrank.Modules.CSGO.Application.Contracts;
+using Aimrank.Modules.CSGO.Application.Queries.GetAvailableServers;
 using Aimrank.Modules.Matches.Application.Lobbies.ProcessLobbies.Matchmaking;
 using Aimrank.Modules.Matches.Domain.Lobbies;
 using Aimrank.Modules.Matches.Domain.Matches;
@@ -12,23 +13,23 @@ using System.Threading;
 
 namespace Aimrank.Modules.Matches.Application.Lobbies.ProcessLobbies
 {
-    internal class ProcessLobbiesCommandHandler : ICommandHandler<ProcessLobbiesCommand>
+    internal class ProcessLobbiesCommandHandler : Contracts.ICommandHandler<ProcessLobbiesCommand>
     {
+        private readonly ICSGOModule _csgoModule;
         private readonly ILobbyRepository _lobbyRepository;
         private readonly IMatchRepository _matchRepository;
         private readonly IPlayerRepository _playerRepository;
-        private readonly IServerProcessManager _serverProcessManager;
 
         public ProcessLobbiesCommandHandler(
+            ICSGOModule csgoModule,
             ILobbyRepository lobbyRepository,
             IMatchRepository matchRepository,
-            IPlayerRepository playerRepository,
-            IServerProcessManager serverProcessManager)
+            IPlayerRepository playerRepository)
         {
+            _csgoModule = csgoModule;
             _lobbyRepository = lobbyRepository;
             _matchRepository = matchRepository;
             _playerRepository = playerRepository;
-            _serverProcessManager = serverProcessManager;
         }
 
 
@@ -38,16 +39,13 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.ProcessLobbies
             var players = (await GetPlayers(lobbies)).ToDictionary(p => p.Id);
 
             var manager = await MatchmakingManager.CreateAsync(_matchRepository, lobbies, players);
+            
+            var serversCount = await _csgoModule.ExecuteQueryAsync(new GetAvailableServersQuery());
 
-            var matches = manager.CreateMatches();
-
+            var matches = manager.CreateMatches().Take(serversCount).ToList();
+            
             foreach (var match in matches)
             {
-                if (!_serverProcessManager.TryCreateReservation(match.Id))
-                {
-                    break;
-                }
-
                 var lobbiesToClose = lobbies.Where(l => match.Lobbies.Any(entry => entry.LobbyId == l.Id));
 
                 foreach (var lobbyToClose in lobbiesToClose)
@@ -57,6 +55,8 @@ namespace Aimrank.Modules.Matches.Application.Lobbies.ProcessLobbies
 
                 _matchRepository.Add(match);
             }
+
+            await _csgoModule.ExecuteCommandAsync(new CreateServersCommand(matches.Select(m => m.Id.Value)));
 
             return Unit.Value;
         }

@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 
 [assembly:InternalsVisibleTo("Aimrank.Database.Migrator")]
 [assembly:InternalsVisibleTo("Aimrank.Web")]
-[assembly:InternalsVisibleTo("Aimrank.Modules.Matches.IntegrationTests")]
 [assembly:InternalsVisibleTo("Aimrank.Modules.Matches.ArchTests")]
 
 namespace Aimrank.Modules.Matches.Infrastructure

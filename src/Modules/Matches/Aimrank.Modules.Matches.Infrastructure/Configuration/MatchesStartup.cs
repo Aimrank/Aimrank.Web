@@ -1,6 +1,6 @@
 using Aimrank.Common.Application;
 using Aimrank.Common.Infrastructure.EventBus;
-using Aimrank.Modules.Matches.Infrastructure.Configuration.CSGO;
+using Aimrank.Modules.CSGO.Application.Contracts;
 using Aimrank.Modules.Matches.Infrastructure.Configuration.DataAccess;
 using Aimrank.Modules.Matches.Infrastructure.Configuration.Mediator;
 using Aimrank.Modules.Matches.Infrastructure.Configuration.Processing;
@@ -16,12 +16,14 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration
 
         public static void Initialize(
             string connectionString,
+            ICSGOModule csgoModule,
             IExecutionContextAccessor executionContextAccessor,
             IEventBus eventBus,
             MatchesModuleSettings matchesModuleSettings)
         {
             ConfigureCompositionRoot(
                 connectionString,
+                csgoModule,
                 executionContextAccessor,
                 eventBus,
                 matchesModuleSettings);
@@ -31,6 +33,7 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration
 
         private static void ConfigureCompositionRoot(
             string connectionString,
+            ICSGOModule csgoModule,
             IExecutionContextAccessor executionContextAccessor,
             IEventBus eventBus,
             MatchesModuleSettings matchesModuleSettings)
@@ -40,11 +43,11 @@ namespace Aimrank.Modules.Matches.Infrastructure.Configuration
             containerBuilder.RegisterModule(new DataAccessModule(connectionString));
             containerBuilder.RegisterModule(new MediatorModule());
             containerBuilder.RegisterModule(new ProcessingModule());
-            containerBuilder.RegisterModule(new CSGOModule(matchesModuleSettings.CSGOSettings));
             containerBuilder.RegisterModule(new QuartzModule());
             containerBuilder.RegisterModule(new RedisModule(matchesModuleSettings.RedisSettings));
             containerBuilder.RegisterInstance(executionContextAccessor);
             containerBuilder.RegisterInstance(eventBus);
+            containerBuilder.RegisterInstance(csgoModule);
 
             _container = containerBuilder.Build();
             

@@ -12,6 +12,7 @@
     
     <ItemGroup>
       <ProjectReference Include="..\..\..\Common\Aimrank.Common.Application\Aimrank.Common.Application.csproj" />
+      <ProjectReference Include="..\..\CSGO\Aimrank.Modules.CSGO.Application\Aimrank.Modules.CSGO.Application.csproj" />
       <ProjectReference Include="..\Aimrank.Modules.Matches.Domain\Aimrank.Modules.Matches.Domain.csproj" />
       <ProjectReference Include="..\Aimrank.Modules.Matches.IntegrationEvents\Aimrank.Modules.Matches.IntegrationEvents.csproj" />
     </ItemGroup>

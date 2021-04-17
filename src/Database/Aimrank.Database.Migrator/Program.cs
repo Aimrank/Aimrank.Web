@@ -19,12 +19,12 @@ static IConfiguration LoadConfiguration()
 {
     var builder = new ConfigurationBuilder()
         .SetBasePath(Path.Combine(AppContext.BaseDirectory))
-        .AddJsonFile("settings.json", true);
+        .AddJsonFile("settings.json");
 
     var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
     if (environment is not null)
     {
-        builder.AddJsonFile($"settings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", true);
+        builder.AddJsonFile($"settings.{environment}.json", true);
     }
 
     builder.AddEnvironmentVariables();

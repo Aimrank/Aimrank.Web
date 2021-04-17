@@ -1,6 +1,5 @@
 using Aimrank.Modules.CSGO.Application.Contracts;
 using Aimrank.Modules.CSGO.Application.Entities;
-using Aimrank.Modules.CSGO.Application.Exceptions;
 using Aimrank.Modules.CSGO.Application.Repositories;
 using MediatR;
 using System.Threading.Tasks;
@@ -22,7 +21,7 @@ namespace Aimrank.Modules.CSGO.Application.Commands.CreatePod
             var pod = await _podRepository.GetByIpAddressAsync(request.IpAddress);
             if (pod is not null)
             {
-                throw new CSGOException($"Pod with IP address \"{request.IpAddress}\" already exists.");
+                return Unit.Value;
             }
 
             pod = new Pod
