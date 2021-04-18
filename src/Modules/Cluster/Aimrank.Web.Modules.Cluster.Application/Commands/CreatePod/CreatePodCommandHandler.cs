@@ -18,7 +18,7 @@ namespace Aimrank.Web.Modules.Cluster.Application.Commands.CreatePod
 
         public async Task<Unit> Handle(CreatePodCommand request, CancellationToken cancellationToken)
         {
-            var pod = await _podRepository.GetByIpAddressAsync(request.IpAddress);
+            var pod = await _podRepository.GetByIpAddressOptionalAsync(request.IpAddress);
             if (pod is not null)
             {
                 return Unit.Value;

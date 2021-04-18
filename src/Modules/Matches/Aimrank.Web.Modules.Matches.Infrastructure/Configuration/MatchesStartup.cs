@@ -1,6 +1,7 @@
 using Aimrank.Web.Common.Application;
 using Aimrank.Web.Common.Infrastructure.EventBus;
 using Aimrank.Web.Modules.Cluster.Application.Contracts;
+using Aimrank.Web.Modules.Matches.Infrastructure.Application;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.DataAccess;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Mediator;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing;
@@ -47,6 +48,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
             containerBuilder.RegisterModule(new QuartzModule());
             containerBuilder.RegisterModule(new RedisModule(matchesModuleSettings.RedisSettings));
             containerBuilder.RegisterModule(new RabbitMQModule(matchesModuleSettings.RabbitMQSettings));
+            containerBuilder.RegisterModule(new ApplicationModule());
             containerBuilder.RegisterInstance(executionContextAccessor);
             containerBuilder.RegisterInstance(eventBus);
             containerBuilder.RegisterInstance(clusterModule);

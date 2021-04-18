@@ -1,9 +1,11 @@
 using Aimrank.Web.Common.Application.Events;
+using RabbitMQ.Client.Exceptions;
 using RabbitMQ.Client;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json;
 using System.Text;
+using System.Threading;
 using System;
 
 namespace Aimrank.Web.Common.Infrastructure.EventBus.RabbitMQ
@@ -30,13 +32,30 @@ namespace Aimrank.Web.Common.Infrastructure.EventBus.RabbitMQ
                 DispatchConsumersAsync = true
             };
 
-            Connection = factory.CreateConnection();
+            Connection = CreateConnection(factory);
             Channel = Connection.CreateModel();
             Channel.ExchangeDeclare(RabbitMQSettings.ExchangeName, "direct", true, false, null);
             Channel.QueueDeclare(RabbitMQSettings.ServiceName, true, false, false, null);
             
             BasicProperties = Channel.CreateBasicProperties();
             BasicProperties.Persistent = true;
+        }
+
+        private IConnection CreateConnection(ConnectionFactory factory)
+        {
+            while (true)
+            {
+                try
+                {
+                    var connection = factory.CreateConnection();
+                    return connection;
+                }
+                catch (BrokerUnreachableException)
+                {
+                    Console.WriteLine("Failed to connect to RabbitMQ. Retrying in 10 seconds.");
+                    Thread.Sleep(10000);
+                }
+            }
         }
         
         public void Dispose()

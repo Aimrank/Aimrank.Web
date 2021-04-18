@@ -1,5 +1,4 @@
 using Aimrank.Web.Modules.Cluster.Application.Entities;
-using Aimrank.Web.Modules.Cluster.Application.Exceptions;
 using Aimrank.Web.Modules.Cluster.Application.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -17,19 +16,22 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Application.Repositories
             _context = context;
         }
 
-        public Task<int> GetAvailableServersCountAsync()
-            => _context.Pods.Select(p => p.MaxServers - p.Servers.Count).SumAsync();
-
-        public async Task<Pod> GetByIpAddressAsync(string ipAddress)
+        public async Task<int> GetAvailableServersCountAsync()
         {
-            var pod = await _context.Pods.FirstOrDefaultAsync(p => p.IpAddress == ipAddress);
-            if (pod is null)
-            {
-                throw new ClusterException($"Pod with IP address \"{ipAddress}\" does not exist.");
-            }
+            var result = await _context.Pods
+                .Include(p => p.Servers)
+                .Select(p => new
+                {
+                    p.MaxServers,
+                    p.Servers.Count
+                })
+                .ToListAsync();
 
-            return pod;
+            return result.Sum(p => p.MaxServers - p.Count);
         }
+
+        public Task<Pod> GetByIpAddressOptionalAsync(string ipAddress)
+            => _context.Pods.FirstOrDefaultAsync(p => p.IpAddress == ipAddress);
 
         public async Task<IEnumerable<Pod>> BrowseAsync()
             => await _context.Pods.Include(p => p.Servers).ToListAsync();

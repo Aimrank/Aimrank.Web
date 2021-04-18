@@ -27,7 +27,11 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Application.Repositories
 
         public async Task<Server> GetByMatchIdAsync(Guid matchId)
         {
-            var server = await _context.Servers.FirstOrDefaultAsync(s => s.MatchId == matchId);
+            var server = await _context.Servers
+                .Include(s => s.Pod)
+                .Include(s => s.SteamToken)
+                .FirstOrDefaultAsync(s => s.MatchId == matchId);
+                
             if (server is null)
             {
                 throw new ClusterException($"Server with matchId \"{matchId}\" does not exist.");
@@ -35,6 +39,8 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Application.Repositories
 
             return server;
         }
+
+        public void Add(Server server) => _context.Servers.Add(server);
 
         public void Delete(Server server) => _context.Servers.Remove(server);
 

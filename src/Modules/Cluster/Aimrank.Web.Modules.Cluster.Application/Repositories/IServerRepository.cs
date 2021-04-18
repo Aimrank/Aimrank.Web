@@ -9,6 +9,7 @@ namespace Aimrank.Web.Modules.Cluster.Application.Repositories
     {
         Task<IEnumerable<Server>> BrowseByIpAddressesAsync(IEnumerable<string> ipAddresses);
         Task<Server> GetByMatchIdAsync(Guid matchId);
+        void Add(Server server);
         void Delete(Server server);
         void DeleteRange(IEnumerable<Server> servers);
     }

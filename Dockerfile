@@ -67,12 +67,13 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
 
 COPY --from=build /app/out/ .
-
-COPY scripts/start.sh start.sh
+COPY scripts/start.sh .
 
 RUN chmod +x start.sh
+
+RUN apt-get update && apt-get install -y curl
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=5 \
   CMD curl -f http://localhost/ || exit 1
 
-ENTRYPOINT ["start.sh"]
+ENTRYPOINT ["bash", "start.sh"]

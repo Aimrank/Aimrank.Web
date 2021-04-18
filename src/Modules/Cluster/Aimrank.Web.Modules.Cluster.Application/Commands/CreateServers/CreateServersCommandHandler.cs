@@ -12,11 +12,16 @@ namespace Aimrank.Web.Modules.Cluster.Application.Commands.CreateServers
     internal class CreateServersCommandHandler : ICommandHandler<CreateServersCommand>
     {
         private readonly ISteamTokenRepository _steamTokenRepository;
+        private readonly IServerRepository _serverRepository;
         private readonly IPodRepository _podRepository;
 
-        public CreateServersCommandHandler(ISteamTokenRepository steamTokenRepository, IPodRepository podRepository)
+        public CreateServersCommandHandler(
+            ISteamTokenRepository steamTokenRepository,
+            IServerRepository serverRepository,
+            IPodRepository podRepository)
         {
             _steamTokenRepository = steamTokenRepository;
+            _serverRepository = serverRepository;
             _podRepository = podRepository;
         }
 
@@ -30,24 +35,41 @@ namespace Aimrank.Web.Modules.Cluster.Application.Commands.CreateServers
                 throw new ClusterException("Not enough steam tokens.");
             }
 
-            var pods = (await _podRepository.BrowseAsync()).ToList();
+            var entries = (await _podRepository.BrowseAsync())
+                .Select(p => new PodDto
+                {
+                    Pod = p,
+                    AvailableServers = p.MaxServers - p.Servers.Count
+                })
+                .ToList();
 
             for (var i = 0; i < matches.Count; i++)
             {
-                var pod = pods.FirstOrDefault(p => p.Servers.Count < p.MaxServers);
-                if (pod is null)
+                var entry = entries.FirstOrDefault(e => e.AvailableServers > 0);
+                if (entry is null)
                 {
                     throw new ClusterException("No server available.");
                 }
-                
-                pod.Servers.Add(new Server
+
+                var server = new Server
                 {
+                    Pod = entry.Pod,
                     MatchId = matches[i],
                     SteamToken = tokens[i]
-                });
+                };
+
+                entry.AvailableServers--;
+
+                _serverRepository.Add(server);
             }
             
             return Unit.Value;
+        }
+
+        private class PodDto
+        {
+            public Pod Pod { get; set; }
+            public int AvailableServers { get; set; }
         }
     }
 }

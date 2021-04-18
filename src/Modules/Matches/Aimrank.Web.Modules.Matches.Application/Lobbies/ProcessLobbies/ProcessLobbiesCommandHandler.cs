@@ -56,7 +56,10 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.ProcessLobbies
                 _matchRepository.Add(match);
             }
 
-            await _clusterModule.ExecuteCommandAsync(new CreateServersCommand(matches.Select(m => m.Id.Value)));
+            if (matches.Count > 0)
+            {
+                await _clusterModule.ExecuteCommandAsync(new CreateServersCommand(matches.Select(m => m.Id.Value)));
+            }
 
             return Unit.Value;
         }
