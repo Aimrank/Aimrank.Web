@@ -9,6 +9,7 @@ using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Quartz;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Rabbit;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Redis;
 using Autofac;
+using Microsoft.Extensions.Logging;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
 {
@@ -18,27 +19,30 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
 
         public static void Initialize(
             string connectionString,
+            MatchesModuleSettings matchesModuleSettings,
+            ILogger logger,
             IClusterModule clusterModule,
             IExecutionContextAccessor executionContextAccessor,
-            IEventBus eventBus,
-            MatchesModuleSettings matchesModuleSettings)
+            IEventBus eventBus)
         {
             ConfigureCompositionRoot(
                 connectionString,
+                matchesModuleSettings,
+                logger,
                 clusterModule,
                 executionContextAccessor,
-                eventBus,
-                matchesModuleSettings);
+                eventBus);
             
             QuartzStartup.Initialize();
         }
 
         private static void ConfigureCompositionRoot(
             string connectionString,
+            MatchesModuleSettings matchesModuleSettings,
+            ILogger logger,
             IClusterModule clusterModule,
             IExecutionContextAccessor executionContextAccessor,
-            IEventBus eventBus,
-            MatchesModuleSettings matchesModuleSettings)
+            IEventBus eventBus)
         {
             var containerBuilder = new ContainerBuilder();
 
@@ -47,10 +51,11 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
             containerBuilder.RegisterModule(new ProcessingModule());
             containerBuilder.RegisterModule(new QuartzModule());
             containerBuilder.RegisterModule(new RedisModule(matchesModuleSettings.RedisSettings));
-            containerBuilder.RegisterModule(new RabbitMQModule(matchesModuleSettings.RabbitMQSettings));
+            containerBuilder.RegisterModule(new RabbitMQModule(matchesModuleSettings.RabbitMQSettings, logger));
             containerBuilder.RegisterModule(new ApplicationModule());
             containerBuilder.RegisterInstance(executionContextAccessor);
             containerBuilder.RegisterInstance(eventBus);
+            containerBuilder.RegisterInstance(logger);
             containerBuilder.RegisterInstance(clusterModule);
 
             _container = containerBuilder.Build();

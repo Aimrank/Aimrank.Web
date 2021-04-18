@@ -40,6 +40,7 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Mediator
                     .AsImplementedInterfaces();
             }
 
+            builder.RegisterGeneric(typeof(LoggingPipelineBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(ValidationPipelineBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(UnitOfWorkPipelineBehavior<,>)).As(typeof(IPipelineBehavior<,>));
 

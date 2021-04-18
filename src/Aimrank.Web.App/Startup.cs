@@ -1,12 +1,3 @@
-using Aimrank.Web.Common.Application;
-using Aimrank.Web.Common.Infrastructure.EventBus;
-using Aimrank.Web.Modules.Cluster.Application.Contracts;
-using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration;
-using Aimrank.Web.Modules.Matches.Infrastructure.Configuration;
-using Aimrank.Web.Modules.Matches.IntegrationEvents.Lobbies;
-using Aimrank.Web.Modules.Matches.IntegrationEvents.Matches;
-using Aimrank.Web.Modules.UserAccess.Application.Services;
-using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration;
 using Aimrank.Web.App.Configuration.EventBus;
 using Aimrank.Web.App.Configuration.ExecutionContext;
 using Aimrank.Web.App.Configuration.SessionAuthentication;
@@ -15,6 +6,18 @@ using Aimrank.Web.App.GraphQL;
 using Aimrank.Web.App.Modules.Cluster;
 using Aimrank.Web.App.Modules.Matches;
 using Aimrank.Web.App.Modules.UserAccess;
+using Aimrank.Web.Common.Application;
+using Aimrank.Web.Common.Infrastructure.EventBus;
+using Aimrank.Web.Modules.Cluster.Application.Contracts;
+using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration;
+using Aimrank.Web.Modules.Cluster.Infrastructure;
+using Aimrank.Web.Modules.Matches.Infrastructure.Configuration;
+using Aimrank.Web.Modules.Matches.Infrastructure;
+using Aimrank.Web.Modules.Matches.IntegrationEvents.Lobbies;
+using Aimrank.Web.Modules.Matches.IntegrationEvents.Matches;
+using Aimrank.Web.Modules.UserAccess.Application.Services;
+using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration;
+using Aimrank.Web.Modules.UserAccess.Infrastructure;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
@@ -23,6 +26,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using System.Net.Http;
 
@@ -167,25 +171,28 @@ namespace Aimrank.Web.App
             var csgoModuleSettings = Configuration.GetSection(nameof(ClusterModuleSettings)).Get<ClusterModuleSettings>();
             var matchesModuleSettings = Configuration.GetSection(nameof(MatchesModuleSettings)).Get<MatchesModuleSettings>();
             var userAccessModuleSettings = Configuration.GetSection(nameof(UserAccessModuleSettings)).Get<UserAccessModuleSettings>();
-            
+
             ClusterStartup.Initialize(
                 connectionString,
-                _eventBus,
+                csgoModuleSettings,
+                container.Resolve<ILogger<ClusterModule>>(),
                 httpClientFactory,
-                csgoModuleSettings);
+                _eventBus);
 
             MatchesStartup.Initialize(
                 connectionString,
+                matchesModuleSettings,
+                container.Resolve<ILogger<MatchesModule>>(),
                 csgoModule,
                 executionContextAccessor,
-                _eventBus,
-                matchesModuleSettings);
+                _eventBus);
             
             UserAccessStartup.Initialize(
                 connectionString,
+                userAccessModuleSettings,
+                container.Resolve<ILogger<UserAccessModule>>(),
                 executionContextAccessor,
-                urlFactory,
-                userAccessModuleSettings);
+                urlFactory);
         }
     }
 }

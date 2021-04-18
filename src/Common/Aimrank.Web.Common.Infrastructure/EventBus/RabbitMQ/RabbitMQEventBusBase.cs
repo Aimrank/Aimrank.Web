@@ -1,4 +1,5 @@
 using Aimrank.Web.Common.Application.Events;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client.Exceptions;
 using RabbitMQ.Client;
 using System.Collections.Generic;
@@ -16,12 +17,14 @@ namespace Aimrank.Web.Common.Infrastructure.EventBus.RabbitMQ
         protected IBasicProperties BasicProperties { get; }
         protected IConnection Connection { get; }
         protected IModel Channel { get; }
+        protected ILogger Logger { get; }
         
         protected Dictionary<string, Type> Events { get; } = new();
 
-        protected RabbitMQEventBusBase(RabbitMQSettings rabbitMqSettings)
+        protected RabbitMQEventBusBase(RabbitMQSettings rabbitMqSettings, ILogger logger)
         {
             RabbitMQSettings = rabbitMqSettings;
+            Logger = logger;
 
             var factory = new ConnectionFactory
             {
@@ -52,7 +55,7 @@ namespace Aimrank.Web.Common.Infrastructure.EventBus.RabbitMQ
                 }
                 catch (BrokerUnreachableException)
                 {
-                    Console.WriteLine("Failed to connect to RabbitMQ. Retrying in 10 seconds.");
+                    Logger.LogError("Failed to connect to RabbitMQ. Retrying in 10 seconds.");
                     Thread.Sleep(10000);
                 }
             }

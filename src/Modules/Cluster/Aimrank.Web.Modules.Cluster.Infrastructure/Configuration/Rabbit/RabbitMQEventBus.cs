@@ -1,6 +1,7 @@
 using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Common.Infrastructure.EventBus.RabbitMQ;
 using Autofac;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Rabbit
 {
     internal class RabbitMQEventBus : RabbitMQEventBusBase
     {
-        public RabbitMQEventBus(RabbitMQSettings rabbitMqSettings) : base(rabbitMqSettings)
+        public RabbitMQEventBus(RabbitMQSettings rabbitMqSettings, ILogger logger) : base(rabbitMqSettings, logger)
         {
         }
 

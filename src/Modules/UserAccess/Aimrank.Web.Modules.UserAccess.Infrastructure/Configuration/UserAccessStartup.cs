@@ -6,6 +6,7 @@ using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Mediator;
 using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing;
 using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Quartz;
 using Autofac;
+using Microsoft.Extensions.Logging;
 
 namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration
 {
@@ -15,24 +16,27 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration
 
         public static void Initialize(
             string connectionString,
+            UserAccessModuleSettings userAccessModuleSettings,
+            ILogger logger,
             IExecutionContextAccessor executionContextAccessor,
-            IUrlFactory urlFactory,
-            UserAccessModuleSettings userAccessModuleSettings)
+            IUrlFactory urlFactory)
         {
             ConfigureCompositionRoot(
                 connectionString,
+                userAccessModuleSettings,
+                logger,
                 executionContextAccessor,
-                urlFactory,
-                userAccessModuleSettings);
+                urlFactory);
             
             QuartzStartup.Initialize();
         }
 
         private static void ConfigureCompositionRoot(
             string connectionString,
+            UserAccessModuleSettings userAccessModuleSettings,
+            ILogger logger,
             IExecutionContextAccessor executionContextAccessor,
-            IUrlFactory urlFactory,
-            UserAccessModuleSettings userAccessModuleSettings)
+            IUrlFactory urlFactory)
         {
             var containerBuilder = new ContainerBuilder();
 
@@ -43,6 +47,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration
             containerBuilder.RegisterModule(new QuartzModule());
             containerBuilder.RegisterInstance(executionContextAccessor);
             containerBuilder.RegisterInstance(urlFactory);
+            containerBuilder.RegisterInstance(logger);
 
             _container = containerBuilder.Build();
             

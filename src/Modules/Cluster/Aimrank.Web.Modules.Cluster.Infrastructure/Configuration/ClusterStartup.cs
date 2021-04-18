@@ -6,6 +6,7 @@ using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Processing;
 using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Quartz;
 using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Rabbit;
 using Autofac;
+using Microsoft.Extensions.Logging;
 using System.Net.Http;
 
 namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration
@@ -16,24 +17,27 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration
 
         public static void Initialize(
             string connectionString,
-            IEventBus eventBus,
+            ClusterModuleSettings clusterModuleSettings,
+            ILogger logger,
             IHttpClientFactory httpClientFactory,
-            ClusterModuleSettings clusterModuleSettings)
+            IEventBus eventBus)
         {
             ConfigureCompositionRoot(
                 connectionString,
-                eventBus,
+                clusterModuleSettings,
+                logger,
                 httpClientFactory,
-                clusterModuleSettings);
+                eventBus);
             
             QuartzStartup.Initialize();
         }
 
         private static void ConfigureCompositionRoot(
             string connectionString,
-            IEventBus eventBus,
+            ClusterModuleSettings clusterModuleSettings,
+            ILogger logger,
             IHttpClientFactory httpClientFactory,
-            ClusterModuleSettings clusterModuleSettings)
+            IEventBus eventBus)
         {
             var containerBuilder = new ContainerBuilder();
 
@@ -42,9 +46,10 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration
             containerBuilder.RegisterModule(new ProcessingModule());
             containerBuilder.RegisterModule(new QuartzModule());
             containerBuilder.RegisterModule(new PodsModule());
-            containerBuilder.RegisterModule(new RabbitMQModule(clusterModuleSettings.RabbitMQSettings));
+            containerBuilder.RegisterModule(new RabbitMQModule(clusterModuleSettings.RabbitMQSettings, logger));
             containerBuilder.RegisterInstance(httpClientFactory);
             containerBuilder.RegisterInstance(eventBus);
+            containerBuilder.RegisterInstance(logger);
 
             _container = containerBuilder.Build();
             

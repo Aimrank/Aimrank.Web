@@ -3,7 +3,6 @@ using Aimrank.Web.Modules.Cluster.Application.Repositories;
 using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Net.Http;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
 namespace Aimrank.Web.Modules.Cluster.Application.Services
@@ -21,17 +20,15 @@ namespace Aimrank.Web.Modules.Cluster.Application.Services
 
         public async Task<IEnumerable<Pod>> GetInactivePodsAsync()
         {
+            using var httpClient = _httpClientFactory.CreateClient();
+            
             var inactivePods = new List<Pod>();
             
             var pods = await _podRepository.BrowseAsync();
 
-            var sender = new Ping();
-
             foreach (var pod in pods)
             {
-                var result = sender.Send(pod.IpAddress);
-
-                if (result.Status != IPStatus.Success)
+                if (await IsPodAliveAsync(httpClient, pod) is false)
                 {
                     inactivePods.Add(pod);
                 }
@@ -66,6 +63,19 @@ namespace Aimrank.Web.Modules.Cluster.Application.Services
             }
 
             return null;
+        }
+
+        private async Task<bool> IsPodAliveAsync(HttpClient httpClient, Pod pod)
+        {
+            try
+            {
+                var result = await httpClient.GetAsync($"http://{pod.IpAddress}");
+                return result.IsSuccessStatusCode;
+            }
+            catch (HttpRequestException)
+            {
+                return false;
+            }
         }
 
         private record ServerDto(string Address);
