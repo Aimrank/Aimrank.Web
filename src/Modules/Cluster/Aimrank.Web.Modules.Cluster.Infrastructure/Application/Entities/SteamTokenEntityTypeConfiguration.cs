@@ -8,7 +8,7 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Application.Entities
     {
         public void Configure(EntityTypeBuilder<SteamToken> builder)
         {
-            builder.ToTable("SteamTokens", "csgo");
+            builder.ToTable("SteamTokens", "cluster");
             builder.HasKey(t => t.Token);
         }
     }

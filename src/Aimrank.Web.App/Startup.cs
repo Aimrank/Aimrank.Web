@@ -162,19 +162,19 @@ namespace Aimrank.Web.App
 
         private void InitializeModules(ILifetimeScope container)
         {
-            var csgoModule = container.Resolve<IClusterModule>();
+            var clusterModule = container.Resolve<IClusterModule>();
             var urlFactory = container.Resolve<IUrlFactory>();
             var httpClientFactory = container.Resolve<IHttpClientFactory>();
             var executionContextAccessor = container.Resolve<IExecutionContextAccessor>();
             
             var connectionString = Configuration.GetConnectionString("Database");
-            var csgoModuleSettings = Configuration.GetSection(nameof(ClusterModuleSettings)).Get<ClusterModuleSettings>();
+            var clusterModuleSettings = Configuration.GetSection(nameof(ClusterModuleSettings)).Get<ClusterModuleSettings>();
             var matchesModuleSettings = Configuration.GetSection(nameof(MatchesModuleSettings)).Get<MatchesModuleSettings>();
             var userAccessModuleSettings = Configuration.GetSection(nameof(UserAccessModuleSettings)).Get<UserAccessModuleSettings>();
 
             ClusterStartup.Initialize(
                 connectionString,
-                csgoModuleSettings,
+                clusterModuleSettings,
                 container.Resolve<ILogger<ClusterModule>>(),
                 httpClientFactory,
                 _eventBus);
@@ -183,7 +183,7 @@ namespace Aimrank.Web.App
                 connectionString,
                 matchesModuleSettings,
                 container.Resolve<ILogger<MatchesModule>>(),
-                csgoModule,
+                clusterModule,
                 executionContextAccessor,
                 _eventBus);
             

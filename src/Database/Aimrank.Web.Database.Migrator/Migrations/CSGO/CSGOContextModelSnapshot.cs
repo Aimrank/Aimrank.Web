@@ -29,7 +29,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
 
                     b.HasKey("IpAddress");
 
-                    b.ToTable("Pods", "csgo");
+                    b.ToTable("Pods", "cluster");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.Cluster.Application.Entities.Server", b =>
@@ -56,7 +56,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
                     b.HasIndex("SteamTokenToken")
                         .IsUnique();
 
-                    b.ToTable("Servers", "csgo");
+                    b.ToTable("Servers", "cluster");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.Cluster.Application.Entities.SteamToken", b =>
@@ -66,7 +66,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
 
                     b.HasKey("Token");
 
-                    b.ToTable("SteamTokens", "csgo");
+                    b.ToTable("SteamTokens", "cluster");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.Cluster.Application.Entities.Server", b =>

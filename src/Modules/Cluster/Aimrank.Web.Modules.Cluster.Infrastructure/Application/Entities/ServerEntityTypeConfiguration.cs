@@ -8,7 +8,7 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Application.Entities
     {
         public void Configure(EntityTypeBuilder<Server> builder)
         {
-            builder.ToTable("Servers", "csgo");
+            builder.ToTable("Servers", "cluster");
             builder.HasKey(s => s.MatchId);
             
             builder

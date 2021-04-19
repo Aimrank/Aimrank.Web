@@ -8,11 +8,11 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "csgo");
+                name: "cluster");
 
             migrationBuilder.CreateTable(
                 name: "Pods",
-                schema: "csgo",
+                schema: "cluster",
                 columns: table => new
                 {
                     IpAddress = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -25,7 +25,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
 
             migrationBuilder.CreateTable(
                 name: "SteamTokens",
-                schema: "csgo",
+                schema: "cluster",
                 columns: table => new
                 {
                     Token = table.Column<string>(type: "nvarchar(450)", nullable: false)
@@ -37,7 +37,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
 
             migrationBuilder.CreateTable(
                 name: "Servers",
-                schema: "csgo",
+                schema: "cluster",
                 columns: table => new
                 {
                     MatchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -51,14 +51,14 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
                     table.ForeignKey(
                         name: "FK_Servers_Pods_PodIpAddress",
                         column: x => x.PodIpAddress,
-                        principalSchema: "csgo",
+                        principalSchema: "cluster",
                         principalTable: "Pods",
                         principalColumn: "IpAddress",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Servers_SteamTokens_SteamTokenToken",
                         column: x => x.SteamTokenToken,
-                        principalSchema: "csgo",
+                        principalSchema: "cluster",
                         principalTable: "SteamTokens",
                         principalColumn: "Token",
                         onDelete: ReferentialAction.Cascade);
@@ -66,13 +66,13 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
 
             migrationBuilder.CreateIndex(
                 name: "IX_Servers_PodIpAddress",
-                schema: "csgo",
+                schema: "cluster",
                 table: "Servers",
                 column: "PodIpAddress");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Servers_SteamTokenToken",
-                schema: "csgo",
+                schema: "cluster",
                 table: "Servers",
                 column: "SteamTokenToken",
                 unique: true);
@@ -82,15 +82,15 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
         {
             migrationBuilder.DropTable(
                 name: "Servers",
-                schema: "csgo");
+                schema: "cluster");
 
             migrationBuilder.DropTable(
                 name: "Pods",
-                schema: "csgo");
+                schema: "cluster");
 
             migrationBuilder.DropTable(
                 name: "SteamTokens",
-                schema: "csgo");
+                schema: "cluster");
         }
     }
 }
