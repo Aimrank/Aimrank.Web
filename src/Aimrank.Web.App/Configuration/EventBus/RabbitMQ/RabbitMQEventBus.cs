@@ -1,7 +1,5 @@
 using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Common.Infrastructure.EventBus;
-using Microsoft.Extensions.Logging;
-using RabbitMQ.Client.Exceptions;
 using RabbitMQ.Client;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,20 +12,17 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
     internal class RabbitMQEventBus : IEventBus
     {
         private readonly IEventBus _eventBus;
-        private readonly ILogger<RabbitMQEventBus> _logger;
         private readonly RabbitMQSettings _rabbitMqSettings;
         private readonly RabbitMQEventSerializer _eventSerializer;
         private readonly RabbitMQRoutingKeyFactory _routingKeyFactory;
 
         public RabbitMQEventBus(
             IEventBus eventBus,
-            ILogger<RabbitMQEventBus> logger,
             RabbitMQSettings rabbitMqSettings,
             RabbitMQEventSerializer eventSerializer,
             RabbitMQRoutingKeyFactory routingKeyFactory)
         {
             _eventBus = eventBus;
-            _logger = logger;
             _rabbitMqSettings = rabbitMqSettings;
             _eventSerializer = eventSerializer;
             _routingKeyFactory = routingKeyFactory;
@@ -41,7 +36,7 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
 
             if (IsOutboundEvent(@event))
             {
-                await PublishEventsToRabbitMQ(new[] {@event});
+                PublishEventsToRabbitMQ(new[] {@event});
             }
         }
 
@@ -54,15 +49,15 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
                 await _eventBus.Publish(@event);
             }
             
-            await PublishEventsToRabbitMQ(list.Where(IsOutboundEvent));
+            PublishEventsToRabbitMQ(list.Where(IsOutboundEvent));
         }
 
         public IEventBus Subscribe<TEvent>(IIntegrationEventHandler<TEvent> handler) where TEvent : IIntegrationEvent
             => _eventBus.Subscribe(handler);
 
-        private async Task PublishEventsToRabbitMQ(IEnumerable<IIntegrationEvent> events)
+        private void PublishEventsToRabbitMQ(IEnumerable<IIntegrationEvent> events)
         {
-            var channel = await CreateModel();
+            var channel = CreateChannel();
             var basicProperties = channel.CreateBasicProperties();
             basicProperties.Persistent = true;
             
@@ -82,7 +77,7 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
             return attribute?.Outbound ?? false;
         }
         
-        private async Task<IModel> CreateModel()
+        private IModel CreateChannel()
         {
             var factory = new ConnectionFactory
             {
@@ -93,22 +88,10 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
                 DispatchConsumersAsync = true
             };
 
-            while (true)
-            {
-                try
-                {
-                    var connection = factory.CreateConnection();
-                    var channel = connection.CreateModel();
-                    channel.ExchangeDeclare(_rabbitMqSettings.ExchangeName, "direct", true, false, null);
-                    return channel;
-                }
-                catch (BrokerUnreachableException)
-                {
-                    _logger.LogError("Failed to connect to RabbitMQ. Retrying in 10 seconds.");
-
-                    await Task.Delay(10000);
-                }
-            }
+            var connection = factory.CreateConnection();
+            var channel = connection.CreateModel();
+            channel.ExchangeDeclare(_rabbitMqSettings.ExchangeName, "direct", true, false, null);
+            return channel;
         }
     }
 }

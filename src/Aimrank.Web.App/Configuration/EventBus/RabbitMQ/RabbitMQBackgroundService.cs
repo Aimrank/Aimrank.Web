@@ -120,7 +120,9 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
                 DispatchConsumersAsync = true
             };
 
-            while (true)
+            var attempts = 0;
+
+            while (attempts <= _rabbitMqSettings.MaxRetries)
             {
                 try
                 {
@@ -129,10 +131,17 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
                 catch (BrokerUnreachableException)
                 {
                     _logger.LogError("Failed to connect to RabbitMQ. Retrying in 10 seconds.");
+
+                    attempts++;
                     
-                    Thread.Sleep(10000);
+                    if (attempts <= _rabbitMqSettings.MaxRetries)
+                    {
+                        Thread.Sleep(10000);
+                    }
                 }
             }
+            
+            throw new Exception("Failed to connect to RabbitMQ.");
         }
     }
 }
