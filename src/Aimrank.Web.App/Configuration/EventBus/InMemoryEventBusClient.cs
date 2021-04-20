@@ -8,9 +8,7 @@ namespace Aimrank.Web.App.Configuration.EventBus
 {
     internal class InMemoryEventBusClient : IEventBus
     {
-        private readonly HashSet<Type> _events = new();
-
-        public IEnumerable<Type> Events => _events;
+        public IEnumerable<Type> Events => InMemoryEventBus.Instance.Events;
 
         public async Task Publish(IIntegrationEvent @event)
         {
@@ -28,7 +26,6 @@ namespace Aimrank.Web.App.Configuration.EventBus
         public IEventBus Subscribe<TEvent>(IIntegrationEventHandler<TEvent> handler) where TEvent : IIntegrationEvent
         {
             InMemoryEventBus.Instance.Subscribe(handler);
-            _events.Add(typeof(TEvent));
             return this;
         }
     }
