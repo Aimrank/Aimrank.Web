@@ -74,7 +74,7 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
         private static bool IsOutboundEvent(IIntegrationEvent @event)
         {
             var attribute = (IntegrationEventAttribute) @event.GetType().GetCustomAttribute(typeof(IntegrationEventAttribute));
-            return attribute?.Outbound ?? false;
+            return attribute?.Type == IntegrationEventType.Outbound;
         }
         
         private IModel CreateChannel()

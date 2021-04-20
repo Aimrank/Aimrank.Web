@@ -59,7 +59,7 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
             foreach (var type in _eventBus.Events)
             {
                 var attribute = (IntegrationEventAttribute) type.GetCustomAttribute(typeof(IntegrationEventAttribute));
-                if (attribute is null)
+                if (attribute is null || attribute.Type != IntegrationEventType.Inbound)
                 {
                     continue;
                 }
