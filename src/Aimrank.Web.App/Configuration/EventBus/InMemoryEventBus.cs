@@ -2,7 +2,7 @@ using Aimrank.Web.Common.Application.Events;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Aimrank.Web.Common.Infrastructure.EventBus
+namespace Aimrank.Web.App.Configuration.EventBus
 {
     internal sealed class InMemoryEventBus
     {

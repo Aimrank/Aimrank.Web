@@ -1,4 +1,4 @@
-namespace Aimrank.Web.Common.Infrastructure.EventBus.RabbitMQ
+namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
 {
     public class RabbitMQSettings
     {
