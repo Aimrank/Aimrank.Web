@@ -35,12 +35,13 @@ namespace Aimrank.Web.Modules.Cluster.Application.Commands.RemoveInactivePods
             var inactivePodsIp = inactivePods.Select(p => p.IpAddress);
 
             var inactiveServers = (await _serverRepository.BrowseByIpAddressesAsync(inactivePodsIp)).ToList();
-            
-            _serverRepository.DeleteRange(inactiveServers);
+            if (inactiveServers.Any())
+            {
+                _serverRepository.DeleteRange(inactiveServers);
+                _podRepository.DeleteRange(inactivePods);
 
-            _podRepository.DeleteRange(inactivePods);
-
-            await _eventDispatcher.DispatchAsync(new ServersDeletedEvent(inactiveServers.Select(s => s.MatchId)));
+                await _eventDispatcher.DispatchAsync(new ServersDeletedEvent(inactiveServers.Select(s => s.MatchId)));
+            }
 
             return Unit.Value;
         }

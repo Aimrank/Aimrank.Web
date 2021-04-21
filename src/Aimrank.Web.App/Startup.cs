@@ -1,3 +1,4 @@
+using Aimrank.Web.App.Configuration.EventBus.RabbitMQ;
 using Aimrank.Web.App.Configuration.EventBus;
 using Aimrank.Web.App.Configuration.ExecutionContext;
 using Aimrank.Web.App.Configuration.SessionAuthentication;
@@ -25,7 +26,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using System.Net.Http;
@@ -34,8 +34,6 @@ namespace Aimrank.Web.App
 {
     public class Startup
     {
-        private readonly IEventBus _eventBus = new InMemoryEventBusClient();
-        
         private IConfiguration Configuration { get; }
         
         public Startup(IConfiguration configuration)
@@ -46,11 +44,11 @@ namespace Aimrank.Web.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient();
-            
+
             services.AddSingleton<IUrlFactory, ApplicationUrlFactory>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
-            
+
             var redisSettings = Configuration.GetSection(nameof(RedisSettings)).Get<RedisSettings>();
 
             services.AddStackExchangeRedisCache(options =>
@@ -82,7 +80,9 @@ namespace Aimrank.Web.App
 
             services.AddControllersWithViews();
             services.AddRouting(options => options.LowercaseUrls = true);
+            services.AddRabbitMQ();
 
+            #region Migrations
 #if false
             //Add db contexts so "dotnet ef" can find them when generating migrations
             var connectionString = Configuration.GetConnectionString("Database");
@@ -105,10 +105,12 @@ namespace Aimrank.Web.App
                     x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"));
             });
 #endif
+            #endregion
         }
 
         public void ConfigureContainer(ContainerBuilder containerBuilder)
         {
+            containerBuilder.RegisterModule(new EventBusAutofacModule(Configuration));
             containerBuilder.RegisterModule(new ClusterAutofacModule());
             containerBuilder.RegisterModule(new MatchesAutofacModule());
             containerBuilder.RegisterModule(new UserAccessAutofacModule());
@@ -117,15 +119,11 @@ namespace Aimrank.Web.App
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             var container = app.ApplicationServices.GetAutofacRoot();
-            
+
             InitializeEventBus(container);
             InitializeModules(container);
-            
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
 
+            app.UseRabbitMQ();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -145,39 +143,24 @@ namespace Aimrank.Web.App
                     defaults: new {Controller = "Home", Action = "Index"});
             });
         }
-        private void InitializeEventBus(ILifetimeScope container)
-        {
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchReadyEvent>(container));
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchAcceptedEvent>(container));
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchTimedOutEvent>(container));
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartingEvent>(container));
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartedEvent>(container));
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchCanceledEvent>(container));
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchFinishedEvent>(container));
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<MatchPlayerLeftEvent>(container));
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<LobbyStatusChangedEvent>(container));
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<MemberLeftEvent>(container));
-            _eventBus.Subscribe(new IntegrationEventGenericHandler<MemberRoleChangedEvent>(container));
-        }
 
         private void InitializeModules(ILifetimeScope container)
         {
+            var eventBus = container.Resolve<IEventBus>();
             var clusterModule = container.Resolve<IClusterModule>();
             var urlFactory = container.Resolve<IUrlFactory>();
             var httpClientFactory = container.Resolve<IHttpClientFactory>();
             var executionContextAccessor = container.Resolve<IExecutionContextAccessor>();
             
             var connectionString = Configuration.GetConnectionString("Database");
-            var clusterModuleSettings = Configuration.GetSection(nameof(ClusterModuleSettings)).Get<ClusterModuleSettings>();
             var matchesModuleSettings = Configuration.GetSection(nameof(MatchesModuleSettings)).Get<MatchesModuleSettings>();
             var userAccessModuleSettings = Configuration.GetSection(nameof(UserAccessModuleSettings)).Get<UserAccessModuleSettings>();
-
+            
             ClusterStartup.Initialize(
                 connectionString,
-                clusterModuleSettings,
                 container.Resolve<ILogger<ClusterModule>>(),
                 httpClientFactory,
-                _eventBus);
+                eventBus);
 
             MatchesStartup.Initialize(
                 connectionString,
@@ -185,7 +168,7 @@ namespace Aimrank.Web.App
                 container.Resolve<ILogger<MatchesModule>>(),
                 clusterModule,
                 executionContextAccessor,
-                _eventBus);
+                eventBus);
             
             UserAccessStartup.Initialize(
                 connectionString,
@@ -193,6 +176,22 @@ namespace Aimrank.Web.App
                 container.Resolve<ILogger<UserAccessModule>>(),
                 executionContextAccessor,
                 urlFactory);
+        }
+        
+        private static void InitializeEventBus(ILifetimeScope container)
+        {
+            container.Resolve<IEventBus>()
+                .Subscribe(new IntegrationEventGenericHandler<MatchReadyEvent>(container))
+                .Subscribe(new IntegrationEventGenericHandler<MatchAcceptedEvent>(container))
+                .Subscribe(new IntegrationEventGenericHandler<MatchTimedOutEvent>(container))
+                .Subscribe(new IntegrationEventGenericHandler<MatchStartingEvent>(container))
+                .Subscribe(new IntegrationEventGenericHandler<MatchStartedEvent>(container))
+                .Subscribe(new IntegrationEventGenericHandler<MatchCanceledEvent>(container))
+                .Subscribe(new IntegrationEventGenericHandler<MatchFinishedEvent>(container))
+                .Subscribe(new IntegrationEventGenericHandler<MatchPlayerLeftEvent>(container))
+                .Subscribe(new IntegrationEventGenericHandler<LobbyStatusChangedEvent>(container))
+                .Subscribe(new IntegrationEventGenericHandler<MemberLeftEvent>(container))
+                .Subscribe(new IntegrationEventGenericHandler<MemberRoleChangedEvent>(container));
         }
     }
 }

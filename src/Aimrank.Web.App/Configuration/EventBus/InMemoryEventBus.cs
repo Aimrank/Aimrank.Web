@@ -1,14 +1,17 @@
 using Aimrank.Web.Common.Application.Events;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 
-namespace Aimrank.Web.Common.Infrastructure.EventBus
+namespace Aimrank.Web.App.Configuration.EventBus
 {
     internal sealed class InMemoryEventBus
     {
         public static InMemoryEventBus Instance { get; } = new();
 
-        private readonly Dictionary<string, List<IIntegrationEventHandler>> _handlers = new();
+        public IEnumerable<Type> Events => _handlers.Keys;
+
+        private readonly Dictionary<Type, List<IIntegrationEventHandler>> _handlers = new();
 
         private InMemoryEventBus()
         {
@@ -16,9 +19,7 @@ namespace Aimrank.Web.Common.Infrastructure.EventBus
         
         public async Task Publish<TEvent>(TEvent @event) where TEvent : IIntegrationEvent
         {
-            var eventName = @event.GetType().FullName;
-
-            var integrationEventHandlers = _handlers.GetValueOrDefault(eventName);
+            var integrationEventHandlers = _handlers.GetValueOrDefault(@event.GetType());
             if (integrationEventHandlers is not null)
             {
                 foreach (dynamic integrationEventHandler in integrationEventHandlers)
@@ -30,15 +31,15 @@ namespace Aimrank.Web.Common.Infrastructure.EventBus
 
         public void Subscribe<TEvent>(IIntegrationEventHandler<TEvent> handler) where TEvent : IIntegrationEvent
         {
-            var eventName = typeof(TEvent).FullName;
+            var type = typeof(TEvent);
 
-            if (_handlers.ContainsKey(eventName))
+            if (_handlers.ContainsKey(type))
             {
-                _handlers[eventName].Add(handler);
+                _handlers[type].Add(handler);
             }
             else
             {
-                _handlers[eventName] = new List<IIntegrationEventHandler> {handler};
+                _handlers[type] = new List<IIntegrationEventHandler> {handler};
             }
         }
     }
