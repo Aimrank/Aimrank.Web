@@ -2,7 +2,7 @@ using Aimrank.Web.Common.Domain;
 
 namespace Aimrank.Web.Modules.Matches.Domain.Matches.Events
 {
-    public class MatchStartedDomainEvent : IDomainEvent
+    public class MatchStartedDomainEvent : DomainEvent
     {
         public Match Match { get; }
         public string Map { get; }

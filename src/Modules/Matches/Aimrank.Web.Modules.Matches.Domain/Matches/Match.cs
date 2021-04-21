@@ -113,7 +113,7 @@ namespace Aimrank.Web.Modules.Matches.Domain.Matches
                 player.CalculateNewRating(score, player.Team == MatchTeam.T ? avgCT : avgT);
             }
 
-            var @event = new MatchFinishedDomainEvent(this, _scoreT, _scoreCT, Lobbies.Select(l => l.LobbyId).ToList());
+            var @event = new MatchFinishedDomainEvent(this, _scoreT, _scoreCT, Lobbies.ToList());
             
             _lobbies.Clear();
             
@@ -147,5 +147,9 @@ namespace Aimrank.Web.Modules.Matches.Domain.Matches
             
             AddDomainEvent(new MatchStartedDomainEvent(this, Map, _address));
         }
+
+        public void Cancel() => AddDomainEvent(new MatchCanceledDomainEvent(Id, Lobbies.ToList()));
+
+        public void Timeout() => AddDomainEvent(new MatchTimedOutDomainEvent(Id, Lobbies.ToList()));
     }
 }

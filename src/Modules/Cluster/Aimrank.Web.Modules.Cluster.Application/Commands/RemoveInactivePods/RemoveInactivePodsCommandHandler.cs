@@ -12,21 +12,21 @@ namespace Aimrank.Web.Modules.Cluster.Application.Commands.RemoveInactivePods
 {
     internal class RemoveInactivePodsCommandHandler : ICommandHandler<RemoveInactivePodsCommand>
     {
+        private readonly IEventBus _eventBus;
         private readonly IPodClient _podClient;
         private readonly IPodRepository _podRepository;
         private readonly IServerRepository _serverRepository;
-        private readonly IEventDispatcher _eventDispatcher;
 
         public RemoveInactivePodsCommandHandler(
+            IEventBus eventBus,
             IPodClient podClient,
             IPodRepository podRepository,
-            IServerRepository serverRepository,
-            IEventDispatcher eventDispatcher)
+            IServerRepository serverRepository)
         {
+            _eventBus = eventBus;
             _podClient = podClient;
             _podRepository = podRepository;
             _serverRepository = serverRepository;
-            _eventDispatcher = eventDispatcher;
         }
 
         public async Task<Unit> Handle(RemoveInactivePodsCommand request, CancellationToken cancellationToken)
@@ -40,7 +40,7 @@ namespace Aimrank.Web.Modules.Cluster.Application.Commands.RemoveInactivePods
                 _serverRepository.DeleteRange(inactiveServers);
                 _podRepository.DeleteRange(inactivePods);
 
-                await _eventDispatcher.DispatchAsync(new ServersDeletedEvent(inactiveServers.Select(s => s.MatchId)));
+                await _eventBus.Publish(new ServersDeletedEvent(inactiveServers.Select(s => s.MatchId)));
             }
 
             return Unit.Value;

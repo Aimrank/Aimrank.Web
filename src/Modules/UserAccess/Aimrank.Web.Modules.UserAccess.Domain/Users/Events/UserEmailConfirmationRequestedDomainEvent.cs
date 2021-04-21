@@ -2,14 +2,18 @@ using Aimrank.Web.Common.Domain;
 
 namespace Aimrank.Web.Modules.UserAccess.Domain.Users.Events
 {
-    public class UserEmailConfirmationRequestedDomainEvent : IDomainEvent
+    public class UserEmailConfirmationRequestedDomainEvent : DomainEvent
     {
-        public User User { get; }
-        public UserToken Token { get; }
+        public UserId UserId { get; }
+        public string Username { get; }
+        public string Email { get; }
+        public string Token { get; }
 
-        public UserEmailConfirmationRequestedDomainEvent(User user, UserToken token)
+        public UserEmailConfirmationRequestedDomainEvent(UserId userId, string username, string email, string token)
         {
-            User = user;
+            UserId = userId;
+            Username = username;
+            Email = email;
             Token = token;
         }
     }

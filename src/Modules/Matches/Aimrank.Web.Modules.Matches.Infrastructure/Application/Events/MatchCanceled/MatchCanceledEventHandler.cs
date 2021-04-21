@@ -1,14 +1,14 @@
-using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Modules.Matches.Application.Matches.CancelMatch;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration;
+using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure.Application.Events.MatchCanceled
 {
-    internal class MatchCanceledEventHandler : IIntegrationEventHandler<MatchCanceledEvent>
+    internal class MatchCanceledEventHandler : INotificationHandler<MatchCanceledEvent>
     {
-        public Task HandleAsync(MatchCanceledEvent @event, CancellationToken cancellationToken = default)
-            => CommandsExecutor.Execute(new CancelMatchCommand(@event.MatchId));
+        public Task Handle(MatchCanceledEvent notification, CancellationToken cancellationToken)
+            => CommandsExecutor.Execute(new CancelMatchCommand(notification.MatchId));
     }
 }

@@ -1,8 +1,7 @@
-using Aimrank.Web.Common.Infrastructure.EventBus;
+using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Modules.Cluster.Infrastructure.Application.Events.MatchCanceled;
 using Aimrank.Web.Modules.Cluster.Infrastructure.Application.Events.MatchFinished;
 using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.DataAccess;
-using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Mediator;
 using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Pods;
 using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Processing;
 using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Quartz;
@@ -29,6 +28,9 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration
                 eventBus);
             
             QuartzStartup.Initialize();
+            
+            eventBus.Subscribe(new MatchCanceledEventHandler());
+            eventBus.Subscribe(new MatchFinishedEventHandler());
         }
 
         private static void ConfigureCompositionRoot(
@@ -40,16 +42,12 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration
             var containerBuilder = new ContainerBuilder();
 
             containerBuilder.RegisterModule(new DataAccessModule(connectionString));
-            containerBuilder.RegisterModule(new MediatorModule());
             containerBuilder.RegisterModule(new ProcessingModule());
             containerBuilder.RegisterModule(new QuartzModule());
             containerBuilder.RegisterModule(new PodsModule());
             containerBuilder.RegisterInstance(httpClientFactory);
             containerBuilder.RegisterInstance(eventBus);
             containerBuilder.RegisterInstance(logger);
-            
-            eventBus.Subscribe(new MatchCanceledEventHandler());
-            eventBus.Subscribe(new MatchFinishedEventHandler());
 
             _container = containerBuilder.Build();
             

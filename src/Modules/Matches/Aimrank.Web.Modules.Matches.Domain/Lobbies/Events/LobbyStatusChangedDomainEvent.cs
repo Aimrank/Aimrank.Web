@@ -2,13 +2,15 @@ using Aimrank.Web.Common.Domain;
 
 namespace Aimrank.Web.Modules.Matches.Domain.Lobbies.Events
 {
-    public class LobbyStatusChangedDomainEvent : IDomainEvent
+    public class LobbyStatusChangedDomainEvent : DomainEvent
     {
-        public Lobby Lobby { get; }
+        public LobbyId LobbyId { get; }
+        public LobbyStatus Status { get; }
 
-        public LobbyStatusChangedDomainEvent(Lobby lobby)
+        public LobbyStatusChangedDomainEvent(LobbyId lobbyId, LobbyStatus status)
         {
-            Lobby = lobby;
+            LobbyId = lobbyId;
+            Status = status;
         }
     }
 }

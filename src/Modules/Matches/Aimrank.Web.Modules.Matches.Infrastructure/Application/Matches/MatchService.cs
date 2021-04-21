@@ -1,4 +1,4 @@
-using Aimrank.Web.Common.Infrastructure.EventBus;
+using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Modules.Cluster.Application.Commands.StartServer;
 using Aimrank.Web.Modules.Cluster.Application.Contracts;
 using Aimrank.Web.Modules.Matches.Application.Matches;

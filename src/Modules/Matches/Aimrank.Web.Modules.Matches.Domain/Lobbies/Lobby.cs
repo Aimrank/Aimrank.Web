@@ -98,7 +98,7 @@ namespace Aimrank.Web.Modules.Matches.Domain.Lobbies
             
             _members.Remove(member);
             
-            AddDomainEvent(new MemberLeftDomainEvent(this, member));
+            AddDomainEvent(new MemberLeftDomainEvent(Id, member));
 
             if (member.Role == LobbyMemberRole.Leader && _members.Any())
             {
@@ -110,7 +110,7 @@ namespace Aimrank.Web.Modules.Matches.Domain.Lobbies
                     _members.Remove(first);
                     _members.Add(updated);
                     
-                    AddDomainEvent(new MemberRoleChangedDomainEvent(this, updated));
+                    AddDomainEvent(new MemberRoleChangedDomainEvent(Id, updated));
                 }
             }
         }
@@ -174,7 +174,7 @@ namespace Aimrank.Web.Modules.Matches.Domain.Lobbies
         {
             Status = status;
             
-            AddDomainEvent(new LobbyStatusChangedDomainEvent(this));
+            AddDomainEvent(new LobbyStatusChangedDomainEvent(Id, status));
         }
     }
 }

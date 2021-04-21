@@ -1,14 +1,14 @@
-using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Modules.Matches.Application.Matches.MarkPlayerAsLeaver;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration;
+using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure.Application.Events.PlayerDisconnected
 {
-    internal class PlayerDisconnectedEventHandler : IIntegrationEventHandler<PlayerDisconnectedEvent>
+    internal class PlayerDisconnectedEventHandler : INotificationHandler<PlayerDisconnectedEvent>
     {
-        public Task HandleAsync(PlayerDisconnectedEvent @event, CancellationToken cancellationToken = default)
-            => CommandsExecutor.Execute(new MarkPlayerAsLeaverCommand(@event.MatchId, @event.SteamId));
+        public Task Handle(PlayerDisconnectedEvent notification, CancellationToken cancellationToken)
+            => CommandsExecutor.Execute(new MarkPlayerAsLeaverCommand(notification.MatchId, notification.SteamId));
     }
 }

@@ -1,5 +1,4 @@
 using Aimrank.Web.Common.Application.Events;
-using Aimrank.Web.Common.Infrastructure.EventBus;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client.Events;
