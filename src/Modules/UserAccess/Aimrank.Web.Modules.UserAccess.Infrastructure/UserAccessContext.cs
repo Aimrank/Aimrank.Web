@@ -1,6 +1,5 @@
 using Aimrank.Web.Modules.UserAccess.Domain.Friendships;
 using Aimrank.Web.Modules.UserAccess.Domain.Users;
-using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing.Inbox;
 using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing.Outbox;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
@@ -14,7 +13,6 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Friendship> Friendships { get; set; }
-        public DbSet<InboxMessage> InboxMessages { get; set; }
         public DbSet<OutboxMessage> OutboxMessages { get; set; }
         
         public UserAccessContext(DbContextOptions<UserAccessContext> options) : base(options)
