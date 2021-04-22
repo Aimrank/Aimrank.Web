@@ -6,7 +6,6 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.In
     {
         public Guid Id { get; }
         public DateTime OccurredAt { get; }
-        public DateTime ProcessedDate { get; }
         public string Type { get; }
         public string Data { get; }
         

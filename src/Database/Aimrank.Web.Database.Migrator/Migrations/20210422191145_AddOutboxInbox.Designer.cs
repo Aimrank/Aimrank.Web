@@ -4,14 +4,16 @@ using Aimrank.Web.Modules.Matches.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Aimrank.Web.Database.Migrator.Migrations
 {
     [DbContext(typeof(MatchesContext))]
-    partial class MatchesContextModelSnapshot : ModelSnapshot
+    [Migration("20210422191145_AddOutboxInbox")]
+    partial class AddOutboxInbox
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
