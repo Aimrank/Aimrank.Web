@@ -61,12 +61,15 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing
                 return;
             }
             
-            var notification = (IDomainEventNotification<IDomainEvent>) Activator.CreateInstance(
-                notificationType, BindingFlags.Instance | BindingFlags.Public, null, new object[]
-                {
-                    Guid.NewGuid(),
-                    domainEvent
-                });
+            var constructor = notificationType.GetConstructor(BindingFlags.Instance | BindingFlags.Public,
+                null, new Type[] {typeof(Guid), domainEventType}, Array.Empty<ParameterModifier>());
+
+            var notification = (IDomainEventNotification<IDomainEvent>) constructor.Invoke(new object []
+            {
+                Guid.NewGuid(),
+                domainEvent
+            });
+            
             var notificationData = JsonSerializer.Serialize(notification, notificationType);
             var outboxMessage = new OutboxMessage(
                 notification.Id,

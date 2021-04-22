@@ -43,13 +43,15 @@ namespace Aimrank.Web.App
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var redisSettings = Configuration.GetSection(nameof(RedisSettings)).Get<RedisSettings>();
+            var urlFactorySettings = Configuration.GetSection(nameof(UrlFactorySettings)).Get<UrlFactorySettings>();
+            
             services.AddHttpClient();
 
+            services.AddSingleton(urlFactorySettings);
             services.AddSingleton<IUrlFactory, ApplicationUrlFactory>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
-
-            var redisSettings = Configuration.GetSection(nameof(RedisSettings)).Get<RedisSettings>();
 
             services.AddStackExchangeRedisCache(options =>
             {

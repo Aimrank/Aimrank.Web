@@ -50,7 +50,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.In
             foreach (var message in messages)
             {
                 var messageAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                    .SingleOrDefault(assembly => message.Type.Contains(assembly.GetName().Name));
+                    .FirstOrDefault(assembly => message.Type.Contains(assembly.GetName().Name));
 
                 var messageType = messageAssembly.GetType(message.Type);
                 var notification = JsonSerializer.Deserialize(message.Data, messageType) as INotification;

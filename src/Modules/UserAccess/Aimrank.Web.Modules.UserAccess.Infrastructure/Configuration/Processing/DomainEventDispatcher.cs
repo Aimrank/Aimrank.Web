@@ -60,13 +60,16 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing
             {
                 return;
             }
+
+            var constructor = notificationType.GetConstructor(BindingFlags.Instance | BindingFlags.Public,
+                null, new Type[] {typeof(Guid), domainEventType}, Array.Empty<ParameterModifier>());
+
+            var notification = (IDomainEventNotification<IDomainEvent>) constructor.Invoke(new object []
+            {
+                Guid.NewGuid(),
+                domainEvent
+            });
             
-            var notification = (IDomainEventNotification<IDomainEvent>) Activator.CreateInstance(
-                notificationType, BindingFlags.Instance | BindingFlags.Public, null, new object[]
-                {
-                    Guid.NewGuid(),
-                    domainEvent
-                });
             var notificationData = JsonSerializer.Serialize(notification, notificationType);
             var outboxMessage = new OutboxMessage(
                 notification.Id,
