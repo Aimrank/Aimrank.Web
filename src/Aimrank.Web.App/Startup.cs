@@ -85,25 +85,19 @@ namespace Aimrank.Web.App
             #region Migrations
 #if false
             //Add db contexts so "dotnet ef" can find them when generating migrations
-            var connectionString = Configuration.GetConnectionString("Database");
-
-            services.AddDbContext<ClusterContext>(options =>
-                options.UseSqlServer(connectionString,
-                    x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator")));
-
-            services.AddDbContext<MatchesContext>(options =>
+            void AddDbContext<T>() where T : DbContext
             {
-                options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
-                options.UseSqlServer(connectionString,
-                    x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"));
-            });
+                services.AddDbContext<T>(options =>
+                {
+                    options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
+                    options.UseSqlServer(Configuration.GetConnectionString("Database"),
+                        x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"));
+                });
+            }
             
-            services.AddDbContext<UserAccessContext>(options =>
-            {
-                options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
-                options.UseSqlServer(connectionString,
-                    x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"));
-            });
+            AddDbContext<ClusterContext>();
+            AddDbContext<MatchesContext>();
+            AddDbContext<UserAccessContext>();
 #endif
             #endregion
         }
