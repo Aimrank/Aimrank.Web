@@ -2,6 +2,7 @@ using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Common.Domain;
 using Aimrank.Web.Common.Infrastructure;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Outbox;
+using Autofac;
 using MediatR;
 using System.Collections.Generic;
 using System.Reflection;
@@ -14,12 +15,18 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing
     internal class DomainEventDispatcher
     {
         private readonly IDomainEventAccessor _domainEventAccessor;
+        private readonly ILifetimeScope _lifetimeScope;
         private readonly IMediator _mediator;
         private readonly MatchesContext _context;
 
-        public DomainEventDispatcher(IDomainEventAccessor domainEventAccessor, IMediator mediator, MatchesContext context)
+        public DomainEventDispatcher(
+            IDomainEventAccessor domainEventAccessor,
+            ILifetimeScope lifetimeScope,
+            IMediator mediator,
+            MatchesContext context)
         {
             _domainEventAccessor = domainEventAccessor;
+            _lifetimeScope = lifetimeScope;
             _mediator = mediator;
             _context = context;
         }
@@ -47,6 +54,13 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing
         {
             var domainEventType = domainEvent.GetType();
             var notificationType = typeof(DomainEventNotification<>).MakeGenericType(domainEventType);
+            var notificationHandlerType = typeof(INotificationHandler<>).MakeGenericType(notificationType);
+
+            if (!_lifetimeScope.IsRegistered(notificationHandlerType))
+            {
+                return;
+            }
+            
             var notification = (IDomainEventNotification<IDomainEvent>) Activator.CreateInstance(
                 notificationType, BindingFlags.Instance | BindingFlags.Public, null, new object[]
                 {
