@@ -80,7 +80,7 @@ namespace Aimrank.Web.Modules.Matches.Domain.Matches
             {
                 player.MarkAsLeaver();
                 
-                AddDomainEvent(new MatchPlayerLeftDomainEvent(player, _lobbies));
+                AddDomainEvent(new MatchPlayerLeftDomainEvent(player.PlayerId, _lobbies));
             }
         }
 
@@ -113,7 +113,7 @@ namespace Aimrank.Web.Modules.Matches.Domain.Matches
                 player.CalculateNewRating(score, player.Team == MatchTeam.T ? avgCT : avgT);
             }
 
-            var @event = new MatchFinishedDomainEvent(this, _scoreT, _scoreCT, Lobbies.ToList());
+            var @event = new MatchFinishedDomainEvent(Id, _scoreT, _scoreCT, _lobbies);
             
             _lobbies.Clear();
             
@@ -126,7 +126,7 @@ namespace Aimrank.Web.Modules.Matches.Domain.Matches
             
             Status = MatchStatus.Ready;
             
-            AddDomainEvent(new MatchReadyDomainEvent(this, Map));
+            AddDomainEvent(new MatchReadyDomainEvent(Id, Map, _lobbies));
         }
 
         public void SetStarting(string address)
@@ -136,7 +136,7 @@ namespace Aimrank.Web.Modules.Matches.Domain.Matches
             Status = MatchStatus.Starting;
             _address = address;
             
-            AddDomainEvent(new MatchStartingDomainEvent(this));
+            AddDomainEvent(new MatchStartingDomainEvent(Id, _lobbies));
         }
 
         public void SetStarted()
@@ -145,11 +145,11 @@ namespace Aimrank.Web.Modules.Matches.Domain.Matches
 
             Status = MatchStatus.Started;
             
-            AddDomainEvent(new MatchStartedDomainEvent(this, Map, _address));
+            AddDomainEvent(new MatchStartedDomainEvent(Id, Map, Mode, _address, _lobbies, _players));
         }
 
-        public void Cancel() => AddDomainEvent(new MatchCanceledDomainEvent(Id, Lobbies.ToList()));
+        public void Cancel() => AddDomainEvent(new MatchCanceledDomainEvent(Id, _lobbies));
 
-        public void Timeout() => AddDomainEvent(new MatchTimedOutDomainEvent(Id, Lobbies.ToList()));
+        public void Timeout() => AddDomainEvent(new MatchTimedOutDomainEvent(Id, _lobbies));
     }
 }

@@ -1,14 +1,17 @@
 using Aimrank.Web.Common.Domain;
+using System.Collections.Generic;
 
 namespace Aimrank.Web.Modules.Matches.Domain.Matches.Events
 {
     public class MatchStartingDomainEvent : DomainEvent
     {
-        public Match Match { get; }
+        public MatchId MatchId { get; }
+        public IEnumerable<MatchLobby> Lobbies { get; }
 
-        public MatchStartingDomainEvent(Match match)
+        public MatchStartingDomainEvent(MatchId matchId, IEnumerable<MatchLobby> lobbies)
         {
-            Match = match;
+            MatchId = matchId;
+            Lobbies = lobbies;
         }
     }
 }
