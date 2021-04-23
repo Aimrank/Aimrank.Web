@@ -1,8 +1,7 @@
-using Aimrank.Web.Common.Application.Data;
 using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Modules.Matches.Application.Contracts;
-using Dapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Text.Json;
@@ -14,40 +13,27 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Ou
 {
     internal class ProcessOutboxCommandHandler : ICommandHandler<ProcessOutboxCommand>
     {
-        private readonly ISqlConnectionFactory _sqlConnectionFactory;
+        private readonly MatchesContext _context;
         private readonly IMediator _mediator;
         private readonly ILogger _logger;
 
         public ProcessOutboxCommandHandler(
-            ISqlConnectionFactory sqlConnectionFactory,
+            MatchesContext context,
             IMediator mediator,
             ILogger logger)
         {
-            _sqlConnectionFactory = sqlConnectionFactory;
+            _context = context;
             _mediator = mediator;
             _logger = logger;
         }
 
         public async Task<Unit> Handle(ProcessOutboxCommand request, CancellationToken cancellationToken)
         {
-            var connection = _sqlConnectionFactory.GetOpenConnection();
+            var messages = await _context.OutboxMessages
+                .Where(m => m.ProcessedDate == null)
+                .OrderBy(m => m.OccurredAt)
+                .ToListAsync(cancellationToken);
             
-            const string sql = @"
-                SELECT
-                    [OutboxMessage].[Id],
-                    [OutboxMessage].[Type],
-                    [OutboxMessage].[Data]
-                FROM [matches].[OutboxMessages] AS [OutboxMessage]
-                WHERE [OutboxMessage].[ProcessedDate] IS NULL
-                ORDER BY [OutboxMessage].[OccurredAt];";
-
-            var messages = await connection.QueryAsync<OutboxMessageDto>(sql);
-            
-            const string sqlUpdate = @"
-                UPDATE [matches].[OutboxMessages]
-                SET [ProcessedDate] = @Date
-                WHERE [Id] = @Id;";
-
             foreach (var message in messages)
             {
                 var notification = DeserializeMessage(message);
@@ -60,18 +46,14 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Ou
                 {
                     _logger.LogError(exception, exception.Message);
                 }
-
-                await connection.ExecuteScalarAsync(sqlUpdate, new
-                {
-                    Date = DateTime.UtcNow,
-                    message.Id
-                });
+                
+                message.ProcessedDate = DateTime.UtcNow;
             }
 
             return Unit.Value;
         }
 
-        private static IDomainEventNotification DeserializeMessage(OutboxMessageDto message)
+        private static IDomainEventNotification DeserializeMessage(OutboxMessage message)
         {
             var messageAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .FirstOrDefault(assembly => message.Type.Contains(assembly.GetName().Name));

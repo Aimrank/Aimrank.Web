@@ -1,7 +1,6 @@
-using Aimrank.Web.Common.Application.Data;
 using Aimrank.Web.Modules.Matches.Application.Contracts;
-using Dapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Text.Json;
@@ -13,39 +12,26 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.In
 {
     internal class ProcessInboxCommandHandler : ICommandHandler<ProcessInboxCommand>
     {
-        private readonly ISqlConnectionFactory _sqlConnectionFactory;
+        private readonly MatchesContext _context;
         private readonly IMediator _mediator;
         private readonly ILogger _logger;
 
         public ProcessInboxCommandHandler(
-            ISqlConnectionFactory sqlConnectionFactory,
+            MatchesContext context,
             IMediator mediator,
             ILogger logger)
         {
-            _sqlConnectionFactory = sqlConnectionFactory;
+            _context = context;
             _mediator = mediator;
             _logger = logger;
         }
 
         public async Task<Unit> Handle(ProcessInboxCommand request, CancellationToken cancellationToken)
         {
-            var connection = _sqlConnectionFactory.GetOpenConnection();
-            
-            const string sql = @"
-                SELECT
-                    [InboxMessage].[Id],
-                    [InboxMessage].[Type],
-                    [InboxMessage].[Data]
-                FROM [matches].[InboxMessages] AS [InboxMessage]
-                WHERE [InboxMessage].[ProcessedDate] IS NULL
-                ORDER BY [InboxMessage].[OccurredAt];";
-
-            var messages = await connection.QueryAsync<InboxMessageDto>(sql);
-
-            const string sqlUpdate = @"
-                UPDATE [matches].[InboxMessages]
-                SET [ProcessedDate] = @Date
-                WHERE [Id] = @Id;";
+            var messages = await _context.InboxMessages
+                .Where(m => m.ProcessedDate == null)
+                .OrderBy(m => m.OccurredAt)
+                .ToListAsync(cancellationToken);
 
             foreach (var message in messages)
             {
@@ -60,17 +46,13 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.In
                     _logger.LogError(exception, exception.Message);
                 }
                 
-                await connection.ExecuteScalarAsync(sqlUpdate, new
-                {
-                    Date = DateTime.UtcNow,
-                    message.Id
-                });
+                message.ProcessedDate = DateTime.UtcNow;
             }
             
             return Unit.Value;
         }
 
-        private static INotification DeserializeMessage(InboxMessageDto message)
+        private static INotification DeserializeMessage(InboxMessage message)
         {
             var messageAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .FirstOrDefault(assembly => message.Type.Contains(assembly.GetName().Name));
