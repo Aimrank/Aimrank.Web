@@ -7,9 +7,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Lo
     [DisallowConcurrentExecution]
     internal class ProcessLobbiesJob : IJob
     {
-        public async Task Execute(IJobExecutionContext context)
-        {
-            await CommandsExecutor.Execute(new ProcessLobbiesCommand());
-        }
+        public Task Execute(IJobExecutionContext context)
+            => CommandsExecutor.Execute(new ProcessLobbiesCommand());
     }
 }

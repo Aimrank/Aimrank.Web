@@ -1,6 +1,7 @@
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Inbox;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Lobbies;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Outbox;
+using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.RemoveProcessedMessages;
 using Quartz.Impl;
 using Quartz;
 using System.Collections.Specialized;
@@ -38,6 +39,14 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Quartz
                 .Build();
                 
             _scheduler.ScheduleJob(processInboxJob, processInboxTrigger).GetAwaiter().GetResult();
+
+            var removeProcessedMessagesJob = JobBuilder.Create<RemoveProcessedMessagesJob>().Build();
+            var removeProcessedMessagesTrigger = TriggerBuilder.Create()
+                .StartNow()
+                .WithCronSchedule("0 0 0/2 ? * *")
+                .Build();
+                
+            _scheduler.ScheduleJob(removeProcessedMessagesJob, removeProcessedMessagesTrigger);
 
             var processLobbiesJob = JobBuilder.Create<ProcessLobbiesJob>().Build();
             var processLobbiesTrigger =

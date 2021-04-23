@@ -6,9 +6,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Ou
     [DisallowConcurrentExecution]
     internal class ProcessOutboxJob : IJob
     {
-        public async Task Execute(IJobExecutionContext context)
-        {
-            await CommandsExecutor.Execute(new ProcessOutboxCommand());
-        }
+        public Task Execute(IJobExecutionContext context)
+            => CommandsExecutor.Execute(new ProcessOutboxCommand());
     }
 }
