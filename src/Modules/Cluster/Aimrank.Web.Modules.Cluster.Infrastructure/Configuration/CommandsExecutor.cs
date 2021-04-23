@@ -1,7 +1,9 @@
 using Aimrank.Web.Modules.Cluster.Application.Contracts;
 using Autofac;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using System;
 
 namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration
 {
@@ -11,14 +13,16 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration
         {
             await using var scope = ClusterCompositionRoot.BeginLifetimeScope();
             var mediator = scope.Resolve<IMediator>();
-            await mediator.Send(command);
-        }
-        
-        internal static async Task Execute<TResult>(ICommand<TResult> command)
-        {
-            await using var scope = ClusterCompositionRoot.BeginLifetimeScope();
-            var mediator = scope.Resolve<IMediator>();
-            await mediator.Send(command);
+            var logger = scope.Resolve<ILogger>();
+
+            try
+            {
+                await mediator.Send(command);
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, exception.Message);
+            }
         }
     }
 }

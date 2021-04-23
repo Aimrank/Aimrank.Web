@@ -37,25 +37,21 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Ou
                     [OutboxMessage].[Id],
                     [OutboxMessage].[Type],
                     [OutboxMessage].[Data]
-                FROM [users].[OutboxMessages] AS [OutboxMessage]
+                FROM [matches].[OutboxMessages] AS [OutboxMessage]
                 WHERE [OutboxMessage].[ProcessedDate] IS NULL
                 ORDER BY [OutboxMessage].[OccurredAt];";
 
             var messages = await connection.QueryAsync<OutboxMessageDto>(sql);
             
             const string sqlUpdate = @"
-                UPDATE [users].[OutboxMessages]
+                UPDATE [matches].[OutboxMessages]
                 SET [ProcessedDate] = @Date
                 WHERE [Id] = @Id;";
 
             foreach (var message in messages)
             {
-                var messageAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                    .FirstOrDefault(assembly => message.Type.Contains(assembly.GetName().Name));
-
-                var messageType = messageAssembly.GetType(message.Type);
-                var notification = JsonSerializer.Deserialize(message.Data, messageType) as IDomainEventNotification;
-
+                var notification = DeserializeMessage(message);
+                
                 try
                 {
                     await _mediator.Publish(notification, cancellationToken);
@@ -73,6 +69,16 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Ou
             }
 
             return Unit.Value;
+        }
+
+        private static IDomainEventNotification DeserializeMessage(OutboxMessageDto message)
+        {
+            var messageAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault(assembly => message.Type.Contains(assembly.GetName().Name));
+
+            var messageType = messageAssembly.GetType(message.Type);
+
+            return JsonSerializer.Deserialize(message.Data, messageType) as IDomainEventNotification;
         }
     }
 }

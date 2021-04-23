@@ -49,12 +49,8 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.In
 
             foreach (var message in messages)
             {
-                var messageAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                    .FirstOrDefault(assembly => message.Type.Contains(assembly.GetName().Name));
-
-                var messageType = messageAssembly.GetType(message.Type);
-                var notification = JsonSerializer.Deserialize(message.Data, messageType) as INotification;
-
+                var notification = DeserializeMessage(message);
+                
                 try
                 {
                     await _mediator.Publish(notification, cancellationToken);
@@ -72,6 +68,16 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.In
             }
             
             return Unit.Value;
+        }
+
+        private static INotification DeserializeMessage(InboxMessageDto message)
+        {
+            var messageAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault(assembly => message.Type.Contains(assembly.GetName().Name));
+
+            var messageType = messageAssembly.GetType(message.Type);
+            
+            return JsonSerializer.Deserialize(message.Data, messageType) as INotification;
         }
     }
 }

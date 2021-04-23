@@ -1,4 +1,5 @@
 using Aimrank.Web.Common.Application.Data;
+using Aimrank.Web.Common.Application.Exceptions;
 using Aimrank.Web.Modules.Matches.Domain.Matches;
 using Aimrank.Web.Modules.Matches.Domain.Players;
 using Dapper;
@@ -58,8 +59,16 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Matches
             return result;
         }
 
-        public Task<Match> GetByIdAsync(MatchId id)
-            => _context.Matches.FirstOrDefaultAsync(m => m.Id == id);
+        public async Task<Match> GetByIdAsync(MatchId id)
+        {
+            var match = await _context.Matches.FirstOrDefaultAsync(m => m.Id == id);
+            if (match is null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            return match;
+        }
 
         public void Add(Match match) => _context.Matches.Add(match);
 

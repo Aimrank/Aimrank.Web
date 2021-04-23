@@ -29,7 +29,7 @@ namespace Aimrank.Web.App.Configuration.EventBus
             
             foreach (dynamic handler in handlers)
             {
-                await handler.HandleAsync(@event);
+                await handler.HandleAsync((dynamic) @event);
             }
         }
     }

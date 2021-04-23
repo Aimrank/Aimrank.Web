@@ -50,12 +50,8 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing
 
             foreach (var message in messages)
             {
-                var messageAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                    .FirstOrDefault(assembly => message.Type.Contains(assembly.GetName().Name));
-
-                var messageType = messageAssembly.GetType(message.Type);
-                var notification = JsonSerializer.Deserialize(message.Data, messageType) as IDomainEventNotification;
-
+                var notification = DeserializeMessage(message);
+                
                 try
                 {
                     await _mediator.Publish(notification, cancellationToken);
@@ -73,6 +69,16 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing
             }
 
             return Unit.Value;
+        }
+
+        private static IDomainEventNotification DeserializeMessage(OutboxMessageDto message)
+        {
+            var messageAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault(assembly => message.Type.Contains(assembly.GetName().Name));
+
+            var messageType = messageAssembly.GetType(message.Type);
+            
+            return JsonSerializer.Deserialize(message.Data, messageType) as IDomainEventNotification;
         }
     }
 }

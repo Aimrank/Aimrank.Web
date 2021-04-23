@@ -22,6 +22,8 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.In
                 @event.OccurredAt,
                 type,
                 data);
+            
+            context.InboxMessages.Add(inboxMessage);
 
             await context.SaveChangesAsync(cancellationToken);
         }

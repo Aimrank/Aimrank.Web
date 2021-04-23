@@ -13,12 +13,5 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
             var mediator = scope.Resolve<IMediator>();
             await mediator.Send(command);
         }
-
-        internal static async Task<TResult> Execute<TResult>(ICommand<TResult> command)
-        {
-            await using var scope = MatchesCompositionRoot.BeginLifetimeScope();
-            var mediator = scope.Resolve<IMediator>();
-            return await mediator.Send(command);
-        }
     }
 }
