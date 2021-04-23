@@ -1,10 +1,9 @@
 using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Modules.Cluster.Application.Commands.DeleteServer;
-using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Web.Modules.Cluster.Infrastructure.Application.Events.MatchFinished
+namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.EventBus.Events.MatchFinished
 {
     internal class MatchFinishedEventHandler : IIntegrationEventHandler<MatchFinishedEvent>
     {

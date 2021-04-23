@@ -1,10 +1,10 @@
 using Aimrank.Web.Common.Application.Events;
 using System;
 
-namespace Aimrank.Web.Modules.Cluster.Infrastructure.Application.Events.MatchFinished
+namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.MatchStarted
 {
     [IntegrationEvent("Aimrank.Pod")]
-    internal class MatchFinishedEvent : IIntegrationEvent
+    internal class MatchStartedEvent : IIntegrationEvent
     {
         public Guid Id { get; set; }
         public DateTime OccurredAt { get; set; }

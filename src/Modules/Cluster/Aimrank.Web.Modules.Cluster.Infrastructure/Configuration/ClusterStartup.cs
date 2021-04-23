@@ -1,7 +1,6 @@
 using Aimrank.Web.Common.Application.Events;
-using Aimrank.Web.Modules.Cluster.Infrastructure.Application.Events.MatchCanceled;
-using Aimrank.Web.Modules.Cluster.Infrastructure.Application.Events.MatchFinished;
 using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.DataAccess;
+using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.EventBus;
 using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Pods;
 using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Processing;
 using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Quartz;
@@ -28,9 +27,8 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration
                 eventBus);
             
             QuartzStartup.Initialize();
+            EventBusStartup.Initialize(eventBus);
             
-            eventBus.Subscribe(new MatchCanceledEventHandler());
-            eventBus.Subscribe(new MatchFinishedEventHandler());
         }
 
         private static void ConfigureCompositionRoot(

@@ -1,13 +1,9 @@
-using Aimrank.Web.Common.Application;
 using Aimrank.Web.Common.Application.Events;
+using Aimrank.Web.Common.Application;
 using Aimrank.Web.Modules.Cluster.Application.Contracts;
-using Aimrank.Web.Modules.Matches.Infrastructure.Application.Events.MatchCanceled;
-using Aimrank.Web.Modules.Matches.Infrastructure.Application.Events.MatchFinished;
-using Aimrank.Web.Modules.Matches.Infrastructure.Application.Events.MatchStarted;
-using Aimrank.Web.Modules.Matches.Infrastructure.Application.Events.PlayerDisconnected;
 using Aimrank.Web.Modules.Matches.Infrastructure.Application;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.DataAccess;
-using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Inbox;
+using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Quartz;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Redis;
@@ -37,11 +33,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
                 eventBus);
             
             QuartzStartup.Initialize();
-
-            eventBus.Subscribe(new IntegrationEventGenericHandler<MatchStartedEvent>());
-            eventBus.Subscribe(new IntegrationEventGenericHandler<MatchCanceledEvent>());
-            eventBus.Subscribe(new IntegrationEventGenericHandler<MatchFinishedEvent>());
-            eventBus.Subscribe(new IntegrationEventGenericHandler<PlayerDisconnectedEvent>());
+            EventBusStartup.Initialize(eventBus);
         }
 
         private static void ConfigureCompositionRoot(

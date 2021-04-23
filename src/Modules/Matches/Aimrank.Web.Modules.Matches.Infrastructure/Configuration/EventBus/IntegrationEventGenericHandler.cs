@@ -1,10 +1,11 @@
 using Aimrank.Web.Common.Application.Events;
+using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Inbox;
 using Autofac;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Inbox
+namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus
 {
     internal class IntegrationEventGenericHandler<T> : IIntegrationEventHandler<T>
         where T : IIntegrationEvent

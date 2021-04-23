@@ -1,7 +1,7 @@
 using Aimrank.Web.Common.Application.Events;
 using System;
 
-namespace Aimrank.Web.Modules.Matches.Infrastructure.Application.Events.PlayerDisconnected
+namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.PlayerDisconnected
 {
     [IntegrationEvent("Aimrank.Pod")]
     internal class PlayerDisconnectedEvent : IIntegrationEvent

@@ -1,10 +1,9 @@
 using Aimrank.Web.Modules.Matches.Application.Matches.CancelMatch;
-using Aimrank.Web.Modules.Matches.Infrastructure.Configuration;
 using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Web.Modules.Matches.Infrastructure.Application.Events.MatchCanceled
+namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.MatchCanceled
 {
     internal class MatchCanceledEventHandler : INotificationHandler<MatchCanceledEvent>
     {
