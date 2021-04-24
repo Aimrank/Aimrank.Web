@@ -21,8 +21,8 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Processing.Re
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = @"
-                DELETE FROM [cluster].[InboxMessages]
-                WHERE DATEDIFF(HOUR, [ProcessedDate], GETUTCDATE()) >= 2;";
+                DELETE FROM cluster.inbox_messages
+                WHERE EXTRACT(EPOCH FROM NOW() - processed_date) / 3600 >= 2;";
 
             await connection.ExecuteAsync(sql);
             
