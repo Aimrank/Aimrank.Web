@@ -3,10 +3,10 @@ using System;
 using Aimrank.Web.Modules.UserAccess.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
+namespace Aimrank.Web.Database.Migrator.Migrations
 {
     [DbContext(typeof(UserAccessContext))]
     partial class UserAccessContextModelSnapshot : ModelSnapshot
@@ -16,107 +16,120 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("users")
-                .UseIdentityColumns()
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.2");
+                .UseIdentityByDefaultColumns()
+                .HasAnnotation("Relational:MaxIdentifierLength", 63)
+                .HasAnnotation("ProductVersion", "5.0.5");
 
             modelBuilder.Entity("Aimrank.Web.Modules.UserAccess.Domain.Friendships.Friendship", b =>
                 {
                     b.Property<Guid>("User1Id")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("User1Id");
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_1_id");
 
                     b.Property<Guid>("User2Id")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("User2Id");
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_2_id");
 
                     b.Property<Guid?>("_blockingUserId1")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("BlockingUserId1");
+                        .HasColumnType("uuid")
+                        .HasColumnName("blocking_user_id_1");
 
                     b.Property<Guid?>("_blockingUserId2")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("BlockingUserId2");
+                        .HasColumnType("uuid")
+                        .HasColumnName("blocking_user_id_2");
 
                     b.Property<DateTime>("_createdAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created_at");
 
                     b.Property<Guid?>("_invitingUserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("InvitingUserId");
+                        .HasColumnType("uuid")
+                        .HasColumnName("inviting_user_id");
 
                     b.Property<bool>("_isAccepted")
-                        .HasColumnType("bit")
-                        .HasColumnName("IsAccepted");
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_accepted");
 
-                    b.HasKey("User1Id", "User2Id");
+                    b.HasKey("User1Id", "User2Id")
+                        .HasName("pk_friendships");
 
-                    b.HasIndex("User2Id");
+                    b.HasIndex("User2Id")
+                        .HasDatabaseName("ix_friendships_user_2_id");
 
-                    b.HasIndex("_blockingUserId1");
+                    b.HasIndex("_blockingUserId1")
+                        .HasDatabaseName("ix_friendships_blocking_user_id_1");
 
-                    b.HasIndex("_blockingUserId2");
+                    b.HasIndex("_blockingUserId2")
+                        .HasDatabaseName("ix_friendships_blocking_user_id_2");
 
-                    b.HasIndex("_invitingUserId");
+                    b.HasIndex("_invitingUserId")
+                        .HasDatabaseName("ix_friendships_inviting_user_id");
 
-                    b.ToTable("Friendships");
+                    b.ToTable("friendships");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.UserAccess.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("Email");
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("email");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit")
-                        .HasColumnName("IsActive");
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Username");
+                        .HasColumnType("text")
+                        .HasColumnName("username");
 
                     b.Property<string>("_password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Password");
+                        .HasColumnType("text")
+                        .HasColumnName("password");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_users");
 
-                    b.ToTable("Users");
+                    b.ToTable("users");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing.Outbox.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<string>("Data")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text")
+                        .HasColumnName("data");
 
                     b.Property<DateTime>("OccurredAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("occurred_at");
 
                     b.Property<DateTime?>("ProcessedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("processed_date");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_outbox_messages");
 
-                    b.ToTable("OutboxMessages", "users");
+                    b.ToTable("outbox_messages");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.UserAccess.Domain.Friendships.Friendship", b =>
@@ -124,28 +137,33 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
                     b.HasOne("Aimrank.Web.Modules.UserAccess.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("User1Id")
+                        .HasConstraintName("fk_friendships_users_user_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Aimrank.Web.Modules.UserAccess.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("User2Id")
+                        .HasConstraintName("fk_friendships_users_user_id1")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Aimrank.Web.Modules.UserAccess.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("_blockingUserId1")
+                        .HasConstraintName("fk_friendships_users_user_id2")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Aimrank.Web.Modules.UserAccess.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("_blockingUserId2")
+                        .HasConstraintName("fk_friendships_users_user_id3")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Aimrank.Web.Modules.UserAccess.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("_invitingUserId")
+                        .HasConstraintName("fk_friendships_users_user_id4")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -153,28 +171,31 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
                 {
                     b.OwnsMany("Aimrank.Web.Modules.UserAccess.Domain.Users.UserToken", "_tokens", b1 =>
                         {
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uniqueidentifier");
+                            b1.Property<Guid>("user_id")
+                                .HasColumnType("uuid")
+                                .HasColumnName("user_id");
 
                             b1.Property<int>("Type")
-                                .HasColumnType("int")
-                                .HasColumnName("Type");
+                                .HasColumnType("integer")
+                                .HasColumnName("type");
 
                             b1.Property<DateTime?>("ExpiresAt")
-                                .HasColumnType("datetime2")
-                                .HasColumnName("ExpiresAt");
+                                .HasColumnType("timestamp without time zone")
+                                .HasColumnName("expires_at");
 
                             b1.Property<string>("Token")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Token");
+                                .HasColumnType("text")
+                                .HasColumnName("token");
 
-                            b1.HasKey("UserId", "Type");
+                            b1.HasKey("user_id", "Type")
+                                .HasName("pk_users_tokens");
 
-                            b1.ToTable("UsersTokens");
+                            b1.ToTable("users_tokens");
 
                             b1.WithOwner()
-                                .HasForeignKey("UserId");
+                                .HasForeignKey("user_id")
+                                .HasConstraintName("fk_users_tokens_users_user_id");
                         });
 
                     b.Navigation("_tokens");

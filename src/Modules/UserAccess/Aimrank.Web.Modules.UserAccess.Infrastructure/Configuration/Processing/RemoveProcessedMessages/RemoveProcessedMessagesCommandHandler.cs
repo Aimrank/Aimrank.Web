@@ -21,8 +21,8 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = @"
-                DELETE FROM [users].[OutboxMessages]
-                WHERE DATEDIFF(HOUR, [ProcessedDate], GETUTCDATE()) > 2;";
+                DELETE FROM users.outbox_messages
+                WHERE EXTRACT(EPOCH FROM NOW() - processed_date) / 3600 >= 2;";
 
             await connection.ExecuteAsync(sql);
             

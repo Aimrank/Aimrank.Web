@@ -8,10 +8,10 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing
     {
         public void Configure(EntityTypeBuilder<OutboxMessage> builder)
         {
-            builder.ToTable("OutboxMessages", "users");
+            builder.ToTable("outbox_messages");
             builder.HasKey(x => x.Id);
-            builder.Property<DateTime>("OccurredAt");
-            builder.Property<DateTime?>("ProcessedDate");
+            builder.Property<DateTime>("OccurredAt").HasColumnName("occurred_at");
+            builder.Property<DateTime?>("ProcessedDate").HasColumnName("processed_date");
             builder.Property<string>("Type").IsRequired().HasMaxLength(255);
             builder.Property<string>("Data").IsRequired();
         }

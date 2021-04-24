@@ -18,6 +18,8 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.DataAccess
 
         protected override void Load(ContainerBuilder builder)
         {
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+            
             builder.RegisterType<SqlConnectionFactory>()
                 .As<ISqlConnectionFactory>()
                 .WithParameter("connectionString", _databaseConnectionString)
@@ -26,8 +28,9 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.DataAccess
             builder.Register(c =>
                 {
                     var dbContextOptionsBuilder = new DbContextOptionsBuilder<UserAccessContext>();
-                    dbContextOptionsBuilder.UseSqlServer(_databaseConnectionString,
-                        x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"));
+                    dbContextOptionsBuilder
+                        .UseNpgsql(_databaseConnectionString, x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"))
+                        .UseSnakeCaseNamingConvention();
                     dbContextOptionsBuilder.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
 
                     return new UserAccessContext(dbContextOptionsBuilder.Options);

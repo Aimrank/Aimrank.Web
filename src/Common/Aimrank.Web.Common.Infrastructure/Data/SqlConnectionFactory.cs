@@ -1,5 +1,5 @@
 using Aimrank.Web.Common.Application.Data;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using System.Data;
 using System;
 
@@ -19,7 +19,7 @@ namespace Aimrank.Web.Common.Infrastructure.Data
         {
             if (_connection is null || _connection.State != ConnectionState.Open)
             {
-                _connection = new SqlConnection(_connectionString);
+                _connection = new NpgsqlConnection(_connectionString);
                 _connection.Open();
             }
 

@@ -24,12 +24,9 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = @"
-                SELECT
-                    [U].[Id],
-                    [U].[Email],
-                    [U].[Username]
-                FROM [users].[Users] AS [U]
-                WHERE [U].[Id] = @UserId;";
+                SELECT id, email, username
+                FROM users.users
+                WHERE id = @UserId;";
 
             var user = await connection.QueryFirstAsync<UserResult>(sql, new {request.UserId});
             if (user is null)

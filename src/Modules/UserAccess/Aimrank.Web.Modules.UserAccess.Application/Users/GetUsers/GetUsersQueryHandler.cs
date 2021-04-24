@@ -26,16 +26,14 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Users.GetUsers
             
             const string sqlCount = @"
                 SELECT COUNT (*)
-                FROM [users].[Users] AS [U]
-                WHERE [U].[Username] LIKE @Username;";
+                FROM users.users
+                WHERE username LIKE @Username;";
 
             const string sql = @"
-                SELECT
-                    [U].[Id] AS [Id],
-                    [U].[Username] AS [Username]
-                FROM [users].[Users] AS [U]
-                WHERE [U].[Username] LIKE @Username
-                ORDER BY [U].[Username]
+                SELECT id, username
+                FROM users.users
+                WHERE username LIKE @Username
+                ORDER BY username
                 OFFSET @Offset ROWS FETCH NEXT @Fetch ROWS ONLY;";
 
             var count = await connection.ExecuteScalarAsync<int>(sqlCount, new {Username = username});

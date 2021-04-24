@@ -38,7 +38,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Domain.Users
         public async Task<bool> ExistsEmailAsync(string email)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
-            const string sql = "SELECT COUNT (*) FROM [users].[Users] AS [U] WHERE [U].[Email] = @Email;";
+            const string sql = "SELECT COUNT (*) FROM users.users WHERE email = @Email;";
             var count = await connection.ExecuteScalarAsync<int>(sql, new {Email = email});
             return count > 0;
         }
@@ -46,7 +46,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Domain.Users
         public async Task<bool> ExistsUsernameAsync(string username)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
-            const string sql = "SELECT COUNT (*) FROM [users].[Users] AS [U] WHERE [U].[Username] = @Username;";
+            const string sql = "SELECT COUNT (*) FROM users.users WHERE username = @Username;";
             var count = await connection.ExecuteScalarAsync<int>(sql, new {Username = username});
             return count > 0;
         }

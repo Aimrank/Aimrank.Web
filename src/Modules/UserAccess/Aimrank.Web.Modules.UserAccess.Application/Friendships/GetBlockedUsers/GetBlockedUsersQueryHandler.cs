@@ -29,28 +29,28 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Friendships.GetBlockedUsers
 
             const string sqlCount = @"
                 SELECT COUNT (*)
-                FROM [users].[Friendships] AS [F]
+                FROM users.friendships
                 WHERE
-                    [F].[BlockingUserId1] = @UserId OR
-                    [F].[BlockingUserId2] = @UserId";
+                    blocking_user_id_1 = @UserId OR
+                    blocking_user_id_2 = @UserId";
 
             const string sql = @"
                 SELECT
                     CASE
-                        WHEN [U1].[Id] = @UserId THEN [U2].[Id]
-                        WHEN [U2].[Id] = @UserId THEN [U1].[Id]
-                    END AS [Id],
+                        WHEN u1.id = @UserId THEN u2.id
+                        WHEN u2.id = @UserId THEN u1.id
+                    END AS id,
                     CASE
-                        WHEN [U1].[Id] = @UserId THEN [U2].[Username]
-                        WHEN [U2].[Id] = @UserId THEN [U1].[Username]
-                    END AS [Username]
-                FROM [users].[Friendships] AS [F]
-                INNER JOIN [users].[Users] AS [U1] ON [U1].[Id] = [F].[User1Id]
-                INNER JOIN [users].[Users] AS [U2] ON [U2].[Id] = [F].[User2Id]
+                        WHEN u1.id = @UserId THEN u2.username
+                        WHEN u2.id = @UserId THEN u1.username
+                    END AS username
+                FROM users.friendships AS f
+                INNER JOIN users.users AS u1 ON u1.id = f.user_1_id
+                INNER JOIN users.users AS u2 ON u2.id = f.user_1_id
                 WHERE
-                    [F].[BlockingUserId1] = @UserId OR
-                    [F].[BlockingUserId2] = @UserId
-                ORDER BY [F].[CreatedAt] DESC
+                    f.blocking_user_id_1 = @UserId OR
+                    f.blocking_user_id_2 = @UserId
+                ORDER BY f.created_at DESC
                 OFFSET @Offset ROWS FETCH NEXT @Fetch ROWS ONLY;";
 
             var count = await connection.ExecuteScalarAsync<int>(sqlCount, new {_executionContextAccessor.UserId});

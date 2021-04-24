@@ -29,18 +29,18 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Friendships.GetFriendshipBa
 
             const string sql = @"
                 SELECT
-                    [U1].[Id] AS [UserId1],
-                    [U2].[Id] AS [UserId2],
-                    [F].[BlockingUserId1] AS [BlockingUserId1],
-                    [F].[BlockingUserId2] AS [BlockingUserId2],
-                    [F].[InvitingUserId] AS [InvitingUserId],
-                    [F].[IsAccepted] AS [IsAccepted]
-                FROM [users].[Friendships] AS [F]
-                INNER JOIN [users].[Users] AS [U1] ON [U1].[Id] = [F].[User1Id]
-                INNER JOIN [users].[Users] AS [U2] ON [U2].[Id] = [F].[User2Id]
+                    u1.id AS user_id_1,
+                    u2.id AS user_id_2,
+                    f.blocking_user_id_1 AS blocking_user_id_1,
+                    f.blocking_user_id_2 AS blocking_user_id_2,
+                    f.inviting_user_id AS inviting_user_id,
+                    f.is_accepted AS is_accepted
+                FROM users.friendships AS f
+                INNER JOIN users.users AS u1 ON u1.id = f.user_1_id
+                INNER JOIN users.users AS u2 ON u2.id = f.user_2_id
                 WHERE
-                    ([U1].[Id] IN @UserIds AND [U2].[Id] = @CurrentUserId) OR
-                    ([U2].[Id] IN @userIds AND [U1].[Id] = @CurrentUserId);";
+                    (u1.id IN @UserIds AND u2.id = @CurrentUserId) OR
+                    (u2.id IN @userIds AND u1.id = @CurrentUserId);";
 
             var result = await connection.QueryAsync<FriendshipQueryResult>(sql,
                 new {request.UserIds, CurrentUserId = _executionContextAccessor.UserId});
