@@ -96,9 +96,9 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
                         .HasColumnType("text")
                         .HasColumnName("data");
 
-                    b.Property<DateTime>("OccurredAt")
+                    b.Property<DateTime>("OccurredOn")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("occurred_at");
+                        .HasColumnName("occurred_on");
 
                     b.Property<DateTime?>("ProcessedDate")
                         .HasColumnType("timestamp without time zone")

@@ -5,12 +5,12 @@ namespace Aimrank.Web.Common.Domain
     public abstract class DomainEvent : IDomainEvent
     {
         public Guid Id { get; }
-        public DateTime OccurredAt { get; }
+        public DateTime OccurredOn { get; }
 
         protected DomainEvent()
         {
             Id = Guid.NewGuid();
-            OccurredAt = DateTime.UtcNow;
+            OccurredOn = DateTime.UtcNow;
         }
     }
 }

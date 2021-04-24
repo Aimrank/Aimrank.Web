@@ -31,7 +31,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing
         {
             var messages = await _context.OutboxMessages
                 .Where(m => m.ProcessedDate == null)
-                .OrderBy(m => m.OccurredAt)
+                .OrderBy(m => m.OccurredOn)
                 .ToListAsync(cancellationToken);
 
             foreach (var message in messages)

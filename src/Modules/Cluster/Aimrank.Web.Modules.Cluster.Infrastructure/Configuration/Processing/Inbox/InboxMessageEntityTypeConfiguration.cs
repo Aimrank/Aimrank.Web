@@ -10,7 +10,7 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Processing.In
         {
             builder.ToTable("inbox_messages");
             builder.HasKey(x => x.Id);
-            builder.Property<DateTime>("OccurredAt").HasColumnName("occurred_at");
+            builder.Property<DateTime>("OccurredOn").HasColumnName("occurred_on");
             builder.Property<DateTime?>("ProcessedDate").HasColumnName("processed_date");
             builder.Property<string>("Type").IsRequired().HasMaxLength(255);
             builder.Property<string>("Data").IsRequired();

@@ -7,7 +7,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Even
     internal class PlayerDisconnectedEvent : IIntegrationEvent
     {
         public Guid Id { get; set; }
-        public DateTime OccurredAt { get; set; }
+        public DateTime OccurredOn { get; set; }
         public Guid MatchId { get; set; }
         public string SteamId { get; set; }
     }

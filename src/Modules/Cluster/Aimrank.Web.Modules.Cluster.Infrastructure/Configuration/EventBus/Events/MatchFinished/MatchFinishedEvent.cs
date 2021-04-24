@@ -7,7 +7,7 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.EventBus.Even
     internal class MatchFinishedEvent : IIntegrationEvent
     {
         public Guid Id { get; set; }
-        public DateTime OccurredAt { get; set; }
+        public DateTime OccurredOn { get; set; }
         public Guid MatchId { get; set; }
     }
 }

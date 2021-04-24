@@ -6,6 +6,6 @@ namespace Aimrank.Web.Common.Domain
     public interface IDomainEvent : INotification
     {
         public Guid Id { get; }
-        public DateTime OccurredAt { get; }
+        public DateTime OccurredOn { get; }
     }
 }

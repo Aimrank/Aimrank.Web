@@ -73,7 +73,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing
             var notificationData = JsonSerializer.Serialize(notification, notificationType);
             var outboxMessage = new OutboxMessage(
                 notification.Id,
-                notification.DomainEvent.OccurredAt,
+                notification.DomainEvent.OccurredOn,
                 notificationType.FullName,
                 notificationData);
             _context.OutboxMessages.Add(outboxMessage);

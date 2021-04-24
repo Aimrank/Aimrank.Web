@@ -5,17 +5,17 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing
     internal class OutboxMessage
     {
         public Guid Id { get; }
-        public DateTime OccurredAt { get; }
+        public DateTime OccurredOn { get; }
         public DateTime? ProcessedDate { get; set; }
         public string Type { get; }
         public string Data { get; }
 
         private OutboxMessage() {}
 
-        public OutboxMessage(Guid id, DateTime occurredAt, string type, string data)
+        public OutboxMessage(Guid id, DateTime occurredOn, string type, string data)
         {
             Id = id;
-            OccurredAt = occurredAt;
+            OccurredOn = occurredOn;
             Type = type;
             Data = data;
         }

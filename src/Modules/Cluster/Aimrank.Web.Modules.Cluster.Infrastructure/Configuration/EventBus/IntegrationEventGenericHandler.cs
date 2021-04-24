@@ -20,7 +20,7 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.EventBus
 
             var message = new InboxMessage(
                 @event.Id,
-                @event.OccurredAt,
+                @event.OccurredOn,
                 type,
                 data);
             

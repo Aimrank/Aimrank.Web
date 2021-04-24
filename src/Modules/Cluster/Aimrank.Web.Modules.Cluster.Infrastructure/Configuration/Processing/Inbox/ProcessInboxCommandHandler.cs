@@ -30,7 +30,7 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Processing.In
         {
             var messages = await _context.InboxMessages
                 .Where(m => m.ProcessedDate == null)
-                .OrderBy(m => m.OccurredAt)
+                .OrderBy(m => m.OccurredOn)
                 .ToListAsync(cancellationToken);
 
             foreach (var message in messages)

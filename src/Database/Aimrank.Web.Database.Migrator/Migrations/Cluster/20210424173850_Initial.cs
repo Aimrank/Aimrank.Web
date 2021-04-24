@@ -16,7 +16,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    occurred_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    occurred_on = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     processed_date = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     type = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     data = table.Column<string>(type: "text", nullable: false)
