@@ -39,8 +39,8 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Friendships.GetFriendshipBa
                 INNER JOIN users.users AS u1 ON u1.id = f.user_1_id
                 INNER JOIN users.users AS u2 ON u2.id = f.user_2_id
                 WHERE
-                    (u1.id IN @UserIds AND u2.id = @CurrentUserId) OR
-                    (u2.id IN @userIds AND u1.id = @CurrentUserId);";
+                    (u1.id = ANY(@UserIds) AND u2.id = @CurrentUserId) OR
+                    (u2.id = ANY(@userIds) AND u1.id = @CurrentUserId);";
 
             var result = await connection.QueryAsync<FriendshipQueryResult>(sql,
                 new {request.UserIds, CurrentUserId = _executionContextAccessor.UserId});

@@ -64,6 +64,13 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate
             });
         }
 
-        private record UserResult(Guid Id, string Email, string Username, string Password, bool IsActive);
+        private class UserResult
+        {
+            public Guid Id { get; set; }
+            public string Email { get; set; }
+            public string Username { get; set; }
+            public string Password { get; set; }
+            public bool IsActive { get; set; }
+        }
     }
 }

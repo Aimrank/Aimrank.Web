@@ -33,7 +33,7 @@ namespace Aimrank.Web.Modules.Matches.Application.Players.GetPlayerStatsBatch
                     SUM(p.stats_hs) AS total_hs
                 FROM matches.matches AS m
                 INNER JOIN matches.matches_players AS p ON p.match_id = m.id
-                WHERE p.player_id IN @PlayerIds
+                WHERE p.player_id = ANY(@PlayerIds)
                 GROUP BY p.player_id, m.mode, m.map;";
 
             var result = await connection.QueryAsync<PlayerStatsQueryResult>(sql, new {request.PlayerIds});

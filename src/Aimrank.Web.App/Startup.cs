@@ -92,8 +92,10 @@ namespace Aimrank.Web.App
                 services.AddDbContext<T>(options =>
                 {
                     options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
-                    options.UseSqlServer(Configuration.GetConnectionString("Database"),
-                        x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"));
+                    options
+                        .UseNpgsql(Configuration.GetConnectionString("Database"),
+                            x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"))
+                        .UseSnakeCaseNamingConvention();
                 });
             }
             

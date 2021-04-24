@@ -24,7 +24,7 @@ namespace Aimrank.Web.Modules.Matches.Application.Players.GetPlayerBatch
             const string sql = @"
                 SELECT id, steam_id
                 FROM matches.players
-                WHERE id IN @PlayerIds;";
+                WHERE id = ANY(@PlayerIds);";
 
             var result = await connection.QueryAsync<PlayerDto>(sql, new {request.PlayerIds});
 

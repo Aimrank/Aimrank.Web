@@ -38,7 +38,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Matches
                 WHERE
                     m.mode = @Mode AND
                     m.status = @Status AND
-                    p.player_id IN @PlayerIds;";
+                    p.player_id = ANY(@PlayerIds);";
 
             var result = new Dictionary<PlayerId, int>();
             
@@ -52,7 +52,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Matches
                 {
                     Mode = mode,
                     Status = MatchStatus.Finished,
-                    PlayerIds = ids.Select(id => id.Value)
+                    PlayerIds = ids.Select(id => id.Value).ToList()
                 },
                 splitOn: "rating");
 

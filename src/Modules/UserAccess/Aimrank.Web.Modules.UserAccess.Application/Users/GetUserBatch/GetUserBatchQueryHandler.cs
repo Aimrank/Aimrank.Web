@@ -24,7 +24,7 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Users.GetUserBatch
             const string sql = @"
                 SELECT id, username
                 FROM users.users
-                WHERE id IN @UserIds;";
+                WHERE id = ANY(@UserIds);";
 
             var result = await connection.QueryAsync<UserDto>(sql, new {request.UserIds});
 

@@ -26,7 +26,7 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Friendships.GetFriendsList
                 SELECT COUNT (*)
                 FROM users.friendships
                 WHERE
-                    is_accepted = 1 AND
+                    is_accepted = true AND
                     (blocking_user_id_1 IS NULL OR blocking_user_id_1 <> @UserId) AND
                     (blocking_user_id_2 IS NULL OR blocking_user_id_2 <> @UserId) AND
                     (user_1_id = @UserId OR user_2_id = @UserId);";
@@ -39,7 +39,7 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Friendships.GetFriendsList
                     END AS id
                 FROM users.friendships AS f
                 WHERE
-                    f.is_accepted = 1 AND
+                    f.is_accepted = true AND
                     (f.blocking_user_id_1 IS NULL OR f.blocking_user_id_1 <> @UserId) AND
                     (f.blocking_user_id_2 IS NULL OR f.blocking_user_id_2 <> @UserId) AND
                     (f.user_1_id = @UserId OR f.user_2_id = @UserId)

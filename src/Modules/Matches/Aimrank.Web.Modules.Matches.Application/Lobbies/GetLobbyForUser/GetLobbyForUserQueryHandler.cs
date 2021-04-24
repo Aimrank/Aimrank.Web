@@ -31,9 +31,9 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.GetLobbyForUser
                 SELECT
                     l.id,
                     l.status,
-                    l.configuration_maps,
-                    l.configuration_name,
-                    l.configuration_mode,
+                    l.configuration_maps AS maps,
+                    l.configuration_name AS name,
+                    l.configuration_mode AS mode,
                     m.player_id,
                     CASE m.role
                         WHEN 0 THEN 0

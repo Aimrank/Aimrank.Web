@@ -69,7 +69,8 @@ namespace Aimrank.Web.Modules.Matches.Application.Matches.GetFinishedMatches
 					{sqlInner}
 					ORDER BY mi.finished_at DESC
 					OFFSET @Offset ROWS FETCH NEXT @Fetch ROWS ONLY
-				);";
+				)
+				ORDER BY m.finished_at DESC;";
 
             var count = await connection.ExecuteScalarAsync<int>(sqlCount, sqlParams);
 
@@ -97,8 +98,8 @@ namespace Aimrank.Web.Modules.Matches.Application.Matches.GetFinishedMatches
 							Assists = player.Player_Assists,
 							Deaths = player.Player_Deaths,
 							Hs = player.Player_Hs,
-							RatingStart = player.Player_RatingStart,
-							RatingEnd = player.Player_RatingEnd
+							RatingStart = player.Player_Rating_Start,
+							RatingEnd = player.Player_Rating_End
 						};
 
 						if (playerDto.Team == 2)

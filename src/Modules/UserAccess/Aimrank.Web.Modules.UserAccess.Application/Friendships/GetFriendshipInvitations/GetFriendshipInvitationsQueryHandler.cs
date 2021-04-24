@@ -31,7 +31,7 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Friendships.GetFriendshipIn
                 SELECT COUNT (*)
                 FROM users.friendships
                 WHERE
-                    is_accepted = 0 AND
+                    is_accepted = false AND
                     blocking_user_id_1 IS NULL AND
                     blocking_user_id_2 IS NULL AND
                     inviting_user_id <> @UserId AND
@@ -51,7 +51,7 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Friendships.GetFriendshipIn
                 INNER JOIN users.users AS u1 ON u1.id = f.user_1_id
                 INNER JOIN users.users AS u2 ON u2.id = f.user_2_id
                 WHERE
-                    f.is_accepted = 0 AND
+                    f.is_accepted = false AND
                     f.blocking_user_id_1 IS NULL AND
                     f.blocking_user_id_2 IS NULL AND
                     f.inviting_user_id <> @UserId AND
