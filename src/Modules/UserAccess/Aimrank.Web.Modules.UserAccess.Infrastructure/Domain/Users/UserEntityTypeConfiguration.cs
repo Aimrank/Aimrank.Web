@@ -20,12 +20,12 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Domain.Users
             builder.OwnsMany<UserToken>("_tokens", b =>
             {
                 b.ToTable("users_tokens");
-                b.Property<UserId>("user_id");
-                b.HasKey("user_id", "Type");
+                b.Property<UserId>("UserId");
+                b.HasKey("UserId", "Type");
                 b.Property(t => t.Type).IsRequired();
                 b.Property(t => t.Token).IsRequired();
                 b.Property(t => t.ExpiresAt).HasColumnName("expires_at");
-                b.WithOwner().HasForeignKey("user_id");
+                b.WithOwner().HasForeignKey("UserId");
             });
 
             builder.Ignore(u => u.DomainEvents);

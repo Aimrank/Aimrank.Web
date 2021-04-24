@@ -171,7 +171,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations
                 {
                     b.OwnsMany("Aimrank.Web.Modules.UserAccess.Domain.Users.UserToken", "_tokens", b1 =>
                         {
-                            b1.Property<Guid>("user_id")
+                            b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("user_id");
 
@@ -188,13 +188,13 @@ namespace Aimrank.Web.Database.Migrator.Migrations
                                 .HasColumnType("text")
                                 .HasColumnName("token");
 
-                            b1.HasKey("user_id", "Type")
+                            b1.HasKey("UserId", "Type")
                                 .HasName("pk_users_tokens");
 
                             b1.ToTable("users_tokens");
 
                             b1.WithOwner()
-                                .HasForeignKey("user_id")
+                                .HasForeignKey("UserId")
                                 .HasConstraintName("fk_users_tokens_users_user_id");
                         });
 
