@@ -20,15 +20,10 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.GetLobbyMatch
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = @"
-                SELECT
-                    [M].[Id] AS [Id],
-                    [M].[Map] AS [Map],
-                    [M].[Mode] AS [Mode],
-                    [M].[Status] AS [Status],
-                    [M].[Address] AS [Address]
-                FROM [matches].[Matches] AS [M]
-                LEFT JOIN [matches].[MatchesLobbies] AS [L] ON [L].[MatchId] = [M].[Id]
-                WHERE [L].[LobbyId] = @LobbyId;";
+                SELECT m.id, m.map, m.mode, m.status, m.address
+                FROM matches.matches AS m
+                LEFT JOIN matches.matches_lobbies AS l ON l.match_id = m.id
+                WHERE l.lobby_id = @LobbyId;";
 
             return await connection.QueryFirstOrDefaultAsync<LobbyMatchDto>(sql, new {request.LobbyId});
         }

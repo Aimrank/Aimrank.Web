@@ -25,15 +25,13 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate
 
             const string sql = @"
                 SELECT
-                    [U].[Id],
-                    [U].[Email],
-                    [U].[Username],
-                    [U].[Password],
-                    [U].[IsActive]
-                FROM [users].[Users] AS [U]
-                WHERE
-                    [U].[Email] = @UsernameOrEmail OR
-                    [U].[Username] = @UsernameOrEmail;";
+                    id,
+                    email,
+                    username,
+                    password,
+                    is_active
+                FROM users.users
+                WHERE email = @UsernameOrEmail OR username = @UsernameOrEmail;";
 
             var user = await connection.QueryFirstOrDefaultAsync<UserResult>(sql, new {request.UsernameOrEmail});
 
@@ -66,6 +64,13 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate
             });
         }
 
-        private record UserResult(Guid Id, string Email, string Username, string Password, bool IsActive);
+        private class UserResult
+        {
+            public Guid Id { get; set; }
+            public string Email { get; set; }
+            public string Username { get; set; }
+            public string Password { get; set; }
+            public bool IsActive { get; set; }
+        }
     }
 }

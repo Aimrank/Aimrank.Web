@@ -17,8 +17,9 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.DataAccess
             builder.Register(c =>
                 {
                     var dbContextOptionsBuilder = new DbContextOptionsBuilder<ClusterContext>();
-                    dbContextOptionsBuilder.UseSqlServer(_databaseConnectionString,
-                        x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"));
+                    dbContextOptionsBuilder
+                        .UseNpgsql(_databaseConnectionString, x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"))
+                        .UseSnakeCaseNamingConvention();
 
                     return new ClusterContext(dbContextOptionsBuilder.Options);
                 })

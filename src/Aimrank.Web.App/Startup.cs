@@ -7,8 +7,8 @@ using Aimrank.Web.App.GraphQL;
 using Aimrank.Web.App.Modules.Cluster;
 using Aimrank.Web.App.Modules.Matches;
 using Aimrank.Web.App.Modules.UserAccess;
+using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Common.Application;
-using Aimrank.Web.Common.Infrastructure.EventBus;
 using Aimrank.Web.Modules.Cluster.Application.Contracts;
 using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration;
 using Aimrank.Web.Modules.Cluster.Infrastructure;
@@ -43,13 +43,15 @@ namespace Aimrank.Web.App
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var redisSettings = Configuration.GetSection(nameof(RedisSettings)).Get<RedisSettings>();
+            var urlFactorySettings = Configuration.GetSection(nameof(UrlFactorySettings)).Get<UrlFactorySettings>();
+            
             services.AddHttpClient();
 
+            services.AddSingleton(urlFactorySettings);
             services.AddSingleton<IUrlFactory, ApplicationUrlFactory>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
-
-            var redisSettings = Configuration.GetSection(nameof(RedisSettings)).Get<RedisSettings>();
 
             services.AddStackExchangeRedisCache(options =>
             {
@@ -85,25 +87,21 @@ namespace Aimrank.Web.App
             #region Migrations
 #if false
             //Add db contexts so "dotnet ef" can find them when generating migrations
-            var connectionString = Configuration.GetConnectionString("Database");
-
-            services.AddDbContext<ClusterContext>(options =>
-                options.UseSqlServer(connectionString,
-                    x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator")));
-
-            services.AddDbContext<MatchesContext>(options =>
+            void AddDbContext<T>() where T : DbContext
             {
-                options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
-                options.UseSqlServer(connectionString,
-                    x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"));
-            });
+                services.AddDbContext<T>(options =>
+                {
+                    options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
+                    options
+                        .UseNpgsql(Configuration.GetConnectionString("Database"),
+                            x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"))
+                        .UseSnakeCaseNamingConvention();
+                });
+            }
             
-            services.AddDbContext<UserAccessContext>(options =>
-            {
-                options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
-                options.UseSqlServer(connectionString,
-                    x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"));
-            });
+            AddDbContext<ClusterContext>();
+            AddDbContext<MatchesContext>();
+            AddDbContext<UserAccessContext>();
 #endif
             #endregion
         }

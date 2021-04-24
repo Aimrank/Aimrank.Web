@@ -20,10 +20,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Domain.Users.RemoveExpir
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
-            const string sql = @"
-                DELETE
-                FROM [users].[UsersTokens]
-                WHERE DATEDIFF(SECOND, GETUTCDATE(), [ExpiresAt]) <= 0;";
+            const string sql = "DELETE FROM users.users_tokens WHERE NOW() >= expires_at;";
 
             await connection.ExecuteAsync(sql);
             

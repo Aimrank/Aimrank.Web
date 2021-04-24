@@ -22,11 +22,9 @@ namespace Aimrank.Web.Modules.Matches.Application.Players.GetPlayerBatch
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = @"
-                SELECT
-                    [P].[Id],
-                    [P].[SteamId]
-                FROM [matches].[Players] AS [P]
-                WHERE [P].[Id] IN @PlayerIds;";
+                SELECT id, steam_id
+                FROM matches.players
+                WHERE id = ANY(@PlayerIds);";
 
             var result = await connection.QueryAsync<PlayerDto>(sql, new {request.PlayerIds});
 

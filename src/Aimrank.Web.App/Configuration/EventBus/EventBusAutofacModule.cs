@@ -1,5 +1,5 @@
 using Aimrank.Web.App.Configuration.EventBus.RabbitMQ;
-using Aimrank.Web.Common.Infrastructure.EventBus;
+using Aimrank.Web.Common.Application.Events;
 using Autofac;
 using Microsoft.Extensions.Configuration;
 

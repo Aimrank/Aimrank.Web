@@ -1,4 +1,5 @@
 using Aimrank.Web.Common.Application.Data;
+using Aimrank.Web.Common.Application.Exceptions;
 using Aimrank.Web.Modules.Matches.Domain.Matches;
 using Aimrank.Web.Modules.Matches.Domain.Players;
 using Dapper;
@@ -27,17 +28,17 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Matches
 
             const string sql = @"
                 SELECT DISTINCT
-                    [P].[PlayerId] AS [PlayerId],
-                    FIRST_VALUE([P].[RatingEnd]) OVER (
-                        PARTITION BY [P].[PlayerId]
-                        ORDER BY [M].[FinishedAt] DESC
-                    ) AS [Rating]
-                FROM [matches].[Matches] AS [M]
-                INNER JOIN [matches].[MatchesPlayers] AS [P] ON [P].[MatchId] = [M].[Id]
+                    p.player_id,
+                    FIRST_VALUE(p.rating_end) OVER (
+                        PARTITION BY p.player_id
+                        ORDER BY m.finished_at DESC
+                    ) AS rating
+                FROM matches.matches AS m
+                INNER JOIN matches.matches_players AS p ON p.match_id = m.id
                 WHERE
-                    [M].[Mode] = @Mode AND
-                    [M].[Status] = @Status AND
-                    [P].[PlayerId] IN @PlayerIds;";
+                    m.mode = @Mode AND
+                    m.status = @Status AND
+                    p.player_id = ANY(@PlayerIds);";
 
             var result = new Dictionary<PlayerId, int>();
             
@@ -51,15 +52,23 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Matches
                 {
                     Mode = mode,
                     Status = MatchStatus.Finished,
-                    PlayerIds = ids.Select(id => id.Value)
+                    PlayerIds = ids.Select(id => id.Value).ToList()
                 },
-                splitOn: "Rating");
+                splitOn: "rating");
 
             return result;
         }
 
-        public Task<Match> GetByIdAsync(MatchId id)
-            => _context.Matches.FirstOrDefaultAsync(m => m.Id == id);
+        public async Task<Match> GetByIdAsync(MatchId id)
+        {
+            var match = await _context.Matches.FirstOrDefaultAsync(m => m.Id == id);
+            if (match is null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            return match;
+        }
 
         public void Add(Match match) => _context.Matches.Add(match);
 

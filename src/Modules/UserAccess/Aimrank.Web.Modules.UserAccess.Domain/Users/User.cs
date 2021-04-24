@@ -43,7 +43,7 @@ namespace Aimrank.Web.Modules.UserAccess.Domain.Users
 
             var user = new User(id, email, username, password, token);
             
-            user.AddDomainEvent(new UserCreatedDomainEvent(user, token));
+            user.AddDomainEvent(new UserCreatedDomainEvent(user.Id, username, email, token.Token));
 
             return user;
         }
@@ -67,7 +67,7 @@ namespace Aimrank.Web.Modules.UserAccess.Domain.Users
             
             _tokens.Add(token);
             
-            AddDomainEvent(new UserEmailConfirmationRequestedDomainEvent(this, token));
+            AddDomainEvent(new UserEmailConfirmationRequestedDomainEvent(Id, Username, Email, token.Token));
         }
 
         public void RequestPasswordReminder()
@@ -80,7 +80,7 @@ namespace Aimrank.Web.Modules.UserAccess.Domain.Users
             
             _tokens.Add(token);
             
-            AddDomainEvent(new UserPasswordReminderRequestedDomainEvent(this, token));
+            AddDomainEvent(new UserPasswordReminderRequestedDomainEvent(Id, Username, Email, token.Token));
         }
 
         public void ChangePassword(string oldPassword, string newPasswordHash)

@@ -10,7 +10,7 @@ namespace Aimrank.Web.Modules.Matches.Application.Matches.GetFinishedMatches
 		public int Player_Assists { get; set; }
 		public int Player_Deaths { get; set; }
 		public int Player_Hs { get; set; }
-		public int Player_RatingStart { get; set; }
-		public int Player_RatingEnd { get; set; }
+		public int Player_Rating_Start { get; set; }
+		public int Player_Rating_End { get; set; }
     }
 }

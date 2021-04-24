@@ -8,7 +8,7 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Application.Entities
     {
         public void Configure(EntityTypeBuilder<Pod> builder)
         {
-            builder.ToTable("Pods", "cluster");
+            builder.ToTable("pods");
             builder.HasKey(p => p.IpAddress);
         }
     }

@@ -1,5 +1,4 @@
 using Aimrank.Web.Common.Application.Events;
-using Aimrank.Web.Common.Infrastructure.EventBus;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;

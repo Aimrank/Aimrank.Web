@@ -2,10 +2,10 @@
 using Aimrank.Web.Modules.Cluster.Infrastructure;
 using Aimrank.Web.Modules.Matches.Infrastructure;
 using Aimrank.Web.Modules.UserAccess.Infrastructure;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -39,15 +39,18 @@ static void MigrateDatabase(IConfiguration configuration)
     var connectionString = configuration.GetConnectionString("Database");
 
     var optionsBuilderCluster = new DbContextOptionsBuilder<ClusterContext>()
-        .UseSqlServer(connectionString, ConfigureContext);
+        .UseNpgsql(connectionString, ConfigureContext)
+        .UseSnakeCaseNamingConvention();
 
     var optionsBuilderMatches = new DbContextOptionsBuilder<MatchesContext>()
         .ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>()
-        .UseSqlServer(connectionString, ConfigureContext);
+        .UseNpgsql(connectionString, ConfigureContext)
+        .UseSnakeCaseNamingConvention();
         
     var optionsBuilderUserAccess = new DbContextOptionsBuilder<UserAccessContext>()
         .ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>()
-        .UseSqlServer(connectionString, ConfigureContext);
+        .UseNpgsql(connectionString, ConfigureContext)
+        .UseSnakeCaseNamingConvention();
 
     using var contextCluster = new ClusterContext(optionsBuilderCluster.Options);
     using var contextMatches = new MatchesContext(optionsBuilderMatches.Options);
@@ -56,7 +59,7 @@ static void MigrateDatabase(IConfiguration configuration)
     MigrateContexts(contextCluster, contextMatches, contextUserAccess);
 }
 
-static void ConfigureContext(SqlServerDbContextOptionsBuilder optionsBuilder)
+static void ConfigureContext(NpgsqlDbContextOptionsBuilder optionsBuilder)
 {
     optionsBuilder.EnableRetryOnFailure(10, TimeSpan.FromMinutes(1), null);
     optionsBuilder.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);

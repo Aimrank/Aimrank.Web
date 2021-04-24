@@ -22,11 +22,9 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Users.GetUserBatch
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = @"
-                SELECT
-                    [U].[Id] AS [Id],
-                    [U].[Username] AS [Username]
-                FROM [users].[Users] AS [U]
-                WHERE [U].[Id] IN @UserIds;";
+                SELECT id, username
+                FROM users.users
+                WHERE id = ANY(@UserIds);";
 
             var result = await connection.QueryAsync<UserDto>(sql, new {request.UserIds});
 

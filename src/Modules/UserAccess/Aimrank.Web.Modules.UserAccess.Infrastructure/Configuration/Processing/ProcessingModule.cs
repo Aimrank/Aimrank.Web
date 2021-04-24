@@ -1,7 +1,8 @@
-using Aimrank.Web.Common.Application.Events;
-using Aimrank.Web.Common.Domain;
 using Aimrank.Web.Common.Infrastructure;
 using Autofac;
+using FluentValidation;
+using MediatR.Extensions.Autofac.DependencyInjection;
+using MediatR;
 
 namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing
 {
@@ -9,16 +10,18 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
-            builder.RegisterType<EventDispatcher>().As<IEventDispatcher>().InstancePerLifetimeScope();
-            builder.RegisterType<DomainEventAccessor>().As<IDomainEventAccessor>().InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(Assemblies.Application, Assemblies.Infrastructure)
+                .AsClosedTypesOf(typeof(IValidator<>))
+                .SingleInstance();
 
-            builder.RegisterAssemblyTypes(
-                    Assemblies.Application,
-                    Assemblies.Domain,
-                    Assemblies.Infrastructure)
-                .Where(t => typeof(IDomainEventHandler).IsAssignableFrom(t))
-                .AsClosedTypesOf(typeof(IDomainEventHandler<>));
+            builder.RegisterMediatR(Assemblies.Domain, Assemblies.Application, Assemblies.Infrastructure);
+            
+            builder.RegisterGeneric(typeof(ValidationPipelineBehavior<,>)).As(typeof(IPipelineBehavior<,>));
+            builder.RegisterGeneric(typeof(UnitOfWorkPipelineBehavior<,>)).As(typeof(IPipelineBehavior<,>));
+            
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
+            builder.RegisterType<DomainEventDispatcher>().InstancePerLifetimeScope();
+            builder.RegisterType<DomainEventAccessor>().As<IDomainEventAccessor>().InstancePerLifetimeScope();
         }
     }
 }

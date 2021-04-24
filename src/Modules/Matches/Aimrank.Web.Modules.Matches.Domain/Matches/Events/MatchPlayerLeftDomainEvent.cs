@@ -1,16 +1,17 @@
-using System.Collections.Generic;
 using Aimrank.Web.Common.Domain;
+using Aimrank.Web.Modules.Matches.Domain.Players;
+using System.Collections.Generic;
 
 namespace Aimrank.Web.Modules.Matches.Domain.Matches.Events
 {
-    public class MatchPlayerLeftDomainEvent : IDomainEvent
+    public class MatchPlayerLeftDomainEvent : DomainEvent
     {
-        public MatchPlayer Player { get; }
+        public PlayerId PlayerId { get; }
         public IEnumerable<MatchLobby> Lobbies { get; }
 
-        public MatchPlayerLeftDomainEvent(MatchPlayer player, IEnumerable<MatchLobby> lobbies)
+        public MatchPlayerLeftDomainEvent(PlayerId playerId, IEnumerable<MatchLobby> lobbies)
         {
-            Player = player;
+            PlayerId = playerId;
             Lobbies = lobbies;
         }
     }

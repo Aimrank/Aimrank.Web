@@ -8,9 +8,7 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Application
     [DisallowConcurrentExecution]
     internal class RemoveInactivePodsJob : IJob
     {
-        public async Task Execute(IJobExecutionContext context)
-        {
-            await CommandsExecutor.Execute(new RemoveInactivePodsCommand());
-        }
+        public Task Execute(IJobExecutionContext context)
+            => CommandsExecutor.Execute(new RemoveInactivePodsCommand());
     }
 }

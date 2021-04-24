@@ -22,9 +22,9 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.GetLobbyMembers
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = @"
-                SELECT [M].[PlayerId]
-                FROM [matches].[LobbiesMembers] AS [M]
-                WHERE [M].[LobbyId] = @LobbyId;";
+                SELECT player_id
+                FROM matches.lobbies_members
+                WHERE lobby_id = @LobbyId;";
 
             return connection.QueryAsync<Guid>(sql, new {request.LobbyId});
         }

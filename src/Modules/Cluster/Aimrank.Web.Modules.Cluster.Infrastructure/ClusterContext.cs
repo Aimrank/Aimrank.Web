@@ -1,4 +1,5 @@
 using Aimrank.Web.Modules.Cluster.Application.Entities;
+using Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Processing.Inbox;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 
@@ -12,6 +13,7 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure
         public DbSet<Pod> Pods { get; set; }
         public DbSet<Server> Servers { get; set; }
         public DbSet<SteamToken> SteamTokens { get; set; }
+        public DbSet<InboxMessage> InboxMessages { get; set; }
         
         public ClusterContext(DbContextOptions<ClusterContext> options) : base(options)
         {
@@ -19,6 +21,7 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("cluster");
             modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
         }
     }

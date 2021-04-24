@@ -27,12 +27,12 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.GetLobbyInvitations
 
             const string sql = @"
                 SELECT
-                    [I].[LobbyId],
-                    [I].[InvitingPlayerId],
-                    [I].[InvitedPlayerId],
-                    [I].[CreatedAt]
-                FROM [matches].[LobbiesInvitations] AS [I]
-                WHERE [I].[InvitedPlayerId] = @PlayerId;";
+                    lobby_id,
+                    inviting_player_id,
+                    invited_player_id,
+                    created_at
+                FROM matches.lobbies_invitations
+                WHERE invited_player_id = @PlayerId;";
 
             var invitations =
                 await connection.QueryAsync<LobbyInvitationDto>(sql, new {PlayerId = _executionContextAccessor.UserId});

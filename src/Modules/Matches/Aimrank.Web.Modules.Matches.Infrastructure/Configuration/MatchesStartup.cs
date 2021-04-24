@@ -1,13 +1,9 @@
+using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Common.Application;
-using Aimrank.Web.Common.Infrastructure.EventBus;
 using Aimrank.Web.Modules.Cluster.Application.Contracts;
-using Aimrank.Web.Modules.Matches.Infrastructure.Application.Events.MatchCanceled;
-using Aimrank.Web.Modules.Matches.Infrastructure.Application.Events.MatchFinished;
-using Aimrank.Web.Modules.Matches.Infrastructure.Application.Events.MatchStarted;
-using Aimrank.Web.Modules.Matches.Infrastructure.Application.Events.PlayerDisconnected;
 using Aimrank.Web.Modules.Matches.Infrastructure.Application;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.DataAccess;
-using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Mediator;
+using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Quartz;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Redis;
@@ -37,6 +33,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
                 eventBus);
             
             QuartzStartup.Initialize();
+            EventBusStartup.Initialize(eventBus);
         }
 
         private static void ConfigureCompositionRoot(
@@ -50,7 +47,6 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
             var containerBuilder = new ContainerBuilder();
 
             containerBuilder.RegisterModule(new DataAccessModule(connectionString));
-            containerBuilder.RegisterModule(new MediatorModule());
             containerBuilder.RegisterModule(new ProcessingModule());
             containerBuilder.RegisterModule(new QuartzModule());
             containerBuilder.RegisterModule(new RedisModule(matchesModuleSettings.RedisSettings));
@@ -59,11 +55,6 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
             containerBuilder.RegisterInstance(eventBus);
             containerBuilder.RegisterInstance(logger);
             containerBuilder.RegisterInstance(clusterModule);
-            
-            eventBus.Subscribe(new MatchStartedEventHandler());
-            eventBus.Subscribe(new MatchCanceledEventHandler());
-            eventBus.Subscribe(new MatchFinishedEventHandler());
-            eventBus.Subscribe(new PlayerDisconnectedEventHandler());
 
             _container = containerBuilder.Build();
             

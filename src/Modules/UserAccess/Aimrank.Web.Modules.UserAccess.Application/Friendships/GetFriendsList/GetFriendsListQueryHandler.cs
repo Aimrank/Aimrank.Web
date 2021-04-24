@@ -24,26 +24,26 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Friendships.GetFriendsList
             
             const string sqlCount = @"
                 SELECT COUNT (*)
-                FROM [users].[Friendships] AS [F]
+                FROM users.friendships
                 WHERE
-                    [F].[IsAccepted] = 1 AND
-                    ([F].[BlockingUserId1] IS NULL OR [F].[BlockingUserId1] <> @UserId) AND
-                    ([F].[BlockingUserId2] IS NULL OR [F].[BlockingUserId2] <> @UserId) AND
-                    ([F].[User1Id] = @UserId OR [F].[User2Id] = @UserId);";
+                    is_accepted = true AND
+                    (blocking_user_id_1 IS NULL OR blocking_user_id_1 <> @UserId) AND
+                    (blocking_user_id_2 IS NULL OR blocking_user_id_2 <> @UserId) AND
+                    (user_1_id = @UserId OR user_2_id = @UserId);";
 
             const string sql = @"
                 SELECT
                     CASE
-                        WHEN [F].[User1Id] = @UserId THEN [F].[User2Id]
-                        WHEN [F].[User2Id] = @UserId THEN [F].[User1Id]
-                    END AS [Id]
-                FROM [users].[Friendships] AS [F]
+                        WHEN f.user_1_id = @UserId THEN f.user_2_id
+                        WHEN f.user_2_id = @UserId THEN f.user_1_id
+                    END AS id
+                FROM users.friendships AS f
                 WHERE
-                    [F].[IsAccepted] = 1 AND
-                    ([F].[BlockingUserId1] IS NULL OR [F].[BlockingUserId1] <> @UserId) AND
-                    ([F].[BlockingUserId2] IS NULL OR [F].[BlockingUserId2] <> @UserId) AND
-                    ([F].[User1Id] = @UserId OR [F].[User2Id] = @UserId)
-                ORDER BY [F].[CreatedAt] DESC
+                    f.is_accepted = true AND
+                    (f.blocking_user_id_1 IS NULL OR f.blocking_user_id_1 <> @UserId) AND
+                    (f.blocking_user_id_2 IS NULL OR f.blocking_user_id_2 <> @UserId) AND
+                    (f.user_1_id = @UserId OR f.user_2_id = @UserId)
+                ORDER BY f.created_at DESC
                 OFFSET @Offset ROWS FETCH NEXT @Fetch ROWS ONLY;";
             
             var count = await connection.ExecuteScalarAsync<int>(sqlCount, new {request.UserId});

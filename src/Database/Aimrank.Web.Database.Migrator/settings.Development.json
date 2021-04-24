@@ -1,5 +1,5 @@
 {
   "ConnectionStrings": {
-    "Database": "Server=127.0.0.1,1433;Database=Aimrank;User=sa;Password=Secret123!"
+    "Database": "Host=localhost;Database=aimrank;Username=aimrank;Password=aimrank"
   }
 }

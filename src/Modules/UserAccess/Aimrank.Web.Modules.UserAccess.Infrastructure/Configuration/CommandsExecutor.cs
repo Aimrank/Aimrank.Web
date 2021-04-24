@@ -13,12 +13,5 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration
             var mediator = scope.Resolve<IMediator>();
             await mediator.Send(command);
         }
-        
-        internal static async Task Execute<TResult>(ICommand<TResult> command)
-        {
-            await using var scope = UserAccessCompositionRoot.BeginLifetimeScope();
-            var mediator = scope.Resolve<IMediator>();
-            await mediator.Send(command);
-        }
     }
 }

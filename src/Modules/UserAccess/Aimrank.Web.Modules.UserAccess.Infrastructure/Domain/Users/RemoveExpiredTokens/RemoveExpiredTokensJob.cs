@@ -6,9 +6,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Domain.Users.RemoveExpir
 {
     internal class RemoveExpiredTokensJob : IJob
     {
-        public async Task Execute(IJobExecutionContext context)
-        {
-            await CommandsExecutor.Execute(new RemoveExpiredTokensCommand());
-        }
+        public Task Execute(IJobExecutionContext context)
+            => CommandsExecutor.Execute(new RemoveExpiredTokensCommand());
     }
 }
