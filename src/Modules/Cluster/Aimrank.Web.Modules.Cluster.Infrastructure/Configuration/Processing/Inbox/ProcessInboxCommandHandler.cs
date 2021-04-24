@@ -1,4 +1,4 @@
-using Aimrank.Web.Modules.Matches.Application.Contracts;
+using Aimrank.Web.Modules.Cluster.Application.Contracts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 using System.Threading;
 using System;
 
-namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Inbox
+namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Processing.Inbox
 {
     internal class ProcessInboxCommandHandler : ICommandHandler<ProcessInboxCommand>
     {
-        private readonly MatchesContext _context;
+        private readonly ClusterContext _context;
         private readonly IMediator _mediator;
         private readonly ILogger _logger;
 
         public ProcessInboxCommandHandler(
-            MatchesContext context,
+            ClusterContext context,
             IMediator mediator,
             ILogger logger)
         {

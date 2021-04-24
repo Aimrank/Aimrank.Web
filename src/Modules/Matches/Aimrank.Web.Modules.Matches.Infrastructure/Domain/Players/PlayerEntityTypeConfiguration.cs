@@ -8,7 +8,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Players
     {
         public void Configure(EntityTypeBuilder<Player> builder)
         {
-            builder.ToTable("Players", "matches");
+            builder.ToTable("Players");
 
             builder.HasKey(p => p.Id);
             builder.Property(p => p.SteamId).HasColumnName("SteamId").IsRequired().HasMaxLength(17);

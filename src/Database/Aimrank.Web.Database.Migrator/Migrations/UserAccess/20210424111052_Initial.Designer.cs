@@ -10,13 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
 {
     [DbContext(typeof(UserAccessContext))]
-    [Migration("20210315204410_Initial")]
+    [Migration("20210424111052_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("users")
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
@@ -61,7 +62,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
 
                     b.HasIndex("_invitingUserId");
 
-                    b.ToTable("Friendships", "users");
+                    b.ToTable("Friendships");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.UserAccess.Domain.Users.User", b =>
@@ -75,6 +76,10 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("Email");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsActive");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -87,7 +92,33 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", "users");
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing.Outbox.OutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OccurredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ProcessedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OutboxMessages", "users");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.UserAccess.Domain.Friendships.Friendship", b =>
@@ -118,6 +149,37 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
                         .WithMany()
                         .HasForeignKey("_invitingUserId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Aimrank.Web.Modules.UserAccess.Domain.Users.User", b =>
+                {
+                    b.OwnsMany("Aimrank.Web.Modules.UserAccess.Domain.Users.UserToken", "_tokens", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Type")
+                                .HasColumnType("int")
+                                .HasColumnName("Type");
+
+                            b1.Property<DateTime?>("ExpiresAt")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("ExpiresAt");
+
+                            b1.Property<string>("Token")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Token");
+
+                            b1.HasKey("UserId", "Type");
+
+                            b1.ToTable("UsersTokens");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.Navigation("_tokens");
                 });
 #pragma warning restore 612, 618
         }

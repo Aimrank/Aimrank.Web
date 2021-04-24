@@ -9,7 +9,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Lobbies
     {
         public void Configure(EntityTypeBuilder<Lobby> builder)
         {
-            builder.ToTable("Lobbies", "matches");
+            builder.ToTable("Lobbies");
 
             builder.HasKey(l => l.Id);
 
@@ -27,7 +27,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Lobbies
 
             builder.OwnsMany(l => l.Members, b =>
             {
-                b.ToTable("LobbiesMembers", "matches");
+                b.ToTable("LobbiesMembers");
                 b.HasKey(m => m.PlayerId);
                 b.Property(m => m.PlayerId).HasColumnName("PlayerId").IsRequired();
                 b.Property(m => m.Role).HasColumnName("Role");
@@ -37,7 +37,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Lobbies
 
             builder.OwnsMany(l => l.Invitations, b =>
             {
-                b.ToTable("LobbiesInvitations", "matches");
+                b.ToTable("LobbiesInvitations");
                 b.Property<LobbyId>("LobbyId");
                 b.Property(i => i.InvitingPlayerId).HasColumnName("InvitingPlayerId");
                 b.Property(i => i.InvitedPlayerId).HasColumnName("InvitedPlayerId").IsRequired();

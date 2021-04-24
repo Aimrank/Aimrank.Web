@@ -26,6 +26,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("matches");
             modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
         }
     }

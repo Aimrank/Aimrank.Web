@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
+namespace Aimrank.Web.Database.Migrator.Migrations
 {
     public partial class Initial : Migration
     {
@@ -9,6 +9,22 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
         {
             migrationBuilder.EnsureSchema(
                 name: "cluster");
+
+            migrationBuilder.CreateTable(
+                name: "InboxMessages",
+                schema: "cluster",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OccurredAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProcessedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Data = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InboxMessages", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Pods",
@@ -80,6 +96,10 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "InboxMessages",
+                schema: "cluster");
+
             migrationBuilder.DropTable(
                 name: "Servers",
                 schema: "cluster");

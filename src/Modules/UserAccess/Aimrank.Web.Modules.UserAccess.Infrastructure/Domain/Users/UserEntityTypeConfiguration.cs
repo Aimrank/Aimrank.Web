@@ -8,7 +8,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Domain.Users
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("Users", "users");
+            builder.ToTable("Users");
 
             builder.HasKey(u => u.Id);
 
@@ -19,7 +19,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Domain.Users
 
             builder.OwnsMany<UserToken>("_tokens", b =>
             {
-                b.ToTable("UsersTokens", "users");
+                b.ToTable("UsersTokens");
                 b.Property<UserId>("UserId");
                 b.HasKey("UserId", "Type");
                 b.Property(t => t.Type).HasColumnName("Type").IsRequired();

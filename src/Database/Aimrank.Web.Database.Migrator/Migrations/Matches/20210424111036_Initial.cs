@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Aimrank.Web.Database.Migrator.Migrations
+namespace Aimrank.Web.Database.Migrator.Migrations.Matches
 {
     public partial class Initial : Migration
     {
@@ -11,6 +11,22 @@ namespace Aimrank.Web.Database.Migrator.Migrations
                 name: "matches");
 
             migrationBuilder.CreateTable(
+                name: "InboxMessages",
+                schema: "matches",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OccurredAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProcessedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Data = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InboxMessages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Lobbies",
                 schema: "matches",
                 columns: table => new
@@ -18,8 +34,8 @@ namespace Aimrank.Web.Database.Migrator.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     Configuration_Name = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
-                    Configuration_Map = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Configuration_Mode = table.Column<int>(type: "int", nullable: false)
+                    Configuration_Mode = table.Column<int>(type: "int", nullable: false),
+                    Configuration_Maps = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,6 +70,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OccurredAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProcessedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Data = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -236,6 +253,10 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "InboxMessages",
+                schema: "matches");
+
             migrationBuilder.DropTable(
                 name: "LobbiesInvitations",
                 schema: "matches");

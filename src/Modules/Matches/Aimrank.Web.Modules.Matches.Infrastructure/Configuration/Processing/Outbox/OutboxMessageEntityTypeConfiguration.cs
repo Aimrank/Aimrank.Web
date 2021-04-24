@@ -8,7 +8,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Ou
     {
         public void Configure(EntityTypeBuilder<OutboxMessage> builder)
         {
-            builder.ToTable("OutboxMessages", "matches");
+            builder.ToTable("OutboxMessages");
             builder.HasKey(x => x.Id);
             builder.Property<DateTime>("OccurredAt");
             builder.Property<DateTime?>("ProcessedDate");

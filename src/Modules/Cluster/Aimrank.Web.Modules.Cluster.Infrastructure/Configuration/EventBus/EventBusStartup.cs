@@ -9,8 +9,8 @@ namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.EventBus
         public static void Initialize(IEventBus eventBus)
         {
             eventBus
-                .Subscribe(new MatchCanceledEventHandler())
-                .Subscribe(new MatchFinishedEventHandler());
+                .Subscribe(new IntegrationEventGenericHandler<MatchCanceledEvent>())
+                .Subscribe(new IntegrationEventGenericHandler<MatchFinishedEvent>());
         }
     }
 }

@@ -11,6 +11,22 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
                 name: "users");
 
             migrationBuilder.CreateTable(
+                name: "OutboxMessages",
+                schema: "users",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OccurredAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProcessedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Data = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OutboxMessages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 schema: "users",
                 columns: table => new
@@ -18,6 +34,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -78,6 +95,28 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UsersTokens",
+                schema: "users",
+                columns: table => new
+                {
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsersTokens", x => new { x.UserId, x.Type });
+                    table.ForeignKey(
+                        name: "FK_UsersTokens_Users_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "users",
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Friendships_BlockingUserId1",
                 schema: "users",
@@ -107,6 +146,14 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
         {
             migrationBuilder.DropTable(
                 name: "Friendships",
+                schema: "users");
+
+            migrationBuilder.DropTable(
+                name: "OutboxMessages",
+                schema: "users");
+
+            migrationBuilder.DropTable(
+                name: "UsersTokens",
                 schema: "users");
 
             migrationBuilder.DropTable(

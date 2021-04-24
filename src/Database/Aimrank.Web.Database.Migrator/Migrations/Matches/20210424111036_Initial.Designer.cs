@@ -7,16 +7,17 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Aimrank.Web.Database.Migrator.Migrations
+namespace Aimrank.Web.Database.Migrator.Migrations.Matches
 {
     [DbContext(typeof(MatchesContext))]
-    [Migration("20210422191145_AddOutboxInbox")]
-    partial class AddOutboxInbox
+    [Migration("20210424111036_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("matches")
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
@@ -33,7 +34,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Lobbies", "matches");
+                    b.ToTable("Lobbies");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.Matches.Domain.Matches.Match", b =>
@@ -82,7 +83,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Matches", "matches");
+                    b.ToTable("Matches");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.Matches.Domain.Players.Player", b =>
@@ -98,7 +99,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Players", "matches");
+                    b.ToTable("Players");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Inbox.InboxMessage", b =>
@@ -124,7 +125,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("InboxMessages", "matches");
+                    b.ToTable("InboxMessages");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Outbox.OutboxMessage", b =>
@@ -150,7 +151,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OutboxMessages", "matches");
+                    b.ToTable("OutboxMessages");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.Matches.Domain.Lobbies.Lobby", b =>
@@ -206,7 +207,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
                             b1.HasIndex("InvitingPlayerId");
 
-                            b1.ToTable("LobbiesInvitations", "matches");
+                            b1.ToTable("LobbiesInvitations");
 
                             b1.HasOne("Aimrank.Web.Modules.Matches.Domain.Players.Player", null)
                                 .WithMany()
@@ -241,7 +242,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
                             b1.HasIndex("LobbyId");
 
-                            b1.ToTable("LobbiesMembers", "matches");
+                            b1.ToTable("LobbiesMembers");
 
                             b1.WithOwner()
                                 .HasForeignKey("LobbyId");
@@ -276,7 +277,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations
                             b1.HasIndex("LobbyId")
                                 .IsUnique();
 
-                            b1.ToTable("MatchesLobbies", "matches");
+                            b1.ToTable("MatchesLobbies");
 
                             b1.HasOne("Aimrank.Web.Modules.Matches.Domain.Lobbies.Lobby", null)
                                 .WithOne()
@@ -323,7 +324,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
                             b1.HasIndex("PlayerId");
 
-                            b1.ToTable("MatchesPlayers", "matches");
+                            b1.ToTable("MatchesPlayers");
 
                             b1.WithOwner()
                                 .HasForeignKey("MatchId");

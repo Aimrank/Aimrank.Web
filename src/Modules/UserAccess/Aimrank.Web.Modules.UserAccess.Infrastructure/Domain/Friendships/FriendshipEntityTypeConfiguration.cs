@@ -10,7 +10,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Domain.Friendships
     {
         public void Configure(EntityTypeBuilder<Friendship> builder)
         {
-            builder.ToTable("Friendships", "users");
+            builder.ToTable("Friendships");
 
             builder.HasKey(f => new {f.User1Id, f.User2Id});
 

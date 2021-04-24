@@ -11,7 +11,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Matches
     {
         public void Configure(EntityTypeBuilder<Match> builder)
         {
-            builder.ToTable("Matches", "matches");
+            builder.ToTable("Matches");
             
             builder.HasKey(m => m.Id);
 
@@ -27,7 +27,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Matches
             
             builder.OwnsMany(m => m.Players, b =>
             {
-                b.ToTable("MatchesPlayers", "matches");
+                b.ToTable("MatchesPlayers");
                 b.Property<MatchId>("MatchId");
                 b.Property(p => p.PlayerId).HasColumnName("PlayerId").IsRequired();
                 b.Property(p => p.SteamId).HasColumnName("SteamId").IsRequired().HasMaxLength(17);
@@ -51,7 +51,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Matches
             
             builder.OwnsMany(m => m.Lobbies, b =>
             {
-                b.ToTable("MatchesLobbies", "matches");
+                b.ToTable("MatchesLobbies");
                 b.Property<MatchId>("MatchId");
                 b.Property<LobbyId>("LobbyId");
                 b.HasKey("MatchId", "LobbyId");

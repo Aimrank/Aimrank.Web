@@ -15,6 +15,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("users")
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
@@ -59,7 +60,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
 
                     b.HasIndex("_invitingUserId");
 
-                    b.ToTable("Friendships", "users");
+                    b.ToTable("Friendships");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.UserAccess.Domain.Users.User", b =>
@@ -89,7 +90,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", "users");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing.Outbox.OutboxMessage", b =>
@@ -170,7 +171,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.UserAccess
 
                             b1.HasKey("UserId", "Type");
 
-                            b1.ToTable("UsersTokens", "users");
+                            b1.ToTable("UsersTokens");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");

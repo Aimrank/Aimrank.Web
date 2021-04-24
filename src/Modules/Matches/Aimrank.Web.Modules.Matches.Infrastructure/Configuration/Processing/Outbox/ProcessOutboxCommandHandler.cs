@@ -36,10 +36,10 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Ou
             
             foreach (var message in messages)
             {
-                var notification = DeserializeMessage(message);
-                
                 try
                 {
+                    var notification = DeserializeMessage(message);
+                
                     await _mediator.Publish(notification, cancellationToken);
                 }
                 catch (Exception exception)

@@ -21,6 +21,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("users");
             modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
         }
     }

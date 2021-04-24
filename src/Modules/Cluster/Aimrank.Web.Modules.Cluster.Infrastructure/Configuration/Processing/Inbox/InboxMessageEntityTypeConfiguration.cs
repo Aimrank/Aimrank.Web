@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Inbox
+namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Processing.Inbox
 {
     internal class InboxMessageEntityTypeConfiguration : IEntityTypeConfiguration<InboxMessage>
     {

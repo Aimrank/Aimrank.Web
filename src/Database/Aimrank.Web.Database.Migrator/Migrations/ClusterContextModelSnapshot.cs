@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
+namespace Aimrank.Web.Database.Migrator.Migrations
 {
     [DbContext(typeof(ClusterContext))]
     partial class ClusterContextModelSnapshot : ModelSnapshot
@@ -15,6 +15,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("cluster")
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
@@ -29,7 +30,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
 
                     b.HasKey("IpAddress");
 
-                    b.ToTable("Pods", "cluster");
+                    b.ToTable("Pods");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.Cluster.Application.Entities.Server", b =>
@@ -56,7 +57,7 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
                     b.HasIndex("SteamTokenToken")
                         .IsUnique();
 
-                    b.ToTable("Servers", "cluster");
+                    b.ToTable("Servers");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.Cluster.Application.Entities.SteamToken", b =>
@@ -66,7 +67,33 @@ namespace Aimrank.Web.Database.Migrator.Migrations.Cluster
 
                     b.HasKey("Token");
 
-                    b.ToTable("SteamTokens", "cluster");
+                    b.ToTable("SteamTokens");
+                });
+
+            modelBuilder.Entity("Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Processing.Inbox.InboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OccurredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ProcessedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InboxMessages");
                 });
 
             modelBuilder.Entity("Aimrank.Web.Modules.Cluster.Application.Entities.Server", b =>
