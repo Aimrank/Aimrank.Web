@@ -8,10 +8,10 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.In
     {
         public void Configure(EntityTypeBuilder<InboxMessage> builder)
         {
-            builder.ToTable("InboxMessages");
+            builder.ToTable("inbox_messages");
             builder.HasKey(x => x.Id);
-            builder.Property<DateTime>("OccurredAt");
-            builder.Property<DateTime?>("ProcessedDate");
+            builder.Property<DateTime>("OccurredAt").HasColumnName("occurred_at");
+            builder.Property<DateTime?>("ProcessedDate").HasColumnName("processed_date");
             builder.Property<string>("Type").IsRequired().HasMaxLength(255);
             builder.Property<string>("Data").IsRequired();
         }

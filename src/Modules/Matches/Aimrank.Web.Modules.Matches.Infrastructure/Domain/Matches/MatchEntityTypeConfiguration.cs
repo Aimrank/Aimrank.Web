@@ -11,47 +11,45 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Matches
     {
         public void Configure(EntityTypeBuilder<Match> builder)
         {
-            builder.ToTable("Matches");
+            builder.ToTable("matches");
             
             builder.HasKey(m => m.Id);
 
-            builder.Property<MatchWinner>("_winner").HasColumnName("Winner");
-            builder.Property<int>("_scoreT").HasColumnName("ScoreT");
-            builder.Property<int>("_scoreCT").HasColumnName("ScoreCT");
-            builder.Property<string>("_address").HasColumnName("Address").HasMaxLength(50);
-            builder.Property<DateTime>("_createdAt").HasColumnName("CreatedAt");
-            builder.Property(m => m.Map).HasColumnName("Map").IsRequired().HasMaxLength(50);
-            builder.Property(m => m.Mode).HasColumnName("Mode");
-            builder.Property(m => m.FinishedAt).HasColumnName("FinishedAt");
-            builder.Property(m => m.Status).HasColumnName("Status");
+            builder.Property<MatchWinner>("_winner").HasColumnName("winner");
+            builder.Property<int>("_scoreT").HasColumnName("score_t");
+            builder.Property<int>("_scoreCT").HasColumnName("score_ct");
+            builder.Property<string>("_address").HasColumnName("address").HasMaxLength(50);
+            builder.Property<DateTime>("_createdAt").HasColumnName("created_at");
+            builder.Property(m => m.Mode).HasColumnName("mode");
+            builder.Property(m => m.Map).IsRequired().HasMaxLength(50);
             
             builder.OwnsMany(m => m.Players, b =>
             {
-                b.ToTable("MatchesPlayers");
+                b.ToTable("matches_players");
                 b.Property<MatchId>("MatchId");
-                b.Property(p => p.PlayerId).HasColumnName("PlayerId").IsRequired();
-                b.Property(p => p.SteamId).HasColumnName("SteamId").IsRequired().HasMaxLength(17);
-                b.Property(p => p.Team).HasColumnName("Team");
-                b.Property(p => p.RatingStart).HasColumnName("RatingStart");
-                b.Property(p => p.RatingEnd).HasColumnName("RatingEnd");
-                b.Property(p => p.IsLeaver).HasColumnName("IsLeaver");
+                b.Property(p => p.PlayerId).HasColumnName("player_id").IsRequired();
+                b.Property(p => p.SteamId).HasColumnName("steam_id").IsRequired().HasMaxLength(17);
+                b.Property(p => p.Team).HasColumnName("team");
+                b.Property(p => p.RatingStart).HasColumnName("rating_start");
+                b.Property(p => p.RatingEnd).HasColumnName("rating_end");
+                b.Property(p => p.IsLeaver).HasColumnName("is_leaver");
                 b.HasKey("MatchId", "PlayerId");
                 b.WithOwner().HasForeignKey("MatchId");
                 b.HasOne<Player>().WithMany().HasForeignKey(p => p.PlayerId);
 
                 b.OwnsOne(p => p.Stats, x =>
                     {
-                        x.Property(s => s.Kills).HasColumnName("Stats_Kills");
-                        x.Property(s => s.Assists).HasColumnName("Stats_Assists");
-                        x.Property(s => s.Deaths).HasColumnName("Stats_Deaths");
-                        x.Property(s => s.Hs).HasColumnName("Stats_Hs");
+                        x.Property(s => s.Kills).HasColumnName("stats_kills");
+                        x.Property(s => s.Assists).HasColumnName("stats_assists");
+                        x.Property(s => s.Deaths).HasColumnName("stats_deaths");
+                        x.Property(s => s.Hs).HasColumnName("stats_hs");
                     })
                     .Navigation(p => p.Stats).IsRequired();
             });
             
             builder.OwnsMany(m => m.Lobbies, b =>
             {
-                b.ToTable("MatchesLobbies");
+                b.ToTable("matches_lobbies");
                 b.Property<MatchId>("MatchId");
                 b.Property<LobbyId>("LobbyId");
                 b.HasKey("MatchId", "LobbyId");

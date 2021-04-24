@@ -28,26 +28,24 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.GetLobbyForUser
             var connection = _sqlConnectionFactory.GetOpenConnection();
             
             const string sql = @"
-                DECLARE @id AS NVARCHAR(450);
-
-                SELECT @id = [LobbyId]
-                FROM [matches].[LobbiesMembers]
-                WHERE [PlayerId] = @PlayerId;
-
                 SELECT
-                    [L].[Id] AS [Id],
-                    [L].[Status] AS [Status],
-                    [L].[Configuration_Maps] AS [Maps],
-                    [L].[Configuration_Name] AS [Name],
-                    [L].[Configuration_Mode] AS [Mode],
-                    [M].[PlayerId] AS [PlayerId],
-                    CASE [M].[Role]
+                    l.id,
+                    l.status,
+                    l.configuration_maps,
+                    l.configuration_name,
+                    l.configuration_mode,
+                    m.player_id,
+                    CASE m.role
                         WHEN 0 THEN 0
                         WHEN 1 THEN 1
-                    END AS [IsLeader]
-                FROM [matches].[Lobbies] AS [L]
-                LEFT JOIN [matches].[LobbiesMembers] AS [M] ON [L].[Id] = [M].[LobbyId]
-                WHERE [L].[Id] = @id;";
+                    END AS is_leader
+                FROM matches.lobbies AS l
+                LEFT JOIN matches.lobbies_members AS m ON l.id = m.lobby_id
+                WHERE l.id = (
+                    SELECT lobby_id
+                    FROM matches.lobbies_members
+                    WHERE player_id = @PlayerId
+                );";
 
             var lookup = new Dictionary<Guid, LobbyDto>();
             
@@ -76,7 +74,7 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.GetLobbyForUser
                     return lobby;
                 },
                 new {PlayerId = _executionContextAccessor.UserId},
-                splitOn: "Maps,PlayerId");
+                splitOn: "maps,player_id");
 
             return lookup.Values.FirstOrDefault();
         }

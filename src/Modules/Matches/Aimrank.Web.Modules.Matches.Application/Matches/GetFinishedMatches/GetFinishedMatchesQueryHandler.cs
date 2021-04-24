@@ -34,40 +34,40 @@ namespace Aimrank.Web.Modules.Matches.Application.Matches.GetFinishedMatches
             };
 
             var sqlInner = $@"
-				FROM [matches].[Matches] AS [MI]
-				INNER JOIN [matches].[MatchesPlayers] AS [PI] on [MI].[Id] = [PI].[MatchId]
+				FROM matches.matches AS mi
+				INNER JOIN matches.matches_players AS pi on mi.id = pi.match_id
 				WHERE
-					[PI].[PlayerId] = @PlayerId AND
-					[MI].[Status] = @Status
-					{(request.Filter.Mode.HasValue ? "AND [MI].[Mode] = @Mode " : "")}
-					{(!string.IsNullOrEmpty(request.Filter.Map) ? "AND [MI].[Map] LIKE @Map" : "")}";
+					pi.player_id = @PlayerId AND
+					mi.status = @Status
+					{(request.Filter.Mode.HasValue ? "AND mi.mode = @Mode " : "")}
+					{(!string.IsNullOrEmpty(request.Filter.Map) ? "AND mi.map LIKE @Map" : "")}";
 
-            var sqlCount = $"SELECT COUNT ([MI].[Id]) {sqlInner}";
+            var sqlCount = $"SELECT COUNT (mi.id) {sqlInner}";
 
             var sqlOuter = @$"
 				SELECT
-					[M].[Id] AS [Id],
-					[M].[Winner] AS [Winner],
-					[M].[ScoreT] AS [ScoreT],
-					[M].[ScoreCT] AS [ScoreCT],
-					[M].[Mode] AS [Mode],
-					[M].[CreatedAt] AS [CreatedAt],
-					[M].[FinishedAt] AS [FinishedAt],
-					[M].[Map] AS [Map],
-					[P].[PlayerId] AS [Player_Id],
-					[P].[Team] AS [Player_Team],
-					[P].[Stats_Kills] AS [Player_Kills],
-					[P].[Stats_Assists] AS [Player_Assists],
-					[P].[Stats_Deaths] AS [Player_Deaths],
-					[P].[Stats_Hs] AS [Player_Hs],
-					[P].[RatingStart] AS [Player_RatingStart],
-					[P].[RatingEnd] AS [Player_RatingEnd]
-				FROM [matches].[Matches] AS [M]
-				INNER JOIN [matches].[MatchesPlayers] AS [P] ON [M].[Id] = [P].[MatchId]
-				WHERE [M].[Id] IN (
-					SELECT [MI].[Id]
+					m.id,
+					m.winner,
+					m.score_t,
+					m.score_ct,
+					m.mode,
+					m.created_at,
+					m.finished_at,
+					m.map,
+					p.player_id,
+					p.team AS player_team,
+					p.stats_kills AS player_kills,
+					p.stats_assists AS player_assists,
+					p.stats_deaths AS player_deaths,
+					p.stats_hs AS player_hs,
+					p.rating_start AS player_rating_start,
+					p.rating_end AS player_rating_end
+				FROM matches.matches AS m
+				INNER JOIN matches.matches_players AS p ON m.id = p.match_id
+				WHERE m.id IN (
+					SELECT mi.id
 					{sqlInner}
-					ORDER BY [MI].[FinishedAt] DESC
+					ORDER BY mi.finished_at DESC
 					OFFSET @Offset ROWS FETCH NEXT @Fetch ROWS ONLY
 				);";
 
@@ -113,7 +113,7 @@ namespace Aimrank.Web.Modules.Matches.Application.Matches.GetFinishedMatches
 						return result;
 					},
 					sqlParams,
-					splitOn: "Player_Id");
+					splitOn: "player_id");
 	        }
 
             return new PaginationDto<MatchDto>(lookup.Values, count);

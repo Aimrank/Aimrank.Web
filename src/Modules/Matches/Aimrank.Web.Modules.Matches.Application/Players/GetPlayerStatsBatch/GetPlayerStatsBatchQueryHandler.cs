@@ -23,18 +23,18 @@ namespace Aimrank.Web.Modules.Matches.Application.Players.GetPlayerStatsBatch
 
             const string sql = @"
                 SELECT
-                    [P].[PlayerId] AS [PlayerId],
-                    [M].[Mode] AS [Mode],
-                    [M].[Map] AS [Map],
-                    COUNT(*) AS [MatchesTotal],
-                    SUM(CASE WHEN [M].[Winner] = [P].[Team] AND [M].[Winner] IN (2, 3) THEN 1 ELSE 0 END) AS [MatchesWon],
-                    SUM([P].[Stats_Kills]) AS [TotalKills],
-                    SUM([P].[Stats_Deaths]) AS [TotalDeaths],
-                    SUM([P].[Stats_Hs]) AS [TotalHs]
-                FROM [matches].[Matches] AS [M]
-                INNER JOIN [matches].[MatchesPlayers] AS [P] ON [P].[MatchId] = [M].[Id]
-                WHERE [P].[PlayerId] IN @PlayerIds
-                GROUP BY [P].[PlayerId], [M].[Mode], [M].[Map];";
+                    p.player_id,
+                    m.mode,
+                    m.map,
+                    COUNT(*) AS matches_total,
+                    SUM(CASE WHEN m.winner = p.team AND m.winner IN (2, 3) THEN 1 ELSE 0 END) AS matches_won,
+                    SUM(p.stats_kills) AS total_kills,
+                    SUM(p.stats_deaths) AS total_deaths,
+                    SUM(p.stats_hs) AS total_hs
+                FROM matches.matches AS m
+                INNER JOIN matches.matches_players AS p ON p.match_id = m.id
+                WHERE p.player_id IN @PlayerIds
+                GROUP BY p.player_id, m.mode, m.map;";
 
             var result = await connection.QueryAsync<PlayerStatsQueryResult>(sql, new {request.PlayerIds});
 

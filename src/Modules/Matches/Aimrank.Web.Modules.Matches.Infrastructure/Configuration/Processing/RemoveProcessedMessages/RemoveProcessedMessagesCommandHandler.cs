@@ -21,10 +21,10 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Re
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = @"
-                DELETE FROM [matches].[InboxMessages]
-                WHERE DATEDIFF(HOUR, [ProcessedDate], GETUTCDATE()) >= 2;
-                DELETE FROM [matches].[OutboxMessages]
-                WHERE DATEDIFF(HOUR, [ProcessedDate], GETUTCDATE()) >= 2;";
+                DELETE FROM matches.inbox_messages
+                WHERE EXTRACT(EPOCH FROM NOW() - processed_date) / 3600 >= 2;
+                DELETE FROM matches.outbox_messages
+                WHERE EXTRACT(EPOCH FROM NOW() - processed_date) / 3600 >= 2;";
 
             await connection.ExecuteAsync(sql);
             
