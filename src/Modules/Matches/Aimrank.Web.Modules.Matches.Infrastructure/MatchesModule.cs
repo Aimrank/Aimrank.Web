@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure
 {
-    public class MatchesModule : IMatchesModule
+    internal class MatchesModule : IMatchesModule
     {
         public async Task ExecuteCommandAsync(ICommand command)
         {

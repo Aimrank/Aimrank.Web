@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aimrank.Web.Modules.Cluster.Infrastructure
 {
-    public class ClusterModule : IClusterModule
+    internal class ClusterModule : IClusterModule
     {
         public async Task ExecuteCommandAsync(ICommand command)
         {

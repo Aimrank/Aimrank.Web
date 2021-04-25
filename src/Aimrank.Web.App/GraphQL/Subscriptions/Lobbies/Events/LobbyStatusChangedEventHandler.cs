@@ -1,11 +1,10 @@
+using Aimrank.Web.App.GraphQL.Subscriptions.Lobbies.Payloads;
 using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Modules.Matches.IntegrationEvents.Lobbies;
-using Aimrank.Web.App.GraphQL.Subscriptions.Lobbies.Payloads;
-using Aimrank.Web.App.GraphQL.Subscriptions.Lobbies;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Web.App.Modules.Matches.Lobbies
+namespace Aimrank.Web.App.GraphQL.Subscriptions.Lobbies.Events
 {
     public class LobbyStatusChangedEventHandler : IIntegrationEventHandler<LobbyStatusChangedEvent>
     {

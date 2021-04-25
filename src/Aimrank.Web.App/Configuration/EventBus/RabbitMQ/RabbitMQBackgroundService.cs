@@ -1,6 +1,7 @@
 using Aimrank.Web.Common.Application.Events;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
 using RabbitMQ.Client;
@@ -26,13 +27,13 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
         private Dictionary<string, List<Type>> Events { get; } = new();
 
         public RabbitMQBackgroundService(
-            RabbitMQSettings rabbitMqSettings,
+            IOptions<RabbitMQSettings> rabbitMqSettings,
             RabbitMQEventSerializer eventSerializer,
             RabbitMQRoutingKeyFactory routingKeyFactory,
             ILogger<RabbitMQBackgroundService> logger,
             IEventBus eventBus)
         {
-            _rabbitMqSettings = rabbitMqSettings;
+            _rabbitMqSettings = rabbitMqSettings.Value;
             _eventSerializer = eventSerializer;
             _routingKeyFactory = routingKeyFactory;
             _logger = logger;

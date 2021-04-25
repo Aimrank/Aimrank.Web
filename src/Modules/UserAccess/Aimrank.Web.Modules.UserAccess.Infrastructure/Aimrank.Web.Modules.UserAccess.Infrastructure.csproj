@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="6.1.0" />
+        <PackageReference Include="Autofac" Version="6.2.0" />
         <PackageReference Include="MailKit" Version="2.11.1" />
         <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="7.1.0" />
         <PackageReference Include="MimeKit" Version="2.11.0" />
