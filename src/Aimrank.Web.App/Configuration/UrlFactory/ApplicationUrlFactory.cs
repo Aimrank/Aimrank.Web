@@ -1,5 +1,6 @@
 using Aimrank.Web.Modules.UserAccess.Application.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using System;
 
 namespace Aimrank.Web.App.Configuration.UrlFactory
@@ -9,10 +10,12 @@ namespace Aimrank.Web.App.Configuration.UrlFactory
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UrlFactorySettings _urlFactorySettings;
 
-        public ApplicationUrlFactory(IHttpContextAccessor httpContextAccessor, UrlFactorySettings urlFactorySettings)
+        public ApplicationUrlFactory(
+            IHttpContextAccessor httpContextAccessor,
+            IOptions<UrlFactorySettings> urlFactorySettings)
         {
             _httpContextAccessor = httpContextAccessor;
-            _urlFactorySettings = urlFactorySettings;
+            _urlFactorySettings = urlFactorySettings.Value;
         }
 
         public string CreateEmailConfirmationLink(Guid userId, string token)

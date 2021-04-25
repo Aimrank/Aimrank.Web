@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using System.Reflection;
 
 namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
@@ -6,9 +7,9 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
     {
         private readonly RabbitMQSettings _rabbitMqSettings;
 
-        public RabbitMQRoutingKeyFactory(RabbitMQSettings rabbitMqSettings)
+        public RabbitMQRoutingKeyFactory(IOptions<RabbitMQSettings> rabbitMqSettings)
         {
-            _rabbitMqSettings = rabbitMqSettings;
+            _rabbitMqSettings = rabbitMqSettings.Value;
         }
 
         public string Create(MemberInfo type, string serviceName = null)

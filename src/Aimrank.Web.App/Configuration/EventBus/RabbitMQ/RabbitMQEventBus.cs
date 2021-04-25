@@ -1,4 +1,5 @@
 using Aimrank.Web.Common.Application.Events;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,12 +18,12 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
 
         public RabbitMQEventBus(
             IEventBus eventBus,
-            RabbitMQSettings rabbitMqSettings,
+            IOptions<RabbitMQSettings> rabbitMqSettings,
             RabbitMQEventSerializer eventSerializer,
             RabbitMQRoutingKeyFactory routingKeyFactory)
         {
             _eventBus = eventBus;
-            _rabbitMqSettings = rabbitMqSettings;
+            _rabbitMqSettings = rabbitMqSettings.Value;
             _eventSerializer = eventSerializer;
             _routingKeyFactory = routingKeyFactory;
         }
