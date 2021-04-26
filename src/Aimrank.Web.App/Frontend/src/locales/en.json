@@ -10,6 +10,22 @@
       }
     }
   },
+  "admin": {
+    "views": {
+      "Layout": {
+        "sidebar": {
+          "dashboard": "Dashboard",
+          "steamTokens": "Steam tokens"
+        }
+      },
+      "Dashboard": {
+        "title": "Admin panel dashboard"
+      },
+      "SteamTokens": {
+        "title": "Steam tokens"
+      }
+    }
+  },
   "app": {
     "views": {
       "AppHome": {

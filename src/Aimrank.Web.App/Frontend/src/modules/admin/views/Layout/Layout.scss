@@ -1,0 +1,29 @@
+@use '~/styles/variables/colors' as colors;
+
+.container {
+  padding-left: 200px;
+}
+
+.sidebar {
+  z-index: 5;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 200px;
+  bottom: 0;
+  border-right: 1px solid colors.$lightGray;
+  padding: 20px;
+  background: #fafafa;
+}
+
+.button {
+  width: 100%;
+
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
+
+.content {
+  padding: 20px;
+}

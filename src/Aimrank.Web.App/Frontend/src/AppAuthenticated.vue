@@ -3,7 +3,9 @@
     <main-header />
     <match-dialog />
     <users-dialog />
-    <router-view />
+    <div :class="$style.content">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -54,3 +56,9 @@ const AppAuthenticated = defineComponent({
 
 export default AppAuthenticated;
 </script>
+
+<style lang="scss" module>
+.content {
+  padding-top: 60px;
+}
+</style>

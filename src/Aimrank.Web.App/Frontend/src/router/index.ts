@@ -5,6 +5,7 @@ import { authenticate } from "@/authentication/router/authenticationGuard";
 import { routes as app } from "@/app/router/routes";
 import { routes as authentication } from "@/authentication/router/routes";
 import { routes as home } from "@/home/router/routes";
+import { routes as admin } from "@/admin/router/routes";
 import { routes as lobby } from "@/lobby/router/routes";
 import { routes as profile } from "@/profile/router/routes";
 
@@ -19,8 +20,9 @@ export const router = createRouter({
       path: "/app",
       children: [
         ...app,
+        ...admin,
         ...lobby,
-        ...profile
+        ...profile,
       ],
       component: AppAuthenticated,
       beforeEnter: authenticate
