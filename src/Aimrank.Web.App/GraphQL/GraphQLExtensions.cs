@@ -1,5 +1,6 @@
 using Aimrank.Web.App.GraphQL.Mutations.Friendships;
 using Aimrank.Web.App.GraphQL.Mutations.Lobbies;
+using Aimrank.Web.App.GraphQL.Mutations.SteamTokens;
 using Aimrank.Web.App.GraphQL.Mutations.Users;
 using Aimrank.Web.App.GraphQL.Mutations;
 using Aimrank.Web.App.GraphQL.Queries;
@@ -28,6 +29,7 @@ namespace Aimrank.Web.App.GraphQL
                 .AddType<UserMutations>()
                 .AddType<LobbyMutations>()
                 .AddType<FriendshipMutations>()
+                .AddType<SteamTokensMutations>()
                 .AddSubscriptionType<Subscription>()
                 .AddType<UserSubscriptions>()
                 .AddType<LobbySubscriptions>()

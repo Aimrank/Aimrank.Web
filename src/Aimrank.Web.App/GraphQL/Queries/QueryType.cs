@@ -27,6 +27,10 @@ namespace Aimrank.Web.App.GraphQL.Queries
             descriptor
                 .Field(f => f.GetLobbyInvitations(default))
                 .Type<ListType<NonNullType<LobbyInvitationType>>>();
+                
+            descriptor
+                .Field(f => f.GetSteamTokens(default))
+                .Type<ListType<NonNullType<SteamTokenType>>>();
         }
     }
 }

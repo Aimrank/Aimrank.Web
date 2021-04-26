@@ -1,0 +1,5 @@
+mutation addSteamToken($input: AddSteamTokenCommandInput!) {
+  addSteamToken(input: $input) {
+    status
+  }
+}

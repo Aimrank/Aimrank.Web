@@ -1,7 +1,7 @@
-using Aimrank.Web.Common.Application.Queries;
-using Aimrank.Web.Modules.Matches.Application.Matches.GetFinishedMatches;
 using Aimrank.Web.App.GraphQL.Queries.DataLoaders;
 using Aimrank.Web.App.GraphQL.Queries.Models;
+using Aimrank.Web.Common.Application.Queries;
+using Aimrank.Web.Modules.Matches.Application.Matches.GetFinishedMatches;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types.Pagination;
 using HotChocolate;
@@ -87,6 +87,13 @@ namespace Aimrank.Web.App.GraphQL.Queries
         [Authorize]
         public Task<IEnumerable<LobbyInvitation>> GetLobbyInvitations(
             [DataLoader] LobbyInvitationsDataLoader loader)
+            => loader.LoadAsync(0, CancellationToken.None);
+        
+        
+        // Cluster
+
+        [Authorize]
+        public Task<IEnumerable<SteamToken>> GetSteamTokens([DataLoader] SteamTokensDataLoader loader)
             => loader.LoadAsync(0, CancellationToken.None);
     }
 }

@@ -1,6 +1,6 @@
+using Aimrank.Web.Modules.Cluster.Application.Clients;
 using Aimrank.Web.Modules.Cluster.Application.Contracts;
 using Aimrank.Web.Modules.Cluster.Application.Repositories;
-using Aimrank.Web.Modules.Cluster.Application.Services;
 using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
