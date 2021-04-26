@@ -1,0 +1,5 @@
+mutation deleteSteamToken($input: DeleteSteamTokenCommandInput!) {
+  deleteSteamToken(input: $input) {
+    status
+  }
+}

@@ -22,7 +22,16 @@
         "title": "Admin panel dashboard"
       },
       "SteamTokens": {
-        "title": "Steam tokens"
+        "title": "Steam tokens",
+        "table": {
+          "pos": "Pos.",
+          "token": "Token",
+          "actions": "Actions"
+        },
+        "active": "Active",
+        "delete": "Delete",
+        "add": "Add token",
+        "addLabel": "Add new steam token"
       }
     }
   },

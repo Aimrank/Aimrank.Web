@@ -1,0 +1,6 @@
+query getSteamTokens {
+  steamTokens {
+    isUsed,
+    token
+  }
+}

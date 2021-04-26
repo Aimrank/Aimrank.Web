@@ -24,6 +24,7 @@ export type Query = {
   blockedUsers?: Maybe<UserConnection>;
   friendshipInvitations?: Maybe<UserConnection>;
   lobbyInvitations?: Maybe<Array<LobbyInvitation>>;
+  steamTokens?: Maybe<Array<SteamToken>>;
   user?: Maybe<User>;
   friendship?: Maybe<Friendship>;
   lobby?: Maybe<Lobby>;
@@ -138,6 +139,12 @@ export type MatchPlayer = {
   ratingEnd: Scalars['Int'];
 };
 
+export type SteamToken = {
+  __typename?: 'SteamToken';
+  token: Scalars['String'];
+  isUsed: Scalars['Boolean'];
+};
+
 export type User = {
   __typename?: 'User';
   friends?: Maybe<UserConnection>;
@@ -238,6 +245,8 @@ export type Mutation = {
   blockUser?: Maybe<BlockUserPayload>;
   unblockUser?: Maybe<UnblockUserPayload>;
   deleteFriendship?: Maybe<DeleteFriendshipPayload>;
+  addSteamToken?: Maybe<AddSteamTokenPayload>;
+  deleteSteamToken?: Maybe<DeleteSteamTokenPayload>;
 };
 
 
@@ -343,6 +352,16 @@ export type MutationUnblockUserArgs = {
 
 export type MutationDeleteFriendshipArgs = {
   input: DeleteFriendshipCommandInput;
+};
+
+
+export type MutationAddSteamTokenArgs = {
+  input: AddSteamTokenCommandInput;
+};
+
+
+export type MutationDeleteSteamTokenArgs = {
+  input: DeleteSteamTokenCommandInput;
 };
 
 export type Subscription = {
@@ -462,6 +481,14 @@ export type PlayerStatsDto = {
   modes?: Maybe<Array<Maybe<PlayerStatsModeDto>>>;
 };
 
+export type CreateLobbyPayload = {
+  __typename?: 'CreateLobbyPayload';
+  record: Lobby;
+  query?: Maybe<Query>;
+  recordId: Scalars['Uuid'];
+  status: Scalars['String'];
+};
+
 export type ResetPasswordCommandInput = {
   userId: Scalars['Uuid'];
   token?: Maybe<Scalars['String']>;
@@ -536,14 +563,6 @@ export type SignInPayload = {
   __typename?: 'SignInPayload';
   query?: Maybe<Query>;
   record?: Maybe<AuthenticationSuccessRecord>;
-  status: Scalars['String'];
-};
-
-export type CreateLobbyPayload = {
-  __typename?: 'CreateLobbyPayload';
-  record: Lobby;
-  query?: Maybe<Query>;
-  recordId: Scalars['Uuid'];
   status: Scalars['String'];
 };
 
@@ -700,6 +719,26 @@ export type UnblockUserCommandInput = {
 
 export type DeleteFriendshipCommandInput = {
   userId: Scalars['Uuid'];
+};
+
+export type AddSteamTokenPayload = {
+  __typename?: 'AddSteamTokenPayload';
+  query?: Maybe<Query>;
+  status: Scalars['String'];
+};
+
+export type DeleteSteamTokenPayload = {
+  __typename?: 'DeleteSteamTokenPayload';
+  query?: Maybe<Query>;
+  status: Scalars['String'];
+};
+
+export type AddSteamTokenCommandInput = {
+  token?: Maybe<Scalars['String']>;
+};
+
+export type DeleteSteamTokenCommandInput = {
+  token?: Maybe<Scalars['String']>;
 };
 
 export type LobbyInvitationCreatedPayload = {
@@ -915,6 +954,43 @@ export type AuthenticationSuccessRecord = {
   username: Scalars['String'];
   email: Scalars['String'];
 };
+
+export type AddSteamTokenMutationVariables = Exact<{
+  input: AddSteamTokenCommandInput;
+}>;
+
+
+export type AddSteamTokenMutation = (
+  { __typename?: 'Mutation' }
+  & { addSteamToken?: Maybe<(
+    { __typename?: 'AddSteamTokenPayload' }
+    & Pick<AddSteamTokenPayload, 'status'>
+  )> }
+);
+
+export type DeleteSteamTokenMutationVariables = Exact<{
+  input: DeleteSteamTokenCommandInput;
+}>;
+
+
+export type DeleteSteamTokenMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteSteamToken?: Maybe<(
+    { __typename?: 'DeleteSteamTokenPayload' }
+    & Pick<DeleteSteamTokenPayload, 'status'>
+  )> }
+);
+
+export type GetSteamTokensQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetSteamTokensQuery = (
+  { __typename?: 'Query' }
+  & { steamTokens?: Maybe<Array<(
+    { __typename?: 'SteamToken' }
+    & Pick<SteamToken, 'isUsed' | 'token'>
+  )>> }
+);
 
 export type RequestEmailConfirmationMutationVariables = Exact<{
   input: RequestEmailConfirmationCommandInput;
@@ -1710,6 +1786,9 @@ export type FriendshipInvitationCreatedSubscription = (
 import { Ref } from "vue";
 import { apolloClient } from "~/graphql/apolloClient";
 import { useQuery, useMutation, useSubscription, UseQueryOptions, UseMutationOptions, UseSubscriptionOptions } from "~/graphql/hooks";
+import ADD_STEAM_TOKEN from "../../modules/admin/graphql/mutations/addSteamToken.gql";
+import DELETE_STEAM_TOKEN from "../../modules/admin/graphql/mutations/deleteSteamToken.gql";
+import GET_STEAM_TOKENS from "../../modules/admin/graphql/query/getSteamTokens.gql";
 import REQUEST_EMAIL_CONFIRMATION from "../../modules/authentication/graphql/mutations/requestEmailConfirmation.gql";
 import REQUEST_PASSWORD_REMINDER from "../../modules/authentication/graphql/mutations/requestPasswordReminder.gql";
 import RESET_PASSWORD from "../../modules/authentication/graphql/mutations/resetPassword.gql";
@@ -1760,6 +1839,9 @@ import FRIENDSHIP_INVITATION_CREATED from "../../modules/profile/graphql/subscri
 
 type RefWrapper<T extends object> = Record<keyof T, T[keyof T] | Ref<T[keyof T]>>;
 
+export const useAddSteamToken = (options?: Omit<UseMutationOptions<AddSteamTokenMutationVariables>, "mutation">) => useMutation<AddSteamTokenMutation, AddSteamTokenMutationVariables>(apolloClient, { ...(options ?? {}), mutation: ADD_STEAM_TOKEN });
+export const useDeleteSteamToken = (options?: Omit<UseMutationOptions<DeleteSteamTokenMutationVariables>, "mutation">) => useMutation<DeleteSteamTokenMutation, DeleteSteamTokenMutationVariables>(apolloClient, { ...(options ?? {}), mutation: DELETE_STEAM_TOKEN });
+export const useGetSteamTokens = (options?: Omit<UseQueryOptions<RefWrapper<GetSteamTokensQueryVariables>>, "query">) => useQuery<GetSteamTokensQuery, RefWrapper<GetSteamTokensQueryVariables>>(apolloClient, { ...(options ?? {}), query: GET_STEAM_TOKENS });
 export const useRequestEmailConfirmation = (options?: Omit<UseMutationOptions<RequestEmailConfirmationMutationVariables>, "mutation">) => useMutation<RequestEmailConfirmationMutation, RequestEmailConfirmationMutationVariables>(apolloClient, { ...(options ?? {}), mutation: REQUEST_EMAIL_CONFIRMATION });
 export const useRequestPasswordReminder = (options?: Omit<UseMutationOptions<RequestPasswordReminderMutationVariables>, "mutation">) => useMutation<RequestPasswordReminderMutation, RequestPasswordReminderMutationVariables>(apolloClient, { ...(options ?? {}), mutation: REQUEST_PASSWORD_REMINDER });
 export const useResetPassword = (options?: Omit<UseMutationOptions<ResetPasswordMutationVariables>, "mutation">) => useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(apolloClient, { ...(options ?? {}), mutation: RESET_PASSWORD });
