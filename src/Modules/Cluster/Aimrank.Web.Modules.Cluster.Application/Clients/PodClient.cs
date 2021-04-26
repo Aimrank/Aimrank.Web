@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Aimrank.Web.Modules.Cluster.Application.Services
+namespace Aimrank.Web.Modules.Cluster.Application.Clients
 {
     public class PodClient : IPodClient
     {

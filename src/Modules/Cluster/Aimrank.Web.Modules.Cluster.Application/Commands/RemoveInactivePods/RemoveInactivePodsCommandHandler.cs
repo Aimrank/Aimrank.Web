@@ -1,7 +1,7 @@
 using Aimrank.Web.Common.Application.Events;
+using Aimrank.Web.Modules.Cluster.Application.Clients;
 using Aimrank.Web.Modules.Cluster.Application.Contracts;
 using Aimrank.Web.Modules.Cluster.Application.Repositories;
-using Aimrank.Web.Modules.Cluster.Application.Services;
 using Aimrank.Web.Modules.Cluster.IntegrationEvents.Servers;
 using MediatR;
 using System.Linq;

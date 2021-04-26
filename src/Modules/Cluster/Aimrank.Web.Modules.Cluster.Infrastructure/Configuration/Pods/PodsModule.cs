@@ -1,4 +1,4 @@
-using Aimrank.Web.Modules.Cluster.Application.Services;
+using Aimrank.Web.Modules.Cluster.Application.Clients;
 using Autofac;
 
 namespace Aimrank.Web.Modules.Cluster.Infrastructure.Configuration.Pods

@@ -6,7 +6,6 @@ namespace Aimrank.Web.Modules.Cluster.Application.Repositories
 {
     public interface IPodRepository
     {
-        Task<int> GetAvailableServersCountAsync();
         Task<Pod> GetByIpAddressOptionalAsync(string ipAddress);
         Task<IEnumerable<Pod>> BrowseAsync();
         void Add(Pod pod);
