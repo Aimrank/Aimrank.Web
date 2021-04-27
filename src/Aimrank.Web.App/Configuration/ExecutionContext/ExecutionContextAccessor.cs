@@ -1,6 +1,7 @@
 using Aimrank.Web.Common.Application;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
+using System.Security.Claims;
 using System;
 
 namespace Aimrank.Web.App.Configuration.ExecutionContext
@@ -18,7 +19,8 @@ namespace Aimrank.Web.App.Configuration.ExecutionContext
         {
             get
             {
-                var claim = _httpContextAccessor.HttpContext?.User.Claims.SingleOrDefault(c => c.Type == "id");
+                var claim = _httpContextAccessor.HttpContext?.User.Claims.SingleOrDefault(c =>
+                    c.Type == ClaimTypes.NameIdentifier);
                 if (claim?.Value is null)
                 {
                     throw new ExecutionContextNotAvailableException();

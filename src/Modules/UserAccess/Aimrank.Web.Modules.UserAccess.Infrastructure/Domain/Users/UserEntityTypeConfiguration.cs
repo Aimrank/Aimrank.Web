@@ -27,6 +27,15 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Domain.Users
                 b.Property(t => t.ExpiresAt).HasColumnName("expires_at");
                 b.WithOwner().HasForeignKey("UserId");
             });
+            
+            builder.OwnsMany<UserRole>("_roles", b =>
+            {
+                b.ToTable("users_roles");
+                b.Property<UserId>("UserId");
+                b.HasKey("UserId", "Name");
+                b.Property(t => t.Name).IsRequired();
+                b.WithOwner().HasForeignKey("UserId");
+            });
 
             builder.Ignore(u => u.DomainEvents);
         }

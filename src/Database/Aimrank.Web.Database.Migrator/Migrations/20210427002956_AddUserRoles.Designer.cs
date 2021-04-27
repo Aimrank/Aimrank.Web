@@ -3,15 +3,17 @@ using System;
 using Aimrank.Web.Modules.UserAccess.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Aimrank.Web.Database.Migrator.Migrations
 {
     [DbContext(typeof(UserAccessContext))]
-    partial class UserAccessContextModelSnapshot : ModelSnapshot
+    [Migration("20210427002956_AddUserRoles")]
+    partial class AddUserRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -3,10 +3,8 @@ using Aimrank.Web.Modules.UserAccess.Application.Contracts;
 using Aimrank.Web.Modules.UserAccess.Domain.Users;
 using Dapper;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Threading;
-using System;
 
 namespace Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate
 {
@@ -25,15 +23,31 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate
 
             const string sql = @"
                 SELECT
-                    id,
-                    email,
-                    username,
-                    password,
-                    is_active
-                FROM users.users
+                    u.id,
+                    u.email,
+                    u.username,
+                    u.password,
+                    u.is_active,
+                    r.name
+                FROM users.users AS u
+                LEFT JOIN users.users_roles AS r ON r.user_id = u.id
                 WHERE email = @UsernameOrEmail OR username = @UsernameOrEmail;";
 
-            var user = await connection.QueryFirstOrDefaultAsync<UserResult>(sql, new {request.UsernameOrEmail});
+            UserResultDto user = null;
+
+            await connection.QueryAsync<UserResultDto, string, UserResultDto>(sql,
+                (userResult, role) =>
+                {
+                    user ??= userResult;
+                    user.Roles ??= new List<string>();
+                    if (!string.IsNullOrEmpty(role))
+                    {
+                        user.Roles.Add(role);
+                    }
+                    return userResult;
+                },
+                new {request.UsernameOrEmail},
+                splitOn: "name");
 
             if (user is null)
             {
@@ -50,27 +64,7 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate
                 throw new EmailNotConfirmedException();
             }
 
-            return new AuthenticationResult(new AuthenticatedUserDto
-            {
-                Id = user.Id,
-                Email = user.Email,
-                Username = user.Username,
-                Claims = new List<Claim>
-                {
-                    new(CustomClaimTypes.Id, user.Id.ToString()),
-                    new(CustomClaimTypes.Name, user.Username),
-                    new(CustomClaimTypes.Email, user.Email)
-                }
-            });
-        }
-
-        private class UserResult
-        {
-            public Guid Id { get; set; }
-            public string Email { get; set; }
-            public string Username { get; set; }
-            public string Password { get; set; }
-            public bool IsActive { get; set; }
+            return new AuthenticationResult(user.AsAuthenticatedUserDto());
         }
     }
 }

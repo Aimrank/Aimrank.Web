@@ -2,6 +2,7 @@ using Aimrank.Web.App.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System;
+using System.Security.Claims;
 
 namespace Aimrank.Web.App.ViewComponents
 {
@@ -24,9 +25,11 @@ namespace Aimrank.Web.App.ViewComponents
             var isAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
             if (isAuthenticated)
             {
-                var id = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "id");
-                var email = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "email");
-                var username = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "name");
+                var id = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+                var email = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+                var username = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+                var roles = HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.Role)
+                    .Select(c => c.Value);
 
                 if (id is not null && email is not null && username is not null)
                 {
@@ -34,7 +37,8 @@ namespace Aimrank.Web.App.ViewComponents
                     {
                         Id = Guid.Parse(id.Value).ToString("N"),
                         Email = email.Value,
-                        Username = username.Value
+                        Username = username.Value,
+                        Roles = roles
                     };
                 }
             }

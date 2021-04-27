@@ -92,7 +92,7 @@ namespace Aimrank.Web.App.GraphQL.Queries
         
         // Cluster
 
-        [Authorize]
+        [AuthorizeRoles("Admin")]
         public Task<IEnumerable<SteamToken>> GetSteamTokens([DataLoader] SteamTokensDataLoader loader)
             => loader.LoadAsync(0, CancellationToken.None);
     }

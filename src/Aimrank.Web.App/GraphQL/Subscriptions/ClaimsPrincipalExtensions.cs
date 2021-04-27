@@ -8,7 +8,7 @@ namespace Aimrank.Web.App.GraphQL.Subscriptions
     {
         public static Guid GetUserId(this ClaimsPrincipal principal)
         {
-            var claim = principal.Claims.FirstOrDefault(c => c.Type == "id");
+            var claim = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             return claim is null ? Guid.Empty : Guid.Parse(claim.Value);
         }
     }
