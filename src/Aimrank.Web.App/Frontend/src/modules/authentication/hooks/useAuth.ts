@@ -13,6 +13,7 @@ interface IAuthUser {
   id: string;
   email: string;
   username: string;
+  roles: string[];
 }
 
 interface IAuthState {
@@ -39,7 +40,8 @@ const signIn = async (input: AuthenticateCommandInput) => {
     setCurrentUser({
       id: result.value.signIn.record.id,
       email: result.value.signIn.record.email,
-      username: result.value.signIn.record.username
+      username: result.value.signIn.record.username,
+      roles: result.value.signIn.record.roles
     });
 
     reconnect();

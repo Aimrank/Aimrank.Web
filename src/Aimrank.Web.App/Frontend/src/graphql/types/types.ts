@@ -160,6 +160,14 @@ export type UserFriendsArgs = {
   take?: Maybe<Scalars['Int']>;
 };
 
+export type AuthenticationSuccessRecord = {
+  __typename?: 'AuthenticationSuccessRecord';
+  id: Scalars['Uuid'];
+  email: Scalars['String'];
+  username: Scalars['String'];
+  roles: Array<Scalars['String']>;
+};
+
 /** A connection to a list of items. */
 export type UserConnection = {
   __typename?: 'UserConnection';
@@ -183,6 +191,7 @@ export type MatchConnection = {
   nodes?: Maybe<Array<Match>>;
   totalCount: Scalars['Int'];
 };
+
 
 export enum ApplyPolicy {
   BeforeResolver = 'BEFORE_RESOLVER',
@@ -468,7 +477,6 @@ export type FinishedMatchesFilterInput = {
   mode?: Maybe<Scalars['Int']>;
   map?: Maybe<Scalars['String']>;
 };
-
 
 
 export type PlayerStatsDto = {
@@ -948,13 +956,6 @@ export type LobbyInvitationCreatedRecord = {
   lobbyId: Scalars['Uuid'];
 };
 
-export type AuthenticationSuccessRecord = {
-  __typename?: 'AuthenticationSuccessRecord';
-  id: Scalars['Uuid'];
-  username: Scalars['String'];
-  email: Scalars['String'];
-};
-
 export type AddSteamTokenMutationVariables = Exact<{
   input: AddSteamTokenCommandInput;
 }>;
@@ -1042,7 +1043,7 @@ export type SignInMutation = (
     { __typename?: 'SignInPayload' }
     & { record?: Maybe<(
       { __typename?: 'AuthenticationSuccessRecord' }
-      & Pick<AuthenticationSuccessRecord, 'id' | 'email' | 'username'>
+      & Pick<AuthenticationSuccessRecord, 'id' | 'email' | 'username' | 'roles'>
     )> }
   )> }
 );
