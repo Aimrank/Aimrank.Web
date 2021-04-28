@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Aimrank.Web.Database.Migrator.Migrations
 {
     [DbContext(typeof(UserAccessContext))]
-    [Migration("20210427002956_AddUserRoles")]
+    [Migration("20210428002739_AddUserRoles")]
     partial class AddUserRoles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,8 +78,8 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
+                        .HasMaxLength(320)
+                        .HasColumnType("character varying(320)")
                         .HasColumnName("email");
 
                     b.Property<bool>("IsActive")
@@ -88,7 +88,8 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("username");
 
                     b.Property<string>("_password")
@@ -178,7 +179,8 @@ namespace Aimrank.Web.Database.Migrator.Migrations
                                 .HasColumnName("user_id");
 
                             b1.Property<string>("Name")
-                                .HasColumnType("text")
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)")
                                 .HasColumnName("name");
 
                             b1.HasKey("UserId", "Name")
