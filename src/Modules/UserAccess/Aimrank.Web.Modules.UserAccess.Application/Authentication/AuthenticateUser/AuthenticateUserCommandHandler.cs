@@ -3,10 +3,8 @@ using Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate;
 using Aimrank.Web.Modules.UserAccess.Application.Contracts;
 using Dapper;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Threading;
-using System;
 
 namespace Aimrank.Web.Modules.UserAccess.Application.Authentication.AuthenticateUser
 {
@@ -24,30 +22,39 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = @"
-                SELECT id, email, username
-                FROM users.users
+                SELECT
+                    u.id,
+                    u.email,
+                    u.username,
+                    u.password,
+                    u.is_active,
+                    r.name
+                FROM users.users AS u
+                LEFT JOIN users.users_roles AS r ON r.user_id = u.id
                 WHERE id = @UserId;";
 
-            var user = await connection.QueryFirstAsync<UserResult>(sql, new {request.UserId});
+            UserResultDto user = null;
+
+            await connection.QueryAsync<UserResultDto, string, UserResultDto>(sql,
+                (userResult, role) =>
+                {
+                    user ??= userResult;
+                    user.Roles ??= new List<string>();
+                    if (!string.IsNullOrEmpty(role))
+                    {
+                        user.Roles.Add(role);
+                    }
+                    return userResult;
+                },
+                new {request.UserId},
+                splitOn: "name");
+
             if (user is null)
             {
                 throw new InvalidCredentialsException();
             }
-            
-            return new AuthenticationResult(new AuthenticatedUserDto
-            {
-                Id = user.Id,
-                Email = user.Email,
-                Username = user.Username,
-                Claims = new List<Claim>
-                {
-                    new(CustomClaimTypes.Id, user.Id.ToString()),
-                    new(CustomClaimTypes.Name, user.Username),
-                    new(CustomClaimTypes.Email, user.Email)
-                }
-            });
-        }
 
-        private record UserResult(Guid Id, string Email, string Username);
+            return new AuthenticationResult(user.AsAuthenticatedUserDto());
+        }
     }
 }

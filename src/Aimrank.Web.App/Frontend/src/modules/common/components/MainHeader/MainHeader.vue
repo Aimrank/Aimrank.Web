@@ -13,6 +13,7 @@
     </div>
     <div v-if="currentUser">
       {{ $t("common.components.MainHeader.user", [currentUser.username]) }}
+      <base-button v-if="currentUser.roles.includes('Admin')" :class="$style.button" small tag="router-link" :to="{ name: 'admin:dashboard' }">Admin</base-button>
       <base-button :class="$style.button" small @click="open">Search</base-button>
       <base-button :class="$style.button" small tag="router-link" :to="{ name: 'lobbyInvitations' }">Invitations</base-button>
       <base-button :class="$style.button" small tag="router-link" :to="{ name: 'lobby' }">Lobby</base-button>

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Aimrank.Web.App.ViewModels
 {
     public class InitialAppStateViewModel
@@ -11,5 +13,6 @@ namespace Aimrank.Web.App.ViewModels
         public string Id { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
+        public IEnumerable<string> Roles { get; set; }
     }
 }

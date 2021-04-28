@@ -1,3 +1,4 @@
+using Aimrank.Web.App.Configuration.SessionAuthentication;
 using Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate;
 using Aimrank.Web.Modules.UserAccess.Application.Contracts;
 using Aimrank.Web.Modules.UserAccess.Application.Users.ChangePassword;
@@ -5,12 +6,12 @@ using Aimrank.Web.Modules.UserAccess.Application.Users.RegisterNewUser;
 using Aimrank.Web.Modules.UserAccess.Application.Users.RequestEmailConfirmation;
 using Aimrank.Web.Modules.UserAccess.Application.Users.RequestPasswordReminder;
 using Aimrank.Web.Modules.UserAccess.Application.Users.ResetPassword;
-using Aimrank.Web.App.Configuration.SessionAuthentication;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types;
 using HotChocolate;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -45,7 +46,8 @@ namespace Aimrank.Web.App.GraphQL.Mutations.Users
             return new SignInPayload(new AuthenticationSuccessRecord(
                 result.User.Id,
                 result.User.Username,
-                result.User.Email));
+                result.User.Email,
+                result.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value)));
         }
 
         public async Task<SignUpPayload> SignUp([GraphQLNonNullType] RegisterNewUserCommand input)

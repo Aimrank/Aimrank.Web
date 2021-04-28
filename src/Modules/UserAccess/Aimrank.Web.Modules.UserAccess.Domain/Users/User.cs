@@ -15,6 +15,7 @@ namespace Aimrank.Web.Modules.UserAccess.Domain.Users
         public bool IsActive { get; private set; }
         
         private string _password;
+        private readonly List<UserRole> _roles = new();
         private readonly List<UserToken> _tokens = new();
 
         private User() {}
