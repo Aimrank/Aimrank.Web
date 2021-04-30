@@ -44,14 +44,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E94A77B2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Web.Modules.UserAccess.UnitTests", "src\Modules\UserAccess\Tests\Aimrank.Web.Modules.UserAccess.UnitTests\Aimrank.Web.Modules.UserAccess.UnitTests.csproj", "{BE342DB5-4FBB-4FB0-8E78-0FA37EE686B6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cluster", "Cluster", "{22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Web.Modules.Cluster.Application", "src\Modules\Cluster\Aimrank.Web.Modules.Cluster.Application\Aimrank.Web.Modules.Cluster.Application.csproj", "{99D41473-44AF-46A7-99B3-1938A30A938D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Web.Modules.Cluster.Infrastructure", "src\Modules\Cluster\Aimrank.Web.Modules.Cluster.Infrastructure\Aimrank.Web.Modules.Cluster.Infrastructure.csproj", "{53E60CAF-7414-4572-95CF-A4CE835CD96C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Web.Modules.Cluster.IntegrationEvents", "src\Modules\Cluster\Aimrank.Web.Modules.Cluster.IntegrationEvents\Aimrank.Web.Modules.Cluster.IntegrationEvents.csproj", "{7B859A1B-5FD1-4B33-A83E-88A101B25036}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,10 +68,6 @@ Global
 		{7373DD06-725D-4604-BEFB-C0AE7AC1B6BF} = {CB3E8F47-FF5F-44D3-B79B-7B7930E78289}
 		{E94A77B2-D745-47A5-8EFE-B6482C373CA6} = {6D5200E6-01F3-4679-8B98-94D06222FE65}
 		{BE342DB5-4FBB-4FB0-8E78-0FA37EE686B6} = {E94A77B2-D745-47A5-8EFE-B6482C373CA6}
-		{22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4} = {C85B20C0-AD41-4622-BAA8-70F1C2FB8C64}
-		{99D41473-44AF-46A7-99B3-1938A30A938D} = {22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4}
-		{53E60CAF-7414-4572-95CF-A4CE835CD96C} = {22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4}
-		{7B859A1B-5FD1-4B33-A83E-88A101B25036} = {22E9A0DF-AA30-4054-8DD9-0A3BB6A91CE4}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{528383BC-4260-41C0-89CE-F00138B63F4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

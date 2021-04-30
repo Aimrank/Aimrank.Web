@@ -1,7 +1,7 @@
 using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Common.Application;
 using Aimrank.Web.Common.Infrastructure;
-using Aimrank.Web.Modules.Cluster.Application.Contracts;
+using Aimrank.Web.Modules.Matches.Application.Clients;
 using Aimrank.Web.Modules.Matches.Application.Contracts;
 using Aimrank.Web.Modules.Matches.Infrastructure.Application;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.DataAccess;
@@ -14,13 +14,20 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Refit;
+using System;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
 {
     public class MatchesModuleStartup : IModuleStartup
     {
-        public void Register(IServiceCollection services)
+        public void Register(IServiceCollection services, IConfiguration configuration)
         {
+            var settings = configuration.GetSection(nameof(MatchesModuleSettings)).Get<MatchesModuleSettings>();
+            
+            services.AddRefitClient<IClusterClient>()
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(settings.ClusterAddress));
+            
             services.AddSingleton<IMatchesModule, MatchesModule>();
         }
 
@@ -40,7 +47,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
             containerBuilder.RegisterModule(new RedisModule(settings.RedisSettings));
             containerBuilder.RegisterModule(new ApplicationModule());
             containerBuilder.RegisterInstance(builder.ApplicationServices.GetRequiredService<IExecutionContextAccessor>());
-            containerBuilder.RegisterInstance(builder.ApplicationServices.GetRequiredService<IClusterModule>());
+            containerBuilder.RegisterInstance(builder.ApplicationServices.GetRequiredService<IClusterClient>());
             containerBuilder.RegisterInstance(eventBus);
             containerBuilder.RegisterInstance(logger);
             

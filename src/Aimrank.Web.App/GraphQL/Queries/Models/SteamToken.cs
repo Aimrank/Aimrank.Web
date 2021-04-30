@@ -1,4 +1,4 @@
-using Aimrank.Web.Modules.Cluster.Application.Queries.GetSteamTokens;
+using Aimrank.Web.Modules.Matches.Application.Clients;
 using HotChocolate.Types;
 
 namespace Aimrank.Web.App.GraphQL.Queries.Models

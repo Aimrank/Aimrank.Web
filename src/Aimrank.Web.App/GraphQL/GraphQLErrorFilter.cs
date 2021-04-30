@@ -1,6 +1,5 @@
 using Aimrank.Web.Common.Application.Exceptions;
 using Aimrank.Web.Common.Domain;
-using Aimrank.Web.Modules.Cluster.Application.Exceptions;
 using HotChocolate;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -22,7 +21,6 @@ namespace Aimrank.Web.App.GraphQL
                     .WithCode(e.Code)
                     .WithMessage(e.Message)
                     .SetExtension("errors", JsonSerializer.Serialize(e.Errors)),
-                ClusterException e => error.WithMessage(e.Message),
                 null => error
                     .WithCode(error.Code)
                     .WithMessage(error.Message),

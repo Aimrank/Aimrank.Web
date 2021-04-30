@@ -7,11 +7,11 @@
     <ItemGroup>
         <PackageReference Include="Dapper" Version="2.0.78" />
         <PackageReference Include="FluentValidation" Version="10.0.0-preview2" />
+        <PackageReference Include="Refit" Version="5.2.4" />
     </ItemGroup>
     
     <ItemGroup>
       <ProjectReference Include="..\..\..\Common\Aimrank.Web.Common.Application\Aimrank.Web.Common.Application.csproj" />
-      <ProjectReference Include="..\..\Cluster\Aimrank.Web.Modules.Cluster.Application\Aimrank.Web.Modules.Cluster.Application.csproj" />
       <ProjectReference Include="..\Aimrank.Web.Modules.Matches.Domain\Aimrank.Web.Modules.Matches.Domain.csproj" />
       <ProjectReference Include="..\Aimrank.Web.Modules.Matches.IntegrationEvents\Aimrank.Web.Modules.Matches.IntegrationEvents.csproj" />
     </ItemGroup>

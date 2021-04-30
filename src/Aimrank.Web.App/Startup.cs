@@ -65,7 +65,7 @@ namespace Aimrank.Web.App
             services.AddControllersWithViews();
             services.AddRouting(options => options.LowercaseUrls = true);
             
-            services.AddModules();
+            services.AddModules(Configuration);
             services.AddEventBus();
             services.AddRabbitMQ(Configuration);
 

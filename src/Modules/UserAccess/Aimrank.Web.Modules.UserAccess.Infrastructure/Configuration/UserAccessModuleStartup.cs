@@ -16,7 +16,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration
 {
     public class UserAccessModuleStartup : IModuleStartup
     {
-        public void Register(IServiceCollection services)
+        public void Register(IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IUserAccessModule, UserAccessModule>();
         }

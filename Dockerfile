@@ -12,9 +12,6 @@ COPY src/Common/Aimrank.Web.Common.Domain/*.csproj ./src/Common/Aimrank.Web.Comm
 COPY src/Common/Aimrank.Web.Common.Application/*.csproj ./src/Common/Aimrank.Web.Common.Application/
 COPY src/Common/Aimrank.Web.Common.Infrastructure/*.csproj ./src/Common/Aimrank.Web.Common.Infrastructure/
 COPY src/Database/Aimrank.Web.Database.Migrator/*.csproj ./src/Database/Aimrank.Web.Database.Migrator/
-COPY src/Modules/Cluster/Aimrank.Web.Modules.Cluster.Application/*.csproj ./src/Modules/Cluster/Aimrank.Web.Modules.Cluster.Application/
-COPY src/Modules/Cluster/Aimrank.Web.Modules.Cluster.Infrastructure/*.csproj ./src/Modules/Cluster/Aimrank.Web.Modules.Cluster.Infrastructure/
-COPY src/Modules/Cluster/Aimrank.Web.Modules.Cluster.IntegrationEvents/*.csproj ./src/Modules/Cluster/Aimrank.Web.Modules.Cluster.IntegrationEvents/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/
@@ -33,9 +30,6 @@ COPY src/Common/Aimrank.Web.Common.Domain/. ./src/Common/Aimrank.Web.Common.Doma
 COPY src/Common/Aimrank.Web.Common.Application/. ./src/Common/Aimrank.Web.Common.Application/
 COPY src/Common/Aimrank.Web.Common.Infrastructure/. ./src/Common/Aimrank.Web.Common.Infrastructure/
 COPY src/Database/Aimrank.Web.Database.Migrator/. ./src/Database/Aimrank.Web.Database.Migrator/
-COPY src/Modules/Cluster/Aimrank.Web.Modules.Cluster.Application/. ./src/Modules/Cluster/Aimrank.Web.Modules.Cluster.Application/
-COPY src/Modules/Cluster/Aimrank.Web.Modules.Cluster.Infrastructure/. ./src/Modules/Cluster/Aimrank.Web.Modules.Cluster.Infrastructure/
-COPY src/Modules/Cluster/Aimrank.Web.Modules.Cluster.IntegrationEvents/. ./src/Modules/Cluster/Aimrank.Web.Modules.Cluster.IntegrationEvents/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/

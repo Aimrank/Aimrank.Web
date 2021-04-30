@@ -1,6 +1,5 @@
 using Aimrank.Web.Common.Application.Events;
-using Aimrank.Web.Modules.Cluster.Application.Commands.StartServer;
-using Aimrank.Web.Modules.Cluster.Application.Contracts;
+using Aimrank.Web.Modules.Matches.Application.Clients;
 using Aimrank.Web.Modules.Matches.Application.Matches;
 using Aimrank.Web.Modules.Matches.Domain.Matches;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Redis;
@@ -17,13 +16,13 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Application.Matches
     {
         private readonly IDatabase _database;
         private readonly IEventBus _eventBus;
-        private readonly IClusterModule _clusterModule;
+        private readonly IClusterClient _clusterClient;
 
-        public MatchService(IConnectionMultiplexer connectionMultiplexer, IEventBus eventBus, IClusterModule clusterModule)
+        public MatchService(IConnectionMultiplexer connectionMultiplexer, IEventBus eventBus, IClusterClient clusterClient)
         {
             _database = connectionMultiplexer.GetDatabase();
             _eventBus = eventBus;
-            _clusterModule = clusterModule;
+            _clusterClient = clusterClient;
         }
         
         public async Task AcceptMatchAsync(Match match, Guid playerId)
@@ -40,10 +39,10 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Application.Matches
             {
                 await _database.KeyDeleteAsync(key);
 
-                var address = await _clusterModule.ExecuteCommandAsync(new StartServerCommand(
+                var response = await _clusterClient.StartServerAsync(new StartServerRequest(
                     match.Id, match.Map, match.Players.Select(p => $"{p.SteamId}:{(int) p.Team}")));
                 
-                match.SetStarting(address);
+                match.SetStarting(response.Address);
             }
             else
             {

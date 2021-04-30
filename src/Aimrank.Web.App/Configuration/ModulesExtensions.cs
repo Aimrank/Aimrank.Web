@@ -30,11 +30,11 @@ namespace Aimrank.Web.App.Configuration
             }
         }
         
-        public static IServiceCollection AddModules(this IServiceCollection services)
+        public static IServiceCollection AddModules(this IServiceCollection services, IConfiguration configuration)
         {
             foreach (var module in Modules)
             {
-                module.Register(services);
+                module.Register(services, configuration);
             }
             
             return services;
