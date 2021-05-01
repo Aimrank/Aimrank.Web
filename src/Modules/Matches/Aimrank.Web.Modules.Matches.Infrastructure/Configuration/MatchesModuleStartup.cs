@@ -14,8 +14,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Refit;
-using System;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
 {
@@ -23,11 +21,6 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
     {
         public void Register(IServiceCollection services, IConfiguration configuration)
         {
-            var settings = configuration.GetSection(nameof(MatchesModuleSettings)).Get<MatchesModuleSettings>();
-            
-            services.AddRefitClient<IClusterClient>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri(settings.ClusterAddress));
-            
             services.AddSingleton<IMatchesModule, MatchesModule>();
         }
 

@@ -1,4 +1,3 @@
-using Refit;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
@@ -21,25 +20,12 @@ namespace Aimrank.Web.Modules.Matches.Application.Clients
     
     public interface IClusterClient
     {
-        [Get("/server")]
         Task<GetAvailableServersCountResponse> GetAvailableServersCountAsync();
-        
-        [Post("/server")]
-        Task CreateServersAsync([Body] CreateServersRequest request);
-        
-        [Post("/server/start")]
-        Task<StartServerResponse> StartServerAsync([Body] StartServerRequest request);
-        
-        [Delete("/server/{id}")]
+        Task CreateServersAsync(CreateServersRequest request);
+        Task<string> StartServerAsync(StartServerRequest request);
         Task DeleteServerAsync(Guid id);
-        
-        [Post("/steam-token")]
-        Task AddSteamTokenAsync([Body] AddSteamTokenRequest request);
-        
-        [Delete("/steam-token/{token}")]
+        Task AddSteamTokenAsync(AddSteamTokenRequest request);
         Task DeleteSteamTokenAsync(string token);
-        
-        [Get("/steam-token")]
         Task<IEnumerable<SteamTokenDto>> GetSteamTokensAsync();
     }
 }
