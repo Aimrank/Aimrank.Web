@@ -22,32 +22,21 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Quartz
             _scheduler = schedulerFactory.GetScheduler().GetAwaiter().GetResult();
             _scheduler.JobFactory = new AutofacJobFactory();
             _scheduler.Start().GetAwaiter().GetResult();
-
-            var processOutboxJob = JobBuilder.Create<ProcessOutboxJob>().Build();
-            var processOutboxTrigger = TriggerBuilder.Create()
-                .StartNow()
-                .WithCronSchedule("0/2 * * ? * *")
-                .Build();
-
-            _scheduler.ScheduleJob(processOutboxJob, processOutboxTrigger).GetAwaiter().GetResult();
             
-            var removeProcessedMessagesJob = JobBuilder.Create<RemoveProcessedMessagesJob>().Build();
-            var removeProcessedMessagesTrigger = TriggerBuilder.Create()
+            ScheduleCronJob<ProcessOutboxJob>("0/2 * * ? * *");
+            ScheduleCronJob<RemoveExpiredTokensJob>("0 0 0 ? * *");
+            ScheduleCronJob<RemoveProcessedMessagesJob>("0 0 0/2 ? * *");
+        }
+        
+        private static void ScheduleCronJob<T>(string cron) where T : class, IJob
+        {
+            var job = JobBuilder.Create<T>().Build();
+            var trigger = TriggerBuilder.Create()
                 .StartNow()
-                .WithCronSchedule("0 0 0/2 ? * *")
+                .WithCronSchedule(cron)
                 .Build();
-                
-            _scheduler.ScheduleJob(removeProcessedMessagesJob, removeProcessedMessagesTrigger);
 
-            var removeExpiredTokensJob = JobBuilder.Create<RemoveExpiredTokensJob>().Build();
-            var removeExpiredTokensTrigger =
-                TriggerBuilder
-                    .Create()
-                    .StartNow()
-                    .WithCronSchedule("0 0 0 ? * *")
-                    .Build();
-
-            _scheduler.ScheduleJob(removeExpiredTokensJob, removeExpiredTokensTrigger).GetAwaiter().GetResult();
+            _scheduler.ScheduleJob(job, trigger);
         }
     }
 }
