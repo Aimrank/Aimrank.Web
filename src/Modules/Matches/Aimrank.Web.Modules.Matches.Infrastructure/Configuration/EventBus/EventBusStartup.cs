@@ -3,6 +3,7 @@ using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.M
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.MatchFinished;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.MatchStarted;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.PlayerDisconnected;
+using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.ServersDeleted;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus
 {
@@ -14,7 +15,8 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus
                 .Subscribe(new IntegrationEventGenericHandler<MatchStartedEvent>())
                 .Subscribe(new IntegrationEventGenericHandler<MatchCanceledEvent>())
                 .Subscribe(new IntegrationEventGenericHandler<MatchFinishedEvent>())
-                .Subscribe(new IntegrationEventGenericHandler<PlayerDisconnectedEvent>());
+                .Subscribe(new IntegrationEventGenericHandler<PlayerDisconnectedEvent>())
+                .Subscribe(new IntegrationEventGenericHandler<ServersDeletedEvent>());
         }
     }
 }
