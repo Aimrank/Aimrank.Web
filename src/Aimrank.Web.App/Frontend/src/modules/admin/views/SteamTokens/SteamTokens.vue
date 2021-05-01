@@ -37,6 +37,7 @@
       <div :class="$style.form">
         <form-field-input
           :label="$t('admin.views.SteamTokens.addLabel')"
+          :errors="errors.errors['Token']"
           v-model="token"
         />
         <base-button

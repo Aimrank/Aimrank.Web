@@ -1,6 +1,8 @@
 import { defineComponent, ref } from "vue";
 import { useNotifications } from "@/common/hooks/useNotifications";
+import { useResponseErrors } from "@/common/hooks/useResponseErrors";
 import { useAddSteamToken, useDeleteSteamToken, useGetSteamTokens } from "~/graphql/types/types";
+import { ErrorResponse } from "@/common/hooks/ErrorResponse";
 import BaseButton from "@/common/components/BaseButton";
 import FormFieldInput from "@/common/components/FormFieldInput";
 
@@ -10,6 +12,7 @@ const SteamTokens = defineComponent({
     FormFieldInput
   },
   setup() {
+    const formErrors = useResponseErrors();
     const notifications = useNotifications();
 
     const token = ref("");
@@ -36,6 +39,7 @@ const SteamTokens = defineComponent({
 
       if (errors[0]) {
         notifications.danger(errors[0].message);
+        formErrors.setErrors(ErrorResponse.fromGraphQLError(errors[0]));
       } else if (state.value?.steamTokens) {
         state.value.steamTokens = [
           ...state.value.steamTokens,
@@ -47,6 +51,7 @@ const SteamTokens = defineComponent({
         ];
 
         token.value = "";
+        formErrors.clearErrors();
       }
     }
 
@@ -69,6 +74,7 @@ const SteamTokens = defineComponent({
       token,
       loadingAdd,
       loadingDelete,
+      errors: formErrors.state,
       onAddSteamToken,
       onDeleteSteamToken
     };

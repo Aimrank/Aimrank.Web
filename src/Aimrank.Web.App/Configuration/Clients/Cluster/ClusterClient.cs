@@ -15,6 +15,8 @@ namespace Aimrank.Web.App.Configuration.Clients.Cluster
         {
             PropertyNameCaseInsensitive = true
         };
+        
+        private HttpClient CreateClient() => _httpClientFactory.CreateClient(nameof(ClusterClient));
 
         public ClusterClient(IHttpClientFactory httpClientFactory)
         {
@@ -78,14 +80,12 @@ namespace Aimrank.Web.App.Configuration.Clients.Cluster
             return await response.Content.ReadFromJsonAsync<IEnumerable<SteamTokenDto>>(_options);
         }
 
-        private HttpClient CreateClient() => _httpClientFactory.CreateClient(nameof(ClusterClient));
-
         private async Task ThrowIfErrorResponseAsync(HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode is false)
             {
                 var content = await response.Content.ReadFromJsonAsync<ClusterApiError>(_options);
-                throw new ClusterApiException(content.Title);
+                throw new ClusterApiException(content);
             }
         }
     }

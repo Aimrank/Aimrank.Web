@@ -23,7 +23,9 @@ namespace Aimrank.Web.App.GraphQL
                     .WithMessage(e.Message)
                     .SetExtension("errors", JsonSerializer.Serialize(e.Errors)),
                 ClusterApiException e => error
-                    .WithMessage(e.Message),
+                    .WithCode(e.Code)
+                    .WithMessage(e.Message)
+                    .SetExtension("errors", JsonSerializer.Serialize(e.Errors)),
                 null => error
                     .WithCode(error.Code)
                     .WithMessage(error.Message),
