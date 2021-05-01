@@ -1,4 +1,4 @@
-mutation addSteamToken($input: AddSteamTokenCommandInput!) {
+mutation addSteamToken($input: AddSteamTokenRequestInput!) {
   addSteamToken(input: $input) {
     status
   }

@@ -22,6 +22,10 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Domain.Matches
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
+
+        public async Task<IEnumerable<Match>> BrowseByIdAsync(IEnumerable<MatchId> ids)
+            => await _context.Matches.Where(m => ids.Contains(m.Id)).ToListAsync();
+
         public async Task<Dictionary<PlayerId, int>> BrowsePlayersRatingAsync(IEnumerable<PlayerId> ids, MatchMode mode)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();

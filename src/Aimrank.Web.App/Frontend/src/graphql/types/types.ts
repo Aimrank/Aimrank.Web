@@ -365,12 +365,12 @@ export type MutationDeleteFriendshipArgs = {
 
 
 export type MutationAddSteamTokenArgs = {
-  input: AddSteamTokenCommandInput;
+  input: AddSteamTokenRequestInput;
 };
 
 
 export type MutationDeleteSteamTokenArgs = {
-  input: DeleteSteamTokenCommandInput;
+  input: DeleteSteamTokenRequestInput;
 };
 
 export type Subscription = {
@@ -741,11 +741,11 @@ export type DeleteSteamTokenPayload = {
   status: Scalars['String'];
 };
 
-export type AddSteamTokenCommandInput = {
+export type AddSteamTokenRequestInput = {
   token?: Maybe<Scalars['String']>;
 };
 
-export type DeleteSteamTokenCommandInput = {
+export type DeleteSteamTokenRequestInput = {
   token?: Maybe<Scalars['String']>;
 };
 
@@ -957,7 +957,7 @@ export type LobbyInvitationCreatedRecord = {
 };
 
 export type AddSteamTokenMutationVariables = Exact<{
-  input: AddSteamTokenCommandInput;
+  input: AddSteamTokenRequestInput;
 }>;
 
 
@@ -970,7 +970,7 @@ export type AddSteamTokenMutation = (
 );
 
 export type DeleteSteamTokenMutationVariables = Exact<{
-  input: DeleteSteamTokenCommandInput;
+  input: DeleteSteamTokenRequestInput;
 }>;
 
 

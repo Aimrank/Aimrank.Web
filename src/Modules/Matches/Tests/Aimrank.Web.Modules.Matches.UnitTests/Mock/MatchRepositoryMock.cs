@@ -13,6 +13,9 @@ namespace Aimrank.Web.Modules.Matches.UnitTests.Mock
 
         public IEnumerable<Match> Matches => _matches.Values;
 
+        public Task<IEnumerable<Match>> BrowseByIdAsync(IEnumerable<MatchId> ids)
+            => Task.FromResult(_matches.Values.Where(m => ids.Contains(m.Id)));
+
         public Task<Dictionary<PlayerId, int>> BrowsePlayersRatingAsync(IEnumerable<PlayerId> ids, MatchMode mode)
         {
             var result = _matches.Values

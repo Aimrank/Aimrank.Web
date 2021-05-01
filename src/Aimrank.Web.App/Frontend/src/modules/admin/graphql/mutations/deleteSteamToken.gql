@@ -1,4 +1,4 @@
-mutation deleteSteamToken($input: DeleteSteamTokenCommandInput!) {
+mutation deleteSteamToken($input: DeleteSteamTokenRequestInput!) {
   deleteSteamToken(input: $input) {
     status
   }

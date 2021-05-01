@@ -6,9 +6,17 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Even
     [IntegrationEvent("Aimrank.Pod")]
     internal class PlayerDisconnectedEvent : IIntegrationEvent
     {
-        public Guid Id { get; set; }
-        public DateTime OccurredOn { get; set; }
-        public Guid MatchId { get; set; }
-        public string SteamId { get; set; }
+        public Guid Id { get; }
+        public DateTime OccurredOn { get; }
+        public Guid MatchId { get; }
+        public string SteamId { get; }
+
+        public PlayerDisconnectedEvent(Guid id, DateTime occurredOn, Guid matchId, string steamId)
+        {
+            Id = id;
+            OccurredOn = occurredOn;
+            MatchId = matchId;
+            SteamId = steamId;
+        }
     }
 }

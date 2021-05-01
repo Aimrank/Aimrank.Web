@@ -1,3 +1,4 @@
+using Aimrank.Web.App.Configuration.Clients;
 using Aimrank.Web.App.Configuration.EventBus.RabbitMQ;
 using Aimrank.Web.App.Configuration.EventBus;
 using Aimrank.Web.App.Configuration.ExecutionContext;
@@ -29,8 +30,6 @@ namespace Aimrank.Web.App
         {
             var redisSettings = Configuration.GetSection(nameof(RedisSettings)).Get<RedisSettings>();
             
-            services.AddHttpClient();
-
             services.Configure<UrlFactorySettings>(Configuration.GetSection(nameof(UrlFactorySettings)));
             services.AddSingleton<IUrlFactory, ApplicationUrlFactory>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -64,8 +63,9 @@ namespace Aimrank.Web.App
             services.AddApplicationGraphQL();
             services.AddControllersWithViews();
             services.AddRouting(options => options.LowercaseUrls = true);
-            
-            services.AddModules();
+
+            services.AddClients(Configuration);
+            services.AddModules(Configuration);
             services.AddEventBus();
             services.AddRabbitMQ(Configuration);
 

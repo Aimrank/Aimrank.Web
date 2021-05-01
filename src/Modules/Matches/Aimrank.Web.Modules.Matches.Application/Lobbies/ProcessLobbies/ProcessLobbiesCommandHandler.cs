@@ -1,6 +1,4 @@
-using Aimrank.Web.Modules.Cluster.Application.Commands.CreateServers;
-using Aimrank.Web.Modules.Cluster.Application.Contracts;
-using Aimrank.Web.Modules.Cluster.Application.Queries.GetAvailableServers;
+using Aimrank.Web.Modules.Matches.Application.Clients;
 using Aimrank.Web.Modules.Matches.Application.Lobbies.ProcessLobbies.Matchmaking;
 using Aimrank.Web.Modules.Matches.Domain.Lobbies;
 using Aimrank.Web.Modules.Matches.Domain.Matches;
@@ -15,23 +13,22 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.ProcessLobbies
 {
     internal class ProcessLobbiesCommandHandler : Contracts.ICommandHandler<ProcessLobbiesCommand>
     {
-        private readonly IClusterModule _clusterModule;
+        private readonly IClusterClient _clusterClient;
         private readonly ILobbyRepository _lobbyRepository;
         private readonly IMatchRepository _matchRepository;
         private readonly IPlayerRepository _playerRepository;
 
         public ProcessLobbiesCommandHandler(
-            IClusterModule clusterModule,
+            IClusterClient clusterClient,
             ILobbyRepository lobbyRepository,
             IMatchRepository matchRepository,
             IPlayerRepository playerRepository)
         {
-            _clusterModule = clusterModule;
+            _clusterClient = clusterClient;
             _lobbyRepository = lobbyRepository;
             _matchRepository = matchRepository;
             _playerRepository = playerRepository;
         }
-
 
         public async Task<Unit> Handle(ProcessLobbiesCommand request, CancellationToken cancellationToken)
         {
@@ -39,10 +36,10 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.ProcessLobbies
             var players = (await GetPlayers(lobbies)).ToDictionary(p => p.Id);
 
             var manager = await MatchmakingManager.CreateAsync(_matchRepository, lobbies, players);
-            
-            var serversCount = await _clusterModule.ExecuteQueryAsync(new GetAvailableServersQuery());
 
-            var matches = manager.CreateMatches().Take(serversCount).ToList();
+            var response = await _clusterClient.GetAvailableServersCountAsync();
+
+            var matches = manager.CreateMatches().Take(response.Count).ToList();
             
             foreach (var match in matches)
             {
@@ -58,7 +55,7 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.ProcessLobbies
 
             if (matches.Count > 0)
             {
-                await _clusterModule.ExecuteCommandAsync(new CreateServersCommand(matches.Select(m => m.Id.Value)));
+                await _clusterClient.CreateServersAsync(new CreateServersRequest(matches.Select(m => m.Id.Value)));
             }
 
             return Unit.Value;

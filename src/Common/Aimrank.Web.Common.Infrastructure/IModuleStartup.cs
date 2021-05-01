@@ -6,7 +6,7 @@ namespace Aimrank.Web.Common.Infrastructure
 {
     public interface IModuleStartup
     {
-        void Register(IServiceCollection services);
+        void Register(IServiceCollection services, IConfiguration configuration);
         void Initialize(IApplicationBuilder builder, IConfiguration configuration);
     }
 }

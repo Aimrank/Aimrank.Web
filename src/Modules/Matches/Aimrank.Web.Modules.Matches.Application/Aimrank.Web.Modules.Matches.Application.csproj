@@ -11,7 +11,6 @@
     
     <ItemGroup>
       <ProjectReference Include="..\..\..\Common\Aimrank.Web.Common.Application\Aimrank.Web.Common.Application.csproj" />
-      <ProjectReference Include="..\..\Cluster\Aimrank.Web.Modules.Cluster.Application\Aimrank.Web.Modules.Cluster.Application.csproj" />
       <ProjectReference Include="..\Aimrank.Web.Modules.Matches.Domain\Aimrank.Web.Modules.Matches.Domain.csproj" />
       <ProjectReference Include="..\Aimrank.Web.Modules.Matches.IntegrationEvents\Aimrank.Web.Modules.Matches.IntegrationEvents.csproj" />
     </ItemGroup>

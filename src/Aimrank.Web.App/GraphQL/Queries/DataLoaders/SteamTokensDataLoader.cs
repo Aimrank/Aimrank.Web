@@ -1,6 +1,5 @@
 using Aimrank.Web.App.GraphQL.Queries.Models;
-using Aimrank.Web.Modules.Cluster.Application.Contracts;
-using Aimrank.Web.Modules.Cluster.Application.Queries.GetSteamTokens;
+using Aimrank.Web.Modules.Matches.Application.Clients;
 using GreenDonut;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,18 +10,18 @@ namespace Aimrank.Web.App.GraphQL.Queries.DataLoaders
 {
     public class SteamTokensDataLoader : DataLoaderBase<int, IEnumerable<SteamToken>>
     {
-        private readonly IClusterModule _clusterModule;
+        private readonly IClusterClient _clusterClient;
         
-        public SteamTokensDataLoader(IBatchScheduler batchScheduler, IClusterModule clusterModule)
+        public SteamTokensDataLoader(IBatchScheduler batchScheduler, IClusterClient clusterClient)
             : base(batchScheduler)
         {
-            _clusterModule = clusterModule;
+            _clusterClient = clusterClient;
         }
 
         protected override async ValueTask<IReadOnlyList<Result<IEnumerable<SteamToken>>>> FetchAsync(
             IReadOnlyList<int> keys, CancellationToken cancellationToken)
         {
-            var result = await _clusterModule.ExecuteQueryAsync(new GetSteamTokensQuery());
+            var result = await _clusterClient.GetSteamTokensAsync();
 
             var steamTokens = Result<IEnumerable<SteamToken>>.Resolve(result.Select(t => new SteamToken(t)));
             

@@ -1,5 +1,4 @@
 ﻿using Aimrank.Web.Common.Infrastructure;
-using Aimrank.Web.Modules.Cluster.Infrastructure;
 using Aimrank.Web.Modules.Matches.Infrastructure;
 using Aimrank.Web.Modules.UserAccess.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -38,10 +37,6 @@ static void MigrateDatabase(IConfiguration configuration)
     
     var connectionString = configuration.GetConnectionString("Database");
 
-    var optionsBuilderCluster = new DbContextOptionsBuilder<ClusterContext>()
-        .UseNpgsql(connectionString, ConfigureContext)
-        .UseSnakeCaseNamingConvention();
-
     var optionsBuilderMatches = new DbContextOptionsBuilder<MatchesContext>()
         .ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>()
         .UseNpgsql(connectionString, ConfigureContext)
@@ -52,11 +47,10 @@ static void MigrateDatabase(IConfiguration configuration)
         .UseNpgsql(connectionString, ConfigureContext)
         .UseSnakeCaseNamingConvention();
 
-    using var contextCluster = new ClusterContext(optionsBuilderCluster.Options);
     using var contextMatches = new MatchesContext(optionsBuilderMatches.Options);
     using var contextUserAccess = new UserAccessContext(optionsBuilderUserAccess.Options);
     
-    MigrateContexts(contextCluster, contextMatches, contextUserAccess);
+    MigrateContexts(contextMatches, contextUserAccess);
 }
 
 static void ConfigureContext(NpgsqlDbContextOptionsBuilder optionsBuilder)

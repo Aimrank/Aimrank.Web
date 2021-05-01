@@ -1,12 +1,12 @@
-using Aimrank.Web.Common.Application.Queries;
 using Aimrank.Web.App.GraphQL.Queries.Models;
+using Aimrank.Web.Common.Application.Queries;
+using Aimrank.Web.Modules.UserAccess.Application.Contracts;
+using Aimrank.Web.Modules.UserAccess.Application.Friendships.GetBlockedUsers;
 using GreenDonut;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
-using Aimrank.Web.Modules.UserAccess.Application.Contracts;
-using Aimrank.Web.Modules.UserAccess.Application.Friendships.GetBlockedUsers;
 
 namespace Aimrank.Web.App.GraphQL.Queries.DataLoaders
 {

@@ -6,8 +6,15 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Even
     [IntegrationEvent("Aimrank.Pod")]
     internal class MatchStartedEvent : IIntegrationEvent
     {
-        public Guid Id { get; set; }
-        public DateTime OccurredOn { get; set; }
-        public Guid MatchId { get; set; }
+        public Guid Id { get; }
+        public DateTime OccurredOn { get; }
+        public Guid MatchId { get; }
+
+        public MatchStartedEvent(Guid id, DateTime occurredOn, Guid matchId)
+        {
+            Id = id;
+            OccurredOn = occurredOn;
+            MatchId = matchId;
+        }
     }
 }
