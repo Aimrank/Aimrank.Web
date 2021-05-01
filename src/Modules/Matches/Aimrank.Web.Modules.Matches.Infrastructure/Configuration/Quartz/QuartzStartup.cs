@@ -24,39 +24,21 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Quartz
             _scheduler.JobFactory = new AutofacJobFactory();
             _scheduler.Start().GetAwaiter().GetResult();
             
-            var processOutboxJob = JobBuilder.Create<ProcessOutboxJob>().Build();
-            var processOutboxTrigger = TriggerBuilder.Create()
+            ScheduleCronJob<ProcessOutboxJob>("0/2 * * ? * *");
+            ScheduleCronJob<ProcessInboxJob>("0/5 * * ? * *");
+            ScheduleCronJob<ProcessLobbiesJob>("0/5 * * ? * *");
+            ScheduleCronJob<RemoveProcessedMessagesJob>("0 0 0/2 ? * *");
+        }
+        
+        private static void ScheduleCronJob<T>(string cron) where T : class, IJob
+        {
+            var job = JobBuilder.Create<T>().Build();
+            var trigger = TriggerBuilder.Create()
                 .StartNow()
-                .WithCronSchedule("0/2 * * ? * *")
+                .WithCronSchedule(cron)
                 .Build();
 
-            _scheduler.ScheduleJob(processOutboxJob, processOutboxTrigger).GetAwaiter().GetResult();
-
-            var processInboxJob = JobBuilder.Create<ProcessInboxJob>().Build();
-            var processInboxTrigger = TriggerBuilder.Create()
-                .StartNow()
-                .WithCronSchedule("0/5 * * ? * *")
-                .Build();
-                
-            _scheduler.ScheduleJob(processInboxJob, processInboxTrigger).GetAwaiter().GetResult();
-
-            var removeProcessedMessagesJob = JobBuilder.Create<RemoveProcessedMessagesJob>().Build();
-            var removeProcessedMessagesTrigger = TriggerBuilder.Create()
-                .StartNow()
-                .WithCronSchedule("0 0 0/2 ? * *")
-                .Build();
-                
-            _scheduler.ScheduleJob(removeProcessedMessagesJob, removeProcessedMessagesTrigger);
-
-            var processLobbiesJob = JobBuilder.Create<ProcessLobbiesJob>().Build();
-            var processLobbiesTrigger =
-                TriggerBuilder
-                    .Create()
-                    .StartNow()
-                    .WithCronSchedule("0/5 * * ? * *")
-                    .Build();
-
-            _scheduler.ScheduleJob(processLobbiesJob, processLobbiesTrigger).GetAwaiter().GetResult();
+            _scheduler.ScheduleJob(job, trigger);
         }
     }
 }
