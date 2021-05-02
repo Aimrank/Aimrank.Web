@@ -1,12 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
 WORKDIR /app
 
-ENV ASPNETCORE_ENVIRONMENT=Production
-
-ENV NODE_VERSION=12.6.0
-ENV NODE_ENV=Production
-
-COPY *.sln .
 COPY src/Aimrank.Web.App/*.csproj ./src/Aimrank.Web.App/
 COPY src/Common/Aimrank.Web.Common.Domain/*.csproj ./src/Common/Aimrank.Web.Common.Domain/
 COPY src/Common/Aimrank.Web.Common.Application/*.csproj ./src/Common/Aimrank.Web.Common.Application/
@@ -16,14 +10,12 @@ COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/*.csproj ./src/Modul
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.IntegrationEvents/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.IntegrationEvents/
-COPY src/Modules/Matches/Tests/Aimrank.Web.Modules.Matches.ArchTests/*.csproj ./src/Modules/Matches/Tests/Aimrank.Web.Modules.Matches.ArchTests/
-COPY src/Modules/Matches/Tests/Aimrank.Web.Modules.Matches.UnitTests/*.csproj ./src/Modules/Matches/Tests/Aimrank.Web.Modules.Matches.UnitTests/
 COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Domain/*.csproj ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Domain/
 COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/*.csproj ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/
 COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/*.csproj ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/
-COPY src/Modules/UserAccess/Tests/Aimrank.Web.Modules.UserAccess.UnitTests/*.csproj ./src/Modules/UserAccess/Tests/Aimrank.Web.Modules.UserAccess.UnitTests/
 
-RUN dotnet restore
+RUN dotnet restore src/Aimrank.Web.App
+RUN dotnet restore src/Database/Aimrank.Web.Database.Migrator
 
 COPY src/Aimrank.Web.App/. ./src/Aimrank.Web.App/
 COPY src/Common/Aimrank.Web.Common.Domain/. ./src/Common/Aimrank.Web.Common.Domain/
@@ -40,6 +32,9 @@ COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/. ./sr
 
 WORKDIR /app/src/Aimrank.Web.App/Frontend
 
+ENV NODE_VERSION=12.6.0
+ENV NODE_ENV=Production
+
 RUN apt install -y curl
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
 ENV NVM_DIR=/root/.nvm
@@ -54,7 +49,8 @@ RUN npm install && npm run build-prod
 
 WORKDIR /app
 
-RUN dotnet publish -c Release -o /app/out
+RUN dotnet publish src/Aimrank.Web.App -c Release -o /app/out
+RUN dotnet publish src/Database/Aimrank.Web.Database.Migrator -c Release -o /app/out
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 
@@ -69,5 +65,7 @@ RUN apt-get update && apt-get install -y curl
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=5 \
   CMD curl -f http://localhost/ || exit 1
+  
+ENV ASPNETCORE_ENVIRONMENT=Production
 
 ENTRYPOINT ["bash", "start.sh"]

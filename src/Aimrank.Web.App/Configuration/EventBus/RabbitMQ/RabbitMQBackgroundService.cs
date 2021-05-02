@@ -95,7 +95,7 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
                 var types = Events.GetValueOrDefault(ea.RoutingKey);
                 if (types is null || types.Count == 0)
                 {
-                    _logger.LogWarning($"No events were mapped for routing key \"{ea.RoutingKey}\".");
+                    _logger.LogWarning($"No events were mapped for routing key '{ea.RoutingKey}'.");
                     return;
                 }
                 
