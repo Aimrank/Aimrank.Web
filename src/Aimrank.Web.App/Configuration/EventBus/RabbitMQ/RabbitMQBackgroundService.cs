@@ -3,7 +3,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client.Events;
-using RabbitMQ.Client.Exceptions;
 using RabbitMQ.Client;
 using System.Collections.Generic;
 using System.Reflection;
@@ -119,29 +118,8 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
                 Password = _rabbitMqSettings.Password,
                 DispatchConsumersAsync = true
             };
-
-            var attempts = 0;
-
-            while (attempts <= _rabbitMqSettings.MaxRetries)
-            {
-                try
-                {
-                    return factory.CreateConnection();
-                }
-                catch (BrokerUnreachableException)
-                {
-                    _logger.LogError("Failed to connect to RabbitMQ. Retrying in 10 seconds.");
-
-                    attempts++;
-                    
-                    if (attempts <= _rabbitMqSettings.MaxRetries)
-                    {
-                        Thread.Sleep(10000);
-                    }
-                }
-            }
             
-            throw new Exception("Failed to connect to RabbitMQ.");
+            return factory.CreateConnection();
         }
     }
 }

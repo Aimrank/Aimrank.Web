@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Aimrank.Web.Database.Migrator.Migrations
+namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Migrations
 {
     [DbContext(typeof(UserAccessContext))]
-    [Migration("20210424183022_Initial")]
+    [Migration("20210503123219_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,8 +78,8 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
+                        .HasMaxLength(320)
+                        .HasColumnType("character varying(320)")
                         .HasColumnName("email");
 
                     b.Property<bool>("IsActive")
@@ -88,7 +88,8 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("username");
 
                     b.Property<string>("_password")
@@ -171,6 +172,27 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
             modelBuilder.Entity("Aimrank.Web.Modules.UserAccess.Domain.Users.User", b =>
                 {
+                    b.OwnsMany("Aimrank.Web.Modules.UserAccess.Domain.Users.UserRole", "_roles", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("user_id");
+
+                            b1.Property<string>("Name")
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)")
+                                .HasColumnName("name");
+
+                            b1.HasKey("UserId", "Name")
+                                .HasName("pk_users_roles");
+
+                            b1.ToTable("users_roles");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId")
+                                .HasConstraintName("fk_users_roles_users_user_id");
+                        });
+
                     b.OwnsMany("Aimrank.Web.Modules.UserAccess.Domain.Users.UserToken", "_tokens", b1 =>
                         {
                             b1.Property<Guid>("UserId")
@@ -199,6 +221,8 @@ namespace Aimrank.Web.Database.Migrator.Migrations
                                 .HasForeignKey("UserId")
                                 .HasConstraintName("fk_users_tokens_users_user_id");
                         });
+
+                    b.Navigation("_roles");
 
                     b.Navigation("_tokens");
                 });

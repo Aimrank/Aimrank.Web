@@ -36,7 +36,7 @@ namespace Aimrank.Web.App.Configuration
             {
                 module.Register(services, configuration);
             }
-            
+
             return services;
         }
 

@@ -8,6 +8,8 @@ using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing;
 using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Quartz;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,6 +21,12 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration
         public void Register(IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IUserAccessModule, UserAccessModule>();
+            services.AddScoped<DbContext, UserAccessContext>();
+            services.AddDbContext<UserAccessContext>(options => options
+                .UseNpgsql(configuration.GetConnectionString("Database"),
+                    x => x.MigrationsAssembly(GetType().Assembly.FullName))
+                .UseSnakeCaseNamingConvention()
+                .ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>());
         }
         
         public void Initialize(IApplicationBuilder builder, IConfiguration configuration)

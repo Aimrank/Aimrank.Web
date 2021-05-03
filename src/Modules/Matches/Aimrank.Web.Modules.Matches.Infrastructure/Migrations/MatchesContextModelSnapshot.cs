@@ -3,17 +3,15 @@ using System;
 using Aimrank.Web.Modules.Matches.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Aimrank.Web.Database.Migrator.Migrations.Matches
+namespace Aimrank.Web.Modules.Matches.Infrastructure.Migrations
 {
     [DbContext(typeof(MatchesContext))]
-    [Migration("20210424182728_Initial")]
-    partial class Initial
+    partial class MatchesContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
