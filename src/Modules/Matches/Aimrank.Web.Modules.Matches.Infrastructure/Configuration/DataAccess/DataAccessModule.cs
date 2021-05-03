@@ -29,7 +29,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.DataAccess
                 {
                     var dbContextOptionsBuilder = new DbContextOptionsBuilder<MatchesContext>();
                     dbContextOptionsBuilder
-                        .UseNpgsql(_databaseConnectionString, x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"))
+                        .UseNpgsql(_databaseConnectionString)
                         .UseSnakeCaseNamingConvention();
                     dbContextOptionsBuilder.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
 

@@ -5,7 +5,6 @@ COPY src/Aimrank.Web.App/*.csproj ./src/Aimrank.Web.App/
 COPY src/Common/Aimrank.Web.Common.Domain/*.csproj ./src/Common/Aimrank.Web.Common.Domain/
 COPY src/Common/Aimrank.Web.Common.Application/*.csproj ./src/Common/Aimrank.Web.Common.Application/
 COPY src/Common/Aimrank.Web.Common.Infrastructure/*.csproj ./src/Common/Aimrank.Web.Common.Infrastructure/
-COPY src/Database/Aimrank.Web.Database.Migrator/*.csproj ./src/Database/Aimrank.Web.Database.Migrator/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/
@@ -15,13 +14,11 @@ COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/*.csproj 
 COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/*.csproj ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/
 
 RUN dotnet restore src/Aimrank.Web.App
-RUN dotnet restore src/Database/Aimrank.Web.Database.Migrator
 
 COPY src/Aimrank.Web.App/. ./src/Aimrank.Web.App/
 COPY src/Common/Aimrank.Web.Common.Domain/. ./src/Common/Aimrank.Web.Common.Domain/
 COPY src/Common/Aimrank.Web.Common.Application/. ./src/Common/Aimrank.Web.Common.Application/
 COPY src/Common/Aimrank.Web.Common.Infrastructure/. ./src/Common/Aimrank.Web.Common.Infrastructure/
-COPY src/Database/Aimrank.Web.Database.Migrator/. ./src/Database/Aimrank.Web.Database.Migrator/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/
@@ -50,16 +47,12 @@ RUN npm install && npm run build-prod
 WORKDIR /app
 
 RUN dotnet publish src/Aimrank.Web.App -c Release -o /app/out
-RUN dotnet publish src/Database/Aimrank.Web.Database.Migrator -c Release -o /app/out
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 
 WORKDIR /app
 
 COPY --from=build /app/out/ .
-COPY scripts/start.sh .
-
-RUN chmod +x start.sh
 
 RUN apt-get update && apt-get install -y curl
 
@@ -68,4 +61,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=5 \
   
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-ENTRYPOINT ["bash", "start.sh"]
+ENTRYPOINT ["dotnet", "Aimrank.Web.App.dll"]

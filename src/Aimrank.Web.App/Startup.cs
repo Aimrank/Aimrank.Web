@@ -68,27 +68,6 @@ namespace Aimrank.Web.App
             services.AddModules(Configuration);
             services.AddEventBus();
             services.AddRabbitMQ(Configuration);
-
-            #region Migrations
-#if false
-            //Add db contexts so "dotnet ef" can find them when generating migrations
-            void AddDbContext<T>() where T : DbContext
-            {
-                services.AddDbContext<T>(options =>
-                {
-                    options.ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>();
-                    options
-                        .UseNpgsql(Configuration.GetConnectionString("Database"),
-                            x => x.MigrationsAssembly("Aimrank.Web.Database.Migrator"))
-                        .UseSnakeCaseNamingConvention();
-                });
-            }
-            
-            AddDbContext<ClusterContext>();
-            AddDbContext<MatchesContext>();
-            AddDbContext<UserAccessContext>();
-#endif
-            #endregion
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

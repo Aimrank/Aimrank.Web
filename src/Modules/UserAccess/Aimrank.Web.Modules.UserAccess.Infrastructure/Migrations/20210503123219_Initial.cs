@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Aimrank.Web.Database.Migrator.Migrations
+namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Migrations
 {
     public partial class Initial : Migration
     {
@@ -32,8 +32,8 @@ namespace Aimrank.Web.Database.Migrator.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    username = table.Column<string>(type: "text", nullable: false),
+                    email = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: false),
+                    username = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     is_active = table.Column<bool>(type: "boolean", nullable: false),
                     password = table.Column<string>(type: "text", nullable: false)
                 },
@@ -96,6 +96,26 @@ namespace Aimrank.Web.Database.Migrator.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "users_roles",
+                schema: "users",
+                columns: table => new
+                {
+                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_users_roles", x => new { x.user_id, x.name });
+                    table.ForeignKey(
+                        name: "fk_users_roles_users_user_id",
+                        column: x => x.user_id,
+                        principalSchema: "users",
+                        principalTable: "users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "users_tokens",
                 schema: "users",
                 columns: table => new
@@ -150,6 +170,10 @@ namespace Aimrank.Web.Database.Migrator.Migrations
 
             migrationBuilder.DropTable(
                 name: "outbox_messages",
+                schema: "users");
+
+            migrationBuilder.DropTable(
+                name: "users_roles",
                 schema: "users");
 
             migrationBuilder.DropTable(

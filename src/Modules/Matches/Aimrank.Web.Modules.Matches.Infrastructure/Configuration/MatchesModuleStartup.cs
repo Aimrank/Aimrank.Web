@@ -11,6 +11,8 @@ using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Quartz;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Redis;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -22,6 +24,12 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
         public void Register(IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IMatchesModule, MatchesModule>();
+            services.AddScoped<DbContext, MatchesContext>();
+            services.AddDbContext<MatchesContext>(options => options
+                .UseNpgsql(configuration.GetConnectionString("Database"),
+                    x => x.MigrationsAssembly(GetType().Assembly.FullName))
+                .UseSnakeCaseNamingConvention()
+                .ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>());
         }
 
         public void Initialize(IApplicationBuilder builder, IConfiguration configuration)

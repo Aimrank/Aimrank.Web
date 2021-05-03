@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Aimrank.Web.Database.Migrator.Migrations.Matches
+namespace Aimrank.Web.Modules.Matches.Infrastructure.Migrations
 {
     public partial class Initial : Migration
     {
