@@ -55,7 +55,6 @@ static void MigrateDatabase(IConfiguration configuration)
 
 static void ConfigureContext(NpgsqlDbContextOptionsBuilder optionsBuilder)
 {
-    optionsBuilder.EnableRetryOnFailure(10, TimeSpan.FromMinutes(1), null);
     optionsBuilder.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
 }
 
