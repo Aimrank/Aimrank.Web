@@ -42,9 +42,9 @@ namespace Aimrank.Web.Modules.UserAccess.Domain.Users
 
             var token = UserToken.Create(UserTokenType.EmailConfirmation);
 
-            var user = new User(id, email, username, password, token);
+            var user = new User(id, email.ToLower(), username, password, token);
             
-            user.AddDomainEvent(new UserCreatedDomainEvent(user.Id, username, email, token.Token));
+            user.AddDomainEvent(new UserCreatedDomainEvent(user.Id, user.Username, user.Email, token.Token));
 
             return user;
         }

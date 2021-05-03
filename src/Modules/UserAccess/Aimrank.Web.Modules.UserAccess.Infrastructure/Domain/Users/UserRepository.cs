@@ -30,7 +30,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Domain.Users
         }
 
         public Task<User> GetByEmailOptionalAsync(string email) =>
-            _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            _context.Users.FirstOrDefaultAsync(u => u.Email == email.ToLower());
 
         public Task<User> GetByUsernameOptionalAsync(string username) =>
             _context.Users.FirstOrDefaultAsync(u => u.Username == username);
@@ -39,7 +39,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Domain.Users
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
             const string sql = "SELECT COUNT (*) FROM users.users WHERE email = @Email;";
-            var count = await connection.ExecuteScalarAsync<int>(sql, new {Email = email});
+            var count = await connection.ExecuteScalarAsync<int>(sql, new {Email = email.ToLower()});
             return count > 0;
         }
 

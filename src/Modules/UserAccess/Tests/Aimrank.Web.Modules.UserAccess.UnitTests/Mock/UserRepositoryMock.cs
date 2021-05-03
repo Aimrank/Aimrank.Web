@@ -22,13 +22,13 @@ namespace Aimrank.Web.Modules.UserAccess.UnitTests.Mock
         }
 
         public Task<User> GetByEmailOptionalAsync(string email)
-            => Task.FromResult(_users.Values.FirstOrDefault(u => u.Email == email));
+            => Task.FromResult(_users.Values.FirstOrDefault(u => u.Email == email.ToLower()));
 
         public Task<User> GetByUsernameOptionalAsync(string username)
             => Task.FromResult(_users.Values.FirstOrDefault(u => u.Username == username));
 
         public Task<bool> ExistsEmailAsync(string email)
-            => Task.FromResult(_users.Values.Any(u => u.Email == email));
+            => Task.FromResult(_users.Values.Any(u => u.Email == email.ToLower()));
 
         public Task<bool> ExistsUsernameAsync(string username)
             => Task.FromResult(_users.Values.Any(u => u.Username == username));

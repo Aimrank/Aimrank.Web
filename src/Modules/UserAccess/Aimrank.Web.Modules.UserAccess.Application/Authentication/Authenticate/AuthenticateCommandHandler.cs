@@ -31,7 +31,7 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate
                     r.name
                 FROM users.users AS u
                 LEFT JOIN users.users_roles AS r ON r.user_id = u.id
-                WHERE email = @UsernameOrEmail OR username = @UsernameOrEmail;";
+                WHERE email = LOWER(@UsernameOrEmail) OR username = @UsernameOrEmail;";
 
             UserResultDto user = null;
 
