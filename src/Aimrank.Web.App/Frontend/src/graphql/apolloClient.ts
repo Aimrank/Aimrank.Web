@@ -24,7 +24,7 @@ class VueReactiveMiddlewareLink extends ApolloLink {
 }
 
 const subscriptionClient = new SubscriptionClient(
-  `ws://${window.location.host}/graphql`,
+  `${window.location.protocol.includes('https') ? 'wss' : 'ws'}://${window.location.host}/graphql`,
   {
     reconnect: true
   }

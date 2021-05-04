@@ -62,7 +62,7 @@ namespace Aimrank.Web.App.Controllers
         {
             var properties = new AuthenticationProperties
             {
-                RedirectUri = Url.Action(nameof(SignInWithSteamSuccess)),
+                RedirectUri = Url.ActionLink(nameof(SignInWithSteamSuccess)),
                 Items = {{"userId", _executionContextAccessor.UserId.ToString()}}
             };
 
