@@ -2,7 +2,6 @@ using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Common.Domain;
 using Aimrank.Web.Common.Infrastructure;
 using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing.Outbox;
-using Autofac;
 using MediatR;
 using System.Collections.Generic;
 using System.Reflection;
@@ -15,18 +14,18 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing
     internal class DomainEventDispatcher
     {
         private readonly IDomainEventAccessor _domainEventAccessor;
-        private readonly ILifetimeScope _lifetimeScope;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IMediator _mediator;
         private readonly UserAccessContext _context;
 
         public DomainEventDispatcher(
             IDomainEventAccessor domainEventAccessor,
-            ILifetimeScope lifetimeScope,
+            IServiceProvider serviceProvider,
             IMediator mediator,
             UserAccessContext context)
         {
             _domainEventAccessor = domainEventAccessor;
-            _lifetimeScope = lifetimeScope;
+            _serviceProvider = serviceProvider;
             _mediator = mediator;
             _context = context;
         }
@@ -56,7 +55,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing
             var notificationType = typeof(DomainEventNotification<>).MakeGenericType(domainEventType);
             var notificationHandlerType = typeof(INotificationHandler<>).MakeGenericType(notificationType);
 
-            if (!_lifetimeScope.IsRegistered(notificationHandlerType))
+            if (_serviceProvider.GetService(notificationHandlerType) is null)
             {
                 return;
             }

@@ -6,7 +6,6 @@ using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.DataAccess;
 using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Emails;
 using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing;
 using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Quartz;
-using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore;
@@ -35,17 +34,17 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration
             
             ILogger logger = builder.ApplicationServices.GetRequiredService<ILogger<UserAccessModule>>();
             
-            var containerBuilder = new ContainerBuilder();
+            var services = new ServiceCollection();
 
-            containerBuilder.RegisterModule(new DataAccessModule(configuration.GetConnectionString("Database")));
-            containerBuilder.RegisterModule(new ProcessingModule());
-            containerBuilder.RegisterModule(new EmailModule(settings.EmailSettings));
-            containerBuilder.RegisterModule(new QuartzModule());
-            containerBuilder.RegisterInstance(builder.ApplicationServices.GetRequiredService<IExecutionContextAccessor>());
-            containerBuilder.RegisterInstance(builder.ApplicationServices.GetRequiredService<IUrlFactory>());
-            containerBuilder.RegisterInstance(logger);
+            services.AddDataAccess(configuration.GetConnectionString("Database"));
+            services.AddProcessing();
+            services.AddEmails(settings.EmailSettings);
+            services.AddQuartz();
+            services.AddSingleton(builder.ApplicationServices.GetRequiredService<IExecutionContextAccessor>());
+            services.AddSingleton(builder.ApplicationServices.GetRequiredService<IUrlFactory>());
+            services.AddSingleton(logger);
             
-            UserAccessCompositionRoot.SetContainer(containerBuilder.Build());
+            UserAccessCompositionRoot.SetContainer(services.BuildServiceProvider());
             
             QuartzStartup.Initialize();
         }

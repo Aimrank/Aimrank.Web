@@ -5,7 +5,7 @@ using System;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Redis
 {
-    internal static class RedisExtensions
+    internal static class RedisDatabaseExtensions
     {
         public static async Task<T> GetJsonAsync<T>(this IDatabase database, string key)
         {

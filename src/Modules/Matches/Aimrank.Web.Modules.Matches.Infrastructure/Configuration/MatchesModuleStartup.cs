@@ -9,7 +9,6 @@ using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Quartz;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Redis;
-using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore;
@@ -40,19 +39,19 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
             
             ILogger logger = builder.ApplicationServices.GetRequiredService<ILogger<MatchesModule>>();
             
-            var containerBuilder = new ContainerBuilder();
+            var services = new ServiceCollection();
+
+            services.AddDataAccess(configuration.GetConnectionString("Database"));
+            services.AddProcessing();
+            services.AddQuartz();
+            services.AddRedis(settings.RedisSettings);
+            services.AddApplication();
+            services.AddSingleton(builder.ApplicationServices.GetRequiredService<IExecutionContextAccessor>());
+            services.AddSingleton(builder.ApplicationServices.GetRequiredService<IClusterClient>());
+            services.AddSingleton(eventBus);
+            services.AddSingleton(logger);
             
-            containerBuilder.RegisterModule(new DataAccessModule(configuration.GetConnectionString("Database")));
-            containerBuilder.RegisterModule(new ProcessingModule());
-            containerBuilder.RegisterModule(new QuartzModule());
-            containerBuilder.RegisterModule(new RedisModule(settings.RedisSettings));
-            containerBuilder.RegisterModule(new ApplicationModule());
-            containerBuilder.RegisterInstance(builder.ApplicationServices.GetRequiredService<IExecutionContextAccessor>());
-            containerBuilder.RegisterInstance(builder.ApplicationServices.GetRequiredService<IClusterClient>());
-            containerBuilder.RegisterInstance(eventBus);
-            containerBuilder.RegisterInstance(logger);
-            
-            MatchesCompositionRoot.SetContainer(containerBuilder.Build());
+            MatchesCompositionRoot.SetProvider(services.BuildServiceProvider());
             
             EventBusStartup.Initialize(eventBus);
             QuartzStartup.Initialize();
