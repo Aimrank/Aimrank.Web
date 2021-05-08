@@ -17,6 +17,8 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.DataAccess
                 .UseNpgsql(databaseConnectionString)
                 .UseSnakeCaseNamingConvention()
                 .ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>());
+            
+            services.AddScoped<DbContext>(provider => provider.GetRequiredService<MatchesContext>());
 
             services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>(_ =>
                 new SqlConnectionFactory(databaseConnectionString));

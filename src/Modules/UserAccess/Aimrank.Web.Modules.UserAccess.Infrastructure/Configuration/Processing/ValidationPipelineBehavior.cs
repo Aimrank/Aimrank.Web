@@ -10,9 +10,9 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing
 {
     internal class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        private readonly IList<IValidator<TRequest>> _validators;
+        private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-        public ValidationPipelineBehavior(IList<IValidator<TRequest>> validators)
+        public ValidationPipelineBehavior(IEnumerable<IValidator<TRequest>> validators)
         {
             _validators = validators;
         }
