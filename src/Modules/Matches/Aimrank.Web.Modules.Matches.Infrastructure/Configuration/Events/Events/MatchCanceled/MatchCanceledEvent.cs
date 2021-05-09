@@ -1,22 +1,20 @@
 using Aimrank.Web.Common.Application.Events;
 using System;
 
-namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.PlayerDisconnected
+namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.MatchCanceled
 {
     [IntegrationEvent("Aimrank.Pod")]
-    internal class PlayerDisconnectedEvent : IIntegrationEvent
+    internal class MatchCanceledEvent : IIntegrationEvent
     {
         public Guid Id { get; }
         public DateTime OccurredOn { get; }
         public Guid MatchId { get; }
-        public string SteamId { get; }
 
-        public PlayerDisconnectedEvent(Guid id, DateTime occurredOn, Guid matchId, string steamId)
+        public MatchCanceledEvent(Guid id, DateTime occurredOn, Guid matchId)
         {
             Id = id;
             OccurredOn = occurredOn;
             MatchId = matchId;
-            SteamId = steamId;
         }
     }
 }

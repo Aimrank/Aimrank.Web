@@ -3,7 +3,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.ServersDeleted
+namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.ServersDeleted
 {
     internal class ServersDeletedEventHandler : INotificationHandler<ServersDeletedEvent>
     {

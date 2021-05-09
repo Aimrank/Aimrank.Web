@@ -5,12 +5,12 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus
+namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events
 {
-    internal class IntegrationEventGenericHandler<T> : IIntegrationEventHandler<T>
-        where T : IIntegrationEvent
+    public class InboxIntegrationEventHandler<TEvent> : IIntegrationEventHandler<TEvent>
+        where TEvent : class, IIntegrationEvent
     {
-        public async Task HandleAsync(T @event, CancellationToken cancellationToken = default)
+        public async Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default)
         {
             using var scope = MatchesCompositionRoot.CreateScope();
             await using var context = scope.ServiceProvider.GetRequiredService<MatchesContext>();

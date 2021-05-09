@@ -2,7 +2,7 @@ using Aimrank.Web.Common.Application.Events;
 using System.Collections.Generic;
 using System;
 
-namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.ServersDeleted
+namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.ServersDeleted
 {
     [IntegrationEvent("Aimrank.Cluster")]
     internal class ServersDeletedEvent : IIntegrationEvent

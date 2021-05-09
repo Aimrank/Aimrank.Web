@@ -5,7 +5,12 @@ using Aimrank.Web.Modules.Matches.Application.Clients;
 using Aimrank.Web.Modules.Matches.Application.Contracts;
 using Aimrank.Web.Modules.Matches.Infrastructure.Application;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.DataAccess;
-using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus;
+using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.MatchCanceled;
+using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.MatchFinished;
+using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.MatchStarted;
+using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.PlayerDisconnected;
+using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.ServersDeleted;
+using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Quartz;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Redis;
@@ -29,6 +34,12 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
                     x => x.MigrationsAssembly(GetType().Assembly.FullName))
                 .UseSnakeCaseNamingConvention()
                 .ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>());
+            
+            RegisterEventHandler<MatchStartedEvent>(services);
+            RegisterEventHandler<MatchCanceledEvent>(services);
+            RegisterEventHandler<MatchFinishedEvent>(services);
+            RegisterEventHandler<PlayerDisconnectedEvent>(services);
+            RegisterEventHandler<ServersDeletedEvent>(services);
         }
 
         public void Initialize(IApplicationBuilder builder, IConfiguration configuration)
@@ -53,8 +64,13 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
             
             MatchesCompositionRoot.SetProvider(services.BuildServiceProvider());
             
-            EventBusStartup.Initialize(eventBus);
             QuartzStartup.Initialize();
+        }
+        
+        private static void RegisterEventHandler<TEvent>(IServiceCollection services) where TEvent : class, IIntegrationEvent
+        {
+            services.AddSingleton<IIntegrationEventHandler<TEvent>, InboxIntegrationEventHandler<TEvent>>();
+            services.AddSingleton<IIntegrationEventHandler>(p => p.GetRequiredService<IIntegrationEventHandler<TEvent>>());
         }
     }
 }

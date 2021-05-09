@@ -2,10 +2,8 @@ using Aimrank.Web.Common.Application.Events;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System;
 
 namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
 {
@@ -28,8 +26,6 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
             _routingKeyFactory = routingKeyFactory;
         }
 
-        public IEnumerable<Type> Events => _eventBus.Events;
-        
         public async Task Publish(IIntegrationEvent @event)
         {
             await _eventBus.Publish(@event);
@@ -39,21 +35,6 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
                 PublishEventsToRabbitMQ(new[] {@event});
             }
         }
-
-        public async Task Publish(IEnumerable<IIntegrationEvent> events)
-        {
-            var list = events.ToList();
-            
-            foreach (var @event in list)
-            {
-                await _eventBus.Publish(@event);
-            }
-            
-            PublishEventsToRabbitMQ(list.Where(IsOutboundEvent));
-        }
-
-        public IEventBus Subscribe<TEvent>(IIntegrationEventHandler<TEvent> handler) where TEvent : IIntegrationEvent
-            => _eventBus.Subscribe(handler);
 
         private void PublishEventsToRabbitMQ(IEnumerable<IIntegrationEvent> events)
         {

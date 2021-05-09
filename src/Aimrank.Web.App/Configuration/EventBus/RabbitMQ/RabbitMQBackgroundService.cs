@@ -1,10 +1,12 @@
 using Aimrank.Web.Common.Application.Events;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Threading;
@@ -18,6 +20,7 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
         private readonly RabbitMQEventSerializer _eventSerializer;
         private readonly RabbitMQRoutingKeyFactory _routingKeyFactory;
         private readonly ILogger<RabbitMQBackgroundService> _logger;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IEventBus _eventBus;
         private IBasicProperties _basicProperties;
         private IConnection _connection;
@@ -30,12 +33,14 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
             RabbitMQEventSerializer eventSerializer,
             RabbitMQRoutingKeyFactory routingKeyFactory,
             ILogger<RabbitMQBackgroundService> logger,
+            IServiceProvider serviceProvider,
             IEventBus eventBus)
         {
             _rabbitMqSettings = rabbitMqSettings.Value;
             _eventSerializer = eventSerializer;
             _routingKeyFactory = routingKeyFactory;
             _logger = logger;
+            _serviceProvider = serviceProvider;
             _eventBus = eventBus;
         }
 
@@ -54,15 +59,9 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
             _channel.QueueDeclare(_rabbitMqSettings.ServiceName, true, false, false, null);
             _basicProperties = _channel.CreateBasicProperties();
             _basicProperties.Persistent = true;
-            
-            foreach (var type in _eventBus.Events)
+
+            foreach (var (type, attribute) in GetSubscribedEventTypes())
             {
-                var attribute = (IntegrationEventAttribute) type.GetCustomAttribute(typeof(IntegrationEventAttribute));
-                if (attribute is null || attribute.Type != IntegrationEventType.Inbound)
-                {
-                    continue;
-                }
-                
                 var routingKey = _routingKeyFactory.Create(type, attribute.Service);
                 if (Events.ContainsKey(routingKey))
                 {
@@ -100,7 +99,10 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
                 
                 var events = _eventSerializer.Deserialize(ea.Body.ToArray(), types);
                 
-                await _eventBus.Publish(events);
+                foreach (var @event in events)
+                {
+                    await _eventBus.Publish(@event);
+                }
                 
                 _channel.BasicAck(ea.DeliveryTag, false);
             };
@@ -121,5 +123,22 @@ namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
             
             return factory.CreateConnection();
         }
+
+        private IEnumerable<EventType> GetSubscribedEventTypes()
+        {
+            using var scope = _serviceProvider.CreateScope();
+            return scope.ServiceProvider.GetServices(typeof(IIntegrationEventHandler))
+                .Select(handler => handler?.GetType().GetGenericArguments().FirstOrDefault())
+                .Where(type => type is not null)
+                .Where(type =>
+                {
+                    var attribute = (IntegrationEventAttribute) type.GetCustomAttribute(typeof(IntegrationEventAttribute));
+                    return attribute is not null && attribute.Type == IntegrationEventType.Inbound;
+                })
+                .Select(type => new EventType(type, (IntegrationEventAttribute) type.GetCustomAttribute(typeof(IntegrationEventAttribute))))
+                .ToList();
+        }
+
+        private record EventType(Type Type, IntegrationEventAttribute Attribute);
     }
 }

@@ -3,7 +3,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.MatchStarted
+namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.MatchStarted
 {
     internal class MatchStartedEventHandler : INotificationHandler<MatchStartedEvent>
     {
