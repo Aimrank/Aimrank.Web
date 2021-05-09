@@ -78,7 +78,6 @@ namespace Aimrank.Web.App
                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
                 })
                 .UseModules(Configuration)
-                .UseEventBus()
                 .UseRabbitMQ()
                 .UseStaticFiles()
                 .UseRouting()

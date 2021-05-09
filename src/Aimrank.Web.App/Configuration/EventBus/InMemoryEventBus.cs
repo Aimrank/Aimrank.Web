@@ -1,45 +1,35 @@
 using Aimrank.Web.Common.Application.Events;
-using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
+using System.Threading;
 using System;
 
 namespace Aimrank.Web.App.Configuration.EventBus
 {
-    internal sealed class InMemoryEventBus
+    internal class InMemoryEventBus : IEventBus
     {
-        public static InMemoryEventBus Instance { get; } = new();
+        private readonly IServiceProvider _serviceProvider;
 
-        public IEnumerable<Type> Events => _handlers.Keys;
-
-        private readonly Dictionary<Type, List<IIntegrationEventHandler>> _handlers = new();
-
-        private InMemoryEventBus()
+        public InMemoryEventBus(IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
         }
-        
-        public async Task Publish<TEvent>(TEvent @event) where TEvent : IIntegrationEvent
+
+        public async Task Publish(IIntegrationEvent @event)
         {
-            var integrationEventHandlers = _handlers.GetValueOrDefault(@event.GetType());
-            if (integrationEventHandlers is not null)
+            using var scope = _serviceProvider.CreateScope();
+            var handlerType = typeof(IIntegrationEventHandler<>).MakeGenericType(@event.GetType());
+            var handlers = scope.ServiceProvider.GetServices(handlerType);
+            
+            foreach (var handler in handlers)
             {
-                foreach (dynamic integrationEventHandler in integrationEventHandlers)
+                if (handler is null)
                 {
-                    await integrationEventHandler.HandleAsync((dynamic) @event);
+                    return;
                 }
-            }
-        }
-
-        public void Subscribe<TEvent>(IIntegrationEventHandler<TEvent> handler) where TEvent : IIntegrationEvent
-        {
-            var type = typeof(TEvent);
-
-            if (_handlers.ContainsKey(type))
-            {
-                _handlers[type].Add(handler);
-            }
-            else
-            {
-                _handlers[type] = new List<IIntegrationEventHandler> {handler};
+                
+                var method = handlerType.GetMethod(nameof(IIntegrationEventHandler<IIntegrationEvent>.HandleAsync));
+                await (Task) method.Invoke(handler, new object[]{@event, CancellationToken.None});
             }
         }
     }

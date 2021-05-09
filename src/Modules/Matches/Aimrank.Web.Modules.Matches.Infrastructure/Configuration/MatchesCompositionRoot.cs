@@ -1,13 +1,14 @@
-using Autofac;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
 {
     internal static class MatchesCompositionRoot
     {
-        private static IContainer _container;
+        private static IServiceProvider _provider;
 
-        internal static void SetContainer(IContainer container) => _container = container;
+        internal static void SetProvider(IServiceProvider provider) => _provider = provider;
 
-        internal static ILifetimeScope BeginLifetimeScope() => _container.BeginLifetimeScope();
+        internal static IServiceScope CreateScope() => _provider.CreateScope();
     }
 }

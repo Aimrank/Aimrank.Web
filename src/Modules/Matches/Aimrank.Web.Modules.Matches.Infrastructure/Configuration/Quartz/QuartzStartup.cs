@@ -21,7 +21,7 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Quartz
 
             var schedulerFactory = new StdSchedulerFactory(schedulerConfiguration);
             _scheduler = schedulerFactory.GetScheduler().GetAwaiter().GetResult();
-            _scheduler.JobFactory = new AutofacJobFactory();
+            _scheduler.JobFactory = new CompositionRootJobFactory();
             _scheduler.Start().GetAwaiter().GetResult();
             
             ScheduleCronJob<ProcessOutboxJob>("0/2 * * ? * *");

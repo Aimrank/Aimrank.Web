@@ -1,7 +1,7 @@
 using Aimrank.Web.Modules.Matches.Application.Contracts;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration;
-using Autofac;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure
@@ -10,22 +10,22 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure
     {
         public async Task ExecuteCommandAsync(ICommand command)
         {
-            await using var scope = MatchesCompositionRoot.BeginLifetimeScope();
-            var mediator = scope.Resolve<IMediator>();
+            using var scope = MatchesCompositionRoot.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
             await mediator.Send(command);
         }
 
         public async Task<TResult> ExecuteCommandAsync<TResult>(ICommand<TResult> command)
         {
-            await using var scope = MatchesCompositionRoot.BeginLifetimeScope();
-            var mediator = scope.Resolve<IMediator>();
+            using var scope = MatchesCompositionRoot.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
             return await mediator.Send(command);
         }
 
         public async Task<TResult> ExecuteQueryAsync<TResult>(IQuery<TResult> query)
         {
-            await using var scope = MatchesCompositionRoot.BeginLifetimeScope();
-            var mediator = scope.Resolve<IMediator>();
+            using var scope = MatchesCompositionRoot.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
             return await mediator.Send(query);
         }
     }

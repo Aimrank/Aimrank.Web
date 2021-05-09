@@ -2,7 +2,7 @@ using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Modules.Matches.Application.Matches.FinishMatch;
 using System;
 
-namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.MatchFinished
+namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.MatchFinished
 {
     [IntegrationEvent("Aimrank.Pod")]
     internal class MatchFinishedEvent : IIntegrationEvent

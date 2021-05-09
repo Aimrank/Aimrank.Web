@@ -3,7 +3,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.EventBus.Events.PlayerDisconnected
+namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.PlayerDisconnected
 {
     internal class PlayerDisconnectedEventHandler : INotificationHandler<PlayerDisconnectedEvent>
     {

@@ -1,6 +1,6 @@
 using Aimrank.Web.Modules.Matches.Application.Contracts;
-using Autofac;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
@@ -9,8 +9,8 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
     {
         internal static async Task Execute(ICommand command)
         {
-            await using var scope = MatchesCompositionRoot.BeginLifetimeScope();
-            var mediator = scope.Resolve<IMediator>();
+            using var scope = MatchesCompositionRoot.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
             await mediator.Send(command);
         }
     }

@@ -1,8 +1,8 @@
 using Aimrank.Web.App.Configuration.EventBus.RabbitMQ;
+using Aimrank.Web.App.GraphQL.Subscriptions.Lobbies.Events;
 using Aimrank.Web.Common.Application.Events;
 using Aimrank.Web.Modules.Matches.IntegrationEvents.Lobbies;
 using Aimrank.Web.Modules.Matches.IntegrationEvents.Matches;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Aimrank.Web.App.Configuration.EventBus
@@ -11,42 +11,31 @@ namespace Aimrank.Web.App.Configuration.EventBus
     {
         public static IServiceCollection AddEventBus(this IServiceCollection services)
         {
-            services.AddSingleton<IEventBus, InMemoryEventBusClient>();
+            services.AddSingleton<IEventBus, InMemoryEventBus>();
             services.Decorate<IEventBus, RabbitMQEventBus>();
 
-            services.Scan(scan => scan
-                .FromAssemblyOf<Startup>()
-                .AddClasses(classes =>
-                    classes.Where(x =>
-                        typeof(IIntegrationEventHandler).IsAssignableFrom(x) &&
-                        !x.IsInterface &&
-                        !x.IsAbstract &&
-                        !x.IsGenericType))
-                .AsImplementedInterfaces()
-                .WithTransientLifetime());
+            RegisterEventHandler<LobbyStatusChangedEvent, LobbyStatusChangedEventHandler>(services);
+            RegisterEventHandler<MatchAcceptedEvent, MatchAcceptedEventHandler>(services);
+            RegisterEventHandler<MatchCanceledEvent, MatchCanceledEventHandler>(services);
+            RegisterEventHandler<MatchFinishedEvent, MatchFinishedEventHandler>(services);
+            RegisterEventHandler<MatchPlayerLeftEvent, MatchPlayerLeftEventHandler>(services);
+            RegisterEventHandler<MatchReadyEvent, MatchReadyEventHandler>(services);
+            RegisterEventHandler<MatchStartedEvent, MatchStartedEventHandler>(services);
+            RegisterEventHandler<MatchStartingEvent, MatchStartingEventHandler>(services);
+            RegisterEventHandler<MatchTimedOutEvent, MatchTimedOutEventHandler>(services);
+            RegisterEventHandler<MemberLeftEvent, MemberLeftEventHandler>(services);
+            RegisterEventHandler<MemberRoleChangedEvent, MemberRoleChangedEventHandler>(services);
             
             return services;
         }
 
-        public static IApplicationBuilder UseEventBus(this IApplicationBuilder builder)
+        private static void RegisterEventHandler<TEvent, TEventHandler>(IServiceCollection services)
+            where TEvent : class, IIntegrationEvent
+            where TEventHandler : class, IIntegrationEventHandler<TEvent>
         {
-            var factory = builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-            var eventBus = builder.ApplicationServices.GetRequiredService<IEventBus>();
-                
-            eventBus
-                .Subscribe(new IntegrationEventGenericHandler<MatchReadyEvent>(factory))
-                .Subscribe(new IntegrationEventGenericHandler<MatchAcceptedEvent>(factory))
-                .Subscribe(new IntegrationEventGenericHandler<MatchTimedOutEvent>(factory))
-                .Subscribe(new IntegrationEventGenericHandler<MatchStartingEvent>(factory))
-                .Subscribe(new IntegrationEventGenericHandler<MatchStartedEvent>(factory))
-                .Subscribe(new IntegrationEventGenericHandler<MatchCanceledEvent>(factory))
-                .Subscribe(new IntegrationEventGenericHandler<MatchFinishedEvent>(factory))
-                .Subscribe(new IntegrationEventGenericHandler<MatchPlayerLeftEvent>(factory))
-                .Subscribe(new IntegrationEventGenericHandler<LobbyStatusChangedEvent>(factory))
-                .Subscribe(new IntegrationEventGenericHandler<MemberLeftEvent>(factory))
-                .Subscribe(new IntegrationEventGenericHandler<MemberRoleChangedEvent>(factory));
-
-            return builder;
+            services.AddScoped<IIntegrationEventHandler<TEvent>, TEventHandler>();
+            services.AddScoped<IIntegrationEventHandler>(p =>
+                p.GetRequiredService<IIntegrationEventHandler<TEvent>>());
         }
     }
 }
