@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build-backend
 WORKDIR /app
 
 COPY src/Aimrank.Web.App/*.csproj ./src/Aimrank.Web.App/
@@ -27,32 +27,23 @@ COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Domain/. ./src/Module
 COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/. ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/
 COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/. ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/
 
-WORKDIR /app/src/Aimrank.Web.App/Frontend
+RUN dotnet publish src/Aimrank.Web.App -c Release -o /app/out
 
-ENV NODE_VERSION=12.6.0
-ENV NODE_ENV=Production
-
-RUN apt install -y curl
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
-ENV NVM_DIR=/root/.nvm
-RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
-ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
-RUN node --version
-RUN npm --version
-
-RUN npm install && npm run build-prod
-
+FROM node:12 AS build-frontend
 WORKDIR /app
 
-RUN dotnet publish src/Aimrank.Web.App -c Release -o /app/out
+COPY src/Aimrank.Web.App/Frontend ./src/Aimrank.Web.App/Frontend
+
+WORKDIR /app/src/Aimrank.Web.App/Frontend
+
+RUN npm install && npm run build-prod && mv ../wwwroot ../../../wwwroot
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 
 WORKDIR /app
 
-COPY --from=build /app/out/ .
+COPY --from=build-backend /app/out/ .
+COPY --from=build-frontend /app/wwwroot/. ./wwwroot/
 
 RUN apt-get update && apt-get install -y curl
 
