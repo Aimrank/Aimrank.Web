@@ -6,6 +6,7 @@ using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing.Outbox
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 
+[assembly:InternalsVisibleTo("Aimrank.Web.Database.Migrator")]
 [assembly:InternalsVisibleTo("Aimrank.Web.Modules.Matches.ArchTests")]
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure

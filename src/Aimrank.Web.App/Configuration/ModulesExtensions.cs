@@ -57,7 +57,16 @@ namespace Aimrank.Web.App.Configuration
             Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll")
                 .Where(x => !locations.Contains(x, StringComparer.InvariantCultureIgnoreCase))
                 .ToList()
-                .ForEach(x => AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(x)));
+                .ForEach(x =>
+                {
+                    try
+                    {
+                        AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(x));
+                    }
+                    catch
+                    {
+                    }
+                });
         }
 
         private static void LoadModules()

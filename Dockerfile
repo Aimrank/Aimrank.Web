@@ -12,21 +12,14 @@ COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.IntegrationEvents/*.csproj 
 COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Domain/*.csproj ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Domain/
 COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/*.csproj ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/
 COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/*.csproj ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/
+COPY src/Database/Aimrank.Web.Database.Migrator/*.csproj ./src/Database/Aimrank.Web.Database.Migrator/
 
+RUN dotnet restore src/Database/Aimrank.Web.Database.Migrator
 RUN dotnet restore src/Aimrank.Web.App
 
-COPY src/Aimrank.Web.App/. ./src/Aimrank.Web.App/
-COPY src/Common/Aimrank.Web.Common.Domain/. ./src/Common/Aimrank.Web.Common.Domain/
-COPY src/Common/Aimrank.Web.Common.Application/. ./src/Common/Aimrank.Web.Common.Application/
-COPY src/Common/Aimrank.Web.Common.Infrastructure/. ./src/Common/Aimrank.Web.Common.Infrastructure/
-COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/
-COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/
-COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/
-COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.IntegrationEvents/. ./src/Modules/Matches/Aimrank.Web.Modules.Matches.IntegrationEvents/
-COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Domain/. ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Domain/
-COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/. ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/
-COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/. ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/
+COPY . .
 
+RUN dotnet publish src/Database/Aimrank.Web.Database.Migrator -c Release -o /app/out
 RUN dotnet publish src/Aimrank.Web.App -c Release -o /app/out
 
 FROM node:12 AS build-frontend
@@ -52,4 +45,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=5 \
   
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-ENTRYPOINT ["dotnet", "Aimrank.Web.App.dll"]
+CMD ["dotnet", "Aimrank.Web.App.dll"]
