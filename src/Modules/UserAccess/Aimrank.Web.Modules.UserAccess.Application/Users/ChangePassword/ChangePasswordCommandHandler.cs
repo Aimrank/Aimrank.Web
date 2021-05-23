@@ -10,13 +10,16 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Users.ChangePassword
     internal class ChangePasswordCommandHandler : ICommandHandler<ChangePasswordCommand>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPasswordHasher _passwordHasher;
         private readonly IExecutionContextAccessor _executionContextAccessor;
 
         public ChangePasswordCommandHandler(
             IUserRepository userRepository,
+            IPasswordHasher passwordHasher,
             IExecutionContextAccessor executionContextAccessor)
         {
             _userRepository = userRepository;
+            _passwordHasher = passwordHasher;
             _executionContextAccessor = executionContextAccessor;
         }
 
@@ -25,9 +28,7 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Users.ChangePassword
             var userId = new UserId(_executionContextAccessor.UserId);
             var user = await _userRepository.GetByIdAsync(userId);
 
-            var newPasswordHash = PasswordManager.HashPassword(request.NewPassword);
-
-            user.ChangePassword(request.OldPassword, newPasswordHash);
+            user.ChangePassword(request.OldPassword, request.NewPassword, _passwordHasher);
             
             return Unit.Value;
         }

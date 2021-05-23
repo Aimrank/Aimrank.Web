@@ -6,16 +6,18 @@ namespace Aimrank.Web.Modules.UserAccess.Domain.Users.Rules
     {
         private readonly string _oldPassword;
         private readonly string _oldPasswordHash;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public PasswordMustMatchRule(string oldPassword, string oldPasswordHash)
+        public PasswordMustMatchRule(string oldPassword, string oldPasswordHash, IPasswordHasher passwordHasher)
         {
             _oldPassword = oldPassword;
             _oldPasswordHash = oldPasswordHash;
+            _passwordHasher = passwordHasher;
         }
 
         public string Message => "Old password is invalid";
         public string Code => "invalid_old_password";
 
-        public bool IsBroken() => !PasswordManager.VerifyPassword(_oldPasswordHash, _oldPassword);
+        public bool IsBroken() => !_passwordHasher.VerifyPassword(_oldPasswordHash, _oldPassword);
     }
 }

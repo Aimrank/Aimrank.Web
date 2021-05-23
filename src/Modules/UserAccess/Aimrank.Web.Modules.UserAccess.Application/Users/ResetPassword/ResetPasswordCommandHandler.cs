@@ -9,10 +9,12 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Users.ResetPassword
     internal class ResetPasswordCommandHandler : ICommandHandler<ResetPasswordCommand>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public ResetPasswordCommandHandler(IUserRepository userRepository)
+        public ResetPasswordCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
             _userRepository = userRepository;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<Unit> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
@@ -20,9 +22,7 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Users.ResetPassword
             var userId = new UserId(request.UserId);
             var user = await _userRepository.GetByIdAsync(userId);
 
-            var newPasswordHash = PasswordManager.HashPassword(request.NewPassword);
-
-            user.ResetPassword(newPasswordHash, request.Token);
+            user.ResetPassword(request.NewPassword, request.Token, _passwordHasher);
             
             return Unit.Value;
         }
