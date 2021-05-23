@@ -11,10 +11,12 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate
     internal class AuthenticateCommandHandler : ICommandHandler<AuthenticateCommand, AuthenticationResult>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public AuthenticateCommandHandler(ISqlConnectionFactory sqlConnectionFactory)
+        public AuthenticateCommandHandler(ISqlConnectionFactory sqlConnectionFactory, IPasswordHasher passwordHasher)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<AuthenticationResult> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
@@ -54,7 +56,7 @@ namespace Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate
                 throw new InvalidCredentialsException();
             }
 
-            if (!PasswordManager.VerifyPassword(user.Password, request.Password))
+            if (!_passwordHasher.VerifyPassword(user.Password, request.Password))
             {
                 throw new InvalidCredentialsException();
             }

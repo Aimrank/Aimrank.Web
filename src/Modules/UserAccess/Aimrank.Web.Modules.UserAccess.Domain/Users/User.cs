@@ -35,14 +35,15 @@ namespace Aimrank.Web.Modules.UserAccess.Domain.Users
             string email,
             string username,
             string password,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IPasswordHasher passwordHasher)
         {
             await BusinessRules.CheckAsync(new EmailMustBeUniqueRule(userRepository, email));
             await BusinessRules.CheckAsync(new UsernameMustBeUniqueRule(userRepository, username));
 
             var token = UserToken.Create(UserTokenType.EmailConfirmation);
 
-            var user = new User(id, email.ToLower(), username, password, token);
+            var user = new User(id, email.ToLower(), username, passwordHasher.HashPassword(password), token);
             
             user.AddDomainEvent(new UserCreatedDomainEvent(user.Id, user.Username, user.Email, token.Token));
 
@@ -84,20 +85,20 @@ namespace Aimrank.Web.Modules.UserAccess.Domain.Users
             AddDomainEvent(new UserPasswordReminderRequestedDomainEvent(Id, Username, Email, token.Token));
         }
 
-        public void ChangePassword(string oldPassword, string newPasswordHash)
+        public void ChangePassword(string oldPassword, string newPassword, IPasswordHasher passwordHasher)
         {
-            BusinessRules.Check(new PasswordMustMatchRule(oldPassword, _password));
+            BusinessRules.Check(new PasswordMustMatchRule(oldPassword, _password, passwordHasher));
 
-            _password = newPasswordHash;
+            _password = passwordHasher.HashPassword(newPassword);
         }
 
-        public void ResetPassword(string newPasswordHash, string token)
+        public void ResetPassword(string newPassword, string token, IPasswordHasher passwordHasher)
         {
             BusinessRules.Check(new UserTokenMustBeValidRule(UserTokenType.PasswordReminder, _tokens, token));
 
             _tokens.RemoveAll(t => t.Type == UserTokenType.PasswordReminder);
 
-            _password = newPasswordHash;
+            _password = passwordHasher.HashPassword(newPassword);
         }
     }
 }

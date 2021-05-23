@@ -6,6 +6,7 @@ using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.DataAccess;
 using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Emails;
 using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Processing;
 using Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration.Quartz;
+using Aimrank.Web.Modules.UserAccess.Infrastructure.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,7 @@ namespace Aimrank.Web.Modules.UserAccess.Infrastructure.Configuration
             
             var services = new ServiceCollection();
 
+            services.AddDomainServices();
             services.AddDataAccess(configuration.GetConnectionString("Database"));
             services.AddProcessing();
             services.AddEmails(settings.EmailSettings);
