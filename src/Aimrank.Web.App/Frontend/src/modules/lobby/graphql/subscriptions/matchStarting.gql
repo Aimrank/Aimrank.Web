@@ -1,7 +1,0 @@
-subscription matchStarting($lobbyId: Uuid!) {
-  matchStarting(lobbyId: $lobbyId) {
-    record {
-      matchId
-    }
-  }
-}

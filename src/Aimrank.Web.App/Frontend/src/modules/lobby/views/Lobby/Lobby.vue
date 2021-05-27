@@ -83,16 +83,16 @@
       >
         <h3>{{ $t("lobby.views.Lobby.match") }}</h3>
         <div>Map: {{ lobby.match.map }}</div>
-        <div>Status: {{ ["Created", "Ready", "Starting", "Started", "Finished"][lobby.match.status] }}</div>
+        <div>Status: {{ ["Created", "Ready", "Started", "Finished"][lobby.match.status] }}</div>
         <template v-if="lobby.match.status === MatchStatus.Started">
           <div>
-            Address: aimrank.pl{{ lobby.match.address.slice(lobby.match.address.indexOf(":")) }}
+            Address: {{ lobby.match.address }}
           </div>
           <code :class="$style.code">
             <pre>
               sv_allowupload 1;
               sv_allowdownload 1;
-              connect aimrank.pl{{ lobby.match.address.slice(lobby.match.address.indexOf(":")) }}
+              connect {{ lobby.match.address }}
             </pre>
           </code>
         </template>

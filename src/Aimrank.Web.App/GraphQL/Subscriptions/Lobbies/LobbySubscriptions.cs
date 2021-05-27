@@ -33,13 +33,6 @@ namespace Aimrank.Web.App.GraphQL.Subscriptions.Lobbies
                 $"MatchReady:{lobbyId}:{principal.GetUserId()}", principal);
 
         [SubscribeAndResolve]
-        public ValueTask<ISourceStream<MatchStartingPayload>> MatchStarting(
-            Guid lobbyId,
-            [ClaimsPrincipal] ClaimsPrincipal principal)
-            => SubscribeAuthenticated<MatchStartingPayload>(
-                $"MatchStarting:{lobbyId}:{principal.GetUserId()}", principal);
-
-        [SubscribeAndResolve]
         public ValueTask<ISourceStream<MatchStartedPayload>> MatchStarted(
             Guid lobbyId,
             [ClaimsPrincipal] ClaimsPrincipal principal)

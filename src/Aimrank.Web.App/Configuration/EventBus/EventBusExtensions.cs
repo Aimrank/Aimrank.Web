@@ -21,7 +21,6 @@ namespace Aimrank.Web.App.Configuration.EventBus
             RegisterEventHandler<MatchPlayerLeftEvent, MatchPlayerLeftEventHandler>(services);
             RegisterEventHandler<MatchReadyEvent, MatchReadyEventHandler>(services);
             RegisterEventHandler<MatchStartedEvent, MatchStartedEventHandler>(services);
-            RegisterEventHandler<MatchStartingEvent, MatchStartingEventHandler>(services);
             RegisterEventHandler<MatchTimedOutEvent, MatchTimedOutEventHandler>(services);
             RegisterEventHandler<MemberLeftEvent, MemberLeftEventHandler>(services);
             RegisterEventHandler<MemberRoleChangedEvent, MemberRoleChangedEventHandler>(services);

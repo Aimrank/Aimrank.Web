@@ -39,10 +39,9 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Application.Matches
             {
                 await _database.KeyDeleteAsync(key);
 
-                var address = await _clusterClient.StartServerAsync(new StartServerRequest(
-                    match.Id, match.Map, match.Players.Select(p => $"{p.SteamId}:{(int) p.Team}")));
+                var address = await _clusterClient.CreateMatchAsync(new CreateMatchRequest(match.Id.Value));
                 
-                match.SetStarting(address);
+                match.SetStarted(address);
             }
             else
             {

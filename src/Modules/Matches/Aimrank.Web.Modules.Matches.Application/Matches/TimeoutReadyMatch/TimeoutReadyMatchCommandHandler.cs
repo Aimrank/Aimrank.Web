@@ -1,4 +1,3 @@
-using Aimrank.Web.Modules.Matches.Application.Clients;
 using Aimrank.Web.Modules.Matches.Domain.Lobbies;
 using Aimrank.Web.Modules.Matches.Domain.Matches;
 using MediatR;
@@ -12,18 +11,15 @@ namespace Aimrank.Web.Modules.Matches.Application.Matches.TimeoutReadyMatch
 {
     internal class TimeoutReadyMatchCommandHandler : Contracts.ICommandHandler<TimeoutReadyMatchCommand>
     {
-        private readonly IClusterClient _clusterClient;
         private readonly ILobbyRepository _lobbyRepository;
         private readonly IMatchRepository _matchRepository;
         private readonly IMatchService _matchService;
 
         public TimeoutReadyMatchCommandHandler(
-            IClusterClient clusterClient,
             ILobbyRepository lobbyRepository,
             IMatchRepository matchRepository,
             IMatchService matchService)
         {
-            _clusterClient = clusterClient;
             _lobbyRepository = lobbyRepository;
             _matchRepository = matchRepository;
             _matchService = matchService;
@@ -37,8 +33,6 @@ namespace Aimrank.Web.Modules.Matches.Application.Matches.TimeoutReadyMatch
             {
                 return Unit.Value;
             }
-
-            await _clusterClient.DeleteServerAsync(match.Id);
             
             var lobbies = await _lobbyRepository.BrowseByIdAsync(match.Lobbies.Select(l => l.LobbyId));
 

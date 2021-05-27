@@ -7,9 +7,7 @@ using Aimrank.Web.Modules.Matches.Infrastructure.Application;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.DataAccess;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.MatchCanceled;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.MatchFinished;
-using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.MatchStarted;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.PlayerDisconnected;
-using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.ServersDeleted;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Processing;
 using Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Quartz;
@@ -35,11 +33,9 @@ namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration
                 .UseSnakeCaseNamingConvention()
                 .ReplaceService<IValueConverterSelector, EntityIdValueConverterSelector>());
             
-            RegisterEventHandler<MatchStartedEvent>(services);
             RegisterEventHandler<MatchCanceledEvent>(services);
             RegisterEventHandler<MatchFinishedEvent>(services);
             RegisterEventHandler<PlayerDisconnectedEvent>(services);
-            RegisterEventHandler<ServersDeletedEvent>(services);
         }
 
         public void Initialize(IApplicationBuilder builder, IConfiguration configuration)
