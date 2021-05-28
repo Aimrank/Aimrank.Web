@@ -1,26 +1,28 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build-backend
 WORKDIR /app
 
+COPY *.sln .
 COPY src/Aimrank.Web.App/*.csproj ./src/Aimrank.Web.App/
 COPY src/Common/Aimrank.Web.Common.Domain/*.csproj ./src/Common/Aimrank.Web.Common.Domain/
 COPY src/Common/Aimrank.Web.Common.Application/*.csproj ./src/Common/Aimrank.Web.Common.Application/
 COPY src/Common/Aimrank.Web.Common.Infrastructure/*.csproj ./src/Common/Aimrank.Web.Common.Infrastructure/
+COPY src/Database/Aimrank.Web.Database.Migrator/*.csproj ./src/Database/Aimrank.Web.Database.Migrator/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Domain/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Application/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.Infrastructure/
 COPY src/Modules/Matches/Aimrank.Web.Modules.Matches.IntegrationEvents/*.csproj ./src/Modules/Matches/Aimrank.Web.Modules.Matches.IntegrationEvents/
+COPY src/Modules/Matches/Tests/Aimrank.Web.Modules.Matches.ArchTests/*.csproj ./src/Modules/Matches/Tests/Aimrank.Web.Modules.Matches.ArchTests/
+COPY src/Modules/Matches/Tests/Aimrank.Web.Modules.Matches.UnitTests/*.csproj ./src/Modules/Matches/Tests/Aimrank.Web.Modules.Matches.UnitTests/
 COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Domain/*.csproj ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Domain/
 COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/*.csproj ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Application/
 COPY src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/*.csproj ./src/Modules/UserAccess/Aimrank.Web.Modules.UserAccess.Infrastructure/
-COPY src/Database/Aimrank.Web.Database.Migrator/*.csproj ./src/Database/Aimrank.Web.Database.Migrator/
+COPY src/Modules/UserAccess/Tests/Aimrank.Web.Modules.UserAccess.UnitTests/*.csproj ./src/Modules/UserAccess/Tests/Aimrank.Web.Modules.UserAccess.UnitTests/
 
-RUN dotnet restore src/Database/Aimrank.Web.Database.Migrator
-RUN dotnet restore src/Aimrank.Web.App
+RUN dotnet restore
 
 COPY . .
 
-RUN dotnet publish src/Database/Aimrank.Web.Database.Migrator -c Release -o /app/out
-RUN dotnet publish src/Aimrank.Web.App -c Release -o /app/out
+RUN dotnet publish -c Release -o /app/out
 
 FROM node:12 AS build-frontend
 WORKDIR /app
