@@ -3,7 +3,7 @@ using System;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.MatchCanceled
 {
-    [IntegrationEvent("Aimrank.Pod")]
+    [IntegrationEvent("Aimrank.Agones")]
     internal class MatchCanceledEvent : IIntegrationEvent
     {
         public Guid Id { get; }

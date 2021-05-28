@@ -379,7 +379,6 @@ export type Subscription = {
   friendshipInvitationCreated?: Maybe<FriendshipInvitationCreatedPayload>;
   matchAccepted?: Maybe<MatchAcceptedPayload>;
   matchReady?: Maybe<MatchReadyPayload>;
-  matchStarting?: Maybe<MatchStartingPayload>;
   matchStarted?: Maybe<MatchStartedPayload>;
   matchTimedOut?: Maybe<MatchTimedOutPayload>;
   matchCanceled?: Maybe<MatchCanceledPayload>;
@@ -400,11 +399,6 @@ export type SubscriptionMatchAcceptedArgs = {
 
 
 export type SubscriptionMatchReadyArgs = {
-  lobbyId: Scalars['Uuid'];
-};
-
-
-export type SubscriptionMatchStartingArgs = {
   lobbyId: Scalars['Uuid'];
 };
 
@@ -773,12 +767,6 @@ export type MatchReadyPayload = {
   record: MatchReadyRecord;
 };
 
-export type MatchStartingPayload = {
-  __typename?: 'MatchStartingPayload';
-  query?: Maybe<Query>;
-  record: MatchStartingRecord;
-};
-
 export type MatchStartedPayload = {
   __typename?: 'MatchStartedPayload';
   query?: Maybe<Query>;
@@ -925,11 +913,6 @@ export type MatchStartedRecord = {
   address: Scalars['String'];
   mode: Scalars['Int'];
   players?: Maybe<Array<Scalars['Uuid']>>;
-};
-
-export type MatchStartingRecord = {
-  __typename?: 'MatchStartingRecord';
-  matchId: Scalars['Uuid'];
 };
 
 export type MatchReadyRecord = {
@@ -1486,22 +1469,6 @@ export type MatchStartedSubscription = (
   )> }
 );
 
-export type MatchStartingSubscriptionVariables = Exact<{
-  lobbyId: Scalars['Uuid'];
-}>;
-
-
-export type MatchStartingSubscription = (
-  { __typename?: 'Subscription' }
-  & { matchStarting?: Maybe<(
-    { __typename?: 'MatchStartingPayload' }
-    & { record: (
-      { __typename?: 'MatchStartingRecord' }
-      & Pick<MatchStartingRecord, 'matchId'>
-    ) }
-  )> }
-);
-
 export type MatchTimedOutSubscriptionVariables = Exact<{
   lobbyId: Scalars['Uuid'];
 }>;
@@ -1822,7 +1789,6 @@ import MATCH_FINISHED from "../../modules/lobby/graphql/subscriptions/matchFinis
 import MATCH_PLAYER_LEFT from "../../modules/lobby/graphql/subscriptions/matchPlayerLeft.gql";
 import MATCH_READY from "../../modules/lobby/graphql/subscriptions/matchReady.gql";
 import MATCH_STARTED from "../../modules/lobby/graphql/subscriptions/matchStarted.gql";
-import MATCH_STARTING from "../../modules/lobby/graphql/subscriptions/matchStarting.gql";
 import MATCH_TIMED_OUT from "../../modules/lobby/graphql/subscriptions/matchTimedOut.gql";
 import ACCEPT_FRIENDSHIP_INVITATION from "../../modules/profile/graphql/mutations/acceptFriendshipInvitation.gql";
 import BLOCK_USER from "../../modules/profile/graphql/mutations/blockUser.gql";
@@ -1875,7 +1841,6 @@ export const useMatchFinished = (options?: Omit<UseSubscriptionOptions<RefWrappe
 export const useMatchPlayerLeft = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchPlayerLeftSubscriptionVariables>>, "query">) => useSubscription<MatchPlayerLeftSubscription, RefWrapper<MatchPlayerLeftSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_PLAYER_LEFT });
 export const useMatchReady = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchReadySubscriptionVariables>>, "query">) => useSubscription<MatchReadySubscription, RefWrapper<MatchReadySubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_READY });
 export const useMatchStarted = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchStartedSubscriptionVariables>>, "query">) => useSubscription<MatchStartedSubscription, RefWrapper<MatchStartedSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_STARTED });
-export const useMatchStarting = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchStartingSubscriptionVariables>>, "query">) => useSubscription<MatchStartingSubscription, RefWrapper<MatchStartingSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_STARTING });
 export const useMatchTimedOut = (options?: Omit<UseSubscriptionOptions<RefWrapper<MatchTimedOutSubscriptionVariables>>, "query">) => useSubscription<MatchTimedOutSubscription, RefWrapper<MatchTimedOutSubscriptionVariables>>(apolloClient, { ...(options ?? {}), query: MATCH_TIMED_OUT });
 export const useAcceptFriendshipInvitation = (options?: Omit<UseMutationOptions<AcceptFriendshipInvitationMutationVariables>, "mutation">) => useMutation<AcceptFriendshipInvitationMutation, AcceptFriendshipInvitationMutationVariables>(apolloClient, { ...(options ?? {}), mutation: ACCEPT_FRIENDSHIP_INVITATION });
 export const useBlockUser = (options?: Omit<UseMutationOptions<BlockUserMutationVariables>, "mutation">) => useMutation<BlockUserMutation, BlockUserMutationVariables>(apolloClient, { ...(options ?? {}), mutation: BLOCK_USER });

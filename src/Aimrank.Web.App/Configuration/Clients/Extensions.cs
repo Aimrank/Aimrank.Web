@@ -11,13 +11,11 @@ namespace Aimrank.Web.App.Configuration.Clients
         public static IServiceCollection AddClients(this IServiceCollection services, IConfiguration configuration)
         {
             var settings = configuration.GetSection(nameof(ClusterSettings)).Get<ClusterSettings>();
-            
-            services.AddHttpClient(nameof(ClusterClient), c =>
-            {
-                c.BaseAddress = new Uri(settings.HostName);
-            });
 
-            services.AddSingleton<IClusterClient, ClusterClient>();
+            services.AddHttpClient<IClusterClient, ClusterClient>(c =>
+            {
+                c.BaseAddress = new Uri($"http://{settings.HostName}/api/");
+            });
             
             return services;
         }

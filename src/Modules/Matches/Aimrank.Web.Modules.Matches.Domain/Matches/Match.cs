@@ -129,22 +129,13 @@ namespace Aimrank.Web.Modules.Matches.Domain.Matches
             AddDomainEvent(new MatchReadyDomainEvent(Id, Map, _lobbies));
         }
 
-        public void SetStarting(string address)
+        public void SetStarted(string address)
         {
-            if (Status == MatchStatus.Starting) return;
-            
-            Status = MatchStatus.Starting;
+            if (Status != MatchStatus.Ready) return;
+
             _address = address;
-            
-            AddDomainEvent(new MatchStartingDomainEvent(Id, _lobbies));
-        }
-
-        public void SetStarted()
-        {
-            if (Status != MatchStatus.Starting) return;
-
             Status = MatchStatus.Started;
-
+            
             AddDomainEvent(new MatchStartedDomainEvent(Id, Map, Mode, _address, _lobbies,
                 _players.Select(MatchStartedDomainEvent.MatchPlayerDto.FromMatchPlayer).ToList()));
         }

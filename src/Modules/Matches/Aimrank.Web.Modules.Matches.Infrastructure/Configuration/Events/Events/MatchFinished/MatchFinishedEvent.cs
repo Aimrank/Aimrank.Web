@@ -4,7 +4,7 @@ using System;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.MatchFinished
 {
-    [IntegrationEvent("Aimrank.Pod")]
+    [IntegrationEvent("Aimrank.Agones")]
     internal class MatchFinishedEvent : IIntegrationEvent
     {
         public Guid Id { get; }

@@ -10,72 +10,54 @@ namespace Aimrank.Web.App.Configuration.Clients.Cluster
 {
     public class ClusterClient : IClusterClient
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly JsonSerializerOptions _options = new()
-        {
-            PropertyNameCaseInsensitive = true
-        };
-        
-        private HttpClient CreateClient() => _httpClientFactory.CreateClient(nameof(ClusterClient));
+        private readonly JsonSerializerOptions _options = new() {PropertyNameCaseInsensitive = true};
+        private readonly HttpClient _httpClient;
 
-        public ClusterClient(IHttpClientFactory httpClientFactory)
+        public ClusterClient(HttpClient httpClient)
         {
-            _httpClientFactory = httpClientFactory;
+            _httpClient = httpClient;
         }
 
-        public async Task<GetAvailableServersCountResponse> GetAvailableServersCountAsync()
+        public async Task<GetServerFleetResponse> GetServerFleetAsync()
         {
-            using var client = CreateClient();
-            var response = await client.GetAsync("/server");
+            var response = await _httpClient.GetAsync("fleet");
             if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadFromJsonAsync<GetAvailableServersCountResponse>(_options);
+                return await response.Content.ReadFromJsonAsync<GetServerFleetResponse>(_options);
             }
             
-            return  new GetAvailableServersCountResponse(0);
+            return new GetServerFleetResponse(0, 0, 0, 0);
         }
 
-        public async Task CreateServersAsync(CreateServersRequest request)
+        public async Task CreateReservationAsync(CreateReservationRequest request)
         {
-            using var client = CreateClient();
-            var response = await client.PostAsJsonAsync("/server", request);
+            var response = await _httpClient.PostAsJsonAsync("reservation", request);
             await ThrowIfErrorResponseAsync(response);
         }
 
-        public async Task<string> StartServerAsync(StartServerRequest request)
+        public async Task<string> CreateMatchAsync(CreateMatchRequest request)
         {
-            using var client = CreateClient();
-            var response = await client.PostAsJsonAsync("/server/start", request);
+            var response = await _httpClient.PostAsJsonAsync("match", request);
             await ThrowIfErrorResponseAsync(response);
-            var content = await response.Content.ReadFromJsonAsync<StartServerResponse>();
+            var content = await response.Content.ReadFromJsonAsync<CreateMatchResponse>();
             return content.Address;
-        }
-
-        public async Task DeleteServerAsync(Guid id)
-        {
-            using var client = CreateClient();
-            var response = await client.DeleteAsync($"/server/{id}");
-            await ThrowIfErrorResponseAsync(response);
         }
 
         public async Task AddSteamTokenAsync(AddSteamTokenRequest request)
         {
-            using var client = CreateClient();
-            var response = await client.PostAsJsonAsync("/steam-token", request);
+            var response = await _httpClient.PostAsJsonAsync("steam-token", request);
             await ThrowIfErrorResponseAsync(response);
         }
 
         public async Task DeleteSteamTokenAsync(string token)
         {
-            using var client = CreateClient();
-            var response = await client.DeleteAsync($"/steam-token/{token}");
+            var response = await _httpClient.DeleteAsync($"steam-token/{token}");
             await ThrowIfErrorResponseAsync(response);
         }
 
         public async Task<IEnumerable<SteamTokenDto>> GetSteamTokensAsync()
         {
-            using var client = CreateClient();
-            var response = await client.GetAsync("/steam-token");
+            var response = await _httpClient.GetAsync("steam-token");
             await ThrowIfErrorResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<IEnumerable<SteamTokenDto>>(_options);
         }

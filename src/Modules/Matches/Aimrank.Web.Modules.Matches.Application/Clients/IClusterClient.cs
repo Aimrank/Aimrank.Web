@@ -4,14 +4,18 @@ using System;
 
 namespace Aimrank.Web.Modules.Matches.Application.Clients
 {
-    public record GetAvailableServersCountResponse(int Count);
-    
-    public record CreateServersRequest(IEnumerable<Guid> Ids);
-    
-    public record StartServerRequest(Guid Id, string Map, IEnumerable<string> Whitelist);
+    public record GetServerFleetResponse(
+        int AllocatedReplicas,
+        int ReadyReplicas,
+        int Replicas,
+        int ReservedReplicas);
 
-    public record StartServerResponse(string Address);
+    public record CreateReservationRequest(Guid Id, string Map, string Whitelist, DateTime ExpiresAt);
     
+    public record CreateMatchRequest(Guid ReservationId);
+    
+    public record CreateMatchResponse(Guid MatchId, string Map, string Address, string Whitelist);
+
     public record AddSteamTokenRequest(string Token);
     
     public record DeleteSteamTokenRequest(string Token);
@@ -20,10 +24,9 @@ namespace Aimrank.Web.Modules.Matches.Application.Clients
     
     public interface IClusterClient
     {
-        Task<GetAvailableServersCountResponse> GetAvailableServersCountAsync();
-        Task CreateServersAsync(CreateServersRequest request);
-        Task<string> StartServerAsync(StartServerRequest request);
-        Task DeleteServerAsync(Guid id);
+        Task<GetServerFleetResponse> GetServerFleetAsync();
+        Task CreateReservationAsync(CreateReservationRequest request);
+        Task<string> CreateMatchAsync(CreateMatchRequest request);
         Task AddSteamTokenAsync(AddSteamTokenRequest request);
         Task DeleteSteamTokenAsync(string token);
         Task<IEnumerable<SteamTokenDto>> GetSteamTokensAsync();

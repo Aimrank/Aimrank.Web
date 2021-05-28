@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
+using System;
 
 namespace Aimrank.Web.Modules.Matches.Application.Lobbies.ProcessLobbies
 {
@@ -37,9 +38,9 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.ProcessLobbies
 
             var manager = await MatchmakingManager.CreateAsync(_matchRepository, lobbies, players);
 
-            var response = await _clusterClient.GetAvailableServersCountAsync();
+            var response = await _clusterClient.GetServerFleetAsync();
 
-            var matches = manager.CreateMatches().Take(response.Count).ToList();
+            var matches = manager.CreateMatches().Take(response.ReadyReplicas).ToList();
             
             foreach (var match in matches)
             {
@@ -53,9 +54,13 @@ namespace Aimrank.Web.Modules.Matches.Application.Lobbies.ProcessLobbies
                 _matchRepository.Add(match);
             }
 
-            if (matches.Count > 0)
+            foreach (var match in matches)
             {
-                await _clusterClient.CreateServersAsync(new CreateServersRequest(matches.Select(m => m.Id.Value)));
+                var whitelist = string.Join(',', match.Players
+                    .Select(p => $"{p.SteamId}:{(int) p.Team}"));
+
+                await _clusterClient.CreateReservationAsync(new CreateReservationRequest(
+                    match.Id.Value, match.Map, whitelist, DateTime.UtcNow.AddSeconds(40)));
             }
 
             return Unit.Value;

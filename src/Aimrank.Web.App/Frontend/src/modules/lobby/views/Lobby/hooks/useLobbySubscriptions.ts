@@ -16,7 +16,6 @@ import {
   useMatchPlayerLeft,
   useMatchReady,
   useMatchStarted,
-  useMatchStarting,
   useMatchTimedOut
 } from "~/graphql/types/types";
 import { GetLobbyQuery } from "~/graphql/types/types";
@@ -42,7 +41,6 @@ export const useLobbySubscriptions = (
   const matchReady = useMatchReady({ lazy: true });
   const matchAccepted = useMatchAccepted({ lazy: true });
   const matchStarted = useMatchStarted({ lazy: true });
-  const matchStarting = useMatchStarting({ lazy: true });
   const matchCanceled = useMatchCanceled({ lazy: true });
   const matchFinished = useMatchFinished({ lazy: true });
   const matchTimedOut = useMatchTimedOut({ lazy: true });
@@ -59,7 +57,6 @@ export const useLobbySubscriptions = (
     matchReady.unsubscribe();
     matchAccepted.unsubscribe();
     matchStarted.unsubscribe();
-    matchStarting.unsubscribe();
     matchCanceled.unsubscribe();
     matchFinished.unsubscribe();
     matchTimedOut.unsubscribe();
@@ -84,7 +81,6 @@ export const useLobbySubscriptions = (
         matchReady.subscribe({ lobbyId: lobbyId.value });
         matchAccepted.subscribe({ lobbyId: lobbyId.value });
         matchStarted.subscribe({ lobbyId: lobbyId.value });
-        matchStarting.subscribe({ lobbyId: lobbyId.value });
         matchCanceled.subscribe({ lobbyId: lobbyId.value });
         matchFinished.subscribe({ lobbyId: lobbyId.value });
         matchTimedOut.subscribe({ lobbyId: lobbyId.value });
@@ -265,25 +261,9 @@ export const useLobbySubscriptions = (
         }
       };
 
-      notifications.success(`Match created: aimrank.pl${record.address.slice(record.address.indexOf(":"))}`);
-    }
-  });
-
-  matchStarting.onResult(() => {
-    const lobby = state.value?.lobby;
-
-    if (lobby?.match) {
-      state.value = {
-        ...state.value,
-        lobby: {
-          ...lobby,
-          status: MatchStatus.Starting
-        }
-      };
-
       close();
 
-      notifications.success("Starting server...");
+      notifications.success(`Server started: ${record.address}`);
     }
   });
 

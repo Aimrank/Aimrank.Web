@@ -3,7 +3,7 @@ using System;
 
 namespace Aimrank.Web.Modules.Matches.Infrastructure.Configuration.Events.Events.PlayerDisconnected
 {
-    [IntegrationEvent("Aimrank.Pod")]
+    [IntegrationEvent("Aimrank.Agones")]
     internal class PlayerDisconnectedEvent : IIntegrationEvent
     {
         public Guid Id { get; }
