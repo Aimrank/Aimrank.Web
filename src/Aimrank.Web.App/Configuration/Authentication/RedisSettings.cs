@@ -1,4 +1,4 @@
-namespace Aimrank.Web.App.Configuration.SessionAuthentication
+namespace Aimrank.Web.App.Configuration.Authentication
 {
     public class RedisSettings
     {

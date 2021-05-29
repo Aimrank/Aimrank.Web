@@ -1,10 +1,10 @@
+using Aimrank.Web.App.Contracts;
 using Aimrank.Web.Common.Application.Exceptions;
 using Aimrank.Web.Common.Domain;
 using Aimrank.Web.Modules.UserAccess.Application.Authentication.AuthenticateUser;
 using Aimrank.Web.Modules.UserAccess.Application.Contracts;
 using Aimrank.Web.Modules.UserAccess.Application.Users.ConfirmEmailAddress;
-using Aimrank.Web.App.Configuration.SessionAuthentication;
-using Aimrank.Web.App.Contracts;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -32,10 +32,10 @@ namespace Aimrank.Web.App.Controllers
                 
                 var result = await _userAccessModule.ExecuteCommandAsync(new AuthenticateUserCommand(request.UserId));
                 
-                var identity = new ClaimsIdentity(result.User.Claims, SessionAuthenticationDefaults.AuthenticationScheme);
+                var identity = new ClaimsIdentity(result.User.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
                 
-                await HttpContext.SignInAsync(principal);
+                await HttpContext.SignInAsync(principal, new AuthenticationProperties{IsPersistent = true});
                 
                 return Redirect("/app");
             }

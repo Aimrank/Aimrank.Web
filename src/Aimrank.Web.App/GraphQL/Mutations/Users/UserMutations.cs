@@ -1,4 +1,3 @@
-using Aimrank.Web.App.Configuration.SessionAuthentication;
 using Aimrank.Web.Modules.UserAccess.Application.Authentication.Authenticate;
 using Aimrank.Web.Modules.UserAccess.Application.Contracts;
 using Aimrank.Web.Modules.UserAccess.Application.Users.ChangePassword;
@@ -9,6 +8,7 @@ using Aimrank.Web.Modules.UserAccess.Application.Users.ResetPassword;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types;
 using HotChocolate;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
@@ -38,10 +38,10 @@ namespace Aimrank.Web.App.GraphQL.Mutations.Users
             
             var result = await _userAccessModule.ExecuteCommandAsync(input);
 
-            var identity = new ClaimsIdentity(result.User.Claims, SessionAuthenticationDefaults.AuthenticationScheme);
+            var identity = new ClaimsIdentity(result.User.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
-            await httpContextAccessor.HttpContext.SignInAsync(principal);
+            await httpContextAccessor.HttpContext.SignInAsync(principal, new AuthenticationProperties{IsPersistent = true});
 
             return new SignInPayload(new AuthenticationSuccessRecord(
                 result.User.Id,
