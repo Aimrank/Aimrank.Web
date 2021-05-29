@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Aimrank.Web.App
 {
@@ -46,25 +47,34 @@ namespace Aimrank.Web.App
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-            => app
-                .UseForwardedHeaders(new ForwardedHeadersOptions
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
+            else
+            {
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-                })
-                .UseModules(Configuration)
-                .UseRabbitMQ()
-                .UseStaticFiles()
-                .UseRouting()
-                .UseWebSockets()
-                .UseAuthentication()
-                .UseAuthorization()
-                .UseEndpoints(endpoints =>
-                {
-                    endpoints.MapGraphQL();
-                    endpoints.MapControllerRoute(
-                        name: "default",
-                        pattern: "{*all}",
-                        defaults: new {Controller = "Home", Action = "Index"});
                 });
+            }
+            
+            app.UseModules(Configuration);
+            app.UseRabbitMQ();
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseWebSockets();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGraphQL();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{*all}",
+                    defaults: new {Controller = "Home", Action = "Index"});
+            });
+        }
     }
 }
