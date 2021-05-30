@@ -1,8 +1,10 @@
 using Aimrank.Web.App.Configuration.Authentication;
 using Aimrank.Web.App.Configuration.Clients;
+using Aimrank.Web.App.Configuration.Controllers;
 using Aimrank.Web.App.Configuration.EventBus.RabbitMQ;
 using Aimrank.Web.App.Configuration.EventBus;
 using Aimrank.Web.App.Configuration.ExecutionContext;
+using Aimrank.Web.App.Configuration.Swagger;
 using Aimrank.Web.App.Configuration.UrlFactory;
 using Aimrank.Web.App.Configuration;
 using Aimrank.Web.App.GraphQL;
@@ -14,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Aimrank.Web.App
 {
@@ -36,8 +39,8 @@ namespace Aimrank.Web.App
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
 
             services.AddApplicationGraphQL();
-            services.AddControllersWithViews();
-            services.AddRouting(options => options.LowercaseUrls = true);
+            services.AddApplicationControllers(Configuration);
+            services.AddSwaggerDocumentation(Configuration);
 
             services.AddClients(Configuration);
             services.AddModules(Configuration);
@@ -46,25 +49,34 @@ namespace Aimrank.Web.App
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-            => app
-                .UseForwardedHeaders(new ForwardedHeadersOptions
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
+            else
+            {
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-                })
-                .UseModules(Configuration)
-                .UseRabbitMQ()
-                .UseStaticFiles()
-                .UseRouting()
-                .UseWebSockets()
-                .UseAuthentication()
-                .UseAuthorization()
-                .UseEndpoints(endpoints =>
-                {
-                    endpoints.MapGraphQL();
-                    endpoints.MapControllerRoute(
-                        name: "default",
-                        pattern: "{*all}",
-                        defaults: new {Controller = "Home", Action = "Index"});
                 });
+            }
+            
+            app.UseSwaggerDocumentation(Configuration);
+            app.UseModules(Configuration);
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseWebSockets();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGraphQL();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{*all}",
+                    defaults: new {Controller = "Home", Action = "Index"});
+            });
+        }
     }
 }

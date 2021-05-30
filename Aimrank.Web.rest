@@ -1,0 +1,61 @@
+@host = https://localhost:5001
+@matchId = b8d9d6aa-a250-4047-9793-977a31871b49
+@steamId1 = 12345678901234567
+@steamId2 = 76561198062895607
+@eventId = b8d9d6aa-a250-4047-9793-977a31871b49
+@eventDate = 2021-05-30T09:37:51.0513411Z
+
+### Cancel match
+
+POST {{host}}/api/rabbitmq
+Content-Type: application/json
+
+{
+  "routingKey": "Aimrank.Agones.MatchCanceledEvent",
+  "data": {
+    "id": "{{eventId}}",
+    "occurredOn": "{{eventDate}}",
+    "matchId": "{{matchId}}"
+  }
+}
+
+### Finish match
+
+POST {{host}}/api/rabbitmq
+Content-Type: application/json
+
+{
+  "routingKey": "Aimrank.Agones.MatchFinishedEvent",
+  "data": {
+    "id": "{{eventId}}",
+    "occurredOn": "{{eventDate}}",
+    "matchId": "{{matchId}}",
+    "winner": 2,
+    "teamTerrorists": {
+      "score": 0,
+      "clients": [
+        {
+          "steamId": "{{steamId1}}",
+          "kills": 0,
+          "assists": 0,
+          "deaths": 5,
+          "hs": 0,
+          "score": 0
+        }
+      ]
+    },
+    "teamCounterTerrorists": {
+      "score": 5,
+      "clients": [
+        {
+          "steamId": "{{steamId2}}",
+          "kills": 5,
+          "assists": 0,
+          "deaths": 0,
+          "hs": 4,
+          "score": 0
+        }
+      ]
+    }
+  }
+}

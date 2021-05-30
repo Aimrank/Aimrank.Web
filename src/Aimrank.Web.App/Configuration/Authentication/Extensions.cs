@@ -31,6 +31,7 @@ namespace Aimrank.Web.App.Configuration.Authentication
                 {
                     c.ExpireTimeSpan = TimeSpan.FromDays(1);
                     c.SessionStore = redisCacheTicketStore;
+                    c.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 })
                 .AddSteam(options =>
                 {

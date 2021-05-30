@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
 {
-    internal class RabbitMQEventBus : IEventBus
+    public class RabbitMQEventBus : IEventBus
     {
         private readonly IEventBus _eventBus;
         private readonly RabbitMQSettings _rabbitMqSettings;
