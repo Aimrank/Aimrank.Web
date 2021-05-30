@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Aimrank.Web.App.Configuration.EventBus.RabbitMQ
 {
-    internal class RabbitMQRoutingKeyFactory
+    public class RabbitMQRoutingKeyFactory
     {
         private readonly RabbitMQSettings _rabbitMqSettings;
 

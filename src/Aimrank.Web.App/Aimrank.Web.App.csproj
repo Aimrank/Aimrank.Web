@@ -3,6 +3,11 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
+    
+    <PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);1591</NoWarn>
+    </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="AspNet.Security.OpenId.Steam" Version="5.0.0" />
@@ -15,6 +20,8 @@
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="5.0.1" />
       <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
       <PackageReference Include="Scrutor" Version="3.3.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.1.4" />
       <PackageReference Include="System.Linq.Async" Version="5.0.0" />
     </ItemGroup>
 

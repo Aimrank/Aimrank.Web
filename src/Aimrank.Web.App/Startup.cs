@@ -1,8 +1,10 @@
 using Aimrank.Web.App.Configuration.Authentication;
 using Aimrank.Web.App.Configuration.Clients;
+using Aimrank.Web.App.Configuration.Controllers;
 using Aimrank.Web.App.Configuration.EventBus.RabbitMQ;
 using Aimrank.Web.App.Configuration.EventBus;
 using Aimrank.Web.App.Configuration.ExecutionContext;
+using Aimrank.Web.App.Configuration.Swagger;
 using Aimrank.Web.App.Configuration.UrlFactory;
 using Aimrank.Web.App.Configuration;
 using Aimrank.Web.App.GraphQL;
@@ -37,8 +39,8 @@ namespace Aimrank.Web.App
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
 
             services.AddApplicationGraphQL();
-            services.AddControllersWithViews();
-            services.AddRouting(options => options.LowercaseUrls = true);
+            services.AddApplicationControllers(Configuration);
+            services.AddSwaggerDocumentation(Configuration);
 
             services.AddClients(Configuration);
             services.AddModules(Configuration);
@@ -60,8 +62,8 @@ namespace Aimrank.Web.App
                 });
             }
             
+            app.UseSwaggerDocumentation(Configuration);
             app.UseModules(Configuration);
-            app.UseRabbitMQ();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseWebSockets();
