@@ -22,7 +22,7 @@ namespace Aimrank.Web.App.Configuration.Controllers
 
             if (typeInfo.IsDefined(typeof(DevelopmentControllerAttribute)))
             {
-                return _configuration.IsDevelopment();
+                return _configuration.IsDevelopment() || _configuration.IsDocker();
             }
             
             return true;

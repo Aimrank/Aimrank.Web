@@ -10,7 +10,7 @@ namespace Aimrank.Web.App.Configuration.Clients
     {
         public static IServiceCollection AddClients(this IServiceCollection services, IConfiguration configuration)
         {
-            if (configuration.IsDevelopment())
+            if (configuration.IsDevelopment() || configuration.IsDocker())
             {
                 services.AddSingleton<IClusterClient, FakeClusterClient>();
             }
