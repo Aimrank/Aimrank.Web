@@ -27,8 +27,6 @@ namespace Aimrank.Web.App.Configuration.Swagger
                     
                     c.IncludeXmlComments(xmlPath);
                 });
-
-                services.AddSwaggerGenNewtonsoftSupport();
                 
                 return services;
             }
