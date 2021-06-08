@@ -38,7 +38,7 @@
   "app": {
     "views": {
       "AppHome": {
-        "title": "Home view for current user"
+        "description": "<p>Welcome on aimrank.</p><ol><li>Go to settings and connect your steam account.</li><li>Click on lobby and create new one.</li><li>Invite friends.</li><li>Start game.</li></ol>"
       }
     }
   },
