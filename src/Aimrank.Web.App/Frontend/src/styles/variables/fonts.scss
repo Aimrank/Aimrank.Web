@@ -1,4 +1,6 @@
-$family: sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+$family: 'Roboto', sans-serif;
 
 $sizeSmX: 1.2rem;
 $sizeSm: 1.3rem;
@@ -6,4 +8,5 @@ $sizeBase: 1.4rem;
 $sizeLg: 1.8rem;
 
 $weightBase: 400;
+$weightMedium: 500;
 $weightBold: 700;
