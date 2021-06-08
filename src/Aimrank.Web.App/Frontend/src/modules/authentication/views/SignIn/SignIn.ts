@@ -3,6 +3,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useAuth } from "@/authentication/hooks/useAuth";
 import { useResponseErrors } from "@/common/hooks/useResponseErrors";
 import { ErrorResponse } from "@/common/hooks/ErrorResponse";
+import Layout from "@/authentication/views/Layout";
 import BaseButton from "@/common/components/BaseButton";
 import FormFieldInput from "@/common/components/FormFieldInput";
 import ValidationSummary from "@/common/components/ValidationSummary";
@@ -11,6 +12,7 @@ import RequestPasswordReminderForm from "@/authentication/components/RequestPass
 
 const SignIn = defineComponent({
   components: {
+    Layout,
     BaseButton,
     FormFieldInput,
     ValidationSummary,

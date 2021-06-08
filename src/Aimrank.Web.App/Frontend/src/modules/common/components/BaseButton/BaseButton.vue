@@ -9,7 +9,8 @@
       [$style.buttonSmall]: small,
       [$style.buttonPrimary]: primary,
       [$style.buttonLoading]: loading,
-      [$style.buttonDisabled]: disabled
+      [$style.buttonDisabled]: disabled,
+      [$style.buttonFullWidth]: fullWidth
     }"
     :disabled="disabled"
     v-bind="$attrs"

@@ -4,10 +4,20 @@
 <template>
   <div :class="$style.container">
     <div :class="$style.sidebar">
-      <base-button :class="$style.button" tag="router-link" :to="{ name: 'admin:dashboard' }">
+      <base-button
+        :class="$style.button"
+        tag="router-link"
+        :to="{ name: 'admin:dashboard' }"
+        full-width
+      >
         {{ $t("admin.views.Layout.sidebar.dashboard") }}
       </base-button>
-      <base-button :class="$style.button" tag="router-link" :to="{ name: 'admin:steamTokens' }">
+      <base-button
+        :class="$style.button"
+        tag="router-link"
+        :to="{ name: 'admin:steamTokens' }"
+        full-width
+      >
         {{ $t("admin.views.Layout.sidebar.steamTokens") }}
       </base-button>
     </div>

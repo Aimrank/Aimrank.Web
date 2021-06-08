@@ -1,3 +1,9 @@
-.container {
-  padding: 20px;
+.buttons {
+  margin-top: 20px;
+}
+
+.button {
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
 }

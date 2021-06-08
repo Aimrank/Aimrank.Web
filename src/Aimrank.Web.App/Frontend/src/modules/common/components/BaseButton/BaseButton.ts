@@ -9,7 +9,8 @@ const BaseButton = defineComponent({
     primary: Boolean,
     loading: Boolean,
     disabled: Boolean,
-    small: Boolean
+    small: Boolean,
+    fullWidth: Boolean
   }
 });
 

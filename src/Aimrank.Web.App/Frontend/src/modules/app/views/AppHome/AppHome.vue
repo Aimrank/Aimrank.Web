@@ -2,6 +2,9 @@
 
 <template>
   <div :class="$style.container">
-    <h1>{{ $t("app.views.AppHome.title") }}</h1>
+    <div
+      :class="$style.content"
+      v-html="$t('app.views.AppHome.description')"
+    />
   </div>
 </template>

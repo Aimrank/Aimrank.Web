@@ -11,14 +11,12 @@
   left: 0;
   width: 200px;
   bottom: 0;
-  border-right: 1px solid colors.$lightGray;
+  border-right: 1px solid colors.$gray2;
   padding: 20px;
-  background: #fafafa;
+  background: colors.$gray1;
 }
 
 .button {
-  width: 100%;
-
   &:not(:last-child) {
     margin-bottom: 10px;
   }

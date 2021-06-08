@@ -4,11 +4,33 @@
 <template>
   <div :class="$style.container">
     <h1 :class="$style.headline">{{ $t("home.views.Home.title") }}</h1>
-    <div>
-      <base-button :class="$style.button" tag="router-link" :to="{ name: 'sign-in' }">Sign in</base-button>
-    </div>
-    <div>
-      <base-button :class="$style.button" tag="router-link" :to="{ name: 'sign-up' }">Sign up</base-button>
+    <div :class="$style.content">
+      <base-button
+        :class="$style.button"
+        tag="router-link"
+        :to="{ name: 'sign-in' }"
+        full-width
+      >
+        {{ $t("home.views.Home.signIn") }}
+      </base-button>
+      <base-button
+        :class="$style.button"
+        tag="router-link"
+        :to="{ name: 'sign-up' }"
+        full-width
+      >
+        {{ $t("home.views.Home.signUp") }}
+      </base-button>
+      <base-button
+        v-if="isAuthenticated && currentUser"
+        :class="$style.button"
+        tag="router-link"
+        :to="{ name: 'app' }"
+        full-width
+        primary
+      >
+        {{ $t("home.views.Home.continue", [currentUser.username]) }}
+      </base-button>
     </div>
   </div>
 </template>
