@@ -3,9 +3,11 @@
 
 <template>
   <div :class="$style.container">
-    <h1 :class="$style.headline">{{ $t("authentication.views.SignUpSuccess.title") }}</h1>
-    <p :class="$style.text">{{ $t("authentication.views.SignUpSuccess.description") }}</p>
-    <p :class="$style.text">{{ $t("authentication.views.SignUpSuccess.resendEmailTitle") }}</p>
-    <email-confirmation-button :username-or-email="route.query.email" />
+    <div :class="$style.content">
+      <h1 :class="$style.headline">{{ $t("authentication.views.SignUpSuccess.title") }}</h1>
+      <p :class="$style.text">{{ $t("authentication.views.SignUpSuccess.description") }}</p>
+      <p :class="$style.text">{{ $t("authentication.views.SignUpSuccess.resendEmailTitle") }}</p>
+      <email-confirmation-button :username-or-email="route.query.email" />
+    </div>
   </div>
 </template>

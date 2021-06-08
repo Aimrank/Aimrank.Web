@@ -2,9 +2,9 @@
 @use "~/styles/variables/colors";
 
 .button {
-  --color-background-hover: #{colors.$lightGray};
+  --color-background-hover: #{colors.$gray2};
   --color-background: transparent;
-  --color-border: #{colors.$lightGray};
+  --color-border: #{colors.$gray2};
   --color-text: #{colors.$black};
 
   cursor: pointer;
@@ -58,6 +58,11 @@
 
   &.buttonDisabled {
     opacity: 0.5;
+  }
+
+  &.buttonFullWidth {
+    display: flex;
+    width: 100%;
   }
 }
 

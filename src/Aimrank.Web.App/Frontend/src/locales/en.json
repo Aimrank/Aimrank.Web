@@ -45,7 +45,10 @@
   "home": {
     "views": {
       "Home": {
-        "title": "Welcome on Aimrank"
+        "title": "Welcome on Aimrank",
+        "signIn": "Sign in",
+        "signUp": "Sign up",
+        "continue": "Continue as {0}"
       }
     }
   },
@@ -66,7 +69,8 @@
         "password": "Password",
         "submit": "Sign in",
         "emailNotConfirmed": "You must confirm your email address before accessing app. In case you didn't receive confirmation email, please click button below to send it again.",
-        "requestPasswordReminder": "Forgot your password? Please input your username or email and we will send password reset link to your inbox."
+        "requestPasswordReminder": "Forgot your password?",
+        "signUp": "I don't have account"
       },
       "SignUp": {
         "title": "Sign up",
@@ -76,7 +80,8 @@
           "password": "Password",
           "passwordRepeat": "Repeat password",
           "submit": "Sign up"
-        }
+        },
+        "signIn": "I already have account"
       },
       "SignUpSuccess": {
         "title": "Confirm your email",

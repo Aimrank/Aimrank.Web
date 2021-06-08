@@ -44,6 +44,7 @@
           :class="$style.button"
           :disabled="token.length == 0"
           :loading="loadingAdd"
+          full-width
           primary
           @click="onAddSteamToken"
         >

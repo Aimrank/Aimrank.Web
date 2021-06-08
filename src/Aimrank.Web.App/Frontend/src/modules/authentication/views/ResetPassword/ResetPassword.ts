@@ -4,15 +4,17 @@ import { useResetPassword } from "~/graphql/types/types";
 import { useNotifications } from "@/common/hooks/useNotifications";
 import { useResponseErrors } from "@/common/hooks/useResponseErrors";
 import { ErrorResponse } from "@/common/hooks/ErrorResponse";
-import ValidationSummary from "@/common/components/ValidationSummary";
-import FormFieldInput from "@/common/components/FormFieldInput";
+import Layout from "@/authentication/views/Layout";
 import BaseButton from "@/common/components/BaseButton";
+import FormFieldInput from "@/common/components/FormFieldInput";
+import ValidationSummary from "@/common/components/ValidationSummary";
 
 const ResetPassword = defineComponent({
   components: {
-    ValidationSummary,
+    Layout,
+    BaseButton,
     FormFieldInput,
-    BaseButton
+    ValidationSummary,
   },
   setup() {
     const route = useRoute();

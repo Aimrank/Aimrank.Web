@@ -1,5 +1,16 @@
+@use '~/styles/variables/colors' as colors;
+
 .container {
+  height: 100vh;
   padding: 20px;
+  background: colors.$gray1;
+}
+
+.content {
+  border: 1px solid colors.$gray2;
+  border-radius: 3px;
+  padding: 20px;
+  background: colors.$white;
 }
 
 .headline {
@@ -8,4 +19,8 @@
 
 .text {
   margin-bottom: 10px;
+
+  &:last-of-type {
+    margin-bottom: 20px;
+  }
 }
