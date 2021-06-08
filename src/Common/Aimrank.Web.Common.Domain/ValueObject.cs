@@ -18,7 +18,7 @@ namespace Aimrank.Web.Common.Domain
 
         public override int GetHashCode() => GetEqualityComponents()
             .Select(x => x?.GetHashCode() ?? 0)
-            .Aggregate((x, y) => x ^ y);
+            .Aggregate(HashCode.Combine);
         
         protected abstract IEnumerable<object> GetEqualityComponents();
 
