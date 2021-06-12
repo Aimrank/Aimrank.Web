@@ -56,10 +56,7 @@ namespace Aimrank.Web.App
             }
             else
             {
-                app.UseForwardedHeaders(new ForwardedHeadersOptions
-                {
-                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-                });
+                app.UseForwardedHeaders(new ForwardedHeadersOptions {ForwardedHeaders = ForwardedHeaders.All});
             }
             
             app.UseSwaggerDocumentation(Configuration);
